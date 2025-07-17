@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UsersPlus, DotsVertical, Edit01, Trash01, Mail01, Download01, Eye } from "@untitledui/icons";
+import { UsersPlus, DotsVertical, Edit01, Trash01, Mail01, Download01, Eye, UserCheck01, SearchMd } from "@untitledui/icons";
 import { Table, TableCard } from "@/components/application/table/table";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
@@ -116,6 +116,15 @@ export const EventsMembersSettings = () => {
     // Add invite functionality here
   };
 
+  const handleChangeRoleToSpaceAdmin = (memberId: number) => {
+    setMembers(members.map(member => 
+      member.id === memberId 
+        ? { ...member, role: "Space Admin" }
+        : member
+    ));
+    console.log("Changed member role to Space Admin:", memberId);
+  };
+
   const handleExportData = () => {
     console.log("Export data triggered");
     // Add export functionality here
@@ -140,7 +149,23 @@ export const EventsMembersSettings = () => {
     document.body.removeChild(link);
   };
 
+  const handleSearchMembers = () => {
+    console.log("Search members triggered");
+    // Add search functionality here
+  };
 
+  const getRoleStyles = (role: string) => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+      case 'space admin':
+        return 'bg-violet-100 border border-violet-200 text-violet-600';
+      case 'moderator':
+        return 'bg-blue-100 border border-blue-200 text-blue-600';
+      case 'member':
+      default:
+        return 'bg-gray-100 border border-gray-200 text-gray-600';
+    }
+  };
 
   const MemberActionsDropdown = ({ member }: { member: any }) => (
     <Dropdown.Root>
@@ -152,6 +177,8 @@ export const EventsMembersSettings = () => {
               handleEditMember(member.id);
             } else if (key === "invite") {
               handleInviteMember(member.id);
+            } else if (key === "change-role") {
+              handleChangeRoleToSpaceAdmin(member.id);
             } else if (key === "delete") {
               handleDeleteMember(member.id);
             }
@@ -170,10 +197,16 @@ export const EventsMembersSettings = () => {
             <span className="pr-4">Send Message</span>
           </Dropdown.Item>
           <Dropdown.Item 
+            id="change-role"
+            icon={UserCheck01}
+          >
+            <span className="pr-4">Change Role to Space Admin</span>
+          </Dropdown.Item>
+          <Dropdown.Item 
             id="delete"
             icon={Trash01}
           >
-            <span className="pr-4">Remove</span>
+            <span className="pr-4">Remove Member</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown.Popover>
@@ -198,8 +231,15 @@ export const EventsMembersSettings = () => {
 
       <div className="mb-4">
         <div className="flex items-center justify-between">
-          <h5 className="text-md font-semibold text-primary">Members List</h5>
+          <h5 className="text-md font-semibold text-primary">Space Members</h5>
           <div className="flex items-center gap-2">
+            <ButtonUtility
+              size="sm"
+              color="tertiary"
+              icon={SearchMd}
+              tooltip="Search Members"
+              onClick={handleSearchMembers}
+            />
             <ButtonUtility
               size="sm"
               color="tertiary"
@@ -209,7 +249,7 @@ export const EventsMembersSettings = () => {
             />
             <ButtonUtility
               size="sm"
-              color="secondary"
+              color="tertiary"
               icon={UsersPlus}
               tooltip="Add Member"
               onClick={() => setIsAddModalOpen(true)}
@@ -222,7 +262,7 @@ export const EventsMembersSettings = () => {
         <Table size="sm">
           <Table.Header>
             <Table.Head label="Member" />
-            <Table.Head label="Actions" />
+            <Table.Head className="w-16 text-center" />
           </Table.Header>
           <Table.Body>
             {members.map((member) => (
@@ -239,7 +279,9 @@ export const EventsMembersSettings = () => {
                         {member.name}
                       </div>
                       <div className="text-xs text-tertiary">
-                        {member.role} • joined {new Date(member.joinedDate).toLocaleDateString('en-US', { 
+                        <span className={`${getRoleStyles(member.role)} rounded-full px-1 py-0.5 text-[0.6rem]`}>
+                          {member.role}
+                        </span> • joined {new Date(member.joinedDate).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric',
                           year: 'numeric'
@@ -248,8 +290,10 @@ export const EventsMembersSettings = () => {
                     </div>
                   </div>
                 </Table.Cell>
-                <Table.Cell>
-                  <MemberActionsDropdown member={member} />
+                <Table.Cell className="w-16">
+                  <div className="flex justify-center">
+                    <MemberActionsDropdown member={member} />
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}

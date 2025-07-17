@@ -35,6 +35,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin/site/spaces/myfolder/events/create" element={<SiteSpacesEventsCreatePage />} />
                         <Route path="/admin/site/spaces/myfolder/events/customize" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/members" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin/site/spaces/myfolder/events/analytics" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin/site/spaces/myfolder/events/audit-logs" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/seo" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/danger" element={<SiteSpacesEventsPage />} />
                         

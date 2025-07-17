@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Settings01, Heart, MessageCircle02, MessageSquare01, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rss01, Rows02, Dotpoints02, DotsGrid, User02 } from '@untitledui/icons';
+import { ArrowLeft, Settings01, Heart, MessageCircle02, MessageSquare01, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rss01, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Browser, File04, Square, Maximize01, Minimize01, FileCheck01, MarkerPin01, Tag01, Users01, AlertCircle, CheckCircle, Database01, Zap } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
@@ -26,9 +26,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   const [cardSize, setCardSize] = useState('medium');
   const [cardStyle, setCardStyle] = useState('modern');
   const [groupView, setGroupView] = useState(false);
-  const [pinnedPost, setPinnedPost] = useState(true);
-  const [upcomingEvents, setUpcomingEvents] = useState(true);
-  const [pastEvents, setPastEvents] = useState(false);
+  const [groupBy, setGroupBy] = useState('date');
   const [openPageIn, setOpenPageIn] = useState('post');
   const [reactButton, setReactButton] = useState(true);
   const [reactionCount, setReactionCount] = useState(true);
@@ -49,20 +47,36 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   ];
 
   const cardSizeOptions = [
-    { id: 'small', label: 'Small' },
-    { id: 'medium', label: 'Medium' },
-    { id: 'large', label: 'Large' },
-    { id: 'extralarge', label: 'Extra Large' }
+    { id: 'small', label: 'Small', icon: Minimize01 },
+    { id: 'medium', label: 'Medium', icon: Square },
+    { id: 'large', label: 'Large', icon: Maximize01 },
+    { id: 'extralarge', label: 'Extra Large', icon: Monitor01 }
   ];
 
   const cardStyleOptions = [
-    { id: 'modern', label: 'Modern Style' },
-    { id: 'simple', label: 'Simple Card' }
+    { id: 'modern', label: 'Modern Style', icon: Zap },
+    { id: 'simple', label: 'Simple Card', icon: Square }
   ];
 
   const openPageOptions = [
-    { id: 'post', label: 'Post Page' },
-    { id: 'modal', label: 'Modal Content' }
+    { id: 'post', label: 'Post Page', icon: File04 },
+    { id: 'modal', label: 'Modal Content', icon: Browser }
+  ];
+
+  const groupByOptions = [
+    { id: 'date', label: 'Date', icon: Calendar },
+    { id: 'location', label: 'Location', icon: MarkerPin01 },
+    { id: 'type', label: 'Type', icon: Tag01 },
+    { id: 'author', label: 'Author', icon: User02 },
+    { id: 'host', label: 'Host', icon: Users01 },
+    { id: 'category', label: 'Category', icon: Grid01 },
+    { id: 'status', label: 'Status', icon: CheckCircle }
+  ];
+
+  const feedStyleOptions = [
+    { id: 'simple', label: 'Simple', icon: List },
+    { id: 'expendable', label: 'Expendable', icon: Maximize01 },
+    { id: 'withcomments', label: 'With Comments', icon: MessageCircle02 }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -206,7 +220,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                       selectedKey={cardSize}
                       onSelectionChange={(key) => setCardSize(key as string)}
                     >
-                      {(item) => <Select.Item id={item.id} label={item.label} />}
+                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                     </Select>
                   </div>
 
@@ -217,7 +231,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                       selectedKey={cardStyle}
                       onSelectionChange={(key) => setCardStyle(key as string)}
                     >
-                      {(item) => <Select.Item id={item.id} label={item.label} />}
+                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                     </Select>
                   </div>
                 </>
@@ -233,15 +247,11 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   <div>
                     <Label htmlFor="feed-layout">Feed Style</Label>
                     <Select 
-                      items={[
-                        { id: 'simple', label: 'Simple' },
-                        { id: 'expendable', label: 'Expendable' },
-                        { id: 'withcomments', label: 'With Comments' }
-                      ]} 
+                      items={feedStyleOptions} 
                       selectedKey="simple"
                       onSelectionChange={(key) => console.log('Feed layout:', key)}
                     >
-                      {(item) => <Select.Item id={item.id} label={item.label} />}
+                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                     </Select>
                   </div>
                 </>
@@ -303,19 +313,16 @@ slim
 
 {groupView && (
 <div className="ml-1 space-y-3 border-l-2 border-gray-200 pl-4 pb-2">
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Pinned Post" size="sm" />
+  <div>
+    <Label htmlFor="group-by">Group by</Label>
+    <Select 
+      items={groupByOptions} 
+      selectedKey={groupBy}
+      onSelectionChange={(key) => setGroupBy(key as string)}
+    >
+      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+    </Select>
   </div>
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Upcoming Events" size="sm" isSelected={true} isDisabled={true} isReadOnly={true}/>
-  </div>
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Past Events" size="sm" />
-  </div>
-
 </div>
 )}
                 </div>
@@ -328,7 +335,7 @@ slim
                   selectedKey={openPageIn}
                   onSelectionChange={(key) => setOpenPageIn(key as string)}
                 >
-                  {(item) => <Select.Item id={item.id} label={item.label} />}
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                 </Select>
               </div>
             </div>

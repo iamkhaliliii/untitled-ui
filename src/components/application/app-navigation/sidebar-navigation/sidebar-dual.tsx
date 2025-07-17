@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -26,6 +26,8 @@ import { RadioButton } from "@/components/base/radio-buttons/radio-buttons";
 import { EventsGeneralSettings } from "./tertiary-sidebar/events-general-settings";
 import { EventsSeoSettings } from "./tertiary-sidebar/events-seo-settings";
 import { EventsMembersSettings } from "./tertiary-sidebar/events-members-settings";
+import { EventsAnalyticsSettings } from "./tertiary-sidebar/events-analytics-settings";
+import { EventsAuditLogsSettings } from "./tertiary-sidebar/events-audit-logs-settings";
 import { EventsDangerSettings } from "./tertiary-sidebar/events-danger-settings";
 import { EventsCustomizeSettings } from "./tertiary-sidebar/events-customize-settings";
 import { WidgetSelection } from "./tertiary-sidebar/widget-selection";
@@ -66,6 +68,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         // Set initial state based on current URL
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/customize")) return "customize";
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/members")) return "members";
+        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/analytics")) return "analytics";
+        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/danger")) return "danger";
         return "general";
@@ -167,6 +171,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 return "Customization";
             case "members":
                 return "Members";
+            case "analytics":
+                return "Space Analytics";
+            case "audit-logs":
+                return "Audit Logs";
             case "seo":
                 return "SEO Settings";
             case "danger":
@@ -222,6 +230,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 );
             case "members":
                 return <EventsMembersSettings />;
+            case "analytics":
+                return <EventsAnalyticsSettings />;
+            case "audit-logs":
+                return <EventsAuditLogsSettings />;
             case "seo":
                 return (
                     <EventsSeoSettings />
@@ -541,6 +553,32 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </li>
                             <li>
                                 <button
+                                    onClick={() => handleSecondaryItemClick("analytics", "/admin/site/spaces/myfolder/events/analytics")}
+                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                        selectedSecondaryItem === "analytics"
+                                            ? "bg-active text-secondary_hover"
+                                            : "text-secondary hover:text-primary hover:bg-secondary"
+                                    }`}
+                                >
+                                    <BarChart03 className="h-4 w-4" />
+                                    Space Analytics
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => handleSecondaryItemClick("audit-logs", "/admin/site/spaces/myfolder/events/audit-logs")}
+                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                        selectedSecondaryItem === "audit-logs"
+                                            ? "bg-active text-secondary_hover"
+                                            : "text-secondary hover:text-primary hover:bg-secondary"
+                                    }`}
+                                >
+                                    <ClipboardCheck className="h-4 w-4" />
+                                    Audit Logs
+                                </button>
+                            </li>
+                            <li>
+                                <button
                                     onClick={() => handleSecondaryItemClick("seo", "/admin/site/spaces/myfolder/events/seo")}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "seo"
@@ -599,7 +637,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col">
                 {/* Header with title and actions */}
-                <div className="sticky top-0 z-10 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                <div className="sticky top-0 z-30 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
                     <div className="flex items-center gap-3">
                         {showWidgetSelection && (
                             <button
