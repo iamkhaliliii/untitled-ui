@@ -1,349 +1,289 @@
-import {
-    Archive,
-    CheckDone01,
-    Edit01,
-    Grid03,
-    Inbox01,
-    Package,
-    Plus,
-    Rows01,
-    SearchLg,
-    Trash01,
-    Eye,
-    MessageCircle01,
-} from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
-import { ButtonUtility } from "@/components/base/buttons/button-utility";
-import { BadgeWithDot } from "@/components/base/badges/badges";
-import { Badge } from "@/components/base/badges/badges";
+import { useMemo, useState } from "react";
+import type { SortDescriptor } from "react-aria-components";
+import { Table, TableCard, TableRowActionsDropdown } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
-import { Input } from "@/components/base/input/input";
+import { BadgeWithDot } from "@/components/base/badges/badges";
 import { AdminLayout } from "@/components/layouts/admin-layout";
+import { Eye, Edit03, Move, BarChart03, ClipboardCheck, EyeOff, Trash01, AlertTriangle, Settings01 } from "@untitledui/icons";
+import { PaginationPageMinimalCenter } from "@/components/application/pagination/pagination";
+
+// Sample content data
+const contentData = {
+    items: [
+        {
+            id: "1",
+            title: "Getting Started with React",
+            description: "A comprehensive guide to building modern web applications",
+            author: {
+                name: "John Doe",
+                avatar: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80"
+            },
+            status: "Published",
+            space: "Tech Blog",
+            posttype: "Article",
+            tags: ["React", "JavaScript", "Tutorial"],
+            publishedAt: "2024-01-15T10:30:00Z",
+            replies: 24,
+            reactions: 156,
+            slug: "getting-started-react",
+            locked: false,
+            hidden: false
+        },
+        {
+            id: "2", 
+            title: "Advanced TypeScript Patterns",
+            description: "Deep dive into advanced TypeScript concepts and patterns",
+            author: {
+                name: "Jane Smith",
+                avatar: "https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80"
+            },
+            status: "Draft",
+            space: "Development",
+            posttype: "Tutorial",
+            tags: ["TypeScript", "Advanced", "Patterns"],
+            publishedAt: null,
+            replies: 0,
+            reactions: 0,
+            slug: "advanced-typescript-patterns",
+            locked: false,
+            hidden: false
+        },
+        {
+            id: "3",
+            title: "UI Design Best Practices",
+            description: "Essential principles for creating beautiful user interfaces",
+            author: {
+                name: "Sarah Wilson",
+                avatar: "https://www.untitledui.com/images/avatars/lana-steiner?fm=webp&q=80"
+            },
+            status: "Scheduled",
+            space: "Design Hub",
+            posttype: "Guide",
+            tags: ["UI", "Design", "Best Practices"],
+            publishedAt: "2024-02-01T09:00:00Z",
+            replies: 8,
+            reactions: 89,
+            slug: "ui-design-best-practices",
+            locked: true,
+            hidden: false
+        },
+        {
+            id: "4",
+            title: "Building Scalable APIs",
+            description: "How to design and implement APIs that can handle growth",
+            author: {
+                name: "Mike Johnson",
+                avatar: "https://www.untitledui.com/images/avatars/demi-wilkinson?fm=webp&q=80"
+            },
+            status: "Published",
+            space: "Backend",
+            posttype: "Technical",
+            tags: ["API", "Scalability", "Backend"],
+            publishedAt: "2024-01-20T14:15:00Z",
+            replies: 42,
+            reactions: 234,
+            slug: "building-scalable-apis",
+            locked: false,
+            hidden: true
+        },
+        {
+            id: "5",
+            title: "Mobile-First Design Strategy",
+            description: "Implementing effective mobile-first design approaches",
+            author: {
+                name: "Lisa Chen",
+                avatar: "https://www.untitledui.com/images/avatars/candice-wu?fm=webp&q=80"
+            },
+            status: "Published",
+            space: "UX Research",
+            posttype: "Case Study",
+            tags: ["Mobile", "Design", "Strategy"],
+            publishedAt: "2024-01-10T11:45:00Z",
+            replies: 16,
+            reactions: 127,
+            slug: "mobile-first-design-strategy",
+            locked: false,
+            hidden: false
+        }
+    ]
+};
+
+const formatDate = (dateString: string | null) => {
+    if (!dateString) return "Not scheduled";
+    return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short", 
+        day: "numeric"
+    });
+};
+
+const getStatusColor = (status: string) => {
+    switch (status) {
+        case "Published":
+            return "success";
+        case "Draft":
+            return "gray";
+        case "Scheduled":
+            return "warning";
+        default:
+            return "gray";
+    }
+};
+
+const ContentActionsDropdown = () => {
+    return <TableRowActionsDropdown />;
+};
 
 export const AdminContentPage = () => {
-    const headerActions = (
-        <div className="flex items-center gap-2">
-            <div className="relative">
-                <Input
-                    placeholder="Search content..."
-                    className="w-64"
-                    icon={SearchLg}
-                />
-            </div>
-            <Button size="sm" iconLeading={Plus}>
-                New Content
-            </Button>
-        </div>
-    );
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+        column: "publishedAt",
+        direction: "descending",
+    });
+
+    const sortedItems = useMemo(() => {
+        return contentData.items.sort((a, b) => {
+            const first = a[sortDescriptor.column as keyof typeof a];
+            const second = b[sortDescriptor.column as keyof typeof b];
+
+            // Handle null values for publishedAt
+            if (sortDescriptor.column === "publishedAt") {
+                if (!first && !second) return 0;
+                if (!first) return 1;
+                if (!second) return -1;
+                const firstDate = new Date(first as string).getTime();
+                const secondDate = new Date(second as string).getTime();
+                return sortDescriptor.direction === "descending" ? secondDate - firstDate : firstDate - secondDate;
+            }
+
+            // Compare numbers or booleans
+            if ((typeof first === "number" && typeof second === "number") || (typeof first === "boolean" && typeof second === "boolean")) {
+                return sortDescriptor.direction === "descending" ? Number(second) - Number(first) : Number(first) - Number(second);
+            }
+
+            // Compare strings
+            if (typeof first === "string" && typeof second === "string") {
+                let cmp = first.localeCompare(second);
+                if (sortDescriptor.direction === "descending") {
+                    cmp *= -1;
+                }
+                return cmp;
+            }
+
+            return 0;
+        });
+    }, [sortDescriptor]);
 
     return (
         <AdminLayout 
             title="Content Management"
             description="Manage your posts, pages, media, and comments"
             currentPath="/admin/content"
-            headerActions={headerActions}
         >
-            <div className="px-4 py-6 lg:px-6">
-                {/* Stats Cards */}
-                <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="rounded-xl border border-secondary bg-primary p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-tertiary">Total Posts</p>
-                                <p className="text-2xl font-semibold text-primary">1,247</p>
+            <div className="p-4 ">
+                <TableCard.Root>
+                    <TableCard.Header
+                        title="All Content"
+                        description="Manage and organize all your content across different spaces and post types."
+                        contentTrailing={
+                            <div className="absolute top-5 right-4 md:right-6">
+                                <ContentActionsDropdown />
                             </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
-                                <Package className="h-6 w-6 text-brand-secondary" />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2">
-                            <Badge color="success" size="sm">+12%</Badge>
-                            <span className="text-sm text-tertiary">vs last month</span>
-                        </div>
-                    </div>
-
-                    <div className="rounded-xl border border-secondary bg-primary p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-tertiary">Pages</p>
-                                <p className="text-2xl font-semibold text-primary">89</p>
-                            </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
-                                <Grid03 className="h-6 w-6 text-brand-secondary" />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2">
-                            <Badge color="success" size="sm">+3</Badge>
-                            <span className="text-sm text-tertiary">new this week</span>
-                        </div>
-                    </div>
-
-                    <div className="rounded-xl border border-secondary bg-primary p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-tertiary">Media Files</p>
-                                <p className="text-2xl font-semibold text-primary">3,456</p>
-                            </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
-                                <Archive className="h-6 w-6 text-brand-secondary" />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2">
-                            <Badge color="warning" size="sm">2.3GB</Badge>
-                            <span className="text-sm text-tertiary">total size</span>
-                        </div>
-                    </div>
-
-                    <div className="rounded-xl border border-secondary bg-primary p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-tertiary">Comments</p>
-                                <p className="text-2xl font-semibold text-primary">567</p>
-                            </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
-                                <Inbox01 className="h-6 w-6 text-brand-secondary" />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2">
-                            <BadgeWithDot color="warning" size="sm">15</BadgeWithDot>
-                            <span className="text-sm text-tertiary">pending approval</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Content Sections */}
-                <div className="grid gap-6 lg:grid-cols-2">
-                    {/* Recent Posts */}
-                    <div className="rounded-xl border border-secondary bg-primary p-6">
-                        <div className="mb-6 flex items-center justify-between">
-                            <h2 className="text-lg font-semibold text-primary">Recent Posts</h2>
-                            <Button size="sm" color="tertiary" iconLeading={Plus}>
-                                New Post
-                            </Button>
-                        </div>
-                        <div className="space-y-4">
-                            {[
-                                {
-                                    title: "Getting Started with Content Management",
-                                    status: "published",
-                                    author: "John Doe",
-                                    date: "2 hours ago",
-                                    views: "1.2k",
-                                    comments: 12,
-                                },
-                                {
-                                    title: "Best Practices for SEO Optimization",
-                                    status: "draft",
-                                    author: "Jane Smith",
-                                    date: "1 day ago",
-                                    views: "890",
-                                    comments: 8,
-                                },
-                                {
-                                    title: "How to Create Engaging Content",
-                                    status: "published",
-                                    author: "Mike Johnson",
-                                    date: "3 days ago",
-                                    views: "2.1k",
-                                    comments: 24,
-                                },
-                                {
-                                    title: "Content Strategy for 2024",
-                                    status: "scheduled",
-                                    author: "Sarah Wilson",
-                                    date: "Next week",
-                                    views: "0",
-                                    comments: 0,
-                                },
-                            ].map((post, index) => (
-                                <div key={index} className="rounded-lg border border-secondary p-4">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <h3 className="font-medium text-primary line-clamp-1">
-                                                {post.title}
-                                            </h3>
-                                            <div className="mt-2 flex items-center gap-3 text-sm text-tertiary">
-                                                <span>by {post.author}</span>
-                                                <span>•</span>
-                                                <span>{post.date}</span>
-                                            </div>
-                                            <div className="mt-2 flex items-center gap-4 text-sm text-tertiary">
-                                                <div className="flex items-center gap-1">
-                                                    <Eye className="h-4 w-4" />
-                                                    <span>{post.views}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <MessageCircle01 className="h-4 w-4" />
-                                                    <span>{post.comments}</span>
-                                                </div>
-                                            </div>
+                        }
+                    />
+                    <Table aria-label="Content management" selectionMode="multiple" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor} className="min-w-[1400px]">
+                        <Table.Header>
+                            <Table.Head id="title" label="Title & Description" isRowHeader allowsSorting />
+                            <Table.Head id="id" label="ID" allowsSorting className="w-20" />
+                            <Table.Head id="author" label="Author" allowsSorting />
+                            <Table.Head id="status" label="Status" allowsSorting />
+                            <Table.Head id="space" label="Space" allowsSorting />
+                            <Table.Head id="posttype" label="Post Type" allowsSorting />
+                            <Table.Head id="tags" label="Tags" />
+                            <Table.Head id="publishedAt" label="Published At" allowsSorting />
+                            <Table.Head id="replies" label="Replies" allowsSorting className="w-20" />
+                            <Table.Head id="reactions" label="Reactions" allowsSorting className="w-20" />
+                            <Table.Head id="slug" label="Slug" className="min-w-40" />
+                            <Table.Head id="locked" label="Locked" className="w-20" />
+                            <Table.Head id="hidden" label="Hidden" className="w-20" />
+                            <Table.Head id="actions" className="sticky right-0 bg-primary z-10 shadow-[-1px_0_0_0_theme(colors.border.secondary)]" />
+                        </Table.Header>
+                        <Table.Body items={sortedItems}>
+                            {(item) => (
+                                <Table.Row id={item.id}>
+                                    <Table.Cell>
+                                        <div className="min-w-60">
+                                            <p className="text-sm font-medium text-primary line-clamp-1">{item.title}</p>
+                                            <p className="text-sm text-tertiary line-clamp-2 mt-1">{item.description}</p>
                                         </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm font-mono text-tertiary">{item.id}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
                                         <div className="flex items-center gap-2">
-                                            <Badge
-                                                color={
-                                                    post.status === "published"
-                                                        ? "success"
-                                                        : post.status === "draft"
-                                                        ? "warning"
-                                                        : "blue"
-                                                }
-                                                size="sm"
-                                            >
-                                                {post.status}
-                                            </Badge>
-                                            <ButtonUtility
-                                                size="sm"
-                                                color="tertiary"
-                                                icon={Edit01}
-                                                tooltip="Edit"
-                                            />
+                                            <Avatar src={item.author.avatar} alt={item.author.name} size="xs" />
+                                            <span className="text-sm text-primary whitespace-nowrap">{item.author.name}</span>
                                         </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Categories & Comments */}
-                    <div className="space-y-6">
-                        {/* Categories */}
-                        <div className="rounded-xl border border-secondary bg-primary p-6">
-                            <div className="mb-6 flex items-center justify-between">
-                                <h2 className="text-lg font-semibold text-primary">Categories</h2>
-                                <Button size="sm" color="tertiary" iconLeading={Plus}>
-                                    Add Category
-                                </Button>
-                            </div>
-                            <div className="space-y-3">
-                                {[
-                                    { name: "Technology", posts: 45, color: "blue" },
-                                    { name: "Business", posts: 32, color: "green" },
-                                    { name: "Design", posts: 28, color: "purple" },
-                                    { name: "Marketing", posts: 19, color: "orange" },
-                                    { name: "Development", posts: 15, color: "red" },
-                                ].map((category, index) => (
-                                    <div key={index} className="flex items-center justify-between rounded-lg border border-secondary p-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`h-3 w-3 rounded-full bg-${category.color}-500`} />
-                                            <span className="font-medium text-primary">{category.name}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <BadgeWithDot size="sm" color={getStatusColor(item.status)}>
+                                            {item.status}
+                                        </BadgeWithDot>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm text-primary">{item.space}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm text-primary">{item.posttype}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="flex flex-wrap gap-1 max-w-32">
+                                            {item.tags.slice(0, 2).map((tag) => (
+                                                <span 
+                                                    key={tag}
+                                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-secondary text-secondary_hover"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                            {item.tags.length > 2 && (
+                                                <span className="text-xs text-tertiary">+{item.tags.length - 2}</span>
+                                            )}
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="gray" size="sm">
-                                                {category.posts} posts
-                                            </Badge>
-                                            <ButtonUtility
-                                                size="sm"
-                                                color="tertiary"
-                                                icon={Edit01}
-                                                tooltip="Edit"
-                                            />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm text-primary whitespace-nowrap">{formatDate(item.publishedAt)}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm text-primary">{item.replies}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm text-primary">{item.reactions}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className="text-sm font-mono text-tertiary">{item.slug}</span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className={`text-sm ${item.locked ? 'text-warning' : 'text-tertiary'}`}>
+                                            {item.locked ? 'Yes' : 'No'}
+                                        </span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span className={`text-sm ${item.hidden ? 'text-warning' : 'text-tertiary'}`}>
+                                            {item.hidden ? 'Yes' : 'No'}
+                                        </span>
+                                    </Table.Cell>
+                                    <Table.Cell className="px-4 sticky right-0 bg-primary z-10 shadow-[-1px_0_0_0_theme(colors.border.secondary)]">
+                                        <div className="flex items-center justify-end">
+                                            <ContentActionsDropdown />
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Recent Comments */}
-                        <div className="rounded-xl border border-secondary bg-primary p-6">
-                            <div className="mb-6 flex items-center justify-between">
-                                <h2 className="text-lg font-semibold text-primary">Recent Comments</h2>
-                                <BadgeWithDot color="warning" size="sm">
-                                    15 pending
-                                </BadgeWithDot>
-                            </div>
-                            <div className="space-y-4">
-                                {[
-                                    {
-                                        author: "Alex Thompson",
-                                        avatar: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80",
-                                        comment: "Great article! Very informative and well-written.",
-                                        post: "Getting Started with Content Management",
-                                        time: "2 hours ago",
-                                        status: "approved",
-                                    },
-                                    {
-                                        author: "Maria Garcia",
-                                        avatar: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80",
-                                        comment: "I have a question about the implementation details...",
-                                        post: "Best Practices for SEO Optimization",
-                                        time: "5 hours ago",
-                                        status: "pending",
-                                    },
-                                    {
-                                        author: "David Chen",
-                                        avatar: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80",
-                                        comment: "Thanks for sharing this! Exactly what I needed.",
-                                        post: "How to Create Engaging Content",
-                                        time: "1 day ago",
-                                        status: "approved",
-                                    },
-                                ].map((comment, index) => (
-                                    <div key={index} className="rounded-lg border border-secondary p-4">
-                                        <div className="flex items-start gap-3">
-                                            <Avatar
-                                                src={comment.avatar}
-                                                alt={comment.author}
-                                                size="sm"
-                                            />
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-primary">{comment.author}</span>
-                                                    <Badge
-                                                        color={comment.status === "approved" ? "success" : "warning"}
-                                                        size="sm"
-                                                    >
-                                                        {comment.status}
-                                                    </Badge>
-                                                </div>
-                                                <p className="mt-1 text-sm text-secondary line-clamp-2">
-                                                    {comment.comment}
-                                                </p>
-                                                <div className="mt-2 flex items-center gap-2 text-xs text-tertiary">
-                                                    <span>on "{comment.post}"</span>
-                                                    <span>•</span>
-                                                    <span>{comment.time}</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <ButtonUtility
-                                                    size="sm"
-                                                    color="tertiary"
-                                                    icon={CheckDone01}
-                                                    tooltip="Approve"
-                                                />
-                                                <ButtonUtility
-                                                    size="sm"
-                                                    color="tertiary"
-                                                    icon={Trash01}
-                                                    tooltip="Delete"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="mt-8 rounded-xl border border-secondary bg-primary p-6">
-                    <h2 className="mb-6 text-lg font-semibold text-primary">Quick Actions</h2>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        <Button size="sm" color="primary" iconLeading={Plus} className="w-full">
-                            Create New Post
-                        </Button>
-                        <Button size="sm" color="secondary" iconLeading={Grid03} className="w-full">
-                            Create New Page
-                        </Button>
-                        <Button size="sm" color="tertiary" iconLeading={Archive} className="w-full">
-                            Upload Media
-                        </Button>
-                        <Button size="sm" color="tertiary" iconLeading={Rows01} className="w-full">
-                            Manage Categories
-                        </Button>
-                    </div>
-                </div>
+                                    </Table.Cell>
+                                </Table.Row>
+                            )}
+                        </Table.Body>
+                    </Table>
+                    <PaginationPageMinimalCenter page={1} total={10} className="px-4 py-3 md:px-6 md:pt-3 md:pb-4" />
+                </TableCard.Root>
             </div>
         </AdminLayout>
     );

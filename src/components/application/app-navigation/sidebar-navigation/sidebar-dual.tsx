@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -499,6 +499,99 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             showIcons={true}
                         />
                     </div>
+                ) : currentItem?.label === "Content" && activeUrl?.includes("/admin/content") ? (
+                    <div className="mt-2 space-y-4">
+                        {/* Content Status Section */}
+                        <ul>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content"} href="/admin/content" icon={File01} type="link">
+                                    All Content
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content/scheduled"} href="/admin/content/scheduled" icon={Calendar} type="link">
+                                    All Scheduled
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content/draft"} href="/admin/content/draft" icon={File04} type="link">
+                                    All Draft
+                                </NavItemBase>
+                            </li>
+                        </ul>
+
+                        {/* Divider */}
+                        <div className="border-t border-secondary my-4"></div>
+
+                        {/* Content Type Section */}
+                        <div>
+                            <h4 className="px-3 py-1 text-xs font-medium text-tertiary uppercase tracking-wider">
+                                Content Type
+                            </h4>
+                            <ul className="mt-2">
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/job-board"} href="/admin/content/job-board" icon={Package} type="link">
+                                        Job Board
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/events"} href="/admin/content/events" icon={Calendar} type="link">
+                                        Events
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/qa"} href="/admin/content/qa" icon={MessageChatCircle} type="link">
+                                        Q&A
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/ideas"} href="/admin/content/ideas" icon={Lightbulb01} type="link">
+                                        Ideas & Wishlist
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/knowledge-base"} href="/admin/content/knowledge-base" icon={BookOpen01} type="link">
+                                        Knowledge Base
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/blog"} href="/admin/content/blog" icon={Edit03} type="link">
+                                        Blog
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/discussions"} href="/admin/content/discussions" icon={MessageSquare01} type="link">
+                                        Discussions
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === "/admin/content/changelog"} href="/admin/content/changelog" icon={FileX02} type="link">
+                                        Changelog
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={false} href="/admin/content/add-type" icon={Plus} type="link">
+                                        Add new content type
+                                    </NavItemBase>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="border-t border-secondary my-4"></div>
+
+                        {/* Custom Views Section */}
+                        <div>
+                            <h4 className="px-3 py-1 text-xs font-medium text-tertiary uppercase tracking-wider">
+                                Custom Views
+                            </h4>
+                            <div className="mt-2 px-3 py-4">
+                                <p className="text-sm text-tertiary leading-relaxed">
+                                    No custom views yet. Create filters or sorting, then save as a view.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 ) : isEventsPage ? (
                     <div className="mt-2">
                         {/* Back Button */}
@@ -616,16 +709,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         ))}
                     </ul>
                 )}
-                
-                <div className="relative mt-auto flex justify-between border-t border-secondary px-2 pt-5">
-                    <div>
-                        <p className="text-sm font-semibold text-primary">Olivia Rhye</p>
-                        <p className="text-sm text-tertiary">olivia@untitledui.com</p>
-                    </div>
-                    <div className="absolute top-2.5 right-0">
-                        <ButtonUtility size="sm" color="tertiary" tooltip="Log out" icon={LogOut01} />
-                    </div>
-                </div>
             </div>
         </div>
     );
