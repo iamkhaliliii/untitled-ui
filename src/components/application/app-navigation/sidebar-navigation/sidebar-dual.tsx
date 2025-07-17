@@ -637,7 +637,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col">
                 {/* Header with title and actions */}
-                <div className="sticky top-0 z-30 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
                     <div className="flex items-center gap-3">
                         {showWidgetSelection && (
                             <button

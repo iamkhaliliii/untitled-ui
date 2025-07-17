@@ -167,7 +167,7 @@ const availableWidgets: WidgetCategory[] = [
         name: "Title",
         icon: File02,
         widgets: [
-                                { 
+          { 
              id: "title-1", 
              name: "Title 1", 
              icon: File02, 
@@ -249,7 +249,7 @@ const availableWidgets: WidgetCategory[] = [
         name: "Button",
         icon: Plus,
         widgets: [
-                                { 
+          { 
              id: "button-1", 
              name: "Button 1", 
              icon: Plus, 
@@ -1096,12 +1096,10 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
     setHoveredWidget(null);
   };
 
-
-
   return (
     <div className="flex flex-col h-full relative">
       {/* Search */}
-      <div className="p-4 border-b border-secondary">
+      <div className="sticky top-[4.5rem] z-30 p-4 border-b border-secondary bg-primary/95 backdrop-blur-sm">
         <Input
           placeholder="Search widgets..."
           value={searchTerm}
@@ -1111,18 +1109,18 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
 
       {/* All Categories and Subcategories */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-        <div className="space-y-4">
+        <div className="space-y-6 pb-4">
           {filteredWidgets.map((category) => (
-            <div key={category.name}>
-              {/* Category Header - Sticky */}
-              <div className="sticky top-0 z-20 bg-primary border-b border-secondary px-4 py-2">
+            <div key={category.name} className="mb-6">
+              {/* Category Header - Sticky with proper offset from search */}
+              <div className="sticky z-30 bg-primary/95 backdrop-blur-sm border-b border-secondary px-4 py-3 shadow-sm">
                 <h3 className="text-sm font-medium text-primary uppercase tracking-wide">
                   {category.name}
                 </h3>
               </div>
 
               {/* Subcategories or Direct Widgets */}
-              <div className="px-4">
+              <div className="sticky z-30 top-[4.5rem] px-4">
                 {category.subcategories ? category.subcategories.map((subcategory, index) => {
                   // Get category color for subcategory header
                   const getSubcategoryColor = () => {
@@ -1159,8 +1157,8 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                   
                   return (
                     <div key={subcategory.name}>
-                      {/* Subcategory Header - Sticky */}
-                      <div className="sticky top-9 z-10 bg-primary/95 backdrop-blur-sm py-2">
+                      {/* Subcategory Header - Sticky with proper offset from search + category */}
+                      <div className="sticky top-[8.25rem] z-20 bg-primary/95 backdrop-blur-sm border-b border-secondary/60 py-2.5 px-3 mb-3 rounded-md">
                         <h4 className={`text-xs font-medium ${subcategoryColors.textColor} flex items-center gap-2`}>
                           <subcategory.icon className={`size-3 ${subcategoryColors.iconColor}`} />
                           {subcategory.name}
@@ -1168,7 +1166,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                       </div>
 
                     {/* Widget Models - 2 Column Grid */}
-                    <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div className="grid grid-cols-2 gap-3 mt-2">
                       {subcategory.widgets.map((widget) => {
                         // Get category color based on main category
                         const getCategoryColor = () => {
@@ -1223,7 +1221,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                     
                     {/* Divider between subcategories */}
                     {index < category.subcategories!.length - 1 && (
-                      <div className="border-t border-secondary/30 my-4"></div>
+                      <div className="border-t border-secondary/30 my-6"></div>
                     )}
                     </div>
                   );
@@ -1231,8 +1229,8 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                 
                 // Handle direct widgets (like Trending Widgets)
                 category.widgets && (
-                  <div className="py-2">
-                    <div className="grid grid-cols-2 gap-3 mt-3">
+                  <div className="py-3">
+                    <div className="grid grid-cols-2 gap-3 mt-2">
                       {category.widgets.map((widget) => {
                         // Get color based on widget's original category
                         const getTrendingColor = (widgetId: string) => {
@@ -1306,12 +1304,12 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
           }}
         >
           {/* Full Width Image at Top */}
-                      <div className="h-48 w-full px-4 pt-4 relative">
-              <img 
-                src={hoveredWidget.previewImage || "/Presets.png"}
-                alt={hoveredWidget.name}
-                className="w-full h-full object-cover rounded-2xl border border-gray-200"
-              />
+          <div className="h-48 w-full px-4 pt-4 relative">
+            <img 
+              src={hoveredWidget.previewImage || "/Presets.png"}
+              alt={hoveredWidget.name}
+              className="w-full h-full object-cover rounded-2xl border border-gray-200"
+            />
             {/* Status Badges */}
             {hoveredWidget.badges && hoveredWidget.badges.length > 0 && (
               <div className="absolute top-2 right-2 flex gap-1">
