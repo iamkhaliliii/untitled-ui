@@ -41,6 +41,8 @@ interface SiteLayoutProps {
     title?: string;
     description?: string;
     currentPath?: string;
+    headerActions?: ReactNode;
+    showBackButton?: boolean;
 }
 
 const siteNavigation = [
@@ -141,7 +143,9 @@ export const SiteLayout = ({
     children, 
     title,
     description,
-    currentPath = "/site"
+    currentPath = "/site",
+    headerActions,
+    showBackButton
 }: SiteLayoutProps) => {
     const { theme } = useTheme();
 
