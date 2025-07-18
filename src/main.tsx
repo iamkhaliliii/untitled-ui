@@ -9,6 +9,7 @@ import { AdminSitePage } from "@/pages/admin/site";
 import { SiteFilesPage } from "@/pages/admin/site-files";
 import { SiteSpacesEventsPage } from "@/pages/admin/site-spaces-events";
 import { SiteSpacesEventsCreatePage } from "@/pages/admin/site-spaces-events-create";
+import EventsCustomizePage from "@/pages/admin/events-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import { SiteEventPage } from "@/pages/site/event";
@@ -33,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin/site/files" element={<SiteFilesPage />} />
                         <Route path="/admin/site/spaces/myfolder/events" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/create" element={<SiteSpacesEventsCreatePage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/customize" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin/site/spaces/myfolder/events/customize" element={<EventsCustomizePage />} />
                         <Route path="/admin/site/spaces/myfolder/events/members" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/analytics" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/audit-logs" element={<SiteSpacesEventsPage />} />

@@ -8,6 +8,7 @@ import { Select } from '@/components/base/select/select';
 import { Toggle } from '@/components/base/toggle/toggle';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { Dot } from '@/components/foundations/dot-icon';
+import { useWidgetConfig } from '@/providers/widget-config-provider';
 
 interface WidgetConfigProps {
   selectedWidget: {
@@ -20,20 +21,30 @@ interface WidgetConfigProps {
 }
 
 const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave }) => {
-  const [widgetTitle, setWidgetTitle] = useState(selectedWidget.label);
-  const [description, setDescription] = useState('Display events in a organized list format');
-  const [style, setStyle] = useState('card');
-  const [cardSize, setCardSize] = useState('medium');
-  const [cardStyle, setCardStyle] = useState('modern');
-  const [groupView, setGroupView] = useState(false);
-  const [groupBy, setGroupBy] = useState('date');
-  const [openPageIn, setOpenPageIn] = useState('post');
-  const [reactButton, setReactButton] = useState(true);
-  const [reactionCount, setReactionCount] = useState(true);
-  const [replyCount, setReplyCount] = useState(true);
-  const [publishDate, setPublishDate] = useState(true);
-  const [tabView, setTabView] = useState(false);
-  const [showAuthor, setShowAuthor] = useState(true);
+  const { eventsListConfig, updateEventsListConfig } = useWidgetConfig();
+  
+  // Use config from context
+  const { 
+    style, 
+    cardSize, 
+    cardStyle, 
+    groupView, 
+    groupBy, 
+    openPageIn, 
+    reactionsCounter, 
+    rsvpAction, 
+    eventDetails, 
+    hostInfo, 
+    coverImage,
+    tabView,
+    allEventsTab,
+    upcomingEventsTab,
+    pastEventsTab,
+    thisMonthEventsTab,
+    title,
+    description
+  } = eventsListConfig;
+  
   // Section collapse/expand states
   const [infoExpanded, setInfoExpanded] = useState(true);
   const [layoutExpanded, setLayoutExpanded] = useState(true);
@@ -86,7 +97,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     onChange: (value: boolean) => void;
     id: string;
   }) => (
-    <div className="flex items-center py-2 px-2 border border-gray-200 rounded-md bg-white/50">
+    <div className="flex items-center py-2 px-2 border border-gray-200 rounded-md bg-white/50 transition-all duration-300 ease-in-out hover:bg-white/80 hover:border-gray-300">
       <div className="flex items-center space-x-2">
         <Icon className="h-4 w-4 text-gray-500" />
         <span className="text-sm font-medium text-gray-900">{label}</span>
@@ -111,10 +122,10 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     const IconComponent = option.icon;
     return (
       <div
-        className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+        className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 ${
           isSelected 
-            ? 'border-brand-solid bg-brand-50 text-brand-primary' 
-            : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+            ? 'border-brand-solid bg-brand-50 text-brand-primary shadow-md' 
+            : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
         }`}
         onClick={onClick}
       >
@@ -165,8 +176,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 <Input
                 label='Widget Title'
                   id="widget-title"
-                  value={widgetTitle}
-                  onChange={setWidgetTitle}
+                  value={title}
+                  onChange={(value) => updateEventsListConfig({ title: value })}
                   placeholder="Enter widget title"
                 />
               </div>
@@ -176,7 +187,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   label='Description'
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
                   placeholder="Enter widget description"
                   rows={3}
                 />
@@ -205,7 +216,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                       key={option.id}
                       option={option}
                       isSelected={style === option.id}
-                      onClick={() => setStyle(option.id)}
+                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' })}
                     />
                   ))}
                 </div>
@@ -218,7 +229,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                     <Select 
                       items={cardSizeOptions} 
                       selectedKey={cardSize}
-                      onSelectionChange={(key) => setCardSize(key as string)}
+                      onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
                     >
                       {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                     </Select>
@@ -229,7 +240,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                     <Select 
                       items={cardStyleOptions} 
                       selectedKey={cardStyle}
-                      onSelectionChange={(key) => setCardStyle(key as string)}
+                      onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
                     >
                       {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                     </Select>
@@ -266,7 +277,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
 <Toggle
 id="tab-view"
 isSelected={tabView}
-onChange={setTabView}
+onChange={(value) => updateEventsListConfig({ tabView: value })}
 size="sm"
 slim
 />
@@ -277,19 +288,19 @@ slim
 <div className="ml-1 space-y-3 border-l-2 border-gray-200 pl-4 pb-2">
   <div className="flex items-center justify-between gap-2">
     <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="All Events" size="sm" isSelected={true} isDisabled={true} isReadOnly={true}/>
+    <Checkbox label="All Events" size="sm" isDisabled={true} isSelected={allEventsTab} onChange={(value) => updateEventsListConfig({ allEventsTab: value })}/>
   </div>
   <div className="flex items-center justify-between gap-2">
     <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Upcoming Events" size="sm" />
+    <Checkbox label="Upcoming Events" size="sm" isSelected={upcomingEventsTab} onChange={(value) => updateEventsListConfig({ upcomingEventsTab: value })}/>
   </div>
   <div className="flex items-center justify-between gap-2">
     <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Past Events" size="sm" />
+    <Checkbox label="Past Events" size="sm" isSelected={pastEventsTab} onChange={(value) => updateEventsListConfig({ pastEventsTab: value })}/>
   </div>
   <div className="flex items-center justify-between gap-2">
     <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="This Month Events" size="sm" />
+    <Checkbox label="This Month Events" size="sm" isSelected={thisMonthEventsTab} onChange={(value) => updateEventsListConfig({ thisMonthEventsTab: value })}/>
 </div>
 
 </div>
@@ -304,7 +315,7 @@ slim
 <Toggle
 id="group-view"
 isSelected={groupView}
-onChange={setGroupView}
+onChange={(value) => updateEventsListConfig({ groupView: value })}
 size="sm"
 slim
 />
@@ -318,7 +329,7 @@ slim
     <Select 
       items={groupByOptions} 
       selectedKey={groupBy}
-      onSelectionChange={(key) => setGroupBy(key as string)}
+                            onSelectionChange={(key) => updateEventsListConfig({ groupBy: key as 'date' | 'location' | 'type' | 'author' | 'host' | 'category' | 'status' })}
     >
       {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
     </Select>
@@ -333,7 +344,7 @@ slim
                 <Select 
                   items={openPageOptions} 
                   selectedKey={openPageIn}
-                  onSelectionChange={(key) => setOpenPageIn(key as string)}
+                  onSelectionChange={(key) => updateEventsListConfig({ openPageIn: key as 'post' | 'modal' })}
                 >
                   {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                 </Select>
@@ -353,47 +364,53 @@ slim
         {propertiesExpanded && (
           <div className="bg-secondary/20 rounded-lg p-1">
             <div className="space-y-2">
+            {!(style === 'card' && cardStyle === 'modern') && (
+              <PropertyToggle
+                icon={Monitor01}
+                label="Cover image"
+                isSelected={coverImage}
+                onChange={(value) => updateEventsListConfig({ coverImage: value })}
+                id="cover-image"
+              />
+            )}
+                            <PropertyToggle
+                icon={Calendar}
+                label="Event details"
+                isSelected={eventDetails}
+                onChange={(value) => updateEventsListConfig({ eventDetails: value })}
+                id="event-details"
+              />
 
             <PropertyToggle
                 icon={User02}
-                label="Show Author"
-                isSelected={showAuthor}
-                onChange={setShowAuthor}
-                id="show-author"
+                label="Host info"
+                isSelected={hostInfo}
+                onChange={(value) => updateEventsListConfig({ hostInfo: value })}
+                id="host-info"
               />
               
-
+              
               <PropertyToggle
                 icon={Heart}
-                label="React Button"
-                isSelected={reactButton}
-                onChange={setReactButton}
-                id="react-button"
+                label="Reactions counter"
+                isSelected={reactionsCounter}
+                onChange={(value) => updateEventsListConfig({ reactionsCounter: value })}
+                id="reactions-counter"
               />
               
-              <PropertyToggle
-                icon={MessageCircle02}
-                label="Reaction Count"
-                isSelected={reactionCount}
-                onChange={setReactionCount}
-                id="reaction-count"
-              />
+              {!(style === 'card' && cardStyle === 'modern') && (
+                <PropertyToggle
+                  icon={CheckCircle}
+                  label="RSVP Action"
+                  isSelected={rsvpAction}
+                  onChange={(value) => updateEventsListConfig({ rsvpAction: value })}
+                  id="rsvp-action"
+                />
+              )}
               
-              <PropertyToggle
-                icon={MessageSquare01}
-                label="Reply Count"
-                isSelected={replyCount}
-                onChange={setReplyCount}
-                id="reply-count"
-              />
+
               
-              <PropertyToggle
-                icon={Calendar}
-                label="Publish Date"
-                isSelected={publishDate}
-                onChange={setPublishDate}
-                id="publish-date"
-              />
+
             </div>
           </div>
         )}
@@ -418,8 +435,8 @@ slim
                 <Input
                 label='Widget Title'
                   id="widget-title"
-                  value={widgetTitle}
-                  onChange={setWidgetTitle}
+                  value={title}
+                  onChange={(value) => updateEventsListConfig({ title: value })}
                   placeholder="Enter widget title"
                 />
               </div>
@@ -429,7 +446,7 @@ slim
                 <TextArea
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
                   placeholder="Enter widget description"
                   rows={3}
                 />
@@ -489,7 +506,7 @@ slim
   );
 
   return (
-    <div className="p-4">
+    <div className="p-4 transition-all duration-300 ease-in-out">
       {selectedWidget.label === 'Events List' ? renderEventsListConfig() : renderDefaultConfig()}
     </div>
   );
