@@ -19,6 +19,7 @@ import { Input } from "@/components/base/input/input";
 import { AdminLayout } from "@/components/layouts/admin-layout";
 import { useNavigate } from "react-router";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
+import { WidgetConfigProvider } from '@/providers/widget-config-provider';
 
 export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
@@ -41,9 +42,11 @@ export const SiteSpacesEventsPage = () => {
             currentPath={currentPath}
             hideHeader={isEventsPage}
         >
-            <div className="px-4 py-6 lg:px-6">
-                <BrowserMockup />
-            </div>
+            <WidgetConfigProvider>
+                <div className="px-4 py-6 lg:px-6">
+                    <BrowserMockup />
+                </div>
+            </WidgetConfigProvider>
         </AdminLayout>
     );
 };
