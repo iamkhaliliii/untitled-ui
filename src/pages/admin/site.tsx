@@ -18,6 +18,7 @@ import { Badge } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { AdminLayout } from "@/components/layouts/admin-layout";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
+import { WidgetConfigProvider } from '@/providers/widget-config-provider';
 
 export const AdminSitePage = () => {
     return (
@@ -27,9 +28,11 @@ export const AdminSitePage = () => {
             currentPath="/admin/site"
             hideHeader={true}
         >
-            <div className="px-4 py-6 lg:px-6">
-                <BrowserMockup />
-            </div>
+            <WidgetConfigProvider>
+                <div className="px-4 py-6 lg:px-6">
+                    <BrowserMockup />
+                </div>
+            </WidgetConfigProvider>
         </AdminLayout>
     );
 }; 
