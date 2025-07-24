@@ -17,8 +17,8 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
     <div className={cx(
       "mb-4 rounded-lg overflow-hidden",
       spaceHeaderConfig.style === 'simple' && cx(
-        "px-4 py-3 border",
-        theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"
+        "",
+        theme === 'dark' ? "" : ""
       ),
       spaceHeaderConfig.style === 'color' && cx(
         "px-6 py-6",

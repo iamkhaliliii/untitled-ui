@@ -210,8 +210,8 @@ export const BrowserMockup = ({
           <div className="flex flex-1 overflow-hidden">
             {/* Left Sidebar */}
             <div className={cx(
-              "w-48 border-r",
-              theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"
+              "w-48 ",
+              theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
             )}>
               <div className="py-3 px-3">
                 <nav className="space-y-1">
