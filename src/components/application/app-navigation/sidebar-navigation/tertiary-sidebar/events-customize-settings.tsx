@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01 } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { cx } from "@/utils/cx";
 
 interface EventsCustomizeSettingsProps {
   toggleStates: {
@@ -26,6 +28,7 @@ export const EventsCustomizeSettings = ({
   onAddWidgetClick,
   onWidgetConfig
 }: EventsCustomizeSettingsProps) => {
+  const theme = useResolvedTheme();
   // State for space widgets tree expansion
   const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(["container", "mainColumn", "secondary", "column1", "column2", "column3"]);
 
@@ -128,7 +131,12 @@ export const EventsCustomizeSettings = ({
               <h5 className="text-xs font-semibold text-primary">Space Widgets</h5>
             </div>
             <button
-              className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-brand-secondary bg-brand-50 border border-brand-200 rounded-md hover:bg-brand-100 transition-colors"
+              className={cx(
+                "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
+                theme === 'dark'
+                  ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
+                  : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
+              )}
               onClick={onAddWidgetClick}
             >
               <Plus className="size-3" />

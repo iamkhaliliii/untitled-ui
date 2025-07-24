@@ -378,7 +378,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             style={{
                 width: MAIN_SIDEBAR_WIDTH,
             }}
-            className="group flex h-full max-h-full max-w-full overflow-y-auto bg-primary py-1 pl-1"
+            className="group flex h-full max-h-full max-w-full overflow-y-auto scrollbar-thin bg-primary py-1 pl-1"
         >
             <div
                 className={cx(
@@ -462,7 +462,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const secondarySidebar = (
         <div
             style={{ width: SECONDARY_SIDEBAR_WIDTH }}
-            className={cx("relative h-full overflow-y-auto bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
+            className={cx("relative h-full overflow-y-auto scrollbar-thin bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
@@ -798,7 +798,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
             {/* Mobile header navigation */}
             <MobileNavigationHeader>
-                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto bg-primary pt-4">
+                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-4">
                     <div className="px-4">
                         <UntitledLogo className="h-8" />
                     </div>

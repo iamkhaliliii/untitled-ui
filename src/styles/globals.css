@@ -37,18 +37,117 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.1);
+        background: rgb(0 0 0 / 0.1);
         border-radius: 3px;
         transition: background 0.2s ease;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 0.15);
     }
 
     /* For Firefox */
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    scrollbar-color: rgb(0 0 0 / 0.1) transparent;
+
+    /* Dark mode */
+    &:where(.dark-mode, .dark-mode *) {
+        &::-webkit-scrollbar-thumb {
+            background: rgb(255 255 255 / 0.15);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(255 255 255 / 0.25);
+        }
+
+        /* For Firefox in dark mode */
+        scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+    }
+}
+
+@utility scrollbar-thin {
+    /* For Webkit-based browsers (Chrome, Safari and Opera) */
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(0 0 0 / 0.08);
+        border-radius: 2px;
+        transition: background 0.2s ease;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(0 0 0 / 0.12);
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.08) transparent;
+
+    /* Dark mode */
+    &:where(.dark-mode, .dark-mode *) {
+        &::-webkit-scrollbar-thumb {
+            background: rgb(255 255 255 / 0.12);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(255 255 255 / 0.18);
+        }
+
+        /* For Firefox in dark mode */
+        scrollbar-color: rgb(255 255 255 / 0.12) transparent;
+    }
+}
+
+@utility scrollbar-thick {
+    /* For Webkit-based browsers (Chrome, Safari and Opera) */
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgb(0 0 0 / 0.03);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(0 0 0 / 0.12);
+        border-radius: 4px;
+        transition: background 0.2s ease;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(0 0 0 / 0.18);
+    }
+
+    /* For Firefox */
+    scrollbar-width: auto;
+    scrollbar-color: rgb(0 0 0 / 0.12) rgb(0 0 0 / 0.03);
+
+    /* Dark mode */
+    &:where(.dark-mode, .dark-mode *) {
+        &::-webkit-scrollbar-track {
+            background: rgb(255 255 255 / 0.05);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgb(255 255 255 / 0.15);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(255 255 255 / 0.25);
+        }
+
+        /* For Firefox in dark mode */
+        scrollbar-color: rgb(255 255 255 / 0.15) rgb(255 255 255 / 0.05);
+    }
 }
 
 @utility transition-inherit-all {

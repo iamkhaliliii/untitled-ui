@@ -192,7 +192,7 @@ export const AdminLayout = ({
         <div className="flex h-dvh">
             <SidebarNavigationDualDemo />
             
-            <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
                 {/* Header */}
                 {!hideHeader && (
                     <header className="flex items-center justify-between border-b border-secondary bg-primary px-6 py-4">
@@ -215,7 +215,7 @@ export const AdminLayout = ({
                 )}
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto overflow-x-hidden">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
                     {children}
                 </main>
             </div>

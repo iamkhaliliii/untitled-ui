@@ -3,14 +3,17 @@ import { DotsHorizontal, ArrowRight, Calendar, Users01, Ticket01, Clock, MarkerP
 import { cx } from "@/utils/cx";
 import type { Key } from "react-aria-components";
 import { Tabs } from "@/components/application/tabs/tabs";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 
 interface EventsListWidgetProps {
   className?: string;
+  theme?: 'light' | 'dark';
 }
 
-export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className }) => {
+export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, theme: propTheme }) => {
   const { eventsListConfig } = useWidgetConfig();
+  const theme = useResolvedTheme(propTheme);
   const [activeTab, setActiveTab] = useState<Key>('All Events');
   
   // Generate available tabs based on configuration

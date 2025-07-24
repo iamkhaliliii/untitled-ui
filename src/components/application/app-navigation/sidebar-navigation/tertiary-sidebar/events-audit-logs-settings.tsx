@@ -5,6 +5,7 @@ import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { Badge } from "@/components/base/badges/badges";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 interface AuditLogEntry {
     id: string;
@@ -19,6 +20,7 @@ interface AuditLogEntry {
 interface EventsAuditLogsSettingsProps {}
 
 export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
+    const theme = useResolvedTheme();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [selectedTimeRange, setSelectedTimeRange] = useState('today');
@@ -138,7 +140,7 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
             case 'reply': return 'text-blue-600';
             case 'reaction': return 'text-orange-600';
             case 'member': return 'text-green-600';
-            default: return 'text-gray-600';
+            default: return theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
         }
     };
 

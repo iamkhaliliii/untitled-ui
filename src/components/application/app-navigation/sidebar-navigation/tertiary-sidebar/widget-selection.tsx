@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import type { Widget, WidgetSelectionProps } from "./types";
 import { availableWidgets } from "./widgets-data";
 import { filterWidgets, getCategoryColor, calculatePopoverPosition } from "./widget-utils";
 import { WidgetCard, WidgetPopover } from "./widget-card";
 
 export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps) => {
+  const theme = useResolvedTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [hoveredWidget, setHoveredWidget] = useState<Widget | null>(null);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
@@ -40,7 +42,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
       </div>
 
       {/* All Categories and Subcategories */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="space-y-6 pb-4">
           {filteredWidgets.map((category) => (
             <div key={category.name} className="mb-6">
@@ -74,6 +76,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                             key={widget.id}
                             widget={widget}
                             categoryName={category.name}
+                            theme={theme}
                             onClick={handleWidgetClick}
                             onMouseEnter={handleWidgetMouseEnter}
                             onMouseLeave={handleWidgetMouseLeave}
@@ -98,6 +101,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
                           key={widget.id}
                           widget={widget}
                           categoryName={category.name}
+                          theme={theme}
                           onClick={handleWidgetClick}
                           onMouseEnter={handleWidgetMouseEnter}
                           onMouseLeave={handleWidgetMouseLeave}
@@ -117,6 +121,7 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
         <WidgetPopover 
           widget={hoveredWidget} 
           position={popoverPosition} 
+          theme={theme}
         />
       )}
     </div>

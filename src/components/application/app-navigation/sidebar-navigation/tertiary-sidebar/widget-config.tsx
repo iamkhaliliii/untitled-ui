@@ -9,6 +9,8 @@ import { Toggle } from '@/components/base/toggle/toggle';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { Dot } from '@/components/foundations/dot-icon';
 import { UntitledLogoMinimal } from '@/components/foundations/logo/untitledui-logo-minimal';
+import { useResolvedTheme } from '@/hooks/use-resolved-theme';
+import { cx } from '@/utils/cx';
 import { useWidgetConfig } from '@/providers/widget-config-provider';
 
 interface WidgetConfigProps {
@@ -23,6 +25,7 @@ interface WidgetConfigProps {
 
 const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave }) => {
   const { eventsListConfig, updateEventsListConfig, spaceHeaderConfig, updateSpaceHeaderConfig } = useWidgetConfig();
+  const theme = useResolvedTheme();
   
   // Use config from context
   const { 
@@ -98,10 +101,21 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     onChange: (value: boolean) => void;
     id: string;
   }) => (
-    <div className="flex items-center py-2 px-2 border border-gray-200 rounded-md bg-white/50 transition-all duration-300 ease-in-out hover:bg-white/80 hover:border-gray-300">
+    <div className={cx(
+      "flex items-center py-2 px-2 border rounded-md transition-all duration-300 ease-in-out",
+      theme === 'dark' 
+        ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+        : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+    )}>
       <div className="flex items-center space-x-2">
-        <Icon className="h-4 w-4 text-gray-500" />
-        <span className="text-sm font-medium text-gray-900">{label}</span>
+        <Icon className={cx(
+          "h-4 w-4",
+          theme === 'dark' ? "text-gray-400" : "text-gray-500"
+        )} />
+        <span className={cx(
+          "text-sm font-medium",
+          theme === 'dark' ? "text-gray-100" : "text-gray-900"
+        )}>{label}</span>
       </div>
       <div className="ml-auto">
         <Toggle
@@ -123,11 +137,16 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     const IconComponent = option.icon;
     return (
       <div
-        className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 ${
+        className={cx(
+          "flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105",
           isSelected 
-            ? 'border-brand-solid bg-brand-50 text-brand-primary shadow-md' 
-            : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-        }`}
+            ? theme === 'dark'
+              ? 'border-brand-solid bg-brand-solid/20 text-brand-primary shadow-md'
+              : 'border-brand-solid bg-brand-50 text-brand-primary shadow-md'
+            : theme === 'dark'
+              ? 'border-gray-700 bg-gray-800 text-gray-200 hover:border-gray-600 hover:bg-gray-700 hover:shadow-sm'
+              : 'border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+        )}
         onClick={onClick}
       >
         <IconComponent className="h-6 w-6 mb-2" />
@@ -155,7 +174,10 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       {isExpanded ? (
         <ChevronUp className="size-4 text-brand-secondary" />
       ) : (
-        <ChevronDown className="size-4 text-gray-400" />
+        <ChevronDown className={cx(
+          "size-4",
+          theme === 'dark' ? "text-gray-400" : "text-gray-400"
+        )} />
       )}
     </div>
   );
@@ -285,24 +307,39 @@ slim
 </div>
 </div>
 
-{tabView && (
-<div className="ml-1 space-y-3 border-l-2 border-gray-200 pl-4 pb-2">
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="All Events" size="sm" isDisabled={true} isSelected={allEventsTab} onChange={(value) => updateEventsListConfig({ allEventsTab: value })}/>
-  </div>
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Upcoming Events" size="sm" isSelected={upcomingEventsTab} onChange={(value) => updateEventsListConfig({ upcomingEventsTab: value })}/>
-  </div>
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="Past Events" size="sm" isSelected={pastEventsTab} onChange={(value) => updateEventsListConfig({ pastEventsTab: value })}/>
-  </div>
-  <div className="flex items-center justify-between gap-2">
-    <DotsGrid className="size-4 text-gray-400" />
-    <Checkbox label="This Month Events" size="sm" isSelected={thisMonthEventsTab} onChange={(value) => updateEventsListConfig({ thisMonthEventsTab: value })}/>
-</div>
+                {tabView && (
+                  <div className={cx(
+                    "ml-1 space-y-3 border-l-2 pl-4 pb-2",
+                    theme === 'dark' ? "border-gray-700" : "border-gray-200"
+                  )}>
+                    <div className="flex items-center justify-between gap-2">
+                      <DotsGrid className={cx(
+                        "size-4",
+                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                      )} />
+                      <Checkbox label="All Events" size="sm" isDisabled={true} isSelected={allEventsTab} onChange={(value) => updateEventsListConfig({ allEventsTab: value })}/>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <DotsGrid className={cx(
+                        "size-4",
+                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                      )} />
+                      <Checkbox label="Upcoming Events" size="sm" isSelected={upcomingEventsTab} onChange={(value) => updateEventsListConfig({ upcomingEventsTab: value })}/>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <DotsGrid className={cx(
+                        "size-4",
+                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                      )} />
+                      <Checkbox label="Past Events" size="sm" isSelected={pastEventsTab} onChange={(value) => updateEventsListConfig({ pastEventsTab: value })}/>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <DotsGrid className={cx(
+                        "size-4",
+                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                      )} />
+                      <Checkbox label="This Month Events" size="sm" isSelected={thisMonthEventsTab} onChange={(value) => updateEventsListConfig({ thisMonthEventsTab: value })}/>
+                    </div>
 
 </div>
 )}
@@ -323,8 +360,11 @@ slim
 </div>
 </div>
 
-{groupView && (
-<div className="ml-1 space-y-3 border-l-2 border-gray-200 pl-4 pb-2">
+                {groupView && (
+                  <div className={cx(
+                    "ml-1 space-y-3 border-l-2 pl-4 pb-2",
+                    theme === 'dark' ? "border-gray-700" : "border-gray-200"
+                  )}>
   <div>
     <Label htmlFor="group-by">Group by</Label>
     <Select 

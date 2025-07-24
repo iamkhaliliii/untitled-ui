@@ -1,10 +1,12 @@
 import React from "react";
+import { cx } from "@/utils/cx";
 import type { Widget } from "./types";
 import { getCategoryColor, getTrendingColor } from "./widget-utils";
 
 interface WidgetCardProps {
   widget: Widget;
   categoryName: string;
+  theme: 'light' | 'dark';
   onClick: (widget: Widget) => void;
   onMouseEnter: (widget: Widget, event: React.MouseEvent) => void;
   onMouseLeave: () => void;
@@ -13,6 +15,7 @@ interface WidgetCardProps {
 export const WidgetCard = ({ 
   widget, 
   categoryName, 
+  theme,
   onClick, 
   onMouseEnter, 
   onMouseLeave 
@@ -27,13 +30,28 @@ export const WidgetCard = ({
       onClick={() => onClick(widget)}
       onMouseEnter={(e) => onMouseEnter(widget, e)}
       onMouseLeave={onMouseLeave}
-      className={`group aspect-square flex flex-col items-center justify-center gap-3 p-4 rounded-lg border border-gray-200 bg-white ${colors.hover} transition-all duration-200 hover:shadow-sm text-center`}
+      className={cx(
+        "group aspect-square flex flex-col items-center justify-center gap-3 p-4 rounded-lg border transition-all duration-200 hover:shadow-sm text-center",
+        theme === 'dark'
+          ? "border-gray-700 bg-gray-800 hover:bg-gray-700 hover:border-gray-600"
+          : "border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300",
+        colors.hover
+      )}
     >
       <div className={`w-full h-1 rounded-full ${colors.accent}`}></div>
-      <div className="p-3 bg-gray-50 rounded-lg">
-        <widget.icon className="size-8 text-gray-600" />
+      <div className={cx(
+        "p-3 rounded-lg",
+        theme === 'dark' ? "bg-gray-700" : "bg-gray-50"
+      )}>
+        <widget.icon className={cx(
+          "size-8",
+          theme === 'dark' ? "text-gray-300" : "text-gray-600"
+        )} />
       </div>
-      <h5 className="text-sm font-medium text-gray-900">{widget.name}</h5>
+      <h5 className={cx(
+        "text-sm font-medium",
+        theme === 'dark' ? "text-gray-100" : "text-gray-900"
+      )}>{widget.name}</h5>
     </button>
   );
 };
@@ -41,12 +59,18 @@ export const WidgetCard = ({
 interface WidgetPopoverProps {
   widget: Widget;
   position: { x: number; y: number };
+  theme: 'light' | 'dark';
 }
 
-export const WidgetPopover = ({ widget, position }: WidgetPopoverProps) => {
+export const WidgetPopover = ({ widget, position, theme }: WidgetPopoverProps) => {
   return (
     <div 
-      className="fixed bg-white rounded-2xl shadow-2xl border border-gray-200 w-128 z-50 pointer-events-none overflow-hidden"
+      className={cx(
+        "fixed rounded-2xl shadow-2xl border w-128 z-50 pointer-events-none overflow-hidden",
+        theme === 'dark'
+          ? "bg-gray-800 border-gray-700"
+          : "bg-white border-gray-200"
+      )}
       style={{
         left: position.x,
         top: position.y,
@@ -58,7 +82,10 @@ export const WidgetPopover = ({ widget, position }: WidgetPopoverProps) => {
         <img 
           src={widget.previewImage || "/Presets.png"}
           alt={widget.name}
-          className="w-full h-full object-cover rounded-2xl border border-gray-200"
+          className={cx(
+            "w-full h-full object-cover rounded-2xl border",
+            theme === 'dark' ? "border-gray-700" : "border-gray-200"
+          )}
         />
         {/* Status Badges */}
         {widget.badges && widget.badges.length > 0 && (
@@ -80,12 +107,24 @@ export const WidgetPopover = ({ widget, position }: WidgetPopoverProps) => {
       <div className="p-3">
         {/* Header with widget info */}
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-gray-100 rounded-md">
-            <widget.icon className="size-3 text-gray-600" />
+          <div className={cx(
+            "p-1.5 rounded-md",
+            theme === 'dark' ? "bg-gray-700" : "bg-gray-100"
+          )}>
+            <widget.icon className={cx(
+              "size-3",
+              theme === 'dark' ? "text-gray-300" : "text-gray-600"
+            )} />
           </div>
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-gray-900">{widget.name}</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className={cx(
+              "text-sm font-semibold",
+              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+            )}>{widget.name}</h3>
+            <p className={cx(
+              "text-xs",
+              theme === 'dark' ? "text-gray-400" : "text-gray-500"
+            )}>
               {widget.category}{widget.subcategory && ` • ${widget.subcategory}`}
             </p>
           </div>
@@ -93,7 +132,10 @@ export const WidgetPopover = ({ widget, position }: WidgetPopoverProps) => {
 
         {/* Description */}
         <div className="mb-3">
-          <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+          <p className={cx(
+            "text-sm leading-relaxed line-clamp-3",
+            theme === 'dark' ? "text-gray-300" : "text-gray-600"
+          )}>
             {widget.description}
           </p>
         </div>

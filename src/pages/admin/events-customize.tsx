@@ -53,7 +53,7 @@ const EventsCustomizePage = () => {
       >
         <div className="flex h-full">
           {/* Right side - Browser Mockup */}
-          <div className="flex-1 p-6 overflow-y-auto bg-gray-50">
+          <div className="flex-1 p-6 overflow-y-auto scrollbar-thin bg-gray-50 dark:bg-gray-900">
             <div className="max-w-4xl mx-auto">
               <BrowserMockup 
                 url="http://yoursite.com/events"

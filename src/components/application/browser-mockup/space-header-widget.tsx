@@ -1,31 +1,45 @@
 import React from 'react';
 import { DotsHorizontal, Calendar, Users01, File04, SearchLg, User01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 
 interface SpaceHeaderWidgetProps {
   className?: string;
+  theme?: 'light' | 'dark';
 }
 
-export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className }) => {
+export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className, theme: propTheme }) => {
   const { spaceHeaderConfig } = useWidgetConfig();
+  const theme = useResolvedTheme(propTheme);
 
   return (
     <div className={cx(
       "mb-4 rounded-lg overflow-hidden",
-      spaceHeaderConfig.style === 'simple' && "",
-      spaceHeaderConfig.style === 'color' && "px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50",
+      spaceHeaderConfig.style === 'simple' && cx(
+        "px-4 py-3 border",
+        theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"
+      ),
+      spaceHeaderConfig.style === 'color' && cx(
+        "px-6 py-6",
+        theme === 'dark' ? "bg-gradient-to-r from-gray-800 to-gray-700" : "bg-gradient-to-r from-blue-50 to-purple-50"
+      ),
       spaceHeaderConfig.style === 'gradient' && "px-6 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white",
-      spaceHeaderConfig.style === 'pattern' && "px-6 py-6 bg-white relative overflow-hidden",
+      spaceHeaderConfig.style === 'pattern' && cx(
+        "px-6 py-6 relative overflow-hidden",
+        theme === 'dark' ? "bg-gray-800" : "bg-white"
+      ),
       spaceHeaderConfig.style === 'image' && "px-6 py-6 bg-gray-900 text-white relative",
       spaceHeaderConfig.style === 'video' && "px-6 py-6 bg-gray-900 text-white relative",
       className
     )}>
       {/* Pattern Background */}
       {spaceHeaderConfig.style === 'pattern' && (
-        <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: theme === 'dark' 
+              ? `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`
+              : `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`,
             backgroundSize: '40px 40px'
           }}></div>
         </div>
@@ -63,16 +77,13 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
             {spaceHeaderConfig.showIcon && (
               <div className={cx(
                 "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
-                spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                  ? "bg-white/20 backdrop-blur-sm" 
-                 : "bg-blue-600"
+                spaceHeaderConfig.style === 'simple' && "bg-blue-600",
+                spaceHeaderConfig.style === 'color' && "bg-blue-600",
+                spaceHeaderConfig.style === 'pattern' && "bg-blue-600",
+                (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') 
+                  && "bg-white/20 backdrop-blur-sm"
               )}>
-                <div className={cx(
-                  "w-6 h-6 rounded",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "bg-white" 
-                    : "bg-white"
-                )}></div>
+                <div className="w-6 h-6 rounded bg-white"></div>
               </div>
             )}
             
@@ -80,18 +91,20 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
             <div className="flex-1 items-center justify-center">
               <h1 className={cx(
                 "text-[0.85rem] font-bold leading-tight",
-                spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                  ? "text-white" 
-                  : "text-gray-900"
+                (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && (
+                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                ),
+                (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white"
               )}>Events & Activities</h1>
               
               {/* Description */}
               {spaceHeaderConfig.showDescription && (
                 <p className={cx(
                   "text-[0.7rem] leading-relaxed",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80" 
-                    : "text-gray-600"
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && (
+                    theme === 'dark' ? "text-gray-300" : "text-gray-600"
+                  ),
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/80"
                 )}>{spaceHeaderConfig.description}</p>
               )}
               
@@ -121,30 +134,39 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
           {spaceHeaderConfig.showStats && (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
-                <User01 className="w-3 h-3 text-gray-400" />
+                <User01 className={cx(
+                  "w-3 h-3",
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-400",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/60"
+                )} />
                 <span className={cx(
                   "text-xs font-medium",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80" 
-                    : "text-gray-600"
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-300",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/80"
                 )}>4</span>
               </div>
               <div className="flex items-center gap-1">
-                <File04 className="w-3 h-3 text-gray-400" />
+                <File04 className={cx(
+                  "w-3 h-3",
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-400",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/60"
+                )} />
                 <span className={cx(
                   "text-xs font-medium",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80" 
-                    : "text-gray-600"
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-300",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/80"
                 )}>4</span>
               </div>
               <div className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-gray-400" />
+                <Calendar className={cx(
+                  "w-3 h-3",
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-400",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/60"
+                )} />
                 <span className={cx(
                   "text-xs font-medium",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80" 
-                    : "text-gray-600"
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "text-gray-300",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/80"
                 )}>created 3 days ago</span>
               </div>
             </div>
@@ -156,9 +178,8 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
             {spaceHeaderConfig.actionAddPost && (
               <button className={cx(
                 "px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
-                spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                  ? "bg-white text-black hover:bg-white/90" 
-                  : "bg-green-600 text-white hover:bg-green-700"
+                (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "bg-green-600 text-white hover:bg-green-700",
+                (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "bg-white text-black hover:bg-white/90"
               )}>
                 Add Post
               </button>
@@ -170,29 +191,26 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
                 {/* Join */}
                 <button className={cx(
                   "px-3 py-1.5 rounded-full text-xs font-medium transition-colors border",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "bg-white/10 text-white border-white/20 hover:bg-white/20 backdrop-blur-sm" 
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "bg-white/10 text-white border-white/20 hover:bg-white/20 backdrop-blur-sm"
                 )}>
                   Joined
                 </button>
 
                 {/* Search */}
                 <button className={cx(
-                  "p-1.5 rounded-full transition-colors border border-gray-300",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80 hover:text-white hover:bg-white/10" 
-                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                  "p-1.5 rounded-full transition-colors border",
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "border-gray-600 text-gray-400 hover:text-gray-200 hover:bg-gray-700",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "border-white/20 text-white/80 hover:text-white hover:bg-white/10"
                 )}>
                   <SearchLg className="w-3 h-3" />
                 </button>
 
                 {/* Options */}
                 <button className={cx(
-                  "p-1.5 rounded-full transition-colors border border-gray-300",
-                  spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
-                    ? "text-white/80 hover:text-white hover:bg-white/10" 
-                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                  "p-1.5 rounded-full transition-colors border",
+                  (spaceHeaderConfig.style === 'simple' || spaceHeaderConfig.style === 'color' || spaceHeaderConfig.style === 'pattern') && "border-gray-600 text-gray-400 hover:text-gray-200 hover:bg-gray-700",
+                  (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "border-white/20 text-white/80 hover:text-white hover:bg-white/10"
                 )}>
                   <DotsHorizontal className="w-3 h-3" />
                 </button>

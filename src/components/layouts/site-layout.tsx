@@ -161,7 +161,7 @@ export const SiteLayout = ({
                 <div className="flex flex-1">
                     {/* Left Sidebar */}
                     <aside className="hidden lg:block w-64 bg-primary">
-                        <div className="sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto py-4 pr-8">
+                        <div className="sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin py-4 pr-8">
                             {/* Navigation */}
                             <nav className="space-y-2">
                                 {siteNavigation.map((item) => (

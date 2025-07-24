@@ -37,7 +37,7 @@ export const SidebarNavigationFull = ({
         <aside
             style={{ width }}
             className={cx(
-                "flex h-full max-w-full flex-col justify-between overflow-auto bg-primary pt-4 lg:pt-6",
+                "flex h-full max-w-full flex-col justify-between overflow-auto scrollbar-thin bg-primary pt-4 lg:pt-6",
                 !(hideBorder || hideRightBorder) && "border-r border-secondary"
             )}
         >
@@ -85,7 +85,7 @@ export const SidebarNavigationFull = ({
 
             {/* Mobile header navigation */}
             <MobileNavigationHeader>
-                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto bg-primary pt-4">
+                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-4">
                     <div className="px-4">
                         <UntitledLogo className="h-8" />
                     </div>

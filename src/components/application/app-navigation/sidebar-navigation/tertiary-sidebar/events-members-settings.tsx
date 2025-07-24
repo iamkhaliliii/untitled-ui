@@ -8,6 +8,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 import { cx } from "@/utils/cx";
 
@@ -76,6 +77,7 @@ const roleOptions = [
 ];
 
 export const EventsMembersSettings = () => {
+  const theme = useResolvedTheme();
   const [members, setMembers] = useState(mockMembers);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [autoSubscribe, setAutoSubscribe] = useState(false);
@@ -163,7 +165,9 @@ export const EventsMembersSettings = () => {
         return 'bg-blue-100 border border-blue-200 text-blue-600';
       case 'member':
       default:
-        return 'bg-gray-100 border border-gray-200 text-gray-600';
+        return theme === 'dark' 
+          ? 'bg-gray-800 border border-gray-700 text-gray-300'
+          : 'bg-gray-100 border border-gray-200 text-gray-600';
     }
   };
 
