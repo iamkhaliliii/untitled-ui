@@ -14,11 +14,11 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
     <div className={cx(
       "mb-4 rounded-lg overflow-hidden",
       spaceHeaderConfig.style === 'simple' && "",
-      spaceHeaderConfig.style === 'color' && "px-4 py-2.5 bg-gradient-to-r from-blue-50 to-purple-50",
-      spaceHeaderConfig.style === 'gradient' && "px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white",
-      spaceHeaderConfig.style === 'pattern' && "px-4 py-2.5 bg-white relative overflow-hidden",
-      spaceHeaderConfig.style === 'image' && "px-4 py-2.5 bg-gray-900 text-white relative",
-      spaceHeaderConfig.style === 'video' && "px-4 py-2.5 bg-gray-900 text-white relative",
+      spaceHeaderConfig.style === 'color' && "px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50",
+      spaceHeaderConfig.style === 'gradient' && "px-6 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white",
+      spaceHeaderConfig.style === 'pattern' && "px-6 py-6 bg-white relative overflow-hidden",
+      spaceHeaderConfig.style === 'image' && "px-6 py-6 bg-gray-900 text-white relative",
+      spaceHeaderConfig.style === 'video' && "px-6 py-6 bg-gray-900 text-white relative",
       className
     )}>
       {/* Pattern Background */}
@@ -77,9 +77,9 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
             )}
             
             {/* Content */}
-            <div className="flex-1 items-center justify-center gap-1">
+            <div className="flex-1 items-center justify-center">
               <h1 className={cx(
-                "text-lg font-bold leading-tight",
+                "text-[0.85rem] font-bold leading-tight",
                 spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
                   ? "text-white" 
                   : "text-gray-900"
@@ -88,7 +88,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className 
               {/* Description */}
               {spaceHeaderConfig.showDescription && (
                 <p className={cx(
-                  "text-sm leading-relaxed",
+                  "text-[0.7rem] leading-relaxed",
                   spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video' 
                     ? "text-white/80" 
                     : "text-gray-600"
