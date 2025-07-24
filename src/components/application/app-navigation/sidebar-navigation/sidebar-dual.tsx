@@ -66,6 +66,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // State for customize page tree expansion
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
 
+    // State for dynamic tree data
+    const [siteTreeData, setSiteTreeData] = useState<TreeNode[]>([]);
+
     // State for secondary sidebar selection
     const [selectedSecondaryItem, setSelectedSecondaryItem] = useState<string>(() => {
         // Set initial state based on current URL

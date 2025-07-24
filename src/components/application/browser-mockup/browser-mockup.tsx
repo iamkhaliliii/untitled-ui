@@ -160,7 +160,7 @@ export const BrowserMockup = ({
         
         {/* Browser Content */}
         <div className={cx(
-          "h-[600px] overflow-hidden flex flex-col",
+          "h-[calc(100vh-158px)] overflow-hidden flex flex-col",
           theme === 'dark' ? "bg-gray-900" : "bg-gray-50"
         )}>
           {/* Site Navigation Header */}

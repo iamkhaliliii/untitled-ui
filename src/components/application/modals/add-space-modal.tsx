@@ -17,6 +17,16 @@ interface ContentType {
   iconColor: string;
   chevronBg: string;
   chevronColor: string;
+  // Dark mode properties
+  darkGradientFrom: string;
+  darkGradientTo: string;
+  darkHoverFrom: string;
+  darkHoverTo: string;
+  darkBorderColor: string;
+  darkIconBg: string;
+  darkIconColor: string;
+  darkChevronBg: string;
+  darkChevronColor: string;
 }
 
 const contentTypes: ContentType[] = [
@@ -34,7 +44,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-cyan-100/50",
     iconColor: "text-cyan-500/70",
     chevronBg: "bg-teal-200/80",
-    chevronColor: "text-teal-600"
+    chevronColor: "text-teal-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-teal-900/20",
+    darkGradientTo: "dark:to-teal-800/5",
+    darkHoverFrom: "dark:hover:from-teal-900/45",
+    darkHoverTo: "dark:hover:to-teal-800/30",
+    darkBorderColor: "dark:border-teal-800/30",
+    darkIconBg: "dark:bg-cyan-900/20",
+    darkIconColor: "dark:text-cyan-400/50",
+    darkChevronBg: "dark:bg-teal-800/40",
+    darkChevronColor: "dark:text-teal-400"
   },
   {
     id: "events",
@@ -50,7 +70,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-emerald-100/50",
     iconColor: "text-emerald-500/70",
     chevronBg: "bg-emerald-100/60",
-    chevronColor: "text-emerald-600"
+    chevronColor: "text-emerald-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-emerald-900/15",
+    darkGradientTo: "dark:to-emerald-800/5",
+    darkHoverFrom: "dark:hover:from-emerald-900/40",
+    darkHoverTo: "dark:hover:to-emerald-800/25",
+    darkBorderColor: "dark:border-emerald-800/20",
+    darkIconBg: "dark:bg-emerald-900/20",
+    darkIconColor: "dark:text-emerald-400/50",
+    darkChevronBg: "dark:bg-emerald-800/30",
+    darkChevronColor: "dark:text-emerald-400"
   },
   {
     id: "qa",
@@ -66,7 +96,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-violet-100/50",
     iconColor: "text-violet-500/70",
     chevronBg: "bg-violet-100/60",
-    chevronColor: "text-violet-600"
+    chevronColor: "text-violet-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-violet-900/15",
+    darkGradientTo: "dark:to-violet-800/5",
+    darkHoverFrom: "dark:hover:from-violet-900/40",
+    darkHoverTo: "dark:hover:to-violet-800/25",
+    darkBorderColor: "dark:border-violet-800/20",
+    darkIconBg: "dark:bg-violet-900/20",
+    darkIconColor: "dark:text-violet-400/50",
+    darkChevronBg: "dark:bg-violet-800/30",
+    darkChevronColor: "dark:text-violet-400"
   },
   {
     id: "ideas",
@@ -82,7 +122,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-amber-100/50",
     iconColor: "text-amber-500/70",
     chevronBg: "bg-amber-100/60",
-    chevronColor: "text-amber-600"
+    chevronColor: "text-amber-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-amber-900/15",
+    darkGradientTo: "dark:to-amber-800/5",
+    darkHoverFrom: "dark:hover:from-amber-900/40",
+    darkHoverTo: "dark:hover:to-amber-800/25",
+    darkBorderColor: "dark:border-amber-800/20",
+    darkIconBg: "dark:bg-amber-900/20",
+    darkIconColor: "dark:text-amber-400/50",
+    darkChevronBg: "dark:bg-amber-800/30",
+    darkChevronColor: "dark:text-amber-400"
   },
   {
     id: "knowledge-base",
@@ -98,7 +148,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-rose-100/50",
     iconColor: "text-rose-500/70",
     chevronBg: "bg-sky-200/80",
-    chevronColor: "text-sky-600"
+    chevronColor: "text-sky-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-sky-900/20",
+    darkGradientTo: "dark:to-sky-800/5",
+    darkHoverFrom: "dark:hover:from-sky-900/45",
+    darkHoverTo: "dark:hover:to-sky-800/30",
+    darkBorderColor: "dark:border-sky-800/30",
+    darkIconBg: "dark:bg-rose-900/20",
+    darkIconColor: "dark:text-rose-400/50",
+    darkChevronBg: "dark:bg-sky-800/40",
+    darkChevronColor: "dark:text-sky-400"
   },
   {
     id: "blog",
@@ -114,7 +174,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-purple-100/50",
     iconColor: "text-purple-500/70",
     chevronBg: "bg-purple-100/60",
-    chevronColor: "text-purple-600"
+    chevronColor: "text-purple-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-purple-900/15",
+    darkGradientTo: "dark:to-purple-800/5",
+    darkHoverFrom: "dark:hover:from-purple-900/40",
+    darkHoverTo: "dark:hover:to-purple-800/25",
+    darkBorderColor: "dark:border-purple-800/20",
+    darkIconBg: "dark:bg-purple-900/20",
+    darkIconColor: "dark:text-purple-400/50",
+    darkChevronBg: "dark:bg-purple-800/30",
+    darkChevronColor: "dark:text-purple-400"
   },
   {
     id: "discussions",
@@ -130,7 +200,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-blue-100/50",
     iconColor: "text-blue-500/70",
     chevronBg: "bg-blue-100/60",
-    chevronColor: "text-blue-600"
+    chevronColor: "text-blue-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-blue-900/15",
+    darkGradientTo: "dark:to-blue-800/5",
+    darkHoverFrom: "dark:hover:from-blue-900/40",
+    darkHoverTo: "dark:hover:to-blue-800/25",
+    darkBorderColor: "dark:border-blue-800/20",
+    darkIconBg: "dark:bg-blue-900/20",
+    darkIconColor: "dark:text-blue-400/50",
+    darkChevronBg: "dark:bg-blue-800/30",
+    darkChevronColor: "dark:text-blue-400"
   },
   {
     id: "changelog",
@@ -146,7 +226,17 @@ const contentTypes: ContentType[] = [
     iconBg: "bg-indigo-100/50",
     iconColor: "text-indigo-500/70",
     chevronBg: "bg-indigo-100/60",
-    chevronColor: "text-indigo-600"
+    chevronColor: "text-indigo-600",
+    // Dark mode
+    darkGradientFrom: "dark:from-indigo-900/15",
+    darkGradientTo: "dark:to-indigo-800/5",
+    darkHoverFrom: "dark:hover:from-indigo-900/40",
+    darkHoverTo: "dark:hover:to-indigo-800/25",
+    darkBorderColor: "dark:border-indigo-800/20",
+    darkIconBg: "dark:bg-indigo-900/20",
+    darkIconColor: "dark:text-indigo-400/50",
+    darkChevronBg: "dark:bg-indigo-800/30",
+    darkChevronColor: "dark:text-indigo-400"
   }
 ];
 
@@ -211,12 +301,12 @@ export const ContentTypeModal = ({
                       contentType.gradientTo,
                       contentType.hoverFrom,
                       contentType.hoverTo,
-                      `dark:${contentType.gradientFrom.replace('from-', 'from-').replace('50/', '900/').replace('70', '20')}`,
-                      `dark:${contentType.gradientTo.replace('to-', 'to-').replace('100/', '800/').replace('20', '5')}`,
-                      `dark:${contentType.hoverFrom.replace('hover:from-', 'dark:hover:from-').replace('50/', '900/').replace('95', '45')}`,
-                      `dark:${contentType.hoverTo.replace('hover:to-', 'dark:hover:to-').replace('100/', '800/').replace('50', '25')}`,
+                      contentType.darkGradientFrom,
+                      contentType.darkGradientTo,
+                      contentType.darkHoverFrom,
+                      contentType.darkHoverTo,
                       contentType.borderColor,
-                      `dark:${contentType.borderColor.replace('border-', 'dark:border-').replace('200/', '800/').replace('40', '30')}`
+                      contentType.darkBorderColor
                     )}
                   >
                     <div className="flex-1 flex flex-col min-h-[248px] relative">
@@ -238,8 +328,8 @@ export const ContentTypeModal = ({
                           <div className="flex flex-col h-full relative">
                             {/* Icon */}
                             <div className="absolute top-0 left-0">
-                              <div className={cx("w-8 h-8 rounded-xl flex items-center justify-center", contentType.iconBg, `dark:${contentType.iconBg.replace('bg-', 'dark:bg-').replace('100/', '900/').replace('50', '20')}`)}>
-                                <IconComponent className={cx("w-5 h-5", contentType.iconColor, `dark:${contentType.iconColor.replace('text-', 'dark:text-').replace('500/', '400/').replace('70', '50')}`)} />
+                              <div className={cx("w-8 h-8 rounded-xl flex items-center justify-center", contentType.iconBg, contentType.darkIconBg)}>
+                                <IconComponent className={cx("w-5 h-5", contentType.iconColor, contentType.darkIconColor)} />
                               </div>
                             </div>
 
@@ -353,8 +443,8 @@ export const ContentTypeModal = ({
 
                       {/* Chevron Icon */}
                       <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className={cx("p-1.5 rounded-full", contentType.chevronBg, `dark:${contentType.chevronBg.replace('bg-', 'dark:bg-').replace('200/', '800/').replace('80', '40')}`)}>
-                          <ChevronRight className={cx("h-4 w-4", contentType.chevronColor, `dark:${contentType.chevronColor.replace('text-', 'dark:text-').replace('600', '400')}`)} />
+                        <div className={cx("p-1.5 rounded-full", contentType.chevronBg, contentType.darkChevronBg)}>
+                          <ChevronRight className={cx("h-4 w-4", contentType.chevronColor, contentType.darkChevronColor)} />
                         </div>
                       </div>
                     </div>
