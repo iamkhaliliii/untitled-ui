@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -29,6 +29,9 @@ import { EventsMembersSettings } from "./tertiary-sidebar/events-members-setting
 import { EventsAnalyticsSettings } from "./tertiary-sidebar/events-analytics-settings";
 import { EventsAuditLogsSettings } from "./tertiary-sidebar/events-audit-logs-settings";
 import { EventsDangerSettings } from "./tertiary-sidebar/events-danger-settings";
+import { AddSpaceModal } from "../../modals/add-space-modal";
+import { SpaceConfigurationModal } from "../../modals/space-configuration-modal";
+import { FieldSelectionModal } from "../../modals/field-selection-modal";
 import { EventsCustomizeSettings } from "./tertiary-sidebar/events-customize-settings";
 import { WidgetSelection } from "./tertiary-sidebar/widget-selection";
 import WidgetConfig from "./tertiary-sidebar/widget-config";
@@ -81,6 +84,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // State for widget configuration
     const [showWidgetConfig, setShowWidgetConfig] = useState(false);
     const [selectedWidgetForConfig, setSelectedWidgetForConfig] = useState<any>(null);
+    
+    // State for add space modal
+    const [showAddSpaceModal, setShowAddSpaceModal] = useState(false);
+    
+    // State for add collection modal  
+    const [showAddCollectionModal, setShowAddCollectionModal] = useState(false);
+    
+    // State for field selection modal (step 2)
+    const [showFieldSelectionModal, setShowFieldSelectionModal] = useState(false);
+    
+    // State for space configuration modal (step 3)
+    const [showSpaceConfigModal, setShowSpaceConfigModal] = useState(false);
+    const [selectedContentType, setSelectedContentType] = useState<string>("");
+    const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
     // Handle add widget click
     const handleAddWidgetClick = () => {
@@ -110,6 +127,75 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const handleWidgetConfigBack = () => {
         setShowWidgetConfig(false);
         setSelectedWidgetForConfig(null);
+    };
+
+    // Handle add space modal
+    const handleAddSpaceClick = () => {
+        setShowAddSpaceModal(true);
+    };
+
+    const handleAddSpaceModalClose = () => {
+        setShowAddSpaceModal(false);
+    };
+
+    const handleSelectContentType = (typeId: string) => {
+        console.log("Selected content type:", typeId);
+        setSelectedContentType(typeId);
+        setShowAddSpaceModal(false);
+        setShowFieldSelectionModal(true);
+    };
+
+    // Handle add collection modal
+    const handleAddCollectionClick = () => {
+        setShowAddCollectionModal(true);
+    };
+
+    const handleAddCollectionModalClose = () => {
+        setShowAddCollectionModal(false);
+    };
+
+    const handleSelectCollectionType = (typeId: string) => {
+        console.log("Selected collection type:", typeId);
+        setSelectedContentType(typeId);
+        setShowAddCollectionModal(false);
+        setShowFieldSelectionModal(true);
+    };
+
+    // Handle field selection modal (step 2)
+    const handleFieldSelectionModalClose = () => {
+        setShowFieldSelectionModal(false);
+        setSelectedContentType("");
+        setSelectedFields([]);
+    };
+
+    const handleFieldSelectionBack = () => {
+        setShowFieldSelectionModal(false);
+        setShowAddSpaceModal(true);
+    };
+
+    const handleFieldSelectionNext = (fields: string[]) => {
+        console.log("Selected fields:", fields);
+        setSelectedFields(fields);
+        setShowFieldSelectionModal(false);
+        setShowSpaceConfigModal(true);
+    };
+
+    // Handle space configuration modal (step 3)
+    const handleSpaceConfigModalClose = () => {
+        setShowSpaceConfigModal(false);
+        setSelectedContentType("");
+        setSelectedFields([]);
+    };
+
+    const handleSpaceConfigBack = () => {
+        setShowSpaceConfigModal(false);
+        setShowFieldSelectionModal(true);
+    };
+
+    const handleCreateSpace = (spaceData: any) => {
+        console.log("Creating space:", spaceData);
+        console.log("With fields:", selectedFields);
+        // TODO: Add actual space creation logic
     };
 
     // Handle toggle changes
@@ -471,33 +557,68 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 
                 {/* Show TreeView for Site section when on /admin/site page */}
                 {currentItem?.label === "Site" && activeUrl === "/admin/site" ? (
-                    <div className="mt-2">
-                        <TreeView
-                            data={siteFileTree}
-                            expandedIds={expandedIds}
-                            selectedIds={["spaces"]}
-                            onNodeClick={handleNodeClick}
-                            onToggleChange={handleToggleChange}
-                            onNodeExpand={(nodeId, expanded) => {
-                                // Update expanded state
-                                if (expanded) {
-                                    setExpandedIds(prev => [...prev, nodeId]);
-                                } else {
-                                    setExpandedIds(prev => prev.filter(id => id !== nodeId));
-                                }
-                                
-                                // Sync with toggle state for layout items
-                                if (nodeId === "header" || nodeId === "leftSidebar" || nodeId === "rightSidebar" || nodeId === "footer") {
-                                    setToggleStates(prev => ({
-                                        ...prev,
-                                        [nodeId]: expanded
-                                    }));
-                                }
-                            }}
-                            className="border-none bg-transparent"
-                            showLines={false}
-                            showIcons={true}
-                        />
+                    <div className="flex flex-col flex-1 mt-2">
+                        <div className="flex-1 overflow-y-auto">
+                            <TreeView
+                                data={siteFileTree}
+                                expandedIds={expandedIds}
+                                selectedIds={["spaces"]}
+                                onNodeClick={handleNodeClick}
+                                onToggleChange={handleToggleChange}
+                                onNodeExpand={(nodeId, expanded) => {
+                                    // Update expanded state
+                                    if (expanded) {
+                                        setExpandedIds(prev => [...prev, nodeId]);
+                                    } else {
+                                        setExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                    }
+                                    
+                                    // Sync with toggle state for layout items
+                                    if (nodeId === "header" || nodeId === "leftSidebar" || nodeId === "rightSidebar" || nodeId === "footer") {
+                                        setToggleStates(prev => ({
+                                            ...prev,
+                                            [nodeId]: expanded
+                                        }));
+                                    }
+                                }}
+                                className="border-none bg-transparent"
+                                showLines={false}
+                                showIcons={true}
+                            />
+                        </div>
+
+                        {/* Footer Actions */}
+                        <div className="sticky bg-primary">
+                            <div className="h-px bg-secondary/40 my-2"></div>
+                            <button 
+                                onClick={handleAddSpaceClick}
+                                className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
+                            >
+                                <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                                    <Package className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                                </div>
+                                <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                                    Add space
+                                </span>
+                                <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                                    <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                                </div>
+                            </button>
+                            <button 
+                                onClick={handleAddCollectionClick}
+                                className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5 mt-0.5"
+                            >
+                                <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                                    <FilePlus01 className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                                </div>
+                                <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                                    Add collection
+                                </span>
+                                <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                                    <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 ) : currentItem?.label === "Content" && activeUrl?.includes("/admin/content") ? (
                     <div className="mt-2 space-y-4">
@@ -841,6 +962,42 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     </div>
                 </aside>
             </MobileNavigationHeader>
+            {/* Add Space Modal */}
+            <AddSpaceModal 
+                isOpen={showAddSpaceModal}
+                onClose={handleAddSpaceModalClose}
+                onSelectType={handleSelectContentType}
+                title="Choose a space type"
+                description="Select the type of space you want to create for your community."
+            />
+            
+            {/* Add Collection Modal */}
+            <AddSpaceModal 
+                isOpen={showAddCollectionModal}
+                onClose={handleAddCollectionModalClose}
+                onSelectType={handleSelectCollectionType}
+                title="Choose a collection type"
+                description="Select the type of collection you want to create to organize your content."
+            />
+            
+            {/* Field Selection Modal (Step 2) */}
+            <FieldSelectionModal
+                isOpen={showFieldSelectionModal}
+                onClose={handleFieldSelectionModalClose}
+                onBack={handleFieldSelectionBack}
+                onNext={handleFieldSelectionNext}
+                contentType={selectedContentType}
+            />
+            
+            {/* Space Configuration Modal (Step 3) */}
+            <SpaceConfigurationModal
+                isOpen={showSpaceConfigModal}
+                onClose={handleSpaceConfigModalClose}
+                onBack={handleSpaceConfigBack}
+                onCreateSpace={handleCreateSpace}
+                contentType={selectedContentType}
+                selectedFields={selectedFields}
+            />
         </>
     );
 }; 

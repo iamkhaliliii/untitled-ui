@@ -58,8 +58,10 @@ const reactionTypeOptions = [
 export const EventForm = ({ className, onSubmit, onCancel, hideActions = false }: EventFormProps) => {
     const [formData, setFormData] = useState({
         icon: null as File | null,
+        coverImage: null as File | null,
         name: "",
         description: "",
+        host: "",
         urlSlug: "",
         folder: "",
         visibility: "",
@@ -76,6 +78,12 @@ export const EventForm = ({ className, onSubmit, onCancel, hideActions = false }
     const handleFileSelect = (files: FileList | null) => {
         if (files && files[0]) {
             setFormData(prev => ({ ...prev, icon: files[0] }));
+        }
+    };
+
+    const handleCoverImageSelect = (files: FileList | null) => {
+        if (files && files[0]) {
+            setFormData(prev => ({ ...prev, coverImage: files[0] }));
         }
     };
 
@@ -123,6 +131,38 @@ export const EventForm = ({ className, onSubmit, onCancel, hideActions = false }
                 </FileTrigger>
             </div>
 
+            {/* Cover Image Upload */}
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-secondary">Cover Image <span className="text-destructive">*</span></label>
+                <FileTrigger
+                    acceptedFileTypes={["image/*"]}
+                    onSelect={handleCoverImageSelect}
+                >
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-secondary bg-secondary/20">
+                            {formData.coverImage ? (
+                                <img
+                                    src={URL.createObjectURL(formData.coverImage)}
+                                    alt="Cover image"
+                                    className="h-full w-full object-cover rounded-lg"
+                                />
+                            ) : (
+                                <div className="flex flex-col items-center gap-2">
+                                    <Upload01 className="h-8 w-8 text-tertiary" />
+                                    <p className="text-sm text-tertiary">Upload cover image</p>
+                                </div>
+                            )}
+                        </div>
+                        <Button size="sm" color="secondary" iconLeading={Upload01} className="w-full">
+                            {formData.coverImage ? "Change Cover Image" : "Upload Cover Image"}
+                        </Button>
+                        <p className="text-xs text-tertiary text-center">
+                            SVG, PNG, JPG or GIF (recommended: 1200x600px)
+                        </p>
+                    </div>
+                </FileTrigger>
+            </div>
+
             {/* Name */}
             <Input
                 label="Event Name"
@@ -130,6 +170,15 @@ export const EventForm = ({ className, onSubmit, onCancel, hideActions = false }
                 isRequired
                 value={formData.name}
                 onChange={handleInputChange("name")}
+            />
+
+            {/* Host */}
+            <Input
+                label="Host"
+                placeholder="Enter host name"
+                isRequired
+                value={formData.host}
+                onChange={handleInputChange("host")}
             />
 
             {/* Description */}
