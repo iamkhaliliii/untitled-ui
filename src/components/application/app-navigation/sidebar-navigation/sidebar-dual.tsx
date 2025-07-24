@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
@@ -68,6 +68,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // State for dynamic tree data
     const [siteTreeData, setSiteTreeData] = useState<TreeNode[]>([]);
+    
+    // Ref to prevent double execution and track folder count
+    const isAddingFolderRef = useRef(false);
+    const folderCounterRef = useRef(2);
 
     // State for secondary sidebar selection
     const [selectedSecondaryItem, setSelectedSecondaryItem] = useState<string>(() => {
@@ -90,9 +94,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     
     // State for add space modal
     const [showAddSpaceModal, setShowAddSpaceModal] = useState(false);
-    
-    // State for add collection modal  
-    const [showAddCollectionModal, setShowAddCollectionModal] = useState(false);
     
     // State for field selection modal (step 2)
     const [showFieldSelectionModal, setShowFieldSelectionModal] = useState(false);
@@ -148,21 +149,79 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         setShowFieldSelectionModal(true);
     };
 
-    // Handle add collection modal
+    // Handle add collection - directly add folder without modal
     const handleAddCollectionClick = () => {
-        setShowAddCollectionModal(true);
+        console.log("Add collection clicked - adding new folder");
+        // Directly add new folder to the tree
+        addNewFolderToTree();
     };
 
-    const handleAddCollectionModalClose = () => {
-        setShowAddCollectionModal(false);
-    };
 
-    const handleSelectCollectionType = (typeId: string) => {
-        console.log("Selected collection type:", typeId);
-        setSelectedContentType(typeId);
-        setShowAddCollectionModal(false);
-        setShowFieldSelectionModal(true);
-    };
+
+    // Function to add new folder to tree
+    const addNewFolderToTree = useCallback(() => {
+        console.log("addNewFolderToTree called");
+        
+        // Prevent double execution
+        if (isAddingFolderRef.current) {
+            console.log("Already adding folder, skipping...");
+            return;
+        }
+        
+        isAddingFolderRef.current = true;
+        
+        // Use the counter for unique naming
+        const newFolderName = `New Folder${folderCounterRef.current}`;
+        const newFolderId = `newFolder${folderCounterRef.current}`;
+        
+        console.log(`Creating folder: ${newFolderName}`);
+        
+        // Increment counter immediately to prevent duplicate IDs
+        folderCounterRef.current++;
+        
+        setSiteTreeData(prevData => {
+            // Check if folder already exists to prevent duplicates
+            const spacesIndex = prevData.findIndex(item => item.id === "spaces");
+            if (spacesIndex !== -1 && prevData[spacesIndex].children) {
+                const existingFolder = prevData[spacesIndex].children!.find(child => child.id === newFolderId);
+                if (existingFolder) {
+                    console.log("Folder already exists, skipping...");
+                    return prevData; // Return unchanged data
+                }
+            }
+            
+            const newData = [...prevData];
+            
+            if (spacesIndex !== -1 && newData[spacesIndex].children) {
+                // Add new folder with folder icon and empty children (like MyFolder)
+                const newFolder = {
+                    id: newFolderId,
+                    label: newFolderName,
+                    icon: <Folder className="size-5 text-fg-quaternary" />,
+                    children: [] // Empty children but expandable
+                };
+                
+                newData[spacesIndex].children!.push(newFolder);
+                console.log("Folder added:", newFolderName);
+            }
+            
+            return newData;
+        });
+        
+        // Make sure spaces is expanded to show the new folder (outside setSiteTreeData)
+        setExpandedIds(prev => {
+            if (!prev.includes("spaces")) {
+                console.log("Expanding spaces section");
+                return [...prev, "spaces"];
+            }
+            return prev;
+        });
+        
+        // Reset the flag after a short delay
+        setTimeout(() => {
+            isAddingFolderRef.current = false;
+        }, 200);
+    }, []);
 
     // Handle field selection modal (step 2)
     const handleFieldSelectionModalClose = () => {
@@ -336,8 +395,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
     };
 
-    // File tree data for Site section
-    const siteFileTree: TreeNode[] = [
+    // Initial file tree data for Site section
+    const getInitialSiteFileTree = (): TreeNode[] => [
         {
             id: "spaces",
             label: "Spaces",
@@ -430,6 +489,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             ]
         },
     ];
+
+    // Initialize tree data
+    useEffect(() => {
+        setSiteTreeData(getInitialSiteFileTree());
+    }, []);
 
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
@@ -563,7 +627,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     <div className="flex flex-col flex-1 mt-2">
                         <div className="flex-1 overflow-y-auto">
                             <TreeView
-                                data={siteFileTree}
+                                data={siteTreeData}
                                 expandedIds={expandedIds}
                                 selectedIds={["spaces"]}
                                 onNodeClick={handleNodeClick}
@@ -608,7 +672,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 </div>
                             </button>
                             <button 
-                                onClick={handleAddCollectionClick}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleAddCollectionClick();
+                                }}
                                 className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5 mt-0.5"
                             >
                                 <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
@@ -974,14 +1042,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 description="Select the type of space you want to create for your community."
             />
             
-            {/* Add Collection Modal */}
-            <AddSpaceModal 
-                isOpen={showAddCollectionModal}
-                onClose={handleAddCollectionModalClose}
-                onSelectType={handleSelectCollectionType}
-                title="Choose a collection type"
-                description="Select the type of collection you want to create to organize your content."
-            />
+
             
             {/* Field Selection Modal (Step 2) */}
             <FieldSelectionModal
