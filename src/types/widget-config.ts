@@ -19,6 +19,17 @@ export interface EventsListConfig {
   description: string;
 }
 
+export interface SpaceHeaderConfig {
+  style: 'simple' | 'color' | 'image' | 'video' | 'pattern' | 'gradient';
+  description: string;
+  showDescription: boolean;
+  showIcon: boolean;
+  showStats: boolean;
+  showMembers: boolean;
+  actionAddPost: boolean;
+  showActions: boolean;
+}
+
 export const defaultEventsListConfig: EventsListConfig = {
   style: 'card',
   cardSize: 'large',
@@ -36,6 +47,17 @@ export const defaultEventsListConfig: EventsListConfig = {
   eventDetails: true,
   coverImage: true,
   openPageIn: 'post',
-  title: '',
-  description: ''
+  title: 'Events List Widget',
+  description: 'Display a list of upcoming and past events with customizable layout and features.'
+};
+
+export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {
+  style: 'simple',
+  description: 'Welcome to the "Ask the Community" channel!',
+  showDescription: false,
+  showIcon: true,
+  showStats: true,
+  showMembers: true,
+  actionAddPost: true,
+  showActions: true,
 }; 

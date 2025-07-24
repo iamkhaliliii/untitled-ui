@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Settings01, Heart, MessageCircle02, MessageSquare01, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rss01, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Browser, File04, Square, Maximize01, Minimize01, FileCheck01, MarkerPin01, Tag01, Users01, AlertCircle, CheckCircle, Database01, Zap } from '@untitledui/icons';
+import { ArrowLeft, Settings01, Heart, MessageCircle02, MessageSquare01, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rss01, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Browser, File04, Square, Maximize01, Minimize01, FileCheck01, MarkerPin01, Tag01, Users01, AlertCircle, CheckCircle, Database01, Zap, Menu01, SearchLg, Image01, PlayCircle, BarChart03, Plus, Share04 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
@@ -8,6 +8,7 @@ import { Select } from '@/components/base/select/select';
 import { Toggle } from '@/components/base/toggle/toggle';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { Dot } from '@/components/foundations/dot-icon';
+import { UntitledLogoMinimal } from '@/components/foundations/logo/untitledui-logo-minimal';
 import { useWidgetConfig } from '@/providers/widget-config-provider';
 
 interface WidgetConfigProps {
@@ -21,7 +22,7 @@ interface WidgetConfigProps {
 }
 
 const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave }) => {
-  const { eventsListConfig, updateEventsListConfig } = useWidgetConfig();
+  const { eventsListConfig, updateEventsListConfig, spaceHeaderConfig, updateSpaceHeaderConfig } = useWidgetConfig();
   
   // Use config from context
   const { 
@@ -418,6 +419,115 @@ slim
     </div>
   );
 
+  const renderSpaceHeaderConfig = () => {
+    const { style, showDescription, showIcon, showStats, showMembers, actionAddPost, showActions } = spaceHeaderConfig;
+
+    const styleOptions = [
+      { id: 'simple', label: 'Simple', icon: Square },
+      { id: 'color', label: 'Color', icon: Zap },
+      { id: 'image', label: 'Image', icon: Image01 },
+      { id: 'video', label: 'Video', icon: PlayCircle },
+      { id: 'pattern', label: 'Pattern', icon: Grid01 },
+      { id: 'gradient', label: 'Gradient', icon: Maximize01 }
+    ];
+
+    return (
+      <div className="space-y-4">
+        {/* Style Section */}
+        <div className="border border-secondary rounded-lg bg-primary p-2">
+          <SectionHeader
+            icon={LayoutAlt01}
+            title="Style"
+            isExpanded={layoutExpanded}
+            onToggle={() => setLayoutExpanded(!layoutExpanded)}
+          />
+          {layoutExpanded && (
+            <div className="bg-secondary/20 rounded-lg p-3">
+              <div className="space-y-6">
+                <div>
+                  <Label htmlFor="style">Header Style</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {styleOptions.map((option) => (
+                      <StyleTile
+                        key={option.id}
+                        option={option}
+                        isSelected={style === option.id}
+                        onClick={() => updateSpaceHeaderConfig({ style: option.id as 'simple' | 'color' | 'image' | 'video' | 'pattern' | 'gradient' })}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Properties Section */}
+        <div className="border border-secondary rounded-lg bg-primary p-2">
+          <SectionHeader
+            icon={Eye}
+            title="Properties"
+            isExpanded={propertiesExpanded}
+            onToggle={() => setPropertiesExpanded(!propertiesExpanded)}
+          />
+          {propertiesExpanded && (
+            <div className="bg-secondary/20 rounded-lg p-1">
+              <div className="space-y-2">
+                <PropertyToggle
+                  icon={Settings01}
+                  label="Icon"
+                  isSelected={showIcon}
+                  onChange={(value) => updateSpaceHeaderConfig({ showIcon: value })}
+                  id="show-icon"
+                />
+
+                <PropertyToggle
+                  icon={MessageSquare01}
+                  label="Description"
+                  isSelected={showDescription}
+                  onChange={(value) => updateSpaceHeaderConfig({ showDescription: value })}
+                  id="show-description"
+                />
+
+                <PropertyToggle
+                  icon={BarChart03}
+                  label="Stats"
+                  isSelected={showStats}
+                  onChange={(value) => updateSpaceHeaderConfig({ showStats: value })}
+                  id="show-stats"
+                />
+
+                <PropertyToggle
+                  icon={Users01}
+                  label="Members"
+                  isSelected={showMembers}
+                  onChange={(value) => updateSpaceHeaderConfig({ showMembers: value })}
+                  id="show-members"
+                />
+
+                <PropertyToggle
+                  icon={Plus}
+                  label="Action: Add post"
+                  isSelected={actionAddPost}
+                  onChange={(value) => updateSpaceHeaderConfig({ actionAddPost: value })}
+                  id="action-add-post"
+                />
+
+                <PropertyToggle
+                  icon={Settings01}
+                  label="Actions"
+                  isSelected={showActions}
+                  onChange={(value) => updateSpaceHeaderConfig({ showActions: value })}
+                  id="show-actions"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderDefaultConfig = () => (
     <div className="space-y-4">
       {/* Info Section */}
@@ -507,7 +617,11 @@ slim
 
   return (
     <div className="p-4 transition-all duration-300 ease-in-out">
-      {selectedWidget.label === 'Events List' ? renderEventsListConfig() : renderDefaultConfig()}
+      {selectedWidget.label === 'Events List' 
+        ? renderEventsListConfig() 
+        : selectedWidget.label === 'Space Header'
+          ? renderSpaceHeaderConfig()
+          : renderDefaultConfig()}
     </div>
   );
 };

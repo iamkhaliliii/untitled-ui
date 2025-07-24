@@ -834,6 +834,24 @@ export const availableWidgets: WidgetCategory[] = [
         icon: Menu01,
         widgets: [
           { 
+            id: "space-header", 
+            name: "Space Header", 
+            icon: Menu01, 
+            description: "Customizable space header with logo, navigation, and user controls",
+            features: ["Logo display", "Navigation menu", "User controls", "Search functionality", "Notification system", "Responsive design"],
+            category: "Advanced",
+            subcategory: "Navigation",
+            type: "Premium",
+            image: "https://blocks.tremor.so/_next/image?url=%2Fthumbnails%2Fspace-header.webp&w=1920&q=75",
+            previewImage: "/Presets.png",
+            usageExample: "Perfect for main space navigation and branding",
+            author: "@bettermode",
+            badges: [
+              { type: "new", icon: Zap, color: "bg-green-500" },
+              { type: "popular", icon: Star01, color: "bg-yellow-500" }
+            ]
+          },
+          { 
             id: "nav-1", 
             name: "Navigation 1", 
             icon: Menu01, 

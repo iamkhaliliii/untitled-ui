@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01 } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01 } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 
 interface EventsCustomizeSettingsProps {
@@ -146,7 +146,8 @@ export const EventsCustomizeSettings = ({
                     {
                       id: "spaceheader",
                       label: "Space Header",
-                      icon: <FlexAlignTop className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,},
+                      icon: <FlexAlignTop className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
+                    },
 
                     {
                       id: "mainColumn",
