@@ -19,13 +19,15 @@ import { SiteEventPage } from "@/pages/site/event";
 import { NotFound } from "@/pages/not-found";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
+import { WidgetConfigProvider } from "@/providers/widget-config-provider";
 import "@/styles/globals.css";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <ThemeProvider>
-            <BrowserRouter>
-                <RouteProvider>
+            <WidgetConfigProvider>
+                <BrowserRouter>
+                    <RouteProvider>
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
                         
@@ -48,6 +50,10 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin/site/spaces/myfolder/events/seo" element={<SiteSpacesEventsPage />} />
                         <Route path="/admin/site/spaces/myfolder/events/danger" element={<SiteSpacesEventsPage />} />
                         
+                        {/* Private Space Routes */}
+                        <Route path="/admin/site/spaces/private-space" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin/site/spaces/private-space/customize" element={<EventsCustomizePage />} />
+                        
                         {/* Site Routes */}
                         <Route path="/site" element={<SiteHomePage />} />
                         <Route path="/site/feed" element={<SiteFeedPage />} />
@@ -61,6 +67,7 @@ createRoot(document.getElementById("root")!).render(
                     </Routes>
                 </RouteProvider>
             </BrowserRouter>
+            </WidgetConfigProvider>
         </ThemeProvider>
     </StrictMode>,
 );

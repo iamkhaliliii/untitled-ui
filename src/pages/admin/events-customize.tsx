@@ -7,9 +7,12 @@ import { Calendar, Save01 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 
 const EventsCustomizePage = () => {
+  const currentPath = window.location.pathname;
+  const isPrivateSpacePage = currentPath.includes("/admin/site/spaces/private-space");
+  
   const [selectedWidget] = useState({
-    id: 'events-list',
-    label: 'Events List',
+    id: isPrivateSpacePage ? 'private-space-list' : 'events-list',
+    label: isPrivateSpacePage ? 'Private Space' : 'Events List',
     icon: <Calendar className="h-4 w-4" />
   });
 
@@ -19,6 +22,17 @@ const EventsCustomizePage = () => {
 
   const handleSave = () => {
     console.log('Save clicked');
+  };
+
+  // Get title and description based on space type
+  const getTitle = () => {
+    if (isPrivateSpacePage) return "Private Space Customization";
+    return "Events Widget Customization";
+  };
+
+  const getDescription = () => {
+    if (isPrivateSpacePage) return "Customize the appearance and behavior of your private space";
+    return "Customize the appearance and behavior of your events list widget";
   };
 
   const headerActions = (
@@ -45,10 +59,10 @@ const EventsCustomizePage = () => {
     <WidgetConfigProvider>
       <AdminLayout
         hideHeader={true}
-        title="Events Widget Customization"
-        description="Customize the appearance and behavior of your events list widget"
+        title={getTitle()}
+        description={getDescription()}
         headerActions={headerActions}
-        currentPath="/admin/site/spaces/myfolder/events/customize"
+        currentPath={currentPath}
 
       >
         <div className="flex h-full">

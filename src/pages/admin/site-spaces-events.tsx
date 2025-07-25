@@ -25,9 +25,16 @@ export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
     const currentPath = window.location.pathname;
     const isEventsPage = currentPath.includes("/admin/site/spaces/myfolder/events");
+    const isPrivateSpacePage = currentPath.includes("/admin/site/spaces/private-space");
+    const isSpacePage = isEventsPage || isPrivateSpacePage;
     
     // Get page title based on current path
     const getPageTitle = () => {
+        if (isPrivateSpacePage) {
+            if (currentPath.includes("/customize")) return "Customize your private space layout and appearance";
+            return "Manage and configure your private space settings";
+        }
+        
         if (currentPath.includes("/customize")) return "Customize your events page layout and appearance";
         if (currentPath.includes("/members")) return "Manage event members and permissions";
         if (currentPath.includes("/seo")) return "Configure SEO settings for your events";
@@ -35,12 +42,18 @@ export const SiteSpacesEventsPage = () => {
         return "Manage and organize events in your personal workspace";
     };
 
+    // Get main title based on space type
+    const getMainTitle = () => {
+        if (isPrivateSpacePage) return "Private Space";
+        return "MyFolder - Events";
+    };
+
     return (
         <AdminLayout 
-            title="MyFolder - Events"
+            title={getMainTitle()}
             description={getPageTitle()}
             currentPath={currentPath}
-            hideHeader={isEventsPage}
+            hideHeader={isSpacePage}
         >
             <WidgetConfigProvider>
             <div className="px-4 py-6 lg:px-6">

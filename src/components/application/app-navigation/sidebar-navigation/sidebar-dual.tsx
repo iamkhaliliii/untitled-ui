@@ -835,71 +835,76 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     Customize
                                 </button>
                             </li>
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("members", "/admin/site/spaces/myfolder/events/members")}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "members"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <Users01 className="h-4 w-4" />
-                                    Members
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("analytics", "/admin/site/spaces/myfolder/events/analytics")}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "analytics"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <BarChart03 className="h-4 w-4" />
-                                    Space Analytics
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("audit-logs", "/admin/site/spaces/myfolder/events/audit-logs")}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "audit-logs"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <ClipboardCheck className="h-4 w-4" />
-                                    Audit Logs
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("seo", "/admin/site/spaces/myfolder/events/seo")}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "seo"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <SearchLg className="h-4 w-4" />
-                                    SEO
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("danger", "/admin/site/spaces/myfolder/events/danger")}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "danger"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <AlertTriangle className="h-4 w-4" />
-                                    Danger Zone
-                                </button>
-                            </li>
+                            {/* Only show these items for Events, not for Private Space */}
+                            {isEventsPage && (
+                                <>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("members", "/admin/site/spaces/myfolder/events/members")}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "members"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <Users01 className="h-4 w-4" />
+                                            Members
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("analytics", "/admin/site/spaces/myfolder/events/analytics")}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "analytics"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <BarChart03 className="h-4 w-4" />
+                                            Space Analytics
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("audit-logs", "/admin/site/spaces/myfolder/events/audit-logs")}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "audit-logs"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <ClipboardCheck className="h-4 w-4" />
+                                            Audit Logs
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("seo", "/admin/site/spaces/myfolder/events/seo")}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "seo"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <SearchLg className="h-4 w-4" />
+                                            SEO
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("danger", "/admin/site/spaces/myfolder/events/danger")}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "danger"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <AlertTriangle className="h-4 w-4" />
+                                            Danger Zone
+                                        </button>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
                 ) : (
@@ -989,7 +994,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             <div className="z-50 hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex">
                 {mainSidebar}
                 {secondarySidebar}
-                {isEventsPage && tertiarySidebar}
+                {isSpacePage && tertiarySidebar}
             </div>
 
             {/* Placeholder to take up physical space because the real sidebar has `fixed` position. */}
