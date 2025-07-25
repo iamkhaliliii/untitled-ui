@@ -1,11 +1,20 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { EventsListConfig, defaultEventsListConfig, SpaceHeaderConfig, defaultSpaceHeaderConfig } from '@/types/widget-config';
 
+interface ToggleStates {
+  header: boolean;
+  leftSidebar: boolean;
+  rightSidebar: boolean;
+  footer: boolean;
+}
+
 interface WidgetConfigContextType {
   eventsListConfig: EventsListConfig;
   updateEventsListConfig: (config: Partial<EventsListConfig>) => void;
   spaceHeaderConfig: SpaceHeaderConfig;
   updateSpaceHeaderConfig: (config: Partial<SpaceHeaderConfig>) => void;
+  toggleStates: ToggleStates;
+  updateToggleStates: (states: Partial<ToggleStates>) => void;
 }
 
 const WidgetConfigContext = createContext<WidgetConfigContextType | undefined>(undefined);
@@ -25,6 +34,12 @@ interface WidgetConfigProviderProps {
 export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ children }) => {
   const [eventsListConfig, setEventsListConfig] = useState<EventsListConfig>(defaultEventsListConfig);
   const [spaceHeaderConfig, setSpaceHeaderConfig] = useState<SpaceHeaderConfig>(defaultSpaceHeaderConfig);
+  const [toggleStates, setToggleStates] = useState<ToggleStates>({
+    header: true,
+    leftSidebar: true,
+    rightSidebar: false,
+    footer: false,
+  });
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
     setEventsListConfig(prevConfig => ({ ...prevConfig, ...config }));
@@ -34,12 +49,18 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     setSpaceHeaderConfig(prevConfig => ({ ...prevConfig, ...config }));
   };
 
+  const updateToggleStates = (states: Partial<ToggleStates>) => {
+    setToggleStates(prevStates => ({ ...prevStates, ...states }));
+  };
+
   return (
     <WidgetConfigContext.Provider value={{ 
       eventsListConfig, 
       updateEventsListConfig,
       spaceHeaderConfig,
-      updateSpaceHeaderConfig
+      updateSpaceHeaderConfig,
+      toggleStates,
+      updateToggleStates
     }}>
       {children}
     </WidgetConfigContext.Provider>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserMockup } from '@/components/application/browser-mockup/browser-mockup';
 import WidgetConfig from '@/components/application/app-navigation/sidebar-navigation/tertiary-sidebar/widget-config';
-import { WidgetConfigProvider } from '@/providers/widget-config-provider';
+
 import { AdminLayout } from '@/components/layouts/admin-layout';
 import { Calendar, Save01 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
@@ -56,7 +56,6 @@ const EventsCustomizePage = () => {
   );
 
   return (
-    <WidgetConfigProvider>
       <AdminLayout
         hideHeader={true}
         title={getTitle()}
@@ -77,7 +76,6 @@ const EventsCustomizePage = () => {
           </div>
         </div>
       </AdminLayout>
-    </WidgetConfigProvider>
   );
 };
 

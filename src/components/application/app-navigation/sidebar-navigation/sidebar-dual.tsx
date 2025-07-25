@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
@@ -17,6 +17,7 @@ import { NavItemButton } from "../base-components/nav-item-button";
 import { NavList } from "../base-components/nav-list";
 import type { NavItemDividerType, NavItemType } from "../config";
 import { useTheme } from "@/providers/theme";
+import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import { Input, InputBase } from "@/components/base/input/input";
 import { TextArea } from "@/components/base/textarea/textarea";
@@ -51,14 +52,7 @@ interface SidebarNavigationDualProps {
 
 export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationDualProps) => {
     const navigate = useNavigate();
-
-    // State for toggle buttons
-    const [toggleStates, setToggleStates] = useState({
-        header: false,
-        leftSidebar: false,
-        rightSidebar: false,
-        footer: false,
-    });
+    const { toggleStates, updateToggleStates } = useWidgetConfig();
 
     // State for tree expansion
     const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
@@ -66,9 +60,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // State for customize page tree expansion
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
 
-    // State for dynamic tree data
-    const [siteTreeData, setSiteTreeData] = useState<TreeNode[]>([]);
-    
     // Ref to prevent double execution and track folder count
     const isAddingFolderRef = useRef(false);
     const folderCounterRef = useRef(2);
@@ -85,6 +76,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/admin/site/spaces/private-space/customize")) return "customize";
         return "general";
     });
+
+    // Dynamic tree data with additional folders
+    const [additionalFolders, setAdditionalFolders] = useState<TreeNode[]>([]);
+
+    // Reactive tree data that updates when toggleStates change
+    const siteTreeData = useMemo(() => {
+        const baseTree = getInitialSiteFileTree();
+        // Add additional folders to the spaces children
+        const spacesNode = baseTree.find(node => node.id === "spaces");
+        if (spacesNode && spacesNode.children) {
+            spacesNode.children = [...spacesNode.children, ...additionalFolders];
+        }
+        return baseTree;
+    }, [toggleStates, additionalFolders]);
 
     // State for widget selection
     const [showWidgetSelection, setShowWidgetSelection] = useState(false);
@@ -180,34 +185,24 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         // Increment counter immediately to prevent duplicate IDs
         folderCounterRef.current++;
         
-        setSiteTreeData(prevData => {
-            // Check if folder already exists to prevent duplicates
-            const spacesIndex = prevData.findIndex(item => item.id === "spaces");
-            if (spacesIndex !== -1 && prevData[spacesIndex].children) {
-                const existingFolder = prevData[spacesIndex].children!.find(child => child.id === newFolderId);
-                if (existingFolder) {
-                    console.log("Folder already exists, skipping...");
-                    return prevData; // Return unchanged data
-                }
-            }
-            
-            const newData = [...prevData];
-            
-            if (spacesIndex !== -1 && newData[spacesIndex].children) {
-                // Add new folder with folder icon and empty children (like MyFolder)
-                const newFolder = {
-                    id: newFolderId,
-                    label: newFolderName,
-                    icon: <Folder className="size-5 text-fg-quaternary" />,
-                    children: [] // Empty children but expandable
-                };
-                
-                newData[spacesIndex].children!.push(newFolder);
-                console.log("Folder added:", newFolderName);
-            }
-            
-            return newData;
-        });
+        // Check if folder already exists to prevent duplicates
+        const existingFolder = additionalFolders.find(folder => folder.id === newFolderId);
+        if (existingFolder) {
+            console.log("Folder already exists, skipping...");
+            isAddingFolderRef.current = false;
+            return;
+        }
+        
+        // Add new folder with folder icon and empty children (like MyFolder)
+        const newFolder = {
+            id: newFolderId,
+            label: newFolderName,
+            icon: <Folder className="size-5 text-fg-quaternary" />,
+            children: [] // Empty children but expandable
+        };
+        
+        setAdditionalFolders(prev => [...prev, newFolder]);
+        console.log("Folder added:", newFolderName);
         
         // Make sure spaces is expanded to show the new folder (outside setSiteTreeData)
         setExpandedIds(prev => {
@@ -263,10 +258,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Handle toggle changes
     const handleToggleChange = (nodeId: string, isToggled: boolean) => {
-        setToggleStates(prev => ({
-            ...prev,
+        updateToggleStates({
             [nodeId]: isToggled
-        }));
+        });
         
         // Sync with tree expansion
         if (isToggled) {
@@ -375,7 +369,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         customizeExpandedIds={customizeExpandedIds}
                         setCustomizeExpandedIds={setCustomizeExpandedIds}
                         handleToggleChange={handleToggleChange}
-                        setToggleStates={setToggleStates}
+                        updateToggleStates={updateToggleStates}
                         onAddWidgetClick={handleAddWidgetClick}
                         onWidgetConfig={handleWidgetConfig}
                     />
@@ -451,7 +445,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     showToggleButton: true,
                     toggleState: toggleStates.header,
                     children: [
-                        { id: "topNavigation", label: "TopNavigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                        { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                 },
                 { 
@@ -481,7 +475,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     showToggleButton: true,
                     toggleState: toggleStates.footer,
                     children: [
-                        { id: "footerBlock", label: "FooterBlock", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                        { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                 },
             ]
@@ -498,10 +492,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         },
     ];
 
-    // Initialize tree data
-    useEffect(() => {
-        setSiteTreeData(getInitialSiteFileTree());
-    }, []);
+
 
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
@@ -650,10 +641,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     
                                     // Sync with toggle state for layout items
                                     if (nodeId === "header" || nodeId === "leftSidebar" || nodeId === "rightSidebar" || nodeId === "footer") {
-                                        setToggleStates(prev => ({
-                                            ...prev,
+                                        updateToggleStates({
                                             [nodeId]: expanded
-                                        }));
+                                        });
                                     }
                                 }}
                                 className="border-none bg-transparent"

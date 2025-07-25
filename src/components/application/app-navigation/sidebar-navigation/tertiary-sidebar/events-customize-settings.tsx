@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01 } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
@@ -14,7 +14,12 @@ interface EventsCustomizeSettingsProps {
   customizeExpandedIds: string[];
   setCustomizeExpandedIds: (callback: (prev: string[]) => string[]) => void;
   handleToggleChange: (nodeId: string, isToggled: boolean) => void;
-  setToggleStates: (callback: (prev: any) => any) => void;
+  updateToggleStates: (states: Partial<{
+    header: boolean;
+    leftSidebar: boolean;
+    rightSidebar: boolean;
+    footer: boolean;
+  }>) => void;
   onAddWidgetClick: () => void;
   onWidgetConfig: (widget: any) => void;
 }
@@ -24,13 +29,22 @@ export const EventsCustomizeSettings = ({
   customizeExpandedIds, 
   setCustomizeExpandedIds, 
   handleToggleChange, 
-  setToggleStates,
+  updateToggleStates,
   onAddWidgetClick,
   onWidgetConfig
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
+  
+  // Detect if we're on a private space page
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
+  
   // State for space widgets tree expansion
-  const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(["container", "mainColumn", "secondary", "column1", "column2", "column3"]);
+  const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(
+    isPrivateSpacePage 
+      ? ["container"] 
+      : ["container", "mainColumn", "secondary", "column1", "column2", "column3"]
+  );
 
   return (
     <div className="space-y-2 p-2">
@@ -56,9 +70,7 @@ export const EventsCustomizeSettings = ({
                     showToggleButton: true,
                     toggleState: toggleStates.header,
                     children: [
-                      { id: "topNavigation", label: "TopNavigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                      { id: "searchBar", label: "SearchBar", icon: <SearchLg className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                      { id: "userProfile", label: "UserProfile", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                      { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                   },
                   { 
@@ -69,7 +81,6 @@ export const EventsCustomizeSettings = ({
                     toggleState: toggleStates.leftSidebar,
                     children: [
                       { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                      { id: "navigation", label: "Navigation", icon: <Menu01 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                   },
                   { 
@@ -80,7 +91,6 @@ export const EventsCustomizeSettings = ({
                     toggleState: toggleStates.rightSidebar,
                     children: [
                       { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                      { id: "activityFeed", label: "ActivityFeed", icon: <Calendar className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                   },
                   { 
@@ -90,14 +100,13 @@ export const EventsCustomizeSettings = ({
                     showToggleButton: true,
                     toggleState: toggleStates.footer,
                     children: [
-                      { id: "footerBlock", label: "FooterBlock", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                      { id: "copyright", label: "Copyright", icon: <File01 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                      { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                   },
                 ]
               }
             ]}
-            expandedIds={customizeExpandedIds}
+            expandedIds={[...customizeExpandedIds,]}
             selectedIds={[]}
             onToggleChange={handleToggleChange}
             onNodeExpand={(nodeId, expanded) => {
@@ -110,16 +119,29 @@ export const EventsCustomizeSettings = ({
               
               // Sync with toggle state for layout items if needed
               if (nodeId === "header" || nodeId === "leftSidebar" || nodeId === "rightSidebar" || nodeId === "footer") {
-                setToggleStates(prev => ({
-                  ...prev,
+                updateToggleStates({
                   [nodeId]: expanded
-                }));
+                });
               }
             }}
             className="border-none bg-transparent"
             showLines={false}
             showIcons={true}
           />
+        </div>
+        
+        {/* Helper Note */}
+        <div className="text-xs mt-2 flex items-start gap-2">
+          <InfoCircle className={cx("size-3 mt-0.5 flex-shrink-0", theme === 'dark' ? "text-gray-400" : "text-gray-500")} />
+          <div className={cx("leading-relaxed", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+            You can <span className="font-medium">show/hide</span> navigation sections for this space, but widget edits apply site-wide. 
+            <button className={cx(
+              "font-medium underline ml-1 hover:no-underline",
+              theme === 'dark' ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"
+            )}>
+              Upgrade to Pro
+            </button> for per-space customization.
+          </div>
         </div>
       </div>
       
@@ -145,7 +167,20 @@ export const EventsCustomizeSettings = ({
           </div>
           <div className="bg-secondary/20 rounded-lg p-1">
             <TreeView
-              data={[
+              data={isPrivateSpacePage ? [
+                {
+                  id: "container",
+                  label: "Container",
+                  icon: <Grid01 className="size-5 text-fg-quaternary" />,
+                  children: [
+                    {
+                      id: "privateSpaceWidget",
+                      label: "Private space widget",
+                      icon: <Lock01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
+                    }
+                  ]
+                }
+              ] : [
                 {
                   id: "container",
                   label: "Container",
