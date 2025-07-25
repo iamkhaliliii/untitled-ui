@@ -80,6 +80,105 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // Dynamic tree data with additional folders
     const [additionalFolders, setAdditionalFolders] = useState<TreeNode[]>([]);
 
+    // Initial file tree data for Site section
+    const getInitialSiteFileTree = (): TreeNode[] => [
+        {
+            id: "spaces",
+            label: "Spaces",
+            showAddButton: true,
+            icon: <Folder className="size-5 text-fg-quaternary" />,
+            children: [
+                { id: "feed", label: "Feed" },
+                { id: "explorer", label: "Explorer" },
+                { id: "members", label: "Members" },
+                { 
+                    id: "myFolder", 
+                    label: "MyFolder",
+                    children: [
+                        { 
+                            id: "events", 
+                            label: "Events",
+                            data: { href: "/admin/site/spaces/myfolder/events" }
+                        },
+                        { id: "blog", label: "Blog" },
+                    ]
+                },
+            ]
+        },
+        {
+            id: "utilityPages",
+            label: "Utility pages",
+            icon: <File01 className="size-5 text-fg-quaternary" />,
+            children: [
+                { id: "search", label: "Search" },
+                { id: "404", label: "404" },
+                { 
+                    id: "privateSpace", 
+                    label: "Private space",
+                    data: { href: "/admin/site/spaces/private-space" }
+                },
+                { id: "memberProfile", label: "Member profile" },
+            ]
+        },
+        {
+            id: "navigation",
+            label: "Navigation",
+            icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
+            children: [
+                { 
+                    id: "header", 
+                    label: "Header",
+                    icon: <LayoutTop className="size-5 text-fg-quaternary" />,
+                    showToggleButton: true,
+                    toggleState: toggleStates.header,
+                    children: [
+                        { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                    ]
+                },
+                { 
+                    id: "leftSidebar", 
+                    label: "Left Sidebar",
+                    icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
+                    showToggleButton: true,
+                    toggleState: toggleStates.leftSidebar,
+                    children: [
+                        { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                    ]
+                },
+                { 
+                    id: "rightSidebar", 
+                    label: "Right Sidebar",
+                    icon: <LayoutRight className="size-5 text-fg-quaternary" />,
+                    showToggleButton: true,
+                    toggleState: toggleStates.rightSidebar,
+                    children: [
+                        { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                    ]
+                },
+                { 
+                    id: "footer", 
+                    label: "Footer",
+                    icon: <LayoutBottom className="size-5 text-fg-quaternary" />,
+                    showToggleButton: true,
+                    toggleState: toggleStates.footer,
+                    children: [
+                        { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
+                    ]
+                },
+            ]
+        },
+        {
+            id: "modules",
+            label: "Modules",
+            showAddButton: true,
+            icon: <Package className="size-5 text-fg-quaternary" />,
+            children: [
+                { id: "events", label: "Events" },
+                { id: "blog", label: "Blog" },
+            ]
+        },
+    ];
+
     // Reactive tree data that updates when toggleStates change
     const siteTreeData = useMemo(() => {
         const baseTree = getInitialSiteFileTree();
@@ -392,105 +491,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 return null;
         }
     };
-
-    // Initial file tree data for Site section
-    const getInitialSiteFileTree = (): TreeNode[] => [
-        {
-            id: "spaces",
-            label: "Spaces",
-            showAddButton: true,
-            icon: <Folder className="size-5 text-fg-quaternary" />,
-            children: [
-                { id: "feed", label: "Feed" },
-                { id: "explorer", label: "Explorer" },
-                { id: "members", label: "Members" },
-                { 
-                    id: "myFolder", 
-                    label: "MyFolder",
-                    children: [
-                        { 
-                            id: "events", 
-                            label: "Events",
-                            data: { href: "/admin/site/spaces/myfolder/events" }
-                        },
-                        { id: "blog", label: "Blog" },
-                    ]
-                },
-            ]
-        },
-        {
-            id: "utilityPages",
-            label: "Utility pages",
-            icon: <File01 className="size-5 text-fg-quaternary" />,
-            children: [
-                { id: "search", label: "Search" },
-                { id: "404", label: "404" },
-                { 
-                    id: "privateSpace", 
-                    label: "Private space",
-                    data: { href: "/admin/site/spaces/private-space" }
-                },
-                { id: "memberProfile", label: "Member profile" },
-            ]
-        },
-        {
-            id: "navigation",
-            label: "Navigation",
-            icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
-            children: [
-                { 
-                    id: "header", 
-                    label: "Header",
-                    icon: <LayoutTop className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.header,
-                    children: [
-                        { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-                { 
-                    id: "leftSidebar", 
-                    label: "Left Sidebar",
-                    icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.leftSidebar,
-                    children: [
-                        { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-                { 
-                    id: "rightSidebar", 
-                    label: "Right Sidebar",
-                    icon: <LayoutRight className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.rightSidebar,
-                    children: [
-                        { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-                { 
-                    id: "footer", 
-                    label: "Footer",
-                    icon: <LayoutBottom className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.footer,
-                    children: [
-                        { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-            ]
-        },
-        {
-            id: "modules",
-            label: "Modules",
-            showAddButton: true,
-            icon: <Package className="size-5 text-fg-quaternary" />,
-            children: [
-                { id: "events", label: "Events" },
-                { id: "blog", label: "Blog" },
-            ]
-        },
-    ];
 
 
 
