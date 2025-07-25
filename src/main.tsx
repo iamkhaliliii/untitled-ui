@@ -1,10 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { HomeScreen } from "@/pages/home-screen";
 import { AdminDashboardPage } from "@/pages/admin/dashboard";
 import { AdminContentPage } from "@/pages/admin/content";
 import { AdminPeoplePage } from "@/pages/admin/people";
+import { AdminGamificationPage } from "@/pages/admin/gamification";
+import { AdminSiteSettingsPage } from "@/pages/admin/site-settings";
+import { AdminAuthenticationPage } from "@/pages/admin/authentication";
 import { AdminSitePage } from "@/pages/admin/site";
 import { SiteFilesPage } from "@/pages/admin/site-files";
 import { SiteSpacesEventsPage } from "@/pages/admin/site-spaces-events";
@@ -30,6 +33,10 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin" element={<AdminDashboardPage />} />
                         <Route path="/admin/content" element={<AdminContentPage />} />
                         <Route path="/admin/people" element={<AdminPeoplePage />} />
+                        <Route path="/admin/setting" element={<Navigate to="/admin/setting/site-settings" replace />} />
+                        <Route path="/admin/setting/site-settings" element={<AdminSiteSettingsPage />} />
+                        <Route path="/admin/setting/authentication" element={<AdminAuthenticationPage />} />
+                        <Route path="/admin/setting/gamification" element={<AdminGamificationPage />} />
                         <Route path="/admin/site" element={<AdminSitePage />} />
                         <Route path="/admin/site/files" element={<SiteFilesPage />} />
                         <Route path="/admin/site/spaces/myfolder/events" element={<SiteSpacesEventsPage />} />

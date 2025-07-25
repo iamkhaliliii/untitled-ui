@@ -82,6 +82,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/admin/site/spaces/myfolder/events/danger")) return "danger";
+        if (activeUrl?.includes("/admin/site/spaces/private-space/customize")) return "customize";
         return "general";
     });
 
@@ -291,13 +292,16 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         navigate(href);
     };
 
-    // Check if we're on any events page
+    // Check if we're on any events page or private space page
     const isEventsPage = activeUrl?.includes("/admin/site/spaces/myfolder/events");
+    const isPrivateSpacePage = activeUrl?.includes("/admin/site/spaces/private-space");
+    const isSpacePage = isEventsPage || isPrivateSpacePage;
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
         inviteOnly: false,
         anyoneInvite: false,
+        hideFromFeed: false,
         comments: false,
         reactions: false,
     });
@@ -427,7 +431,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             children: [
                 { id: "search", label: "Search" },
                 { id: "404", label: "404" },
-                { id: "privateSpace", label: "Private space" },
+                { 
+                    id: "privateSpace", 
+                    label: "Private space",
+                    data: { href: "/admin/site/spaces/private-space" }
+                },
                 { id: "memberProfile", label: "Member profile" },
             ]
         },
@@ -522,9 +530,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     };
 
     const MAIN_SIDEBAR_WIDTH = 68;
-    const SECONDARY_SIDEBAR_WIDTH = isEventsPage ? 200 : 268;
+    const SECONDARY_SIDEBAR_WIDTH = isSpacePage ? 200 : 268;
     const TERTIARY_SIDEBAR_WIDTH = 368;
-    const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH + (isEventsPage ? TERTIARY_SIDEBAR_WIDTH : 0);
+    const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH + (isSpacePage ? TERTIARY_SIDEBAR_WIDTH : 0);
 
     const mainSidebar = (
         <aside
@@ -619,7 +627,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
-                    {isEventsPage ? "Events" : currentItem?.label}
+                    {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : currentItem?.label}
                 </h3>
                 
                 {/* Show TreeView for Site section when on /admin/site page */}
@@ -784,7 +792,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </div>
                         </div>
                     </div>
-                ) : isEventsPage ? (
+                ) : isSpacePage ? (
                     <div className="mt-2">
                         {/* Back Button */}
                         <button
@@ -795,11 +803,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             Back to Site
                         </button>
 
-                        {/* Events Menu */}
+                        {/* Space Menu */}
                         <ul className="space-y-0.5">
                             <li>
                                 <button
-                                    onClick={() => handleSecondaryItemClick("general", "/admin/site/spaces/myfolder/events")}
+                                    onClick={() => handleSecondaryItemClick("general", 
+                                        isPrivateSpacePage ? "/admin/site/spaces/private-space" : "/admin/site/spaces/myfolder/events"
+                                    )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "general"
                                             ? "bg-active text-secondary_hover"
@@ -812,7 +822,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </li>
                             <li>
                                 <button
-                                    onClick={() => handleSecondaryItemClick("customize", "/admin/site/spaces/myfolder/events/customize")}
+                                    onClick={() => handleSecondaryItemClick("customize", 
+                                        isPrivateSpacePage ? "/admin/site/spaces/private-space/customize" : "/admin/site/spaces/myfolder/events/customize"
+                                    )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "customize"
                                             ? "bg-active text-secondary_hover"

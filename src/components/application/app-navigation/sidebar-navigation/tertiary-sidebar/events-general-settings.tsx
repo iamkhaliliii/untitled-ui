@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01 } from "@untitledui/icons";
+import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01 } from "@untitledui/icons";
 import { Input, InputBase } from "@/components/base/input/input";
 import { TextArea } from "@/components/base/textarea/textarea";
 import { Select } from "@/components/base/select/select";
@@ -10,6 +10,7 @@ import { Badge } from "@/components/base/badges/badges";
 interface FormToggles {
     inviteOnly: boolean;
     anyoneInvite: boolean;
+    hideFromFeed: boolean;
     comments: boolean;
     reactions: boolean;
 }
@@ -20,6 +21,11 @@ interface EventsGeneralSettingsProps {
 }
 
 export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGeneralSettingsProps) => {
+    const [visibility, setVisibility] = useState<string>("public");
+    const [privateMessage, setPrivateMessage] = useState<string>("");
+    const [privateAction, setPrivateAction] = useState<string>("request-to-join");
+    const [customUrl, setCustomUrl] = useState<string>("");
+
     return (
         <div className="space-y-6 p-4 pb-6">
             <div className="space-y-6 ">
@@ -87,6 +93,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                     <Select
                         label="Visibility"
                         placeholder="Select visibility"
+                        onSelectionChange={(selected) => setVisibility(String(selected))}
                         items={[
                             { label: "Public", id: "public", icon: Globe01 },
                             { label: "Private", id: "private", icon: Lock01 },
@@ -100,6 +107,65 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                         )}
                     </Select>
                 </div>
+
+                {/* Private Visibility Settings */}
+                {visibility === "private" && (
+                    <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
+                        {/* Private Message */}
+                        <div>
+                            <label className="text-sm font-medium text-secondary mb-2 block">
+                                Message for visitors who cannot access
+                            </label>
+                            <TextArea
+                                placeholder="Enter a message explaining why this content is private and what visitors can do..."
+                                value={privateMessage}
+                                onChange={(e) => setPrivateMessage(e.target.value)}
+                                rows={4}
+                            />
+                            <p className="text-xs text-tertiary mt-1">
+                                This message will be shown to visitors who don't have access to this private space.
+                            </p>
+                        </div>
+
+                        {/* Private Action */}
+                        <div>
+                            <Select
+                                label="Button to show visitors"
+                                placeholder="Select button type"
+                                onSelectionChange={(selected) => setPrivateAction(String(selected))}
+                                items={[
+                                    { label: "Show 'Request to Join' button", id: "request-to-join", icon: UserPlus01 },
+                                    { label: "Show 'Go to Home' button", id: "go-to-home", icon: Home01 },
+                                    { label: "Show 'Visit Link' button", id: "custom-url", icon: Link01 }
+                                ]}
+                            >
+                                {(item) => (
+                                    <Select.Item id={item.id} icon={item.icon}>
+                                        {item.label}
+                                    </Select.Item>
+                                )}
+                            </Select>
+                            <p className="text-xs text-tertiary mt-1">
+                                Choose what button visitors will see when they try to access this private content.
+                            </p>
+                        </div>
+
+                        {/* Custom URL Field (conditional) */}
+                        {privateAction === "custom-url" && (
+                            <div className="ml-4">
+                                <Input
+                                    label="Link URL for 'Visit Link' button"
+                                    placeholder="https://example.com/contact"
+                                    value={customUrl}
+                                    onChange={(value) => setCustomUrl(value)}
+                                />
+                                <p className="text-xs text-tertiary mt-1">
+                                    When visitors click the 'Visit Link' button, they will be redirected to this URL.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Invite Only Toggle */}
                 <div>
@@ -122,6 +188,18 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                         slim
                         isSelected={formToggles.anyoneInvite}
                         onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
+                    />
+                </div>
+
+                {/* Hide from Feed Toggle */}
+                <div>
+                    <Toggle
+                        label="Hide from feed"
+                        hint="Hide posts from this space in the community feed"
+                        size="sm"
+                        slim
+                        isSelected={formToggles.hideFromFeed}
+                        onChange={(value) => setFormToggles(prev => ({ ...prev, hideFromFeed: value }))}
                     />
                 </div>
             </div>

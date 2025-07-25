@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { UsersPlus, DotsVertical, Edit01, Trash01, Mail01, Download01, Eye, UserCheck01, SearchMd } from "@untitledui/icons";
-import { Table, TableCard } from "@/components/application/table/table";
+import { UsersPlus, DotsVertical, Edit01, Trash01, Mail01, Download01, Eye, UserCheck01, SearchMd, CheckCircle, XCircle, Users01 } from "@untitledui/icons";
+
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Avatar } from "@/components/base/avatar/avatar";
@@ -8,6 +8,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
+import { Tabs } from "@/components/application/tabs/tabs";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 import { cx } from "@/utils/cx";
@@ -70,6 +71,37 @@ const mockMembers = [
   },
 ];
 
+// Mock data for membership requests
+const mockRequests = [
+  {
+    id: 1,
+    name: "Alex Chen",
+    email: "alex.chen@example.com",
+    avatar: "https://www.untitledui.com/images/avatars/default-avatar?fm=webp&q=80",
+    requestDate: "2024-03-01",
+    message: "Hi, I'd love to join this space to connect with like-minded people and share my experiences.",
+    status: "pending",
+  },
+  {
+    id: 2,
+    name: "Maria Rodriguez",
+    email: "maria.rodriguez@example.com",
+    avatar: "https://www.untitledui.com/images/avatars/default-avatar?fm=webp&q=80",
+    requestDate: "2024-03-02",
+    message: "I'm interested in the events and discussions happening in this community.",
+    status: "pending",
+  },
+  {
+    id: 3,
+    name: "James Thompson",
+    email: "james.thompson@example.com",
+    avatar: "https://www.untitledui.com/images/avatars/default-avatar?fm=webp&q=80",
+    requestDate: "2024-02-28",
+    message: "Looking forward to contributing to this amazing community!",
+    status: "pending",
+  },
+];
+
 const roleOptions = [
   { label: "Admin", id: "admin" },
   { label: "Moderator", id: "moderator" },
@@ -78,7 +110,9 @@ const roleOptions = [
 
 export const EventsMembersSettings = () => {
   const theme = useResolvedTheme();
+  const [activeTab, setActiveTab] = useState("members");
   const [members, setMembers] = useState(mockMembers);
+  const [requests, setRequests] = useState(mockRequests);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [autoSubscribe, setAutoSubscribe] = useState(false);
   const [newMember, setNewMember] = useState({
@@ -156,6 +190,30 @@ export const EventsMembersSettings = () => {
     // Add search functionality here
   };
 
+  const handleAcceptRequest = (requestId: number) => {
+    const request = requests.find(req => req.id === requestId);
+    if (request) {
+      // Add to members
+      const newMember = {
+        id: Date.now(),
+        name: request.name,
+        email: request.email,
+        avatar: request.avatar,
+        role: "Member",
+        status: "Active",
+        joinedDate: new Date().toISOString().split('T')[0],
+      };
+      setMembers([...members, newMember]);
+      
+      // Remove from requests
+      setRequests(requests.filter(req => req.id !== requestId));
+    }
+  };
+
+  const handleRejectRequest = (requestId: number) => {
+    setRequests(requests.filter(req => req.id !== requestId));
+  };
+
   const getRoleStyles = (role: string) => {
     switch (role.toLowerCase()) {
       case 'admin':
@@ -217,93 +275,54 @@ export const EventsMembersSettings = () => {
     </Dropdown.Root>
   );
 
-  return (
-    <div className="space-y-4 p-4">
 
 
-      <div className="mb-4">
-        <h5 className="text-md font-semibold text-primary mb-3">Notification Config</h5>
-        <Toggle
-          label="Auto-subscribe new and existing members"
-          hint="Enable this setting to automatically subscribe new and existing members to notifications for updates and posts, unless they have already adjusted their notification settings."
-          size="sm"
-          slim
-          isSelected={autoSubscribe}
-          onChange={(value) => setAutoSubscribe(value)}
-        />
-      </div>
+  const renderNotificationConfig = () => (
+    <div className="mb-4">
+      <h5 className="text-md font-semibold text-primary mb-3">Notification Config</h5>
+      <Toggle
+        label="Auto-subscribe new and existing members"
+        hint="Enable this setting to automatically subscribe new and existing members to notifications for updates and posts, unless they have already adjusted their notification settings."
+        size="sm"
+        slim
+        isSelected={autoSubscribe}
+        onChange={(value) => setAutoSubscribe(value)}
+      />
+    </div>
+  );
 
-      <div className="mb-4">
-        <div className="flex items-center justify-between">
-          <h5 className="text-md font-semibold text-primary">Space Members</h5>
-          <div className="flex items-center gap-2">
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={SearchMd}
-              tooltip="Search Members"
-              onClick={handleSearchMembers}
-            />
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={Download01}
-              tooltip="Export Data"
-              onClick={handleExportData}
-            />
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={UsersPlus}
-              tooltip="Add Member"
-              onClick={() => setIsAddModalOpen(true)}
-            />
+  const renderMembersList = () => (
+    <div className="space-y-4">
+      <div className="divide-y divide-gray-200">
+        {members.map((member) => (
+          <div key={member.id} className="flex items-center justify-between py-3 hover:bg-secondary/10 transition-colors">
+            <div className="flex items-center gap-3">
+              <Avatar 
+                src={member.avatar} 
+                alt={member.name}
+                size="sm"
+              />
+              <div>
+                <div className="font-medium text-primary text-sm">
+                  {member.name}
+                </div>
+                <div className="text-xs text-tertiary">
+                  <span className={`${getRoleStyles(member.role)} rounded-full px-1 py-0.5 text-[0.6rem]`}>
+                    {member.role}
+                  </span> • joined {new Date(member.joinedDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <MemberActionsDropdown member={member} />
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-
-      <TableCard.Root size="sm">
-        <Table size="sm">
-          <Table.Header>
-            <Table.Head label="Member" />
-            <Table.Head className="w-16 text-center" />
-          </Table.Header>
-          <Table.Body>
-            {members.map((member) => (
-              <Table.Row key={member.id}>
-                <Table.Cell>
-                  <div className="flex items-center gap-3">
-                    <Avatar 
-                      src={member.avatar} 
-                      alt={member.name}
-                      size="sm"
-                    />
-                    <div>
-                      <div className="font-medium text-primary text-sm">
-                        {member.name}
-                      </div>
-                      <div className="text-xs text-tertiary">
-                        <span className={`${getRoleStyles(member.role)} rounded-full px-1 py-0.5 text-[0.6rem]`}>
-                          {member.role}
-                        </span> • joined {new Date(member.joinedDate).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </Table.Cell>
-                <Table.Cell className="w-16">
-                  <div className="flex justify-center">
-                    <MemberActionsDropdown member={member} />
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </TableCard.Root>
 
       {/* Add Member Form - simplified without modal */}
       {isAddModalOpen && (
@@ -358,6 +377,119 @@ export const EventsMembersSettings = () => {
           </div>
         </div>
       )}
+    </div>
+  );
+
+  const renderRequestsList = () => (
+    <div className="space-y-4">
+      {requests.length === 0 ? (
+        <div className="text-center py-8">
+          <div className="w-12 h-12 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
+            <Users01 className="w-6 h-6 text-tertiary" />
+          </div>
+          <h6 className="text-sm font-medium text-primary mb-1">No pending requests</h6>
+          <p className="text-xs text-tertiary">New membership requests will appear here for approval.</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-gray-200">
+          {requests.map((request) => (
+            <div key={request.id} className="flex items-center justify-between py-3 hover:bg-secondary/10 transition-colors">
+              <div className="flex items-center gap-3">
+                <Avatar 
+                  src={request.avatar} 
+                  alt={request.name}
+                  size="sm"
+                />
+                <div>
+                  <div className="font-medium text-primary text-sm">
+                    {request.name}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <ButtonUtility
+                  size="sm"
+                  color="tertiary"
+                  icon={CheckCircle}
+                  tooltip="Approve"
+                  onClick={() => handleAcceptRequest(request.id)}
+                />
+                <ButtonUtility
+                  size="sm"
+                  color="tertiary"
+                  icon={XCircle}
+                  tooltip="Decline"
+                  onClick={() => handleRejectRequest(request.id)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const tabItems = [
+    { id: "members", label: `Members (${members.length})` },
+    { id: "requests", label: `Request List (${requests.length})` }
+  ];
+
+  return (
+    <div className="space-y-4 p-4">
+      {renderNotificationConfig()}
+
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <h5 className="text-md font-semibold text-primary">Space Members</h5>
+          <div className="flex items-center gap-2">
+            <ButtonUtility
+              size="sm"
+              color="tertiary"
+              icon={SearchMd}
+              tooltip="Search Members"
+              onClick={handleSearchMembers}
+            />
+            <ButtonUtility
+              size="sm"
+              color="tertiary"
+              icon={Download01}
+              tooltip="Export Data"
+              onClick={handleExportData}
+            />
+            <ButtonUtility
+              size="sm"
+              color="tertiary"
+              icon={UsersPlus}
+              tooltip="Add Member"
+              onClick={() => setIsAddModalOpen(true)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))}>
+        <Tabs.List
+          items={tabItems}
+          type="underline"
+          size="md"
+        >
+          {(item) => (
+            <Tabs.Item key={item.id} id={item.id}>
+              {item.label}
+            </Tabs.Item>
+          )}
+        </Tabs.List>
+        
+        <div className="mt-6">
+          <Tabs.Panel id="members">
+            {activeTab === "members" && renderMembersList()}
+          </Tabs.Panel>
+          
+          <Tabs.Panel id="requests">
+            {activeTab === "requests" && renderRequestsList()}
+          </Tabs.Panel>
+        </div>
+      </Tabs>
     </div>
   );
 }; 

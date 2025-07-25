@@ -43,9 +43,9 @@ export const SiteSpacesEventsPage = () => {
             hideHeader={isEventsPage}
         >
             <WidgetConfigProvider>
-                <div className="px-4 py-6 lg:px-6">
-                    <BrowserMockup />
-                </div>
+            <div className="px-4 py-6 lg:px-6">
+                <BrowserMockup />
+            </div>
             </WidgetConfigProvider>
         </AdminLayout>
     );
