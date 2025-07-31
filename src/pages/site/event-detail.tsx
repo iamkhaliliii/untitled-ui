@@ -4,6 +4,7 @@ import {
     Check,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import EventMap from "@/components/base/map/event-map";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -29,6 +30,10 @@ const SiteEventDetailPage = () => {
         type: "in-person",
         attendees: 50,
         goingCount: 23,
+        coordinates: {
+            latitude: 40.7589,
+            longitude: -73.9851
+        },
         organizer: {
             name: "Sarah Johnson",
             avatar: "https://images.unsplash.com/photo-1494790108755-2616b2c8e4ba?w=150&h=150&fit=crop&crop=faces"
@@ -40,10 +45,10 @@ const SiteEventDetailPage = () => {
     };
 
     return (
-        <div className="min-h-screen">
-            {/* Back Button */}
-            <div className="p-4 bg-white border-b border-gray-200">
-                <div className="max-w-6xl mx-auto">
+        <div className="h-screen flex flex-col">
+            {/* Sticky Header */}
+            <div className="sticky top-0 z-50 p-4 bg-white border-b border-gray-200 shrink-0">
+                <div className="max-w-4xl mx-auto">
                     <Button 
                         size="sm" 
                         color="tertiary"
@@ -72,11 +77,10 @@ const SiteEventDetailPage = () => {
                 `
             }} />
 
-            {/* Event Detail Content */}
-            <div className="flex max-w-4xl mx-auto gap-4 py-6">
-                <div className="flex w-full gap-6">
-                {/* Left Column - Image + Basic Info */}
-                                    <div className="w-3/9 relative flex flex-col min-h-0">
+            {/* Main Content Area */}
+            <div className="flex flex-1 max-w-4xl mx-auto gap-6 py-6 min-h-0">
+                {/* Sticky Left Column - Image + Basic Info */}
+                <div className="w-3/9 sticky top-24 h-fit">
                     <div className="pb-4">
                         <div className="w-full h-full">
                             <img
@@ -88,10 +92,7 @@ const SiteEventDetailPage = () => {
                     </div>
                     
                     {/* Basic Event Info */}
-                    <div 
-                        className="space-y-6 flex-1 overflow-y-auto min-h-0 event-scrollbar" 
-                        style={scrollbarStyles}
-                    >
+                    <div className="space-y-6">
                         <div className="space-y-2">
                             {/* Event Title */}
                             <h1 className="text-2xl font-bold leading-tight text-gray-900">
@@ -144,48 +145,46 @@ const SiteEventDetailPage = () => {
                                 </div>
                             </div>
                         </div>
+                        
                         <div className="border-t border-gray-200">
-                        <div className="space-y-2 pt-6">
-                            {/* Top Row - RSVP */}
-                            <Button 
-                                size="sm" 
-                                color="primary" 
-                                className="w-full justify-center text-xs"
-                            >
-                                RSVP Now
-                            </Button>
-                            
-                            {/* Bottom Row - Going & Add to Calendar */}
-                            <div className="flex gap-2">
+                            <div className="space-y-2 pt-6">
+                                {/* Top Row - RSVP */}
                                 <Button 
                                     size="sm" 
-                                    color="tertiary" 
-                                    iconLeading={Check} 
-                                    className="flex-1 justify-center text-xs"
+                                    color="primary" 
+                                    className="w-full justify-center text-xs"
                                 >
-                                    Going ({event.goingCount})
+                                    RSVP Now
                                 </Button>
-                                <Button 
-                                    size="sm" 
-                                    color="tertiary" 
-                                    iconLeading={Calendar} 
-                                    className="flex-1 justify-center text-xs"
-                                >
-                                    Add to Calendar
-                                </Button>
+                                
+                                {/* Bottom Row - Going & Add to Calendar */}
+                                <div className="flex gap-2">
+                                    <Button 
+                                        size="sm" 
+                                        color="tertiary" 
+                                        iconLeading={Check} 
+                                        className="flex-1 justify-center text-xs"
+                                    >
+                                        Going ({event.goingCount})
+                                    </Button>
+                                    <Button 
+                                        size="sm" 
+                                        color="tertiary" 
+                                        iconLeading={Calendar} 
+                                        className="flex-1 justify-center text-xs"
+                                    >
+                                        Add to Calendar
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-                    
-                    {/* Action Buttons - Sticky Footer */}
-
                 </div>
 
-                {/* Right Column - Content Cards */}
+                {/* Scrollable Right Column - Content Cards */}
                 <div className="w-6/9 flex flex-col min-h-0">
                     <div 
-                        className="flex-1 overflow-y-auto space-y-6 min-h-0 event-scrollbar px-4 py-2" 
+                        className="flex-1 space-y-6 min-h-0 event-scrollbar px-4 py-2 " 
                         style={scrollbarStyles}
                     >
                         {/* About Event Card */}
@@ -201,22 +200,26 @@ const SiteEventDetailPage = () => {
                                 <p className="text-gray-600 leading-relaxed mb-4">
                                     Whether you're looking to expand your network, gain new perspectives, or simply enjoy engaging conversations with like-minded individuals, this event offers something valuable for everyone. Our speakers and participants represent diverse backgrounds and expertise levels, creating a rich environment for learning and collaboration.
                                 </p>
-                                <p className="text-gray-700 leading-relaxed">
-                                    Don't miss this opportunity to be part of a dynamic community that's driving positive change and innovation. Reserve your spot today and prepare for an inspiring and transformative experience.
-                                </p>
+                                
                             </div>
                         </div>
 
                         {/* Location Card */}
-                        <div className="">
+                        <div className="pb-18">
                             <div className="text-sm text-gray-500 mb-3 border-b border-gray-200 pb-1">Location & Venue</div>
-                            <div className="font-medium text-gray-900 mb-2">{event.location}</div>
-                            <div className="text-gray-600">
-                                {event.type === "online" ? "Virtual Event" : "In-person event with parking available"}
-                            </div>
+                            <div className="font-medium text-gray-900 mb-3">{event.location}</div>
+
+                            
+                            {/* Interactive Map */}
+                            {event.type !== "online" && event.coordinates && (
+                                <EventMap
+                                    location={event.location}
+                                    latitude={event.coordinates.latitude}
+                                    longitude={event.coordinates.longitude}
+                                />
+                            )}
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
