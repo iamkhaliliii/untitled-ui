@@ -2,8 +2,20 @@ import {
     Calendar,
     MarkerPin01,
     Check,
+    Share02,
+    DotsHorizontal,
+    Share01,
+    Share03,
+    Share04,
+    Share05,
+    Share06,
+    Share07,
+    Home01,
+    Home04,
+    Home05,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import EventMap from "@/components/base/map/event-map";
 import React from "react";
 import { useNavigate } from "react-router";
@@ -44,11 +56,34 @@ const SiteEventDetailPage = () => {
         navigate(-1);
     };
 
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: event.title,
+                text: event.description,
+                url: window.location.href,
+            });
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href);
+            // You could add a toast notification here
+        }
+    };
+
+    const handleMore = () => {
+        // You can add more options like: bookmark, report, etc.
+        console.log('More options clicked');
+    };
+
+    const handleHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="h-screen flex flex-col">
             {/* Sticky Header */}
             <div className="sticky top-0 z-50 p-4 bg-white border-b border-gray-200 shrink-0">
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <Button 
                         size="sm" 
                         color="tertiary"
@@ -56,6 +91,31 @@ const SiteEventDetailPage = () => {
                     >
                         ← <span className="text-sm ml-2">Back to Events</span>
                     </Button>
+                    
+                    {/* Action Icons */}
+                    <div className="flex items-center gap-1">
+                        <ButtonUtility 
+                            size="sm" 
+                            color="tertiary"
+                            icon={Home05}
+                            tooltip="Home"
+                            onClick={handleHome}
+                        />
+                        <ButtonUtility 
+                            size="sm" 
+                            color="tertiary"
+                            icon={Share07}
+                            tooltip="Share"
+                            onClick={handleShare}
+                        />
+                        <ButtonUtility 
+                            size="sm" 
+                            color="tertiary"
+                            icon={DotsHorizontal}
+                            tooltip="More options"
+                            onClick={handleMore}
+                        />
+                    </div>
                 </div>
             </div>
             
