@@ -16,6 +16,7 @@ import EventsCustomizePage from "@/pages/admin/events-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import { SiteEventPage } from "@/pages/site/event";
+import SiteEventDetailPage from "@/pages/site/event-detail";
 import { NotFound } from "@/pages/not-found";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
@@ -58,6 +59,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/site" element={<SiteHomePage />} />
                         <Route path="/site/feed" element={<SiteFeedPage />} />
                         <Route path="/site/event" element={<SiteEventPage />} />
+                        <Route path="/site/event/:id" element={<SiteEventDetailPage />} />
                         
                         {/* Backwards compatibility routes */}
                         <Route path="/content" element={<AdminContentPage />} />
