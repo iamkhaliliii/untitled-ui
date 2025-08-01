@@ -180,17 +180,17 @@ export const AdminStickyHeader = ({
                                     </div>
                                 </div>
 
-                                {/* Hide/Show Toggle - Only show on site pages, not admin pages */}
-                                {!isAdminPage && (
-                                    <ButtonUtility 
-                                        size="sm"
-                                        color="tertiary"
-                                        icon={adminHeaderCollapsed ? ChevronDown : ChevronUp}
-                                        onClick={toggleAdminHeaderCollapse}
-                                        tooltip={adminHeaderCollapsed ? "Show Admin Header" : "Minimize Admin Header"}
-                                        className="text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200"
-                                    />
-                                )}
+                                                               {/* Hide/Show Toggle - Only show on site pages, not admin pages */}
+                               {!isAdminPage && (
+                                   <ButtonUtility
+                                       size="sm"
+                                       color="tertiary"
+                                       icon={adminHeaderCollapsed ? ChevronDown : ChevronUp}
+                                       onClick={toggleAdminHeaderCollapse}
+                                       tooltip={adminHeaderCollapsed ? "Show Admin Header" : "Minimize Admin Header"}
+                                       className="text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200"
+                                   />
+                               )}
 
                                 {/* Mobile Menu */}
                                 <div className="lg:hidden">

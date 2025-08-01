@@ -24,15 +24,17 @@ import { AdminDemo } from "@/components/application/admin-demo";
 import { TestAdminPage } from "@/pages/test-admin";
 import { WidgetConfigProvider } from "@/providers/widget-config-provider";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { AdminProvider } from "@/hooks/use-admin";
 import "@/styles/globals.css";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <ErrorBoundary>
-            <ThemeProvider>
-                <WidgetConfigProvider>
-                    <BrowserRouter>
-                        <RouteProvider>
+            <AdminProvider>
+                <ThemeProvider>
+                    <WidgetConfigProvider>
+                        <BrowserRouter>
+                            <RouteProvider>
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
                         
@@ -75,10 +77,11 @@ createRoot(document.getElementById("root")!).render(
                         
                         <Route path="*" element={<NotFound />} />
                         </Routes>
-                    </RouteProvider>
-                    </BrowserRouter>
-                </WidgetConfigProvider>
-            </ThemeProvider>
+                        </RouteProvider>
+                        </BrowserRouter>
+                    </WidgetConfigProvider>
+                </ThemeProvider>
+            </AdminProvider>
         </ErrorBoundary>
     </StrictMode>,
 );

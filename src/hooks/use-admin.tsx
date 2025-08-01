@@ -1,14 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 
-// Simple admin state management - can be replaced with proper authentication later
-export const useAdmin = () => {
+// Admin Context
+interface AdminContextType {
+    isAdmin: boolean;
+    adminHeaderVisible: boolean;
+    adminHeaderCollapsed: boolean;
+    toggleAdminMode: () => void;
+    toggleAdminHeader: () => void;
+    toggleAdminHeaderCollapse: () => void;
+}
+
+const AdminContext = createContext<AdminContextType | undefined>(undefined);
+
+// Admin Provider Component
+export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [adminHeaderVisible, setAdminHeaderVisible] = useState(true);
     const [adminHeaderCollapsed, setAdminHeaderCollapsed] = useState(false);
 
     useEffect(() => {
-        // Check if user is admin - this could be from localStorage, API, etc.
-        // For now, we'll check localStorage for a simple flag
         const adminFlag = localStorage.getItem('isAdmin');
         setIsAdmin(adminFlag === 'true');
     }, []);
@@ -27,7 +37,7 @@ export const useAdmin = () => {
         setAdminHeaderCollapsed(!adminHeaderCollapsed);
     };
 
-    return {
+    const value = {
         isAdmin,
         adminHeaderVisible,
         adminHeaderCollapsed,
@@ -35,4 +45,19 @@ export const useAdmin = () => {
         toggleAdminHeader,
         toggleAdminHeaderCollapse,
     };
+
+    return (
+        <AdminContext.Provider value={value}>
+            {children}
+        </AdminContext.Provider>
+    );
+};
+
+// Hook to use admin context
+export const useAdmin = () => {
+    const context = useContext(AdminContext);
+    if (!context) {
+        throw new Error('useAdmin must be used within AdminProvider');
+    }
+    return context;
 };
