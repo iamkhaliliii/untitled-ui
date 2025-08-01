@@ -46,6 +46,9 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { SidebarNavigationDual } from "@/components/application/app-navigation/sidebar-navigation/sidebar-dual";
+import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
+import { useAdmin } from "@/hooks/use-admin";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 
 
@@ -185,6 +188,7 @@ export const AdminLayout = ({
     currentPath = "/admin",
     hideHeader = false
 }: AdminLayoutProps) => {
+    const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const SidebarNavigationDualDemo = () => (
         <SidebarNavigationDual
             activeUrl={currentPath}
@@ -205,10 +209,27 @@ export const AdminLayout = ({
     );
 
     return (
-        <div className="flex h-dvh">
-            <SidebarNavigationDualDemo />
-            
-            <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
+        <div className="flex flex-col h-dvh">
+            {/* Admin Sticky Header - Only visible to admins */}
+            {isAdmin && (
+                <ErrorBoundary fallback={
+                    <div className="h-12 bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 text-sm">
+                        Admin header error - check console
+                    </div>
+                }>
+                    <AdminStickyHeader 
+                        isVisible={adminHeaderVisible} 
+                        onToggleVisibility={toggleAdminHeader}
+                        isAdminPage={true}
+                    />
+                </ErrorBoundary>
+            )}
+
+            {/* Main layout with sidebar and content */}
+            <div className="flex flex-1 overflow-hidden">
+                <SidebarNavigationDualDemo />
+                
+                <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
                 {/* Header */}
                 {!hideHeader && (
                     <header className="flex items-center justify-between border-b border-secondary bg-primary px-6 py-4">
@@ -234,6 +255,7 @@ export const AdminLayout = ({
                 <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
                     {children}
                 </main>
+                </div>
             </div>
         </div>
     );

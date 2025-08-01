@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LifeBuoy01, LogOut01, Settings01 } from "@untitledui/icons";
 import { AnimatePresence, motion } from "motion/react";
+import { useAdmin } from "@/hooks/use-admin";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -32,6 +33,7 @@ interface SidebarNavigationSlimProps {
 }
 
 export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationSlimProps) => {
+    const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[1]);
     const [isHovering, setIsHovering] = useState(false);
@@ -50,13 +52,16 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
         >
             <div
                 className={cx(
-                    "flex w-auto flex-col justify-between rounded-xl pt-5 ring-1 ring-secondary transition duration-300 ring-inset",
+                    "flex w-auto flex-col justify-between rounded-xl ring-1 ring-secondary transition duration-300 ring-inset",
+                    isAdmin && adminHeaderVisible ? "pt-3" : "pt-5", // Reduced padding when logo is hidden
                     hideBorder && !isSecondarySidebarVisible && "ring-transparent",
                 )}
             >
-                <div className="flex justify-center px-3">
-                    <UntitledLogoMinimal className="size-8" />
-                </div>
+                {!(isAdmin && adminHeaderVisible) && (
+                    <div className="flex justify-center px-3">
+                        <UntitledLogoMinimal className="size-8" />
+                    </div>
+                )}
 
                 <ul className="mt-4 flex flex-col gap-0.5 px-3">
                     {items.map((item) => (
@@ -158,9 +163,15 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
 
     return (
         <>
-            {/* Desktop sidebar navigation */}
-            <div
-                className="z-50 hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex"
+                            {/* Desktop sidebar navigation */}
+                <div
+                    className={`z-50 hidden lg:fixed lg:left-0 lg:flex ${
+                        isAdmin && adminHeaderVisible
+                            ? adminHeaderCollapsed
+                                ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                                : 'lg:top-12 lg:bottom-0' // Full header height
+                            : 'lg:inset-y-0'
+                    }`}
                 onPointerEnter={() => setIsHovering(true)}
                 onPointerLeave={() => setIsHovering(false)}
             >
@@ -179,9 +190,11 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
             {/* Mobile header navigation */}
             <MobileNavigationHeader>
                 <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto bg-primary pt-4">
-                    <div className="px-4">
-                        <UntitledLogo className="h-8" />
-                    </div>
+                                            {!(isAdmin && adminHeaderVisible) && (
+                            <div className="px-4">
+                                <UntitledLogo className="h-8" />
+                            </div>
+                        )}
 
                     <NavList items={items} />
 

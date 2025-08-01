@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { SearchLg } from "@untitledui/icons";
 import { AnimatePresence, motion } from "motion/react";
+import { useAdmin } from "@/hooks/use-admin";
 import { Input } from "@/components/base/input/input";
 import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
 import { cx } from "@/utils/cx";
@@ -27,6 +28,7 @@ interface SidebarNavigationDualTierProps {
 }
 
 export const SidebarNavigationDualTier = ({ activeUrl, hideBorder, items, footerItems = [], featureCard }: SidebarNavigationDualTierProps) => {
+    const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[1]);
     const [isHovering, setIsHovering] = useState(false);
@@ -49,10 +51,12 @@ export const SidebarNavigationDualTier = ({ activeUrl, hideBorder, items, footer
                     hideBorder && !isSecondarySidebarVisible && "border-transparent",
                 )}
             >
-                <div className="flex flex-col gap-5 px-4 lg:px-5">
+                            <div className="flex flex-col gap-5 px-4 lg:px-5">
+                {!(isAdmin && adminHeaderVisible) && (
                     <UntitledLogo className="h-8" />
-                    <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} />
-                </div>
+                )}
+                <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} />
+            </div>
 
                 <NavList activeUrl={activeUrl} items={items} className="lg:hidden" />
 
@@ -129,9 +133,15 @@ export const SidebarNavigationDualTier = ({ activeUrl, hideBorder, items, footer
             {/* Mobile header navigation */}
             <MobileNavigationHeader>{mainSidebar}</MobileNavigationHeader>
 
-            {/* Desktop sidebar navigation */}
-            <div
-                className="z-50 hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex"
+                            {/* Desktop sidebar navigation */}
+                <div
+                    className={`z-50 hidden lg:fixed lg:left-0 lg:flex ${
+                        isAdmin && adminHeaderVisible
+                            ? adminHeaderCollapsed
+                                ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                                : 'lg:top-12 lg:bottom-0' // Full header height
+                            : 'lg:inset-y-0'
+                    }`}
                 onPointerEnter={() => setIsHovering(true)}
                 onPointerLeave={() => setIsHovering(false)}
             >

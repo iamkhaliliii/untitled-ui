@@ -9,6 +9,7 @@ import { NavAccountCard } from "../base-components/nav-account-card";
 import { NavItemBase } from "../base-components/nav-item";
 import { NavList } from "../base-components/nav-list";
 import type { NavItemDividerType, NavItemType } from "../config";
+import { useAdmin } from "@/hooks/use-admin";
 
 interface SidebarNavigationFullProps {
     /** URL of the currently active item. */
@@ -27,12 +28,13 @@ interface SidebarNavigationFullProps {
 
 export const SidebarNavigationFull = ({ 
     activeUrl, 
-    items, 
+    items,
     footerItems = [], 
     hideBorder, 
     hideRightBorder,
     width = 288 
 }: SidebarNavigationFullProps) => {
+    const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
     const desktopSidebar = (
         <aside
             style={{ width }}
@@ -42,7 +44,9 @@ export const SidebarNavigationFull = ({
             )}
         >
             <div className="flex flex-col gap-5 px-4 lg:px-5">
-                <UntitledLogo className="h-8" />
+                {!(isAdmin && adminHeaderVisible) && (
+                    <UntitledLogo className="h-8" />
+                )}
                 <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} />
             </div>
 
@@ -73,7 +77,13 @@ export const SidebarNavigationFull = ({
     return (
         <>
             {/* Desktop sidebar navigation */}
-            <div className="z-50 hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex">
+            <div className={`z-50 hidden lg:fixed lg:left-0 lg:flex ${
+                isAdmin && adminHeaderVisible 
+                    ? adminHeaderCollapsed
+                        ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                        : 'lg:top-12 lg:bottom-0' // Full header height
+                    : 'lg:inset-y-0'
+            }`}>
                 {desktopSidebar}
             </div>
 
@@ -86,9 +96,11 @@ export const SidebarNavigationFull = ({
             {/* Mobile header navigation */}
             <MobileNavigationHeader>
                 <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-4">
-                    <div className="px-4">
-                        <UntitledLogo className="h-8" />
-                    </div>
+                    {!(isAdmin && adminHeaderVisible) && (
+                        <div className="px-4">
+                            <UntitledLogo className="h-8" />
+                        </div>
+                    )}
 
                     <NavList items={items} activeUrl={activeUrl} />
 

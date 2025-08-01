@@ -35,6 +35,10 @@ import { cx } from "@/utils/cx";
 import { useTheme } from "@/providers/theme";
 import { NavMenuItemLink } from "@/components/marketing/header-navigation/base-components/nav-menu-item";
 import { Header } from "@/components/marketing/header-navigation/components/header";
+import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
+import { AdminToggle } from "@/components/application/admin-toggle";
+import { useAdmin } from "@/hooks/use-admin";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 interface SiteLayoutProps {
     children: ReactNode;
@@ -148,11 +152,31 @@ export const SiteLayout = ({
     showBackButton
 }: SiteLayoutProps) => {
     const { theme } = useTheme();
+    const { isAdmin, adminHeaderVisible, adminHeaderCollapsed, toggleAdminHeader } = useAdmin();
 
     return (
         <div className="flex min-h-screen flex-col bg-primary">
+            {/* Admin Sticky Header - Only visible to admins */}
+            {isAdmin && (
+                <ErrorBoundary fallback={
+                    <div className="h-12 bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 text-sm">
+                        Admin header error - check console
+                    </div>
+                }>
+                    <AdminStickyHeader 
+                        isVisible={adminHeaderVisible} 
+                        onToggleVisibility={toggleAdminHeader}
+                        isAdminPage={false}
+                    />
+                </ErrorBoundary>
+            )}
+
             {/* Header */}
-            <div className="sticky top-0 z-50 bg-primary/80 backdrop-blur-lg">
+                               <div className={`sticky z-40 bg-primary/80 backdrop-blur-lg ${
+                       isAdmin && adminHeaderVisible && !adminHeaderCollapsed
+                           ? 'top-12' // Full admin header height (48px)
+                           : 'top-0'  // No admin header or collapsed (back to normal)
+                   }`}>
                 <HeaderDropdownSimple />
             </div>
 
@@ -161,7 +185,11 @@ export const SiteLayout = ({
                 <div className="flex flex-1">
                     {/* Left Sidebar */}
                     <aside className="hidden lg:block w-64 bg-primary">
-                        <div className="sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin py-4 pr-8">
+                                                       <div className={`sticky overflow-y-auto scrollbar-thin py-4 pr-8 ${
+                                   isAdmin && adminHeaderVisible && !adminHeaderCollapsed
+                                       ? 'top-20 h-[calc(100vh-5rem)]'           // 3rem (admin) + 2rem (header) = 5rem  
+                                       : 'top-16 h-[calc(100vh-4rem)]'           // No admin header or collapsed (back to normal)
+                               }`}>
                             {/* Navigation */}
                             <nav className="space-y-2">
                                 {siteNavigation.map((item) => (
@@ -269,6 +297,11 @@ export const SiteLayout = ({
                     ))}
                 </div>
             </div>
+
+            {/* Admin Toggle for testing - can be removed in production */}
+            <ErrorBoundary fallback={<div>Toggle error</div>}>
+                <AdminToggle />
+            </ErrorBoundary>
         </div>
     );
 }; 

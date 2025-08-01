@@ -20,15 +20,19 @@ import SiteEventDetailPage from "@/pages/site/event-detail";
 import { NotFound } from "@/pages/not-found";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
+import { AdminDemo } from "@/components/application/admin-demo";
+import { TestAdminPage } from "@/pages/test-admin";
 import { WidgetConfigProvider } from "@/providers/widget-config-provider";
+import { ErrorBoundary } from "@/components/error-boundary";
 import "@/styles/globals.css";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <ThemeProvider>
-            <WidgetConfigProvider>
-                <BrowserRouter>
-                    <RouteProvider>
+        <ErrorBoundary>
+            <ThemeProvider>
+                <WidgetConfigProvider>
+                    <BrowserRouter>
+                        <RouteProvider>
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
                         
@@ -65,11 +69,16 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/content" element={<AdminContentPage />} />
                         <Route path="/people" element={<AdminPeoplePage />} />
                         
+                        {/* Admin Header Demo */}
+                        <Route path="/admin-demo" element={<AdminDemo />} />
+                        <Route path="/test-admin" element={<TestAdminPage />} />
+                        
                         <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </RouteProvider>
-                </BrowserRouter>
-            </WidgetConfigProvider>
-        </ThemeProvider>
+                        </Routes>
+                    </RouteProvider>
+                    </BrowserRouter>
+                </WidgetConfigProvider>
+            </ThemeProvider>
+        </ErrorBoundary>
     </StrictMode>,
 );
