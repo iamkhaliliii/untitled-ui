@@ -986,7 +986,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     return (
         <>
                             {/* Desktop triple sidebar navigation */}
-                <div className={`z-50 hidden lg:fixed lg:left-0 lg:flex ${
+                <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
                     isAdmin && adminHeaderVisible
                         ? adminHeaderCollapsed
                             ? 'lg:top-3 lg:bottom-0'  // Collapsed header height

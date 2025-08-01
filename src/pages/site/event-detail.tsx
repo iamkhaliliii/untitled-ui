@@ -1,22 +1,13 @@
 import {
-    Calendar,
     MarkerPin01,
-    Check,
-    Share02,
-    DotsHorizontal,
-    Share01,
-    Share03,
-    Share04,
-    Share05,
-    Share06,
     Share07,
-    Home01,
-    Home04,
-    Home05,
+    DotsHorizontal,
+    Calendar,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import EventMap from "@/components/base/map/event-map";
+import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -41,7 +32,7 @@ const SiteEventDetailPage = () => {
         category: "Workshop",
         type: "in-person",
         attendees: 50,
-        goingCount: 23,
+
         coordinates: {
             latitude: 40.7589,
             longitude: -73.9851
@@ -52,8 +43,8 @@ const SiteEventDetailPage = () => {
         }
     };
 
-    const handleBack = () => {
-        navigate(-1);
+    const handleAllEvents = () => {
+        navigate('/site/event');
     };
 
     const handleShare = () => {
@@ -75,32 +66,26 @@ const SiteEventDetailPage = () => {
         console.log('More options clicked');
     };
 
-    const handleHome = () => {
-        navigate('/');
-    };
-
     return (
         <div className="h-screen flex flex-col">
             {/* Sticky Header */}
             <div className="sticky top-0 z-50 p-4 bg-white border-b border-gray-200 shrink-0">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
-                    <Button 
-                        size="sm" 
-                        color="tertiary"
-                        onClick={handleBack}
-                    >
-                        ← <span className="text-sm ml-2">Back to Events</span>
-                    </Button>
+                    {/* UntitledUI Logo */}
+                    <div className="flex items-center">
+                        <UntitledLogo />
+                    </div>
                     
                     {/* Action Icons */}
                     <div className="flex items-center gap-1">
-                        <ButtonUtility 
+                        <Button 
                             size="sm" 
                             color="tertiary"
-                            icon={Home05}
-                            tooltip="Home"
-                            onClick={handleHome}
-                        />
+                            iconLeading={Calendar}
+                            onClick={handleAllEvents}
+                        >
+                            All Events
+                        </Button>
                         <ButtonUtility 
                             size="sm" 
                             color="tertiary"
@@ -217,25 +202,7 @@ const SiteEventDetailPage = () => {
                                     RSVP Now
                                 </Button>
                                 
-                                {/* Bottom Row - Going & Add to Calendar */}
-                                <div className="flex gap-2">
-                                    <Button 
-                                        size="sm" 
-                                        color="tertiary" 
-                                        iconLeading={Check} 
-                                        className="flex-1 justify-center text-xs"
-                                    >
-                                        Going ({event.goingCount})
-                                    </Button>
-                                    <Button 
-                                        size="sm" 
-                                        color="tertiary" 
-                                        iconLeading={Calendar} 
-                                        className="flex-1 justify-center text-xs"
-                                    >
-                                        Add to Calendar
-                                    </Button>
-                                </div>
+
                             </div>
                         </div>
                     </div>

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { HomeScreen } from "@/pages/home-screen";
 import { AdminDashboardPage } from "@/pages/admin/dashboard";
 import { AdminContentPage } from "@/pages/admin/content";
+import { AdminContentEventsPage } from "@/pages/admin/content-events";
 import { AdminPeoplePage } from "@/pages/admin/people";
 import { AdminGamificationPage } from "@/pages/admin/gamification";
 import { AdminSiteSettingsPage } from "@/pages/admin/site-settings";
@@ -41,6 +42,7 @@ createRoot(document.getElementById("root")!).render(
                         {/* Admin Routes */}
                         <Route path="/admin" element={<AdminDashboardPage />} />
                         <Route path="/admin/content" element={<AdminContentPage />} />
+                        <Route path="/admin/content/events" element={<AdminContentEventsPage />} />
                         <Route path="/admin/people" element={<AdminPeoplePage />} />
                         <Route path="/admin/setting" element={<Navigate to="/admin/setting/site-settings" replace />} />
                         <Route path="/admin/setting/site-settings" element={<AdminSiteSettingsPage />} />

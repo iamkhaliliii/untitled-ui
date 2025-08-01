@@ -8,7 +8,7 @@ import {
     Ticket01,
     Globe01,
     ImageX,
-    Check,
+
     X,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
@@ -35,8 +35,8 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
     if (!event) return null;
 
     const handleEventPageClick = () => {
-        navigate(`/site/event/${event.id}`);
-        onClose();
+        window.open(`/site/event/${event.id}`, '_blank');
+        // Keep modal open - don't call onClose()
     };
 
     return (
@@ -151,25 +151,7 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
                                         RSVP Now
                                     </Button>
                                     
-                                    {/* Bottom Row - Going & Add to Calendar */}
-                                    <div className="flex gap-2">
-                                        <Button 
-                                            size="sm" 
-                                            color="tertiary" 
-                                            iconLeading={Check} 
-                                            className="flex-1 justify-center text-xs"
-                                        >
-                                            Going ({event.goingCount})
-                                        </Button>
-                                        <Button 
-                                            size="sm" 
-                                            color="tertiary" 
-                                            iconLeading={Calendar} 
-                                            className="flex-1 justify-center text-xs"
-                                        >
-                                            Add to Calendar
-                                        </Button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -318,17 +300,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                     </Badge>
                 </div>
 
-                {/* Quick stats overlay */}
-                <div className={`absolute bottom-4 left-4 right-4 z-20 transition-all duration-300 ${
-                    isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-                }`}>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1">
-                            <Users01 className="h-3 w-3 text-white" />
-                            <span className="text-xs text-white font-medium">{event.goingCount} going</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             {/* Event Content */}
@@ -366,23 +338,14 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="flex items-center justify-between pt-2 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
-                    <Button 
-                        size="sm" 
-                        color="tertiary" 
-                        iconLeading={Check}
+                <div className="flex items-center justify-end pt-2 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
+                    <Button
+                        color="tertiary"
+                        size="sm"
                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                        className="group-hover:border-brand-200 group-hover:text-brand-solid transition-all duration-200"
+                        className="text-brand-solid hover:text-brand-solid_hover"
                     >
-                        Going {event.goingCount}
-                    </Button>
-                    <Button 
-                        size="sm" 
-                        color="primary"
-                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                        className="group-hover:shadow-lg transition-all duration-200"
-                    >
-                        RSVP
+                        RSVP →
                     </Button>
                 </div>
             </div>
@@ -471,7 +434,7 @@ export const SiteEventPage = () => {
                             location: "San Francisco, CA",
                             attendees: 150,
                             maxAttendees: 200,
-                            goingCount: 23,
+
                             type: "in-person",
                             category: "Technology",
                             organizer: {
@@ -489,7 +452,7 @@ export const SiteEventPage = () => {
                             location: "Online",
                             attendees: 89,
                             maxAttendees: 100,
-                            goingCount: 45,
+
                             type: "online",
                             category: "Design",
                             organizer: {
@@ -507,7 +470,7 @@ export const SiteEventPage = () => {
                             location: "New York, NY",
                             attendees: 75,
                             maxAttendees: 150,
-                            goingCount: 18,
+
                             type: "in-person",
                             category: "Business",
                             organizer: {
@@ -525,7 +488,7 @@ export const SiteEventPage = () => {
                             location: "Online",
                             attendees: 234,
                             maxAttendees: 500,
-                            goingCount: 67,
+
                             type: "online",
                             category: "Technology",
                             organizer: {
@@ -543,7 +506,7 @@ export const SiteEventPage = () => {
                             location: "Los Angeles, CA",
                             attendees: 45,
                             maxAttendees: 80,
-                            goingCount: 12,
+
                             type: "in-person",
                             category: "Creative",
                             organizer: {
@@ -561,7 +524,7 @@ export const SiteEventPage = () => {
                             location: "Online",
                             attendees: 156,
                             maxAttendees: 200,
-                            goingCount: 34,
+
                             type: "online",
                             category: "Marketing",
                             organizer: {
