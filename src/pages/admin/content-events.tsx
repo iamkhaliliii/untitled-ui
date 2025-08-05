@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
-import { Table, TableCard, TableRowActionsDropdown } from "@/components/application/table/table";
+import { Table, TableCard } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { Eye, Edit03, Move, BarChart03, ClipboardCheck, EyeOff, Trash01, AlertTriangle, Settings01, Calendar } from "@untitledui/icons";
+import { Ticket01, Edit03, Move, BarChart03, ClipboardCheck, Trash01, AlertTriangle, Calendar, Copy01, Plus } from "@untitledui/icons";
 import { PaginationPageMinimalCenter } from "@/components/application/pagination/pagination";
 import { EventDetailSlideout } from "@/components/application/slideout-menus/event-detail-slideout";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
+import { Button } from "@/components/base/buttons/button";
 
 // Sample events data
 const eventsData = {
@@ -133,9 +135,35 @@ const getStatusColor = (status: string) => {
     }
 };
 
-const EventsActionsDropdown = () => {
-    return <TableRowActionsDropdown />;
-};
+const EventsActions = ({ onViewDetails }: { onViewDetails: () => void }) => (
+    <div className="flex items-center gap-2">
+        <button
+            onClick={onViewDetails}
+            className="inline-flex items-center justify-center rounded-md p-2 text-sm font-medium text-fg-quaternary hover:bg-primary_hover hover:text-fg-quaternary_hover focus:outline-none focus:ring-2 focus:ring-brand-secondary focus:ring-offset-2 transition-colors"
+            aria-label="View Details"
+        >
+            <Ticket01 className="size-4" />
+        </button>
+        
+        <Dropdown.Root>
+            <Dropdown.DotsButton />
+
+            <Dropdown.Popover className="w-min">
+                <Dropdown.Menu>
+                    <Dropdown.Item icon={Edit03}>
+                        <span className="pr-4">Edit</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item icon={Copy01}>
+                        <span className="pr-4">Copy link</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item icon={Trash01}>
+                        <span className="pr-4">Delete</span>
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown.Popover>
+        </Dropdown.Root>
+    </div>
+);
 
 export const AdminContentEventsPage = () => {
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -201,7 +229,9 @@ export const AdminContentEventsPage = () => {
                         description="Manage and organize all your events across different types and locations."
                         contentTrailing={
                             <div className="absolute top-5 right-4 md:right-6">
-                                <EventsActionsDropdown />
+                                <Button color="primary" size="md" iconLeading={Plus}>
+                                    New Event
+                                </Button>
                             </div>
                         }
                     />
@@ -228,8 +258,7 @@ export const AdminContentEventsPage = () => {
                                     id={item.id}
                                 >
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <div className="min-w-60">
                                             <p className="text-sm font-medium text-primary line-clamp-1">{item.title}</p>
@@ -237,14 +266,12 @@ export const AdminContentEventsPage = () => {
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm font-mono text-tertiary">{item.id}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <div className="flex items-center gap-2">
                                             <Avatar src={item.organizer.avatar} alt={item.organizer.name} size="xs" />
@@ -252,28 +279,24 @@ export const AdminContentEventsPage = () => {
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <BadgeWithDot size="sm" color={getStatusColor(item.status)}>
                                             {item.status}
                                         </BadgeWithDot>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm text-primary">{item.location}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm text-primary">{item.eventType}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <div className="flex flex-wrap gap-1 max-w-32">
                                             {item.tags.slice(0, 2).map((tag) => (
@@ -290,48 +313,42 @@ export const AdminContentEventsPage = () => {
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm text-primary whitespace-nowrap">{formatDate(item.eventDate)}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm text-primary">{item.attendees}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm text-primary">{item.capacity}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className="text-sm font-mono text-tertiary">{item.slug}</span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className={`text-sm ${item.locked ? 'text-warning' : 'text-tertiary'}`}>
                                             {item.locked ? 'Yes' : 'No'}
                                         </span>
                                     </Table.Cell>
                                     <Table.Cell 
-                                        className="cursor-pointer hover:bg-primary_hover transition-colors"
-                                        onClick={() => handleRowClick(item)}
+                                        
                                     >
                                         <span className={`text-sm ${item.hidden ? 'text-warning' : 'text-tertiary'}`}>
                                             {item.hidden ? 'Yes' : 'No'}
                                         </span>
                                     </Table.Cell>
                                     <Table.Cell className="px-4 sticky right-0 bg-primary z-10 shadow-[-1px_0_0_0_theme(colors.border.secondary)]">
-                                        <div className="flex items-center justify-end" onClick={(e) => e.stopPropagation()}>
-                                            <EventsActionsDropdown />
+                                        <div className="flex items-center justify-end">
+                                            <EventsActions onViewDetails={() => handleRowClick(item)} />
                                         </div>
                                     </Table.Cell>
                                 </Table.Row>
