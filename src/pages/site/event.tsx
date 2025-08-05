@@ -22,6 +22,72 @@ import { ModalOverlay, Modal, Dialog } from "@/components/application/modals/mod
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
+// RSVP States
+type RSVPState = 'open' | 'closed' | 'completed' | 'not_started';
+
+interface RSVPStateConfig {
+    label: string;
+    color: 'primary' | 'secondary' | 'tertiary';
+    disabled: boolean;
+    description?: string;
+    openDate?: string;
+}
+
+const rsvpStateConfig: Record<RSVPState, RSVPStateConfig> = {
+    open: {
+        label: 'RSVP Now',
+        color: 'primary',
+        disabled: false,
+        description: 'Registration is open'
+    },
+    closed: {
+        label: 'RSVP Closed',
+        color: 'secondary',
+        disabled: true,
+        description: 'Registration has closed'
+    },
+    completed: {
+        label: 'Event Completed',
+        color: 'tertiary',
+        disabled: true,
+        description: 'This event has finished'
+    },
+    not_started: {
+        label: 'RSVP Opens Soon',
+        color: 'secondary',
+        disabled: true,
+        description: 'Registration not yet open'
+    }
+};
+
+// Function to randomly assign RSVP state to events
+const getRandomRSVPState = (eventId: number): RSVPState => {
+    const states: RSVPState[] = ['open', 'closed', 'completed', 'not_started'];
+    // Use event ID as seed for consistent random state per event
+    const index = eventId % states.length;
+    return states[index];
+};
+
+// Function to generate random RSVP open date for "not_started" events
+const getRandomRSVPOpenDate = (eventId: number): string => {
+    // Generate dates 1-7 days from now based on event ID
+    const daysFromNow = (eventId % 7) + 1;
+    const openDate = new Date();
+    openDate.setDate(openDate.getDate() + daysFromNow);
+    
+    // Random hour between 9 AM and 5 PM
+    const hour = 9 + (eventId % 9);
+    openDate.setHours(hour, 0, 0, 0);
+    
+    return openDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+};
+
 // Custom scrollbar styles for modal
 const scrollbarStyles = {
     scrollbarWidth: 'thin' as const,
@@ -33,6 +99,10 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
     const navigate = useNavigate();
     
     if (!event) return null;
+
+    const rsvpState = getRandomRSVPState(event.id);
+    const rsvpConfig = rsvpStateConfig[rsvpState];
+    const rsvpOpenDate = rsvpState === 'not_started' ? getRandomRSVPOpenDate(event.id) : null;
 
     const handleEventPageClick = () => {
         window.open(`/site/event/${event.id}`, '_blank');
@@ -143,13 +213,23 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
                             <div className="px-4 pb-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
                                 <div className="space-y-2 pt-3">
                                     {/* Top Row - RSVP */}
-                                    <Button 
-                                        size="sm" 
-                                        color="primary" 
-                                        className="w-full justify-center text-xs"
-                                    >
-                                        RSVP Now
-                                    </Button>
+                                    <div className="space-y-2">
+                                        {(rsvpState === 'open' || rsvpState === 'not_started') ? (
+                                            <Button 
+                                                size="sm" 
+                                                color={rsvpConfig.color} 
+                                                className="w-full justify-center text-xs"
+                                                disabled={rsvpConfig.disabled}
+                                                title={rsvpConfig.description}
+                                            >
+                                                {rsvpState === 'not_started' && rsvpOpenDate ? `Opens: ${rsvpOpenDate}` : rsvpConfig.label}
+                                            </Button>
+                                        ) : (
+                                            <div className="text-center py-2">
+                                                <p className="text-sm text-tertiary font-medium">{rsvpConfig.label}</p>
+                                            </div>
+                                        )}
+                                    </div>
                                     
 
                                 </div>
@@ -253,6 +333,10 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
     const [imageError, setImageError] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
+    const rsvpState = getRandomRSVPState(event.id);
+    const rsvpConfig = rsvpStateConfig[rsvpState];
+    const rsvpOpenDate = rsvpState === 'not_started' ? getRandomRSVPOpenDate(event.id) : null;
+
     const handleImageError = () => {
         setImageError(true);
     };
@@ -338,15 +422,26 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="flex items-center justify-end pt-2 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
-                    <Button
-                        color="tertiary"
-                        size="sm"
-                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                        className="text-brand-solid hover:text-brand-solid_hover"
-                    >
-                        RSVP →
-                    </Button>
+                <div className="pt-2 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors space-y-2">
+                    <div className="flex items-center justify-end">
+                        {(rsvpState === 'open' || rsvpState === 'not_started') ? (
+                            <Button
+                                color={rsvpConfig.color === 'primary' ? 'tertiary' : rsvpConfig.color}
+                                size="sm"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                className={rsvpConfig.disabled 
+                                    ? "cursor-not-allowed opacity-60" 
+                                    : "text-brand-solid hover:text-brand-solid_hover"
+                                }
+                                disabled={rsvpConfig.disabled}
+                                title={rsvpConfig.description}
+                            >
+                                {rsvpState === 'not_started' && rsvpOpenDate ? `Opens: ${rsvpOpenDate}` : `${rsvpConfig.label} ${!rsvpConfig.disabled ? '→' : ''}`}
+                            </Button>
+                        ) : (
+                            <p className="text-sm text-tertiary font-medium">{rsvpConfig.label}</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

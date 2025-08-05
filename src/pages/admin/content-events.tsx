@@ -9,6 +9,7 @@ import { PaginationPageMinimalCenter } from "@/components/application/pagination
 import { EventDetailSlideout } from "@/components/application/slideout-menus/event-detail-slideout";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Button } from "@/components/base/buttons/button";
+import { AddEventModal } from "@/components/application/modals/add-event-modal";
 
 // Sample events data
 const eventsData = {
@@ -172,6 +173,7 @@ export const AdminContentEventsPage = () => {
     });
     const [selectedEvent, setSelectedEvent] = useState<typeof eventsData.items[0] | null>(null);
     const [isSlideoutOpen, setIsSlideoutOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const handleRowClick = (event: typeof eventsData.items[0]) => {
         setSelectedEvent(event);
@@ -229,7 +231,12 @@ export const AdminContentEventsPage = () => {
                         description="Manage and organize all your events across different types and locations."
                         contentTrailing={
                             <div className="absolute top-5 right-4 md:right-6">
-                                <Button color="primary" size="md" iconLeading={Plus}>
+                                <Button 
+                                    color="primary" 
+                                    size="md" 
+                                    iconLeading={Plus}
+                                    onPress={() => setIsAddModalOpen(true)}
+                                >
                                     New Event
                                 </Button>
                             </div>
@@ -363,6 +370,11 @@ export const AdminContentEventsPage = () => {
                 isOpen={isSlideoutOpen}
                 onClose={handleCloseSlideout}
                 event={selectedEvent}
+            />
+
+            <AddEventModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
             />
         </AdminLayout>
     );

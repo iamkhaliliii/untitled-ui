@@ -2,8 +2,82 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
+import { Button } from "@/components/base/buttons/button";
 import { X, Calendar, Clock, Edit03, SearchLg, Download01, Users01, Share05, MarkerPin01, Tag01, CheckCircle } from "@untitledui/icons";
 import { useAdmin } from "@/hooks/use-admin";
+
+// RSVP States
+type RSVPState = 'open' | 'closed' | 'completed' | 'not_started';
+
+interface RSVPStateConfig {
+    label: string;
+    color: 'primary' | 'secondary' | 'tertiary';
+    disabled: boolean;
+    description?: string;
+}
+
+const rsvpStateConfig: Record<RSVPState, RSVPStateConfig> = {
+    open: {
+        label: 'RSVP Now',
+        color: 'primary',
+        disabled: false,
+        description: 'Registration is open'
+    },
+    closed: {
+        label: 'RSVP Closed',
+        color: 'secondary',
+        disabled: true,
+        description: 'Registration has closed'
+    },
+    completed: {
+        label: 'Event Completed',
+        color: 'tertiary',
+        disabled: true,
+        description: 'This event has finished'
+    },
+    not_started: {
+        label: 'RSVP Opens Soon',
+        color: 'secondary',
+        disabled: true,
+        description: 'Registration not yet open'
+    }
+};
+
+// Function to randomly assign RSVP state to events
+const getRandomRSVPState = (eventId: string): RSVPState => {
+    const states: RSVPState[] = ['open', 'closed', 'completed', 'not_started'];
+    // Use event ID hash as seed for consistent random state per event
+    const hash = eventId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+    }, 0);
+    const index = Math.abs(hash) % states.length;
+    return states[index];
+};
+
+// Function to generate random RSVP open date for "not_started" events
+const getRandomRSVPOpenDate = (eventId: string): string => {
+    // Generate dates 1-7 days from now based on event ID hash
+    const hash = eventId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+    }, 0);
+    const daysFromNow = (Math.abs(hash) % 7) + 1;
+    const openDate = new Date();
+    openDate.setDate(openDate.getDate() + daysFromNow);
+    
+    // Random hour between 9 AM and 5 PM
+    const hour = 9 + (Math.abs(hash) % 9);
+    openDate.setHours(hour, 0, 0, 0);
+    
+    return openDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+};
 
 interface EventDetailSlideoutProps {
     isOpen: boolean;
@@ -137,6 +211,11 @@ export const EventDetailSlideout = ({ isOpen, onClose, event }: EventDetailSlide
     const [activeTab, setActiveTab] = useState<'overview' | 'rsvp-list'>('overview');
     const [searchQuery, setSearchQuery] = useState('');
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
+
+    // Get RSVP state for this event
+    const rsvpState = event ? getRandomRSVPState(event.id) : 'open';
+    const rsvpConfig = rsvpStateConfig[rsvpState];
+    const rsvpOpenDate = event && rsvpState === 'not_started' ? getRandomRSVPOpenDate(event.id) : null;
 
     // Filter RSVP list based on search query
     const filteredRSVPList = mockRSVPList.filter(person => 
@@ -403,6 +482,25 @@ export const EventDetailSlideout = ({ isOpen, onClose, event }: EventDetailSlide
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        {/* RSVP Action Section - Following user preference for footer positioning */}
+                                        <div className="mt-auto pt-6 border-t border-secondary space-y-2">
+                                            {(rsvpState === 'open' || rsvpState === 'not_started') ? (
+                                                <Button 
+                                                    size="sm" 
+                                                    color={rsvpConfig.color}
+                                                    className="w-full justify-center"
+                                                    disabled={rsvpConfig.disabled}
+                                                    title={rsvpConfig.description}
+                                                >
+                                                    {rsvpState === 'not_started' && rsvpOpenDate ? `Opens: ${rsvpOpenDate}` : rsvpConfig.label}
+                                                </Button>
+                                            ) : (
+                                                <div className="text-center py-2">
+                                                    <p className="text-sm text-tertiary font-medium">{rsvpConfig.label}</p>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
