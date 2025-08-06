@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
+import { useNavigate } from "react-router";
 import { Table, TableCard } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
@@ -9,7 +10,6 @@ import { PaginationPageMinimalCenter } from "@/components/application/pagination
 import { EventDetailSlideout } from "@/components/application/slideout-menus/event-detail-slideout";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Button } from "@/components/base/buttons/button";
-import { AddEventModal } from "@/components/application/modals/add-event-modal";
 
 // Sample events data
 const eventsData = {
@@ -167,13 +167,13 @@ const EventsActions = ({ onViewDetails }: { onViewDetails: () => void }) => (
 );
 
 export const AdminContentEventsPage = () => {
+    const navigate = useNavigate();
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
         column: "eventDate",
         direction: "ascending",
     });
     const [selectedEvent, setSelectedEvent] = useState<typeof eventsData.items[0] | null>(null);
     const [isSlideoutOpen, setIsSlideoutOpen] = useState(false);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const handleRowClick = (event: typeof eventsData.items[0]) => {
         setSelectedEvent(event);
@@ -235,7 +235,7 @@ export const AdminContentEventsPage = () => {
                                     color="primary" 
                                     size="md" 
                                     iconLeading={Plus}
-                                    onClick={() => setIsAddModalOpen(true)}
+                                    onClick={() => navigate("/admin/content/events/create")}
                                 >
                                     New Event
                                 </Button>
@@ -370,11 +370,6 @@ export const AdminContentEventsPage = () => {
                 isOpen={isSlideoutOpen}
                 onClose={handleCloseSlideout}
                 event={selectedEvent}
-            />
-
-            <AddEventModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
             />
         </AdminLayout>
     );

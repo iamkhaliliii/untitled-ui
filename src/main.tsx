@@ -5,6 +5,7 @@ import { HomeScreen } from "@/pages/home-screen";
 import { AdminDashboardPage } from "@/pages/admin/dashboard";
 import { AdminContentPage } from "@/pages/admin/content";
 import { AdminContentEventsPage } from "@/pages/admin/content-events";
+import { AdminContentEventsCreatePage } from "@/pages/admin/content-events-create";
 import { AdminPeoplePage } from "@/pages/admin/people";
 import { AdminGamificationPage } from "@/pages/admin/gamification";
 import { AdminSiteSettingsPage } from "@/pages/admin/site-settings";
@@ -43,6 +44,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin" element={<AdminDashboardPage />} />
                         <Route path="/admin/content" element={<AdminContentPage />} />
                         <Route path="/admin/content/events" element={<AdminContentEventsPage />} />
+                        <Route path="/admin/content/events/create" element={<AdminContentEventsCreatePage />} />
                         <Route path="/admin/people" element={<AdminPeoplePage />} />
                         <Route path="/admin/setting" element={<Navigate to="/admin/setting/site-settings" replace />} />
                         <Route path="/admin/setting/site-settings" element={<AdminSiteSettingsPage />} />
