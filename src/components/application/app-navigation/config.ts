@@ -3,7 +3,7 @@ export type NavItemType = {
     href?: string;
     icon?: any;
     badge?: any;
-    items?: { label: string; href: string; icon?: any; badge?: any }[];
+    items?: NavItemType[];
     divider?: boolean;
 };
 

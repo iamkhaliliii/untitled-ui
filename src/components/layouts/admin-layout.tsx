@@ -42,6 +42,9 @@ import {
     SearchMd,
     Lock01,
     Trophy01,
+    Calendar,
+    MessageChatCircle,
+    Tag01,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import type { NavItemType } from "@/components/application/app-navigation/config";
@@ -63,6 +66,33 @@ const navItemsDualTier: NavItemType[] = [
             { label: "Media", href: "/admin/content/media", icon: Archive },
             { label: "Categories", href: "/admin/content/categories", icon: Rows01 },
             { label: "Comments", href: "/admin/content/comments", icon: Inbox01 },
+        ],
+    },
+    {
+        label: "Content 2",
+        href: "/admin/content2",
+        icon: Database01,
+        items: [
+            { 
+                label: "Contents", 
+                href: "/admin/content2/contents", 
+                icon: Package,
+                items: [
+                    { label: "Events", href: "/admin/content2/contents/events", icon: Calendar },
+                    { label: "Discussion", href: "/admin/content2/contents/discussion", icon: MessageChatCircle },
+                ]
+            },
+            { 
+                label: "Spaces", 
+                href: "/admin/content2/spaces", 
+                icon: Archive,
+                items: [
+                    { label: "Events", href: "/admin/content2/spaces/events", icon: Calendar },
+                    { label: "Discussion", href: "/admin/content2/spaces/discussion", icon: MessageChatCircle },
+                ]
+            },
+            { label: "Tag", href: "/admin/content2/tag", icon: Tag01 },
+            { label: "CMS", href: "/admin/content2/cms", icon: Settings01 },
         ],
     },
     {

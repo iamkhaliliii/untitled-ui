@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01 } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -61,6 +61,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     
     // State for customize page tree expansion
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
+    
+
 
     // Ref to prevent double execution and track folder count
     const isAddingFolderRef = useRef(false);
@@ -191,6 +193,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
         return baseTree;
     }, [toggleStates, additionalFolders]);
+
+
 
     // State for widget selection
     const [showWidgetSelection, setShowWidgetSelection] = useState(false);
@@ -381,6 +385,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
     };
 
+
+
     // Handle secondary sidebar item selection
     const handleSecondaryItemClick = (itemKey: string, href: string) => {
         setSelectedSecondaryItem(itemKey);
@@ -496,9 +502,22 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
 
 
-    const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
+    const activeItem = [...items, ...footerItems].find((item) => {
+        if (item.href === activeUrl) return true;
+        if (item.items?.some((subItem) => subItem.href === activeUrl)) return true;
+        // Handle nested routes for Content 2
+        if (item.label === "Content 2" && activeUrl?.includes("/admin/content2")) return true;
+        return false;
+    });
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
     const { theme, setTheme } = useTheme();
+
+    // Update currentItem when activeUrl changes
+    useEffect(() => {
+        if (activeItem) {
+            setCurrentItem(activeItem);
+        }
+    }, [activeItem]);
 
     const toggleTheme = () => {
         if (theme === "light") {
@@ -902,13 +921,60 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             )}
                         </ul>
                     </div>
+                ) : currentItem?.label === "Content 2" && activeUrl?.includes("/admin/content2") ? (
+                    <div className="mt-2">
+                        <ul>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content2/posts"} href="/admin/content2/posts" icon={Package} type="link">
+                                    Posts
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content2/events"} href="/admin/content2/events" icon={Calendar} type="link">
+                                    Events
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content2/spaces"} href="/admin/content2/spaces" icon={Folder} type="link">
+                                    Spaces
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content2/tag"} href="/admin/content2/tag" icon={Tag01} type="link">
+                                    Tag
+                                </NavItemBase>
+                            </li>
+                            <li className="py-0.5">
+                                <NavItemBase current={activeUrl === "/admin/content2/cms"} href="/admin/content2/cms" icon={Settings01} type="link">
+                                    CMS
+                                </NavItemBase>
+                            </li>
+                        </ul>
+                    </div>
                 ) : (
                     <ul className="mt-2">
                         {currentItem?.items?.map((item, index) => (
                             <li key={item.label} className="py-0.5">
-                                <NavItemBase current={activeUrl === item.href} href={item.href} icon={item.icon} badge={item.badge} type="link">
-                                    {item.label}
-                                </NavItemBase>
+                                {item.items && item.items.length > 0 ? (
+                                    <details className="group" open>
+                                        <NavItemBase current={activeUrl === item.href} href={item.href} icon={item.icon} badge={item.badge} type="collapsible">
+                                            {item.label}
+                                        </NavItemBase>
+                                        <ul className="ml-4 mt-1 space-y-0.5">
+                                            {item.items.map((subItem, subIndex) => (
+                                                <li key={subItem.label}>
+                                                    <NavItemBase current={activeUrl === subItem.href} href={subItem.href} icon={subItem.icon} badge={subItem.badge} type="collapsible-child">
+                                                        {subItem.label}
+                                                    </NavItemBase>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </details>
+                                ) : (
+                                    <NavItemBase current={activeUrl === item.href} href={item.href} icon={item.icon} badge={item.badge} type="link">
+                                        {item.label}
+                                    </NavItemBase>
+                                )}
                             </li>
                         ))}
                     </ul>

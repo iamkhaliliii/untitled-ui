@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { HomeScreen } from "@/pages/home-screen";
 import { AdminDashboardPage } from "@/pages/admin/dashboard";
 import { AdminContentPage } from "@/pages/admin/content";
+import { AdminContent2Page } from "@/pages/admin/content2";
 import { AdminContentEventsPage } from "@/pages/admin/content-events";
 import { AdminContentEventsCreatePage } from "@/pages/admin/content-events-create";
 import { AdminPeoplePage } from "@/pages/admin/people";
@@ -43,6 +44,12 @@ createRoot(document.getElementById("root")!).render(
                         {/* Admin Routes */}
                         <Route path="/admin" element={<AdminDashboardPage />} />
                         <Route path="/admin/content" element={<AdminContentPage />} />
+                        <Route path="/admin/content2" element={<Navigate to="/admin/content2/posts" replace />} />
+                        <Route path="/admin/content2/events" element={<AdminContent2Page />} />
+                        <Route path="/admin/content2/posts" element={<AdminContent2Page />} />
+                        <Route path="/admin/content2/spaces" element={<AdminContent2Page />} />
+                        <Route path="/admin/content2/tag" element={<AdminContent2Page />} />
+                        <Route path="/admin/content2/cms" element={<AdminContent2Page />} />
                         <Route path="/admin/content/events" element={<AdminContentEventsPage />} />
                         <Route path="/admin/content/events/create" element={<AdminContentEventsCreatePage />} />
                         <Route path="/admin/people" element={<AdminPeoplePage />} />
