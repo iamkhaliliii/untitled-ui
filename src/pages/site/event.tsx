@@ -8,7 +8,7 @@ import {
     Ticket01,
     Globe01,
     ImageX,
-
+    CheckCircle,
     X,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
@@ -18,9 +18,8 @@ import { Badge, BadgeWithImage } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { SiteLayout } from "@/components/layouts/site-layout";
 import { ModalOverlay, Modal, Dialog } from "@/components/application/modals/modal";
-import { RSVPTicketModal } from "@/components/application/modals/rsvp-ticket-modal";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 // RSVP States
@@ -96,23 +95,35 @@ const scrollbarStyles = {
 } as React.CSSProperties;
 
 // Enhanced Event Details Modal Component  
-const EventDetailsModal = ({ event, isOpen, onClose, onRSVPClick }: { 
+const EventDetailsModal = ({ event, isOpen, onClose }: { 
     event: any; 
     isOpen: boolean; 
     onClose: () => void;
-    onRSVPClick?: (event: any) => void;
 }) => {
     const navigate = useNavigate();
+    const [rsvpStage, setRsvpStage] = useState<'initial' | 'processing' | 'confirmed'>('initial');
     
     if (!event) return null;
+
+    // Reset RSVP stage when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setRsvpStage('initial');
+        }
+    }, [isOpen]);
 
     const rsvpState = getRandomRSVPState(event.id);
     const rsvpConfig = rsvpStateConfig[rsvpState];
     const rsvpOpenDate = rsvpState === 'not_started' ? getRandomRSVPOpenDate(event.id) : null;
 
     const handleRSVPClick = () => {
-        if (rsvpState === 'open' && onRSVPClick) {
-            onRSVPClick(event);
+        if (rsvpState === 'open') {
+            setRsvpStage('processing');
+            
+            // Simulate processing time
+            setTimeout(() => {
+                setRsvpStage('confirmed');
+            }, 2500);
         }
     };
 
@@ -226,7 +237,24 @@ const EventDetailsModal = ({ event, isOpen, onClose, onRSVPClick }: {
                                 <div className="space-y-2 pt-3">
                                     {/* Top Row - RSVP */}
                                     <div className="space-y-2">
-                                        {(rsvpState === 'open' || rsvpState === 'not_started') ? (
+                                        {rsvpStage === 'processing' ? (
+                                            <div className="text-center py-3">
+                                                <div className="flex items-center justify-center gap-2 mb-2">
+                                                    <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                                                    <span className="text-sm font-medium text-brand-600">Processing RSVP...</span>
+                                                </div>
+                                                <p className="text-xs text-gray-500">Please wait while we confirm your attendance</p>
+                                            </div>
+                                        ) : rsvpStage === 'confirmed' ? (
+                                            <div className="text-center py-3 bg-green-50 border border-green-200 rounded-lg">
+                                                <div className="flex items-center justify-center gap-2 mb-1">
+                                                    <CheckCircle className="w-4 h-4 text-green-600" />
+                                                    <span className="text-sm font-medium text-green-700">You're All Set!</span>
+                                                </div>
+                                                <p className="text-xs text-green-600">Your RSVP has been confirmed</p>
+                                                <p className="text-xs text-gray-600 mt-1">Event details will be sent to your email</p>
+                                            </div>
+                                        ) : (rsvpState === 'open' || rsvpState === 'not_started') ? (
                                             <Button 
                                                 size="sm" 
                                                 color={rsvpConfig.color} 
@@ -464,7 +492,6 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
 export const SiteEventPage = () => {
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [showTicketModal, setShowTicketModal] = useState(false);
 
     const handleEventClick = (event: any) => {
         setSelectedEvent(event);
@@ -474,12 +501,6 @@ export const SiteEventPage = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedEvent(null);
-    };
-
-    const handleRSVPClick = (event: any) => {
-        setSelectedEvent(event);
-        setIsModalOpen(false);
-        setShowTicketModal(true);
     };
 
     const headerActions = (
@@ -657,14 +678,6 @@ export const SiteEventPage = () => {
                     event={selectedEvent} 
                     isOpen={isModalOpen} 
                     onClose={handleCloseModal}
-                    onRSVPClick={handleRSVPClick}
-                />
-
-                {/* RSVP Ticket Modal */}
-                <RSVPTicketModal 
-                    isOpen={showTicketModal}
-                    onClose={() => setShowTicketModal(false)}
-                    event={selectedEvent}
                 />
 
                 {/* Enhanced Load More */}

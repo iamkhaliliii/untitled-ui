@@ -36,8 +36,10 @@ interface FormData {
     timezone: string;
     locationType: 'physical' | 'virtual' | 'tbd';
     address: string;
+    area: string;
     virtualUrl: string;
     coverImage: File | null;
+    eventDetails: string;
     
     // Step 2: RSVP Config
     rsvpOpens: 'immediately' | 'date';
@@ -85,8 +87,10 @@ export const AdminContentEventsCreatePage = () => {
         timezone: 'UTC',
         locationType: 'physical',
         address: '',
+        area: '',
         virtualUrl: '',
         coverImage: null,
+        eventDetails: '',
         
         // Step 2: RSVP Config
         rsvpOpens: 'immediately',
@@ -515,12 +519,21 @@ export const AdminContentEventsCreatePage = () => {
                                                     <div className="relative pl-6 mt-2 space-y-4">
                                                         <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                                         <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
-                                                        <Input
-                                                            label="Address"
-                                                            placeholder="Enter physical address"
-                                                            value={formData.address}
-                                                            onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
-                                                        />
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                            <Input
+                                                                label="Address"
+                                                                placeholder="Enter physical address"
+                                                                value={formData.address}
+                                                                onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
+                                                                hint="This address will be shown in RSVP details"
+                                                            />
+                                                            <Input
+                                                                label="Area"
+                                                                placeholder="Enter area/district"
+                                                                value={formData.area}
+                                                                onChange={(value) => setFormData(prev => ({ ...prev, area: value }))}
+                                                            />
+                                                        </div>
                                                         
                                                         {/* Map Preview */}
                                                         {formData.address && (
@@ -573,6 +586,18 @@ export const AdminContentEventsCreatePage = () => {
                                                             </p>
                                                         </div>
                                                     </FileTrigger>
+                                                </div>
+
+                                                {/* Event Details */}
+                                                <div>
+                                                    <TextArea
+                                                        label="Event Details"
+                                                        placeholder="Additional event information, requirements, what to bring..."
+                                                        value={formData.eventDetails}
+                                                        onChange={(e) => setFormData(prev => ({ ...prev, eventDetails: e.target.value }))}
+                                                        hint="This information will be displayed after RSVP confirmation. You can include details, requirements, and proper copy here."
+                                                        rows={4}
+                                                    />
                                                 </div>
 
                                                 {/* Capacity */}
@@ -686,19 +711,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                         isSelected={formData.emailConfirmation}
                                                                         onChange={(isSelected) => setFormData(prev => ({ ...prev, emailConfirmation: isSelected }))}
                                                                     />
-                                                                    <div className={`overflow-hidden transition-all duration-200 ${formData.emailConfirmation ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                                                        <div className="relative pl-6 mt-2">
-                                                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
-                                                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
-                                                                            <TextArea
-                                                                                label="Customize email text"
-                                                                                placeholder="Thank you for registering for our event..."
-                                                                                value={formData.customEmailText}
-                                                                                onChange={(e) => setFormData(prev => ({ ...prev, customEmailText: e.target.value }))}
-                                                                                rows={3}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
+
                                                                     <Toggle
                                                                         slim
                                                                         size="sm"
@@ -707,19 +720,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                         isSelected={formData.emailReminder}
                                                                         onChange={(isSelected) => setFormData(prev => ({ ...prev, emailReminder: isSelected }))}
                                                                     />
-                                                                    <div className={`overflow-hidden transition-all duration-200 ${formData.emailReminder ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                                                        <div className="relative pl-6 mt-2">
-                                                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
-                                                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
-                                                                            <TextArea
-                                                                                label="Customize reminder text"
-                                                                                placeholder="Don't forget about our upcoming event..."
-                                                                                value={formData.customReminderText}
-                                                                                onChange={(e) => setFormData(prev => ({ ...prev, customReminderText: e.target.value }))}
-                                                                                rows={3}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
