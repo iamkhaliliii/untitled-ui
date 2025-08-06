@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, Bell01, MessageChatCircle, Moon01, SearchLg, Zap, Edit
 import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from '@/components/base/input/input';
 import { InputGroup } from '@/components/base/input/input-group';
+import { Label } from '@/components/base/input/label';
 import { TextArea } from "@/components/base/textarea/textarea";
 import { Select } from "@/components/base/select/select";
 import { NativeSelect } from '@/components/base/select/select-native';
@@ -14,6 +15,8 @@ import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { FileTrigger } from "@/components/base/file-upload-trigger/file-upload-trigger";
 import { Avatar } from '@/components/base/avatar/avatar';
 import EventMap from '@/components/base/map/event-map';
+import { UntitledLogo } from '@/components/foundations/logo/untitledui-logo';
+import { NavItemButton } from '@/components/application/app-navigation/base-components/nav-item-button';
 import { cx } from "@/utils/cx";
 
 interface HostItem {
@@ -240,139 +243,79 @@ export const AdminContentEventsCreatePage = () => {
     return (
         <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background min-h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))]">
             {/* Header Navigation */}
-            <header className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 shrink-0 text-content-on-topbar overflow-hidden -ms-[calc(env(safe-area-inset-left))] ps-[calc(env(safe-area-inset-left))] -me-[calc(env(safe-area-inset-right))] pe-[calc(env(safe-area-inset-right))] shadow-md sticky z-20 inset-0 backdrop-filter backdrop-blur-[20px] backdrop-saturate-[180%] before:absolute before:inset-0 before:w-full before:h-full before:bg-topbar before:opacity-80 before:z-[-1]">
-                <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 py-0 sm:py-0 md:py-0 lg:py-0 px-0 sm:px-0 md:px-0 lg:px-0">
-                    <div className="flex justify-center main-navbar text-content-on-topbar block-navbar">
-                        <div className="flex flex-1 flex-col">
-                            <div className="w-full flex flex-col max-w-full md:max-w-8xl self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 mx-auto">
-                                <div className="px-4 sm:px-6 lg:px-8">
-                                    <div className="flex h-16 items-center gap-x-2 sm:gap-x-8">
-                                        {/* Mobile menu button */}
-                                        <div className="flex h-full items-center lg:hidden shrink-0">
-                                            <button type="button" aria-label="Navigation" className="h-8 w-8 shrink-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 shrink-0" width="1em" height="1em" aria-hidden="true">
-                                                    <rect x="3" y="6" width="18" height="2" rx="1" fill="currentColor"/>
-                                                    <rect x="3" y="12" width="18" height="2" rx="1" fill="currentColor"/>
-                                                    <rect x="3" y="18" width="18" height="2" rx="1" fill="currentColor"/>
-                                                </svg>
-                                            </button>
-                                        </div>
+                                    <header className="sticky top-0 z-50 bg-primary border-b border-secondary">
+                <div className="flex h-16 w-full items-center justify-center">
+                    <div className="flex w-full max-w-container justify-between pr-3 pl-4 md:px-8">
+                        <div className="flex flex-1 items-center gap-4">
+                            <a
+                                aria-label="Go to homepage"
+                                href="/"
+                                className="rounded-sm outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2"
+                            >
+                                <UntitledLogo className="h-8" />
+                            </a>
+                        </div>
 
-                                        {/* Logo */}
-                                        <div className="flex h-full items-center shrink-0">
-                                            <a className="cursor-pointer rounded-none transition duration-200 focus:outline-none focus-visible:ring block logo" href="/">
-                                                <div className="block sm:hidden">
-                                                    <div className="inline-block object-contain square-logo-image shrink-0 h-[2rem] w-[2rem] bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                        U
-                                                    </div>
-                                                </div>
-                                                <div className="hidden sm:block">
-                                                    <div className="flex items-center space-x-2">
-                                                        <div className="h-8 w-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                            U
-                                                        </div>
-                                                        <span className="text-lg font-semibold">Untitled UI</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="hidden lg:block max-w-md w-full">
+                                <Input 
+                                    shortcut 
+                                    size="sm" 
+                                    aria-label="Search" 
+                                    placeholder="Search or ask a question (⌘ + /)" 
+                                    icon={SearchLg}
+                                />
+                            </div>
 
-                                        {/* Search Bar */}
-                                        <div className="h-full lg:items-center flex flex-1 justify-center">
-                                            <div className="max-w-[40rem] w-full hidden lg:block">
-                                                <div className="max-w-[40rem]">
-                                                    <div className="flex items-center flex-1">
-                                                        <div className="relative inline-flex items-center gap-2 block rounded-input appearance-none border placeholder:text-content-disabled placeholder:text-label-md transition duration-200 px-2 py-[3px] min-h-[40px] text-label-md focus-within:ring-action-primary focus-within:border-action-primary bg-surface text-content border-line w-full focus:outline-none focus-within:ring-1 ring-offset-0">
-                                                            <div className="shrink-0">
-                                                                <SearchLg className="text-content-disabled shrink-0" />
-                                                            </div>
-                                                            <input 
-                                                                className="grow appearance-none focus-visible:outline-none bg-transparent" 
-                                                                type="search" 
-                                                                placeholder="Search or ask a question (⌘ + /)" 
-                                                            />
-                                                            <div className="shrink-0">
-                                                                <div className="group flex items-center text-content-disabled cursor-pointer hover:text-content-hovered transition-colors">
-                                                                    <div className="aspect-square h-4 w-4 flex items-center justify-center">
-                                                                        <span className="text-xs">✨</span>
-                                                                    </div>
-                                                                    <span className="ml-1 text-xs">AI</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div className="hidden lg:flex">
+                                <Button size="sm" color="primary" iconLeading={Plus}>
+                                    Create
+                                </Button>
+                            </div>
 
-                                        {/* Right side actions */}
-                                        <div className="h-full flex">
-                                            <div className="h-full flex flex-row-reverse flex-wrap gap-x-2 gap-y-10">
-                                                {/* Profile */}
-                                                <div className="h-full flex justify-center items-center shrink-0">
-                                                    <button className="rounded-button flex items-center text-content-on-topbar bg-topbar hover:text-content-on-topbar focus:outline-none focus-visible:ring transition duration-200 !rounded-avatar navbar-profile-menu">
-                                                        <div className="relative shrink-0 rounded-avatar shrink-0 h-[2.5rem] w-[2.5rem] bg-gray-300 flex items-center justify-center">
-                                                            <span className="text-sm font-medium">A</span>
-                                                            <div className="absolute bottom-1 end-1 bg-surface rounded-avatar text-xs text-content-subdued transform translate-x-1/2 translate-y-1/2 h-4 w-4">
-                                                                <div className="w-4 h-4 p-[2px] rounded-full relative">
-                                                                    <div className="w-full rounded-full h-full bg-action-destructive"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-
-                                                {/* Create Post */}
-                                                <div className="h-full hidden lg:flex justify-center items-center shrink-0">
-                                                    <Button size="sm" color="primary" iconLeading={Plus}>
-                                                        Create
-                                                    </Button>
-                                                </div>
-
-                                                {/* Notifications */}
-                                                <div className="h-full flex justify-center items-center shrink-0">
-                                                    <button className="inline-block text-content-on-topbar bg-topbar hover:bg-topbar-subdued py-[9px] w-10 h-10 leading-5 text-label-sm rounded-button relative">
-                                                        <Bell01 className="shrink-0 h-5 w-5 mx-auto" />
-                                                        <div className="absolute top-0 end-0 transform translate-x-1/4 -translate-y-1/4 flex items-center justify-center">
-                                                            <div className="inline-flex shrink-0 rounded-button-sm items-center justify-center text-label-xs leading-none font-bold text-content-on-destructive bg-action-destructive min-w-[18px] min-h-[18px]">
-                                                                <span className="m-0.5 scale-90">93</span>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-
-                                                {/* Messages */}
-                                                <div className="h-full flex justify-center items-center shrink-0">
-                                                    <button className="inline-block text-content-on-topbar bg-topbar hover:bg-topbar-subdued py-[9px] w-10 h-10 leading-5 text-label-sm rounded-button relative">
-                                                        <MessageChatCircle className="shrink-0 h-5 w-5 mx-auto" />
-                                                        <div className="absolute top-0 end-0 transform translate-x-1/4 -translate-y-1/4 flex items-center justify-center">
-                                                            <div className="inline-flex shrink-0 rounded-button-sm items-center justify-center text-label-xs leading-none font-bold text-content-on-destructive bg-action-destructive min-w-[18px] min-h-[18px]">
-                                                                <span className="m-0.5 scale-90">2</span>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-
-                                                {/* Dark mode */}
-                                                <div className="h-full flex justify-center items-center shrink-0 hidden lg:flex">
-                                                    <button className="inline-block text-content-on-topbar bg-topbar hover:bg-topbar-subdued py-[9px] w-10 h-10 leading-5 text-label-sm rounded-button">
-                                                        <Moon01 className="shrink-0 h-5 w-5 mx-auto" />
-                                                    </button>
-                                                </div>
-
-                                                {/* Language */}
-                                                <div className="h-full hidden lg:flex justify-center items-center shrink-0">
-                                                    <button className="inline-block text-content-on-topbar bg-topbar hover:bg-topbar-subdued py-[9px] w-10 h-10 leading-5 text-label-sm rounded-button">
-                                                        <div className="w-5 h-5 shrink-0 flex justify-center items-center">
-                                                            <span className="text-sm">🇺🇸</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div className="relative">
+                                <NavItemButton 
+                                    label="Notifications" 
+                                    icon={Bell01}
+                                    size="md"
+                                />
+                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                                    93
                                 </div>
                             </div>
+
+                            <div className="relative">
+                                <NavItemButton 
+                                    label="Messages" 
+                                    icon={MessageChatCircle}
+                                    size="md" 
+                                />
+                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                                    2
+                                </div>
+                            </div>
+
+                            <div className="hidden lg:flex">
+                                <NavItemButton 
+                                    label="Toggle dark mode" 
+                                    icon={Moon01}
+                                    size="md"
+                                />
+                            </div>
+
+                            <div className="hidden lg:flex">
+                                <NavItemButton 
+                                    label="Language" 
+                                    icon={() => <span className="text-sm">🇺🇸</span>}
+                                    size="md"
+                                />
+                            </div>
+
+                            <Avatar 
+                                size="md"
+                                initials="A"
+                                className="cursor-pointer"
+                            />
                         </div>
                     </div>
                 </div>
@@ -386,7 +329,7 @@ export const AdminContentEventsCreatePage = () => {
                             <div className="w-full flex flex-col max-w-full md:max-w-3xl self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-0 sm:py-0 md:py-0 lg:py-0 px-0 sm:px-0 md:px-0 lg:px-0">
                                 
                                 {/* Form Card */}
-                                <div className="border border-card flex flex-col text-content-subdued transition duration-200 justify-between bg-surface shadow-card sm:rounded-card">
+                                <div className="border border-gray-300 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface">
                                     
                                     {/* Header */}
                                     <div className="px-4 py-5 sm:p-6 pb-0 sm:pb-0">
@@ -433,14 +376,78 @@ export const AdminContentEventsCreatePage = () => {
                                                     onChange={(value) => setFormData(prev => ({ ...prev, title: value }))}
                                                 />
 
-                                                {/* About Event */}
-                                                <TextArea
-                                                    label="About Event"
-                                                    placeholder="Describe your event in detail..."
-                                                    value={formData.aboutEvent}
-                                                    onChange={(e) => setFormData(prev => ({ ...prev, aboutEvent: e.target.value }))}
-                                                    rows={3}
-                                                />
+                                                {/* About Event - Rich Text Editor */}
+                                                <div>
+                                                    <Label>About Event</Label>
+                                                    <div className="mt-1 relative">
+                                                        <div
+                                                            contentEditable="true"
+                                                            className="tiptap ProseMirror w-full scroll-py-3 overflow-auto rounded-lg bg-primary text-md leading-[1.5] text-primary shadow-xs ring-1 ring-primary transition duration-100 ease-linear ring-inset placeholder:text-placeholder autofill:rounded-lg autofill:text-primary focus:ring-2 focus:ring-brand focus:outline-hidden resize-y p-4"
+                                                            style={{
+                                                                minHeight: '200px'
+                                                            } as React.CSSProperties}
+                                                            tabIndex={0}
+                                                            spellCheck="false"
+                                                            translate="no"
+                                                            aria-label="Rich text editor for event description"
+                                                            onInput={(e) => {
+                                                                const content = e.currentTarget.innerHTML;
+                                                                setFormData(prev => ({ ...prev, aboutEvent: content }));
+                                                            }}
+                                                            onFocus={(e) => {
+                                                                // Initialize with paragraph if empty
+                                                                if (e.currentTarget.innerHTML.trim() === '') {
+                                                                    e.currentTarget.innerHTML = '<p><br></p>';
+                                                                    // Position cursor at the start
+                                                                    const range = document.createRange();
+                                                                    const sel = window.getSelection();
+                                                                    range.setStart(e.currentTarget.firstChild?.firstChild || e.currentTarget, 0);
+                                                                    range.collapse(true);
+                                                                    sel?.removeAllRanges();
+                                                                    sel?.addRange(range);
+                                                                }
+                                                            }}
+                                                            onBlur={(e) => {
+                                                                // Clean up empty content
+                                                                const content = e.currentTarget.innerHTML.trim();
+                                                                if (content === '<p><br></p>' || content === '<br>' || content === '' || content === '<p></p>') {
+                                                                    e.currentTarget.innerHTML = '';
+                                                                    setFormData(prev => ({ ...prev, aboutEvent: '' }));
+                                                                }
+                                                            }}
+                                                            onKeyDown={(e) => {
+                                                                // Handle basic formatting shortcuts
+                                                                if (e.metaKey || e.ctrlKey) {
+                                                                    switch (e.key.toLowerCase()) {
+                                                                        case 'b':
+                                                                            e.preventDefault();
+                                                                            document.execCommand('bold');
+                                                                            break;
+                                                                        case 'i':
+                                                                            e.preventDefault();
+                                                                            document.execCommand('italic');
+                                                                            break;
+                                                                        case 'u':
+                                                                            e.preventDefault();
+                                                                            document.execCommand('underline');
+                                                                            break;
+                                                                    }
+                                                                }
+                                                            }}
+                                                            dangerouslySetInnerHTML={{ 
+                                                                __html: formData.aboutEvent || ''
+                                                            }}
+                                                            suppressContentEditableWarning={true}
+                                                        />
+                                                        
+                                                        {/* Show placeholder when empty */}
+                                                        {!formData.aboutEvent && (
+                                                            <div className="absolute top-4 left-4 pointer-events-none text-placeholder">
+                                                                Describe your event in detail...
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
 
                                                 {/* Hosts - MultiSelect */}
                                                 <MultiSelect
@@ -584,7 +591,10 @@ export const AdminContentEventsCreatePage = () => {
                                                         onClick={() => setSeoExpanded(!seoExpanded)}
                                                         className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
                                                     >
-                                                        <span className="text-sm font-medium text-gray-700">SEO options</span>
+                                                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                            SEO options
+                                                            <EyeOff className="size-4 text-gray-400" />
+                                                        </span>
                                                         {seoExpanded ? (
                                                             <ChevronUp className="size-4 text-gray-400" />
                                                         ) : (
@@ -627,7 +637,10 @@ export const AdminContentEventsCreatePage = () => {
                                                         onClick={() => setAdvancedExpanded(!advancedExpanded)}
                                                         className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
                                                     >
-                                                        <span className="text-sm font-medium text-gray-700">Advanced Options</span>
+                                                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                            Advanced Options
+                                                            <EyeOff className="size-4 text-gray-400" />
+                                                        </span>
                                                         {advancedExpanded ? (
                                                             <ChevronUp className="size-4 text-gray-400" />
                                                         ) : (
