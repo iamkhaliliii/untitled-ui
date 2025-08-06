@@ -18,6 +18,7 @@ import { Badge, BadgeWithImage } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { SiteLayout } from "@/components/layouts/site-layout";
 import { ModalOverlay, Modal, Dialog } from "@/components/application/modals/modal";
+import { RSVPTicketModal } from "@/components/application/modals/rsvp-ticket-modal";
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -95,7 +96,12 @@ const scrollbarStyles = {
 } as React.CSSProperties;
 
 // Enhanced Event Details Modal Component  
-const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boolean; onClose: () => void }) => {
+const EventDetailsModal = ({ event, isOpen, onClose, onRSVPClick }: { 
+    event: any; 
+    isOpen: boolean; 
+    onClose: () => void;
+    onRSVPClick?: (event: any) => void;
+}) => {
     const navigate = useNavigate();
     
     if (!event) return null;
@@ -103,6 +109,12 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
     const rsvpState = getRandomRSVPState(event.id);
     const rsvpConfig = rsvpStateConfig[rsvpState];
     const rsvpOpenDate = rsvpState === 'not_started' ? getRandomRSVPOpenDate(event.id) : null;
+
+    const handleRSVPClick = () => {
+        if (rsvpState === 'open' && onRSVPClick) {
+            onRSVPClick(event);
+        }
+    };
 
     const handleEventPageClick = () => {
         window.open(`/site/event/${event.id}`, '_blank');
@@ -221,6 +233,7 @@ const EventDetailsModal = ({ event, isOpen, onClose }: { event: any; isOpen: boo
                                                 className="w-full justify-center text-xs"
                                                 disabled={rsvpConfig.disabled}
                                                 title={rsvpConfig.description}
+                                                onClick={handleRSVPClick}
                                             >
                                                 {rsvpState === 'not_started' && rsvpOpenDate ? `Opens: ${rsvpOpenDate}` : rsvpConfig.label}
                                             </Button>
@@ -451,6 +464,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
 export const SiteEventPage = () => {
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showTicketModal, setShowTicketModal] = useState(false);
 
     const handleEventClick = (event: any) => {
         setSelectedEvent(event);
@@ -460,6 +474,12 @@ export const SiteEventPage = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedEvent(null);
+    };
+
+    const handleRSVPClick = (event: any) => {
+        setSelectedEvent(event);
+        setIsModalOpen(false);
+        setShowTicketModal(true);
     };
 
     const headerActions = (
@@ -636,7 +656,15 @@ export const SiteEventPage = () => {
                 <EventDetailsModal 
                     event={selectedEvent} 
                     isOpen={isModalOpen} 
-                    onClose={handleCloseModal} 
+                    onClose={handleCloseModal}
+                    onRSVPClick={handleRSVPClick}
+                />
+
+                {/* RSVP Ticket Modal */}
+                <RSVPTicketModal 
+                    isOpen={showTicketModal}
+                    onClose={() => setShowTicketModal(false)}
+                    event={selectedEvent}
                 />
 
                 {/* Enhanced Load More */}

@@ -235,7 +235,7 @@ export const AdminContentEventsPage = () => {
                                     color="primary" 
                                     size="md" 
                                     iconLeading={Plus}
-                                    onPress={() => setIsAddModalOpen(true)}
+                                    onClick={() => setIsAddModalOpen(true)}
                                 >
                                     New Event
                                 </Button>
