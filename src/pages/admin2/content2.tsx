@@ -976,10 +976,10 @@ export const AdminContent2Page = () => {
                                 <Settings01 className="mx-auto size-16 text-fg-quaternary" />
                             </div>
                             <h3 className="text-lg font-semibold text-primary mb-3">
-                                CMS Configuration
+                                Choose a CMS model to begin editing or create a new one
                             </h3>
                             <p className="text-md text-tertiary leading-relaxed">
-                                No changes will be made for this scope. 
+                                Select a model from the sidebar to start managing your content structure and fields.
                             </p>
                         </div>
                     </div>

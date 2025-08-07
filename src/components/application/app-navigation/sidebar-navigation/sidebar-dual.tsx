@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01 } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
+import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
+import { Badge } from "@/components/base/badges/badges";
 import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
 import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
 import { cx } from "@/utils/cx";
@@ -70,6 +72,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     
     // State for customize page tree expansion
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
+    
+    // State for CMS tree expansion
+    const [cmsExpandedIds, setCmsExpandedIds] = useState<string[]>(["models"]);
     
 
 
@@ -202,6 +207,47 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
         return baseTree;
     }, [toggleStates, additionalFolders]);
+
+    // CMS tree data
+    const cmsTreeData = useMemo((): TreeNode[] => [
+        {
+            id: "models",
+            label: "Models",
+            icon: <Settings01 className="size-5 text-fg-quaternary" />,
+            children: [
+                { 
+                    id: "event", 
+                    label: "Event",
+                    icon: <Calendar className="size-5 text-fg-quaternary" />,
+                    data: { href: `/${currentAdminVersion}/content2/cms/event` }
+                },
+                { 
+                    id: "article", 
+                    label: "Article",
+                    icon: <Edit03 className="size-5 text-fg-quaternary" />,
+                    data: { href: `/${currentAdminVersion}/content2/cms/article` }
+                },
+                { 
+                    id: "discussion", 
+                    label: "Discussion",
+                    icon: <MessageSquare01 className="size-5 text-fg-quaternary" />,
+                    data: { href: `/${currentAdminVersion}/content2/cms/discussion` }
+                },
+                { 
+                    id: "changelog", 
+                    label: "Changelog",
+                    icon: <FileX02 className="size-5 text-fg-quaternary" />,
+                    data: { href: `/${currentAdminVersion}/content2/cms/changelog` }
+                },
+                { 
+                    id: "help-article", 
+                    label: "Help Article",
+                    icon: <BookOpen01 className="size-5 text-fg-quaternary" />,
+                    data: { href: `/${currentAdminVersion}/content2/cms/help-article` }
+                },
+            ]
+        }
+    ], [currentAdminVersion]);
 
 
 
@@ -656,7 +702,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 
                 {/* Show TreeView for Site section when on admin site page */}
                 {currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
-                    <div className="flex flex-col flex-1 mt-2">
+                    <div className="flex h-full flex-col flex-1 mt-2">
                         <div className="flex-1 overflow-y-auto">
                             <TreeView
                                 data={siteTreeData}
@@ -931,35 +977,96 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         </ul>
                     </div>
                 ) : currentItem?.label === "Content 2" && activeUrl?.includes("/content2") ? (
-                    <div className="mt-2">
-                        <ul>
-                            <li className="py-0.5">
-                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/posts`} href={`/${currentAdminVersion}/content2/posts`} icon={Package} type="link">
-                                    Posts
-                                </NavItemBase>
-                            </li>
-                            <li className="py-0.5">
-                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/events`} href={`/${currentAdminVersion}/content2/events`} icon={Calendar} type="link">
-                                    Events
-                                </NavItemBase>
-                            </li>
-                            <li className="py-0.5">
-                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/spaces`} href={`/${currentAdminVersion}/content2/spaces`} icon={Folder} type="link">
-                                    Spaces
-                                </NavItemBase>
-                            </li>
-                            <li className="py-0.5">
-                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/tag`} href={`/${currentAdminVersion}/content2/tag`} icon={Tag01} type="link">
-                                    Tag
-                                </NavItemBase>
-                            </li>
-                            <li className="py-0.5">
-                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/cms`} href={`/${currentAdminVersion}/content2/cms`} icon={Settings01} type="link">
+                    activeUrl === `/${currentAdminVersion}/content2/cms` ? (
+                        <div className="h-[calc(100vh-120px)] pt-2">
+                            {/* Back Button */}
+                            
+                            <div className="flex items-center gap-1 mb-4">
+                            <Button  onClick={() => navigate(`/${currentAdminVersion}/content2`)} color="tertiary" size="md" iconLeading={ArrowLeft} aria-label="Button CTA" />
+
+                                <h3 className="text-lg font-semibold">
                                     CMS
-                                </NavItemBase>
-                            </li>
-                        </ul>
-                    </div>
+                                </h3>
+                                <Badge className="ml-1" color="gray">
+                                    Beta
+                                </Badge>
+                            </div>
+                            {/* CMS Models Tree */}
+                            <div className="flex h-full flex-col flex-1 mt-2">
+                                <div className="flex-1 overflow-y-auto">
+                                    <TreeView
+                                        data={cmsTreeData}
+                                        expandedIds={cmsExpandedIds}
+                                        selectedIds={[]}
+                                        onNodeClick={handleNodeClick}
+                                        onNodeExpand={(nodeId, expanded) => {
+                                            // Update expanded state
+                                            if (expanded) {
+                                                setCmsExpandedIds(prev => [...prev, nodeId]);
+                                            } else {
+                                                setCmsExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                            }
+                                        }}
+                                        className="border-none bg-transparent"
+                                        showLines={false}
+                                        showIcons={true}
+                                    />
+                                </div>
+
+                                {/* Footer Actions */}
+                                <div className="sticky bg-primary">
+                                    <div className="h-px bg-secondary/40 my-2"></div>
+                                    <button 
+                                        onClick={() => {
+                                            console.log("Add CMS clicked");
+                                            // TODO: Add CMS creation logic
+                                        }}
+                                        className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
+                                    >
+                                        <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                                            <Settings01 className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                                        </div>
+                                        <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                                            Add CMS
+                                        </span>
+                                        <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                                            <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="h-full mt-2">
+                            <ul>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/posts`} href={`/${currentAdminVersion}/content2/posts`} icon={Package} type="link">
+                                        Posts
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/events`} href={`/${currentAdminVersion}/content2/events`} icon={Calendar} type="link">
+                                        Events
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/spaces`} href={`/${currentAdminVersion}/content2/spaces`} icon={Folder} type="link">
+                                        Spaces
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/tag`} href={`/${currentAdminVersion}/content2/tag`} icon={Tag01} type="link">
+                                        Tag
+                                    </NavItemBase>
+                                </li>
+                                <li className="py-0.5">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/cms`} href={`/${currentAdminVersion}/content2/cms`} icon={Settings01} badge="beta" type="link">
+                                        CMS
+                                    </NavItemBase>
+                                </li>
+                            </ul>
+                        </div>
+                    )
                 ) : (
                     <ul className="mt-2">
                         {currentItem?.items?.map((item, index) => (
