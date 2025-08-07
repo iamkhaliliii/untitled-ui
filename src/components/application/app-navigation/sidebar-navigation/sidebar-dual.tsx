@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01 } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -213,7 +213,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         {
             id: "models",
             label: "Models",
-            icon: <Settings01 className="size-5 text-fg-quaternary" />,
+            icon: <Database01 className="size-5 text-fg-quaternary" />,
             children: [
                 { 
                     id: "event", 
@@ -245,6 +245,18 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     icon: <BookOpen01 className="size-5 text-fg-quaternary" />,
                     data: { href: `/${currentAdminVersion}/content2/cms/help-article` }
                 },
+            ],
+        },
+        {
+            id: "archivedModels",
+            label: "Archived Models",
+            icon: <Archive className="size-5 text-fg-quaternary" />,
+            children: [
+                { id: "event", label: "Event" },
+                { id: "article", label: "Article" },
+                { id: "discussion", label: "Discussion" },
+                { id: "changelog", label: "Changelog" },
+                { id: "help-article", label: "Help Article" },
             ]
         }
     ], [currentAdminVersion]);
@@ -1024,7 +1036,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                         className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
                                     >
                                         <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
-                                            <Settings01 className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                                            <Plus className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
                                         </div>
                                         <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
                                             Add CMS
