@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01 } from "@untitledui/icons";
+import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01, X } from "@untitledui/icons";
 import { Input, InputBase } from "@/components/base/input/input";
 import { TextArea } from "@/components/base/textarea/textarea";
 import { Select } from "@/components/base/select/select";
@@ -49,7 +49,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                 <div>
                     <Input
                         label="Name"
-                        placeholder="Enter event name"
+                        placeholder="Enter space name"
                     />
                 </div>
                 
@@ -57,22 +57,39 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                 <div>
                     <TextArea
                         label="Description"
-                        placeholder="Describe your event..."
+                        placeholder="Describe your space..."
                         rows={3}
                     />
                 </div>
 
-                {/* URL Slug */}
+                {/* Web address */}
                 <div>
-                    <InputGroup isRequired label="URL Slug" leadingAddon={<InputGroup.Prefix>betterm.../</InputGroup.Prefix>}>
-                        <InputBase placeholder="my-awesome-event" tooltip="This is a tooltip" />
-                    </InputGroup>
+                    <Input
+                        label="Web address"
+                        placeholder="my-awesome-event"
+                    />
+                </div>
+
+                {/* Banner Upload */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-secondary">Banner</label>
+                    <div className="flex items-center justify-center w-full h-24 border-2 border-dashed border-secondary bg-secondary/20 rounded-lg">
+                        <div className="text-center">
+                            <Upload01 className="h-6 w-6 text-tertiary mx-auto mb-2" />
+                            <button className="px-3 py-1.5 text-xs font-medium bg-secondary text-primary rounded-md hover:bg-secondary/80 transition-colors">
+                                Upload Banner
+                            </button>
+                        </div>
+                    </div>
+                    <p className="text-xs text-tertiary">
+                        SVG, PNG, JPG or GIF (recommended: 1200x300px)
+                    </p>
                 </div>
                 
-                {/* Folder */}
+                {/* Collection */}
                 <div>
                     <Select
-                        label="Folder"
+                        label="Collection"
                         placeholder="Select folder"
                         items={[
                             { label: "Root", id: "Root", supportingText: "Root folder" },
@@ -166,12 +183,20 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                         )}
                     </div>
                 )}
-
+                {/* Make private Toggle */}
+                <div>
+                    <Toggle
+                        label="Make private"
+                        size="sm"
+                        slim
+                        isSelected={formToggles.anyoneInvite}
+                        onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
+                    />
+                </div>
                 {/* Invite Only Toggle */}
                 <div>
                     <Toggle
-                        label="Invite Only"
-                        hint="Only invited people can attend this event"
+                        label="Make invite-only"
                         size="sm"
                         slim
                         isSelected={formToggles.inviteOnly}
@@ -183,7 +208,6 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                 <div>
                     <Toggle
                         label="Anyone can invite"
-                        hint="Allow attendees to invite other people"
                         size="sm"
                         slim
                         isSelected={formToggles.anyoneInvite}
@@ -191,8 +215,9 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                     />
                 </div>
 
-                {/* Hide from Feed Toggle */}
-                <div>
+
+               {/* Hide from Feed Toggle */}
+               {/*  <div>
                     <Toggle
                         label="Hide from feed"
                         hint="Hide posts from this space in the community feed"
@@ -201,14 +226,14 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                         isSelected={formToggles.hideFromFeed}
                         onChange={(value) => setFormToggles(prev => ({ ...prev, hideFromFeed: value }))}
                     />
-                </div>
+                </div>  */}
             </div>
 
-            {/* Event Module Permissions Section */}
+            {/* CMS Permissions Section */}
             <div className="border border-secondary rounded-lg bg-primary p-2 ">
                 <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
                     <Shield01 className="size-4 text-brand-secondary" />
-                    <h5 className="text-xs font-semibold text-primary">Module Permissions</h5>
+                    <h5 className="text-xs font-semibold text-primary">CMS Permissions</h5>
                     <Badge type="pill-color" color="brand" size="sm">
                         <div className="flex items-center gap-1">
                             <Database01 className="size-3" />
@@ -236,9 +261,48 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                 )}
                             </Select>
                         </div>
+                        {/* Who can comment */}
+                        <div>
+                            <Select
+                                label="Who can comment"
+                                placeholder="Select who can comment"
+                                items={[
+                                    { label: "All members", id: "all-members", icon: Users01 },
+                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                    { label: "Nobody", id: "nobody", icon: X },
+                                ]}
+                            >
+                                {(item) => (
+                                    <Select.Item id={item.id} icon={item.icon}>
+                                        {item.label}
+                                    </Select.Item>
+                                )}
+                            </Select>
+                        </div>
+                        {/* Who can react */}
+                        <div>
+                            <Select
+                                label="Who can react"
+                                placeholder="Select who can react"
+                                items={[
+                                    { label: "All members", id: "all-members", icon: Users01 },
+                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                    { label: "Nobody", id: "nobody", icon: X },
+                                ]}
+                            >
+                                {(item) => (
+                                    <Select.Item id={item.id} icon={item.icon}>
+                                        {item.label}
+                                    </Select.Item>
+                                )}
+                            </Select>
+                        </div>
+                                
 
                         {/* Comment Toggle */}
-                        <div>
+{/*                         <div>
                             <Toggle
                                 label="Comments"
                                 hint="Allow attendees to comment on the event"
@@ -247,10 +311,10 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                 isSelected={formToggles.comments}
                                 onChange={(value) => setFormToggles(prev => ({ ...prev, comments: value }))}
                             />
-                        </div>
+                        </div> */}
 
                         {/* Who Can Reply (conditional) - Only show when comments is enabled */}
-                        {formToggles.comments && (
+{/*                         {formToggles.comments && (
                             <div className="ml-4 border-l-2 border-secondary pl-3">
                                 <Select
                                     label="Who can reply"
@@ -268,10 +332,10 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                     )}
                                 </Select>
                             </div>
-                        )}
+                        )} */}
 
                         {/* Reaction Toggle */}
-                        <div>
+{/*                         <div>
                             <Toggle
                                 label="Reactions"
                                 hint="Allow attendees to react to posts and comments"
@@ -280,10 +344,10 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                 isSelected={formToggles.reactions}
                                 onChange={(value) => setFormToggles(prev => ({ ...prev, reactions: value }))}
                             />
-                        </div>
+                        </div> */}
 
                         {/* Reaction settings (conditional) - Only show when reactions is enabled */}
-                        {formToggles.reactions && (
+{/*                         {formToggles.reactions && (
                             <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
                                 <Select
                                     label="Who can react"
@@ -317,7 +381,10 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                     )}
                                 </Select>
                             </div>
-                        )}
+                        )} */}
+
+
+                        
                     </div>
                 </div>
             </div>

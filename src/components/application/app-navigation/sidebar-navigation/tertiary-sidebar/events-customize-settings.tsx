@@ -68,6 +68,7 @@ export const EventsCustomizeSettings = ({
                     label: "Header",
                     icon: <LayoutTop className="size-5 text-fg-quaternary" />,
                     showToggleButton: true,
+                    showAddButton: true,
                     toggleState: toggleStates.header,
                     children: [
                       { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
@@ -75,32 +76,13 @@ export const EventsCustomizeSettings = ({
                   },
                   { 
                     id: "leftSidebar", 
-                    label: "Left Sidebar",
+                    label: "Sidebar",
                     icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
+                    showAddButton: true,
                     showToggleButton: true,
                     toggleState: toggleStates.leftSidebar,
                     children: [
                       { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                  },
-                  { 
-                    id: "rightSidebar", 
-                    label: "Right Sidebar",
-                    icon: <LayoutRight className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.rightSidebar,
-                    children: [
-                      { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                  },
-                  { 
-                    id: "footer", 
-                    label: "Footer",
-                    icon: <LayoutBottom className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.footer,
-                    children: [
-                      { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                   },
                 ]

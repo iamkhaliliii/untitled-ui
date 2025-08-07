@@ -25,8 +25,8 @@ export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
-    const isEventsPage = currentPath.includes("/admin/site/spaces/myfolder/events");
-    const isPrivateSpacePage = currentPath.includes("/admin/site/spaces/private-space");
+    const isEventsPage = currentPath.includes("/admin2/site/spaces/myfolder/events");
+    const isPrivateSpacePage = currentPath.includes("/admin2/site/spaces/private-space");
     const isSpacePage = isEventsPage || isPrivateSpacePage;
     
     // Get page title based on current path

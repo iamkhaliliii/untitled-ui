@@ -123,7 +123,7 @@ export const EventsAnalyticsSettings = ({}: EventsAnalyticsSettingsProps) => {
 
     return (
         <div className="space-y-4 sm:space-y-6 p-3 sm:p-4">
-            {/* Header with Export */}
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div className="min-w-0 flex-1">
                     <h2 className="text-lg sm:text-xl font-semibold text-primary">Space Analytics</h2>
@@ -133,13 +133,6 @@ export const EventsAnalyticsSettings = ({}: EventsAnalyticsSettingsProps) => {
                     <Badge type="pill-color" color="brand" size="sm">
                         Last 7 days
                     </Badge>
-                    <ButtonUtility
-                        size="sm"
-                        color="secondary"
-                        icon={Download01}
-                        tooltip="Export Analytics Data"
-                        onClick={exportData}
-                    />
                 </div>
             </div>
 

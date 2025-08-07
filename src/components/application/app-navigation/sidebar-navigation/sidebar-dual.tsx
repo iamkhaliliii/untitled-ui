@@ -102,7 +102,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const getInitialSiteFileTree = (): TreeNode[] => [
         {
             id: "spaces",
-            label: "Spaces",
+            label: "Collections & Spaces",
             showAddButton: true,
             icon: <Folder className="size-5 text-fg-quaternary" />,
             children: [
@@ -147,6 +147,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     id: "header", 
                     label: "Header",
                     icon: <LayoutTop className="size-5 text-fg-quaternary" />,
+                    showAddButton: true,
                     showToggleButton: true,
                     toggleState: toggleStates.header,
                     children: [
@@ -155,15 +156,16 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 },
                 { 
                     id: "leftSidebar", 
-                    label: "Left Sidebar",
+                    label: "Sidebar",
                     icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
                     showToggleButton: true,
+                    showAddButton: true,
                     toggleState: toggleStates.leftSidebar,
                     children: [
                         { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
                 },
-                { 
+/*                 { 
                     id: "rightSidebar", 
                     label: "Right Sidebar",
                     icon: <LayoutRight className="size-5 text-fg-quaternary" />,
@@ -172,8 +174,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     children: [
                         { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
-                },
-                { 
+                }, */
+/*                 { 
                     id: "footer", 
                     label: "Footer",
                     icon: <LayoutBottom className="size-5 text-fg-quaternary" />,
@@ -182,12 +184,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     children: [
                         { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
                     ]
-                },
+                }, */
             ]
         },
         {
             id: "modules",
-            label: "Modules",
+            label: "CMS Pages",
             showAddButton: true,
             icon: <Package className="size-5 text-fg-quaternary" />,
             children: [
@@ -715,6 +717,15 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 {/* Show TreeView for Site section when on admin site page */}
                 {currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
                     <div className="flex h-full flex-col flex-1 mt-2">
+                        {/* Search Input */}
+                        <div className="mb-4">
+                            <Input 
+                                size="sm" 
+                                placeholder="Search files and folders..." 
+                                icon={SearchLg}
+                                className="w-full"
+                            />
+                        </div>
                         <div className="flex-1 overflow-y-auto">
                             <TreeView
                                 data={siteTreeData}

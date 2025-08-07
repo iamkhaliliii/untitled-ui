@@ -217,21 +217,6 @@ export function TreeView({
           <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate">
             {node.label}
           </span>
-
-          {/* Toggle Button */}
-          {node.showToggleButton && (
-            <div className="ml-3 flex items-center justify-center">
-              <Toggle
-                size="sm"
-                slim={true}
-                isSelected={node.toggleState}
-                onChange={(isSelected) => {
-                  onToggleChange?.(node.id, isSelected);
-                }}
-              />
-            </div>
-          )}
-
           {/* Plus Button */}
           {node.showAddButton && (
             <div className="ml-3 size-4 shrink-0 flex items-center justify-center">
@@ -246,6 +231,21 @@ export function TreeView({
               </button>
             </div>
           )}
+          {/* Toggle Button */}
+          {node.showToggleButton && (
+            <div className="ml-3 flex items-center justify-center">
+              <Toggle
+                size="sm"
+                slim={true}
+                isSelected={node.toggleState}
+                onChange={(isSelected) => {
+                  onToggleChange?.(node.id, isSelected);
+                }}
+              />
+            </div>
+          )}
+
+
         </motion.div>
 
         {/* Children */}

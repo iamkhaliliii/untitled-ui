@@ -210,15 +210,6 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
                     <h2 className="text-lg sm:text-xl font-semibold text-primary">Audit Logs</h2>
                     <p className="text-sm text-tertiary mt-1">Track all activities and changes in your space</p>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                    <ButtonUtility
-                        size="sm"
-                        color="secondary"
-                        icon={Download01}
-                        tooltip="Export Audit Logs"
-                        onClick={exportLogs}
-                    />
-                </div>
             </div>
 
             {/* Filters */}
