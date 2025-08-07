@@ -345,7 +345,7 @@ slim
 )}
 </div>
 {/* Group View Section */}
-<div className="shadow-xs ring-1 ring-primary rounded-lg bg-primary py-2 px-3 space-y-4 ">
+{/* <div className="shadow-xs ring-1 ring-primary rounded-lg bg-primary py-2 px-3 space-y-4 ">
 
 <div className="flex items-center justify-between">
 <Label htmlFor="group-view" className="truncate text-md font-medium text-primary">Group View</Label>
@@ -377,7 +377,7 @@ slim
   </div>
 </div>
 )}
-                </div>
+                </div> */}
 
 </div>
               <div>
