@@ -17,7 +17,7 @@ import { Avatar } from '@/components/base/avatar/avatar';
 import EventMap from '@/components/base/map/event-map';
 import { UntitledLogo } from '@/components/foundations/logo/untitledui-logo';
 import { NavItemButton } from '@/components/application/app-navigation/base-components/nav-item-button';
-import { AdminLayout } from "@/components/layouts/admin-layout";
+
 import { cx } from "@/utils/cx";
 
 interface HostItem {
@@ -41,6 +41,7 @@ interface FormData {
     virtualUrl: string;
     coverImage: File | null;
     eventDetails: string;
+    additionalDetails: string;
     
     // Step 2: RSVP Config
     rsvpOpens: 'immediately' | 'date';
@@ -93,6 +94,7 @@ export const AdminContentEventsCreatePage = () => {
         virtualUrl: '',
         coverImage: null,
         eventDetails: '',
+        additionalDetails: '',
         
         // Step 2: RSVP Config
         rsvpOpens: 'immediately',
@@ -247,14 +249,92 @@ export const AdminContentEventsCreatePage = () => {
     };
 
     return (
-        <AdminLayout 
-            title="Create Event"
-            description="Create a new event for your community"
-            currentPath={location.pathname}
-            hideHeader={true}
-        >
-            <div className="px-4 py-6 lg:px-6">
-                <div className="w-full flex flex-col max-w-full md:max-w-3xl mx-auto space-y-6">
+        <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background min-h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))]">
+            {/* Header Navigation */}
+            <header className="sticky top-0 z-50 bg-primary border-b border-secondary">
+                <div className="flex h-16 w-full items-center justify-center">
+                    <div className="flex w-full max-w-container justify-between pr-3 pl-4 md:px-8">
+                        <div className="flex flex-1 items-center gap-4">
+                            <a
+                                aria-label="Go to homepage"
+                                href="/"
+                                className="rounded-sm outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2"
+                            >
+                                <UntitledLogo className="h-8" />
+                            </a>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="hidden lg:block max-w-md w-full">
+                                <Input 
+                                    shortcut 
+                                    size="sm" 
+                                    aria-label="Search" 
+                                    placeholder="Search or ask a question (⌘ + /)" 
+                                    icon={SearchLg}
+                                />
+                            </div>
+
+                            <div className="hidden lg:flex">
+                                <Button size="sm" color="primary" iconLeading={Plus}>
+                                    Create
+                                </Button>
+                            </div>
+
+                            <div className="relative">
+                                <NavItemButton 
+                                    label="Notifications" 
+                                    icon={Bell01}
+                                    size="md"
+                                />
+                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                                    93
+                                </div>
+                            </div>
+
+                            <div className="relative">
+                                <NavItemButton 
+                                    label="Messages" 
+                                    icon={MessageChatCircle}
+                                    size="md" 
+                                />
+                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+                                    2
+                                </div>
+                            </div>
+
+                            <div className="hidden lg:flex">
+                                <NavItemButton 
+                                    label="Toggle dark mode" 
+                                    icon={Moon01}
+                                    size="md"
+                                />
+                            </div>
+
+                            <div className="hidden lg:flex">
+                                <NavItemButton 
+                                    label="Language" 
+                                    icon={() => <span className="text-sm">🇺🇸</span>}
+                                    size="md"
+                                />
+                            </div>
+
+                            <Avatar 
+                                size="md"
+                                initials="A"
+                                className="cursor-pointer"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 flex-1">
+                <div className="w-full grid grid-cols-1 md:grid-cols-6 lg:grid-cols-8 max-w-full self-center gap-3 sm:gap-3.5 md:gap-4 lg:gap-5 flex-1">
+                    <main className="w-full flex flex-col col-span-1 md:col-span-6 lg:col-span-8 max-w-full justify-self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0">
+                        <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5">
+                            <div className="w-full flex flex-col max-w-full md:max-w-3xl self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-0 sm:py-0 md:py-0 lg:py-0 px-0 sm:px-0 md:px-0 lg:px-0">
                     
                     {/* Form Card */}
                     <div className="border border-gray-300 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface">
@@ -443,21 +523,32 @@ export const AdminContentEventsCreatePage = () => {
                                         <div className="relative pl-6 mt-2 space-y-4">
                                             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                             <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <Input
-                                                    label="Address"
-                                                    placeholder="Enter physical address"
-                                                    value={formData.address}
-                                                    onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
-                                                    hint="This address will be shown in RSVP details"
-                                                />
-                                                <Input
-                                                    label="Area"
-                                                    placeholder="Enter area/district"
-                                                    value={formData.area}
-                                                    onChange={(value) => setFormData(prev => ({ ...prev, area: value }))}
-                                                />
-                                            </div>
+                                            
+                                            {/* Location - visible to everyone */}
+                                            <Input
+                                                label="Location"
+                                                placeholder="Enter area/district"
+                                                value={formData.area}
+                                                onChange={(value) => setFormData(prev => ({ ...prev, area: value }))}
+                                                hint="This location will be shown to everyone"
+                                            />
+
+                                            <Input
+                                                label="Address"
+                                                placeholder="Enter physical address"
+                                                value={formData.address}
+                                                onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
+                                                hint="Only shown after RSVP"
+                                            />
+
+                                            {/* Additional Details as children of Address */}
+                                            <Input
+                                                label="Additional details"
+                                                placeholder="Room information, building details, etc."
+                                                value={formData.additionalDetails}
+                                                onChange={(value) => setFormData(prev => ({ ...prev, additionalDetails: value }))}
+                                                hint="Only shown after RSVP"
+                                            />
                                             
                                             {/* Map Preview */}
                                             {formData.address && (
@@ -475,9 +566,10 @@ export const AdminContentEventsCreatePage = () => {
                                     )}
 
                                     {formData.locationType === 'virtual' && (
-                                        <div className="relative pl-6 mt-2">
+                                        <div className="relative pl-6 mt-2 space-y-4">
                                             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                             <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
+                                            
                                             <InputGroup 
                                                 label="Virtual URL" 
                                                 leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
@@ -636,14 +728,51 @@ export const AdminContentEventsCreatePage = () => {
                                                             onChange={(isSelected) => setFormData(prev => ({ ...prev, emailConfirmation: isSelected }))}
                                                         />
 
+                                                        <div className="space-y-1">
+                                                            <Toggle
+                                                                slim
+                                                                size="sm"
+                                                                label="Email Reminder"
+                                                                isSelected={formData.emailReminder}
+                                                                onChange={(isSelected) => setFormData(prev => ({ ...prev, emailReminder: isSelected }))}
+                                                            />
+                                                            <div className="text-xs text-gray-500 pl-6">
+                                                                <p>• The event is deleted</p>
+                                                                <p>• The event time or location has changed</p>
+                                                                <p>• 1 hour before the event is due to start</p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                {/* In-App Notifications */}
+                                                <div className="space-y-3">
+                                                    <h4 className="text-sm font-semibold text-gray-900 border-b border-gray-100 pb-2">In-App Notifications</h4>
+                                                    <div className="space-y-2">
                                                         <Toggle
                                                             slim
                                                             size="sm"
-                                                            label="Email Reminder"
-                                                            hint="Send email reminders before event"
-                                                            isSelected={formData.emailReminder}
-                                                            onChange={(isSelected) => setFormData(prev => ({ ...prev, emailReminder: isSelected }))}
+                                                            label="In-App Config"
+                                                            hint="Send in-app notification for registrations"
+                                                            isSelected={formData.inAppConfirmation}
+                                                            onChange={(isSelected) => setFormData(prev => ({ ...prev, inAppConfirmation: isSelected }))}
                                                         />
+
+                                                        <div className="space-y-1">
+                                                            <Toggle
+                                                                slim
+                                                                size="sm"
+                                                                label="In-App Reminder"
+                                                                isSelected={formData.inAppReminder}
+                                                                onChange={(isSelected) => setFormData(prev => ({ ...prev, inAppReminder: isSelected }))}
+                                                            />
+                                                            <div className="text-xs text-gray-500 pl-6">
+                                                                <p>• The event is deleted</p>
+                                                                <p>• The event time or location has changed</p>
+                                                                <p>• 1 hour before the event is due to start</p>
+                                                            </div>
+                                                        </div>
 
                                                     </div>
                                                 </div>
@@ -725,8 +854,11 @@ export const AdminContentEventsCreatePage = () => {
                             </form>
                         </div>
                     </div>
+                                </div>
+                        </div>
+                    </main>
                 </div>
             </div>
-        </AdminLayout>
+        </div>
     );
 };
