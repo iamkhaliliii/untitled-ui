@@ -19,15 +19,20 @@ import {
     ChevronDown,
     DotsHorizontal,
     FilterLines,
+    TrendUp02,
+    Copy01,
+    Download01,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Badge } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { AdminLayout } from "@/components/layouts/admin-layout";
+import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import { Table } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
 
 // Sample posts data
 const samplePosts = [
@@ -456,6 +461,8 @@ export const AdminContent2Page = () => {
     const navigate = useNavigate();
     const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
     const [expandedNodes, setExpandedNodes] = useState<string[]>(['contents', 'spaces']);
+    const [rsvpModalOpen, setRsvpModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
     const handleNodeClick = (node: TreeNode) => {
         console.log("Node clicked:", node.label);
@@ -768,12 +775,49 @@ export const AdminContent2Page = () => {
                                                 )}
                                                 <td className="px-6 py-4 whitespace-nowrap sticky right-0 bg-primary">
                                                     <div className="w-8">
-                                                        <ButtonUtility
-                                                            size="sm"
-                                                            color="tertiary"
-                                                            icon={DotsHorizontal}
-                                                            className="w-6 h-6 p-1"
-                                                        />
+                                                        {isEventsPage ? (
+                                                            <>
+                                                                <Dropdown.Root>
+                                                                    <Dropdown.DotsButton />
+                                                                    <Dropdown.Popover>
+                                                                        <Dropdown.Menu>
+                                                                            <Dropdown.Item 
+                                                                                key="view-rsvp" 
+                                                                                icon={Users01}
+                                                                                onAction={() => {
+                                                                                    setSelectedEvent(item);
+                                                                                    setRsvpModalOpen(true);
+                                                                                }}
+                                                                            >
+                                                                                View RSVP
+                                                                            </Dropdown.Item>
+                                                                            <Dropdown.Item key="view-event" icon={Eye}>
+                                                                                View Event
+                                                                            </Dropdown.Item>
+                                                                            <Dropdown.Item key="edit-event" icon={Edit01}>
+                                                                                Edit Event
+                                                                            </Dropdown.Item>
+                                                                            <Dropdown.Item key="analytics" icon={TrendUp02}>
+                                                                                Event Analytics
+                                                                            </Dropdown.Item>
+                                                                            <Dropdown.Separator />
+                                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-red-600">
+                                                                                Delete Event
+                                                                            </Dropdown.Item>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown.Popover>
+                                                                </Dropdown.Root>
+
+
+                                                            </>
+                                                        ) : (
+                                                            <ButtonUtility
+                                                                size="sm"
+                                                                color="tertiary"
+                                                                icon={DotsHorizontal}
+                                                                className="w-6 h-6 p-1"
+                                                            />
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -784,6 +828,134 @@ export const AdminContent2Page = () => {
                         </div>
                     </div>
                 </div>
+                
+                {/* RSVP Modal - Simple center modal */}
+                {rsvpModalOpen && selectedEvent && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        {/* Backdrop */}
+                        <div 
+                            className="absolute inset-0 bg-black/50" 
+                            onClick={() => {
+                                setRsvpModalOpen(false);
+                                setSelectedEvent(null);
+                            }}
+                        />
+                        
+                        {/* Modal */}
+                        <div className="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                            {/* Header */}
+                            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                                <div>
+                                    <h2 className="text-xl font-semibold text-gray-900">Event RSVPs</h2>
+                                    <p className="text-sm text-gray-600 mt-1">
+                                        Manage RSVPs for "{selectedEvent.title}"
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setRsvpModalOpen(false);
+                                        setSelectedEvent(null);
+                                    }}
+                                    className="text-gray-400 hover:text-gray-600 p-2"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="p-6 space-y-6">
+                                {/* Overview Stats */}
+                                <div className="bg-gray-50 rounded-lg p-6">
+                                    <div className="space-y-4">
+                                        {/* Header with numbers */}
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="text-2xl font-bold text-gray-900">
+                                                    <span>{selectedEvent.attendees || 0}</span>
+                                                    <span className="text-gray-400 mx-2">/</span>
+                                                    <span>{selectedEvent.capacity || 0}</span>
+                                                </div>
+                                                <div className="text-sm text-gray-600 mt-1">
+                                                    RSVPs confirmed
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-2xl font-bold text-gray-900">
+                                                    {Math.round(((selectedEvent.attendees || 0) / (selectedEvent.capacity || 1)) * 100)}%
+                                                </div>
+                                                <div className="text-sm text-gray-600">
+                                                    capacity filled
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Progress Bar */}
+                                        <div className="w-full">
+                                            <ProgressBar 
+                                                labelPosition="top-floating"
+                                                min={0} 
+                                                max={selectedEvent.capacity || 100} 
+                                                value={selectedEvent.attendees || 0}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* All Attendees List */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-medium text-gray-900">All Attendees</h3>
+                                        <div className="flex items-center gap-3">
+                                            <div className="relative">
+                                                <SearchLg className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search attendees..."
+                                                    className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                />
+                                            </div>
+                                            <Button color="secondary" size="sm" iconLeading={Download01}>
+                                                Export All
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 max-h-80 overflow-y-auto">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((rsvp) => (
+                                            <div key={rsvp} className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 rounded-lg">
+                                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                    <Avatar
+                                                        src={`https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80&${rsvp}`}
+                                                        alt={`User ${rsvp}`}
+                                                        size="sm"
+                                                    />
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-medium text-gray-900 truncate">User {rsvp}</div>
+                                                        <div className="text-sm text-gray-600 truncate">user{rsvp}@example.com</div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-sm text-gray-500 whitespace-nowrap ml-4 text-right">
+                                                    <div className="font-medium">
+                                                        {rsvp <= 7 ? `${rsvp} day${rsvp > 1 ? 's' : ''} ago` : 
+                                                         rsvp <= 30 ? `${Math.floor(rsvp / 7)} week${Math.floor(rsvp / 7) > 1 ? 's' : ''} ago` :
+                                                         `${Math.floor(rsvp / 30)} month${Math.floor(rsvp / 30) > 1 ? 's' : ''} ago`}
+                                                    </div>
+                                                    <div className="text-xs text-gray-400">
+                                                        {new Date(Date.now() - rsvp * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { 
+                                                            month: 'short', 
+                                                            day: 'numeric',
+                                                            year: 'numeric'
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                )}
             </AdminLayout>
         );
     }
