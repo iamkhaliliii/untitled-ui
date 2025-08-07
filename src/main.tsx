@@ -2,20 +2,37 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { HomeScreen } from "@/pages/home-screen";
-import { AdminDashboardPage } from "@/pages/admin/dashboard";
-import { AdminContentPage } from "@/pages/admin/content";
-import { AdminContent2Page } from "@/pages/admin/content2";
-import { AdminContentEventsPage } from "@/pages/admin/content-events";
-import { AdminContentEventsCreatePage } from "@/pages/admin/content-events-create";
-import { AdminPeoplePage } from "@/pages/admin/people";
-import { AdminGamificationPage } from "@/pages/admin/gamification";
-import { AdminSiteSettingsPage } from "@/pages/admin/site-settings";
-import { AdminAuthenticationPage } from "@/pages/admin/authentication";
-import { AdminSitePage } from "@/pages/admin/site";
-import { SiteFilesPage } from "@/pages/admin/site-files";
-import { SiteSpacesEventsPage } from "@/pages/admin/site-spaces-events";
-import { SiteSpacesEventsCreatePage } from "@/pages/admin/site-spaces-events-create";
-import EventsCustomizePage from "@/pages/admin/events-customize";
+// Admin 3.0 imports
+import { AdminDashboardPage } from "@/pages/admin3/dashboard";
+import { AdminContentPage } from "@/pages/admin3/content";
+import { AdminContent2Page } from "@/pages/admin3/content2";
+import { AdminContentEventsPage } from "@/pages/admin3/content-events";
+import { AdminContentEventsCreatePage } from "@/pages/admin3/content-events-create";
+import { AdminPeoplePage } from "@/pages/admin3/people";
+import { AdminGamificationPage } from "@/pages/admin3/gamification";
+import { AdminSiteSettingsPage } from "@/pages/admin3/site-settings";
+import { AdminAuthenticationPage } from "@/pages/admin3/authentication";
+import { AdminSitePage } from "@/pages/admin3/site";
+import { SiteFilesPage } from "@/pages/admin3/site-files";
+import { SiteSpacesEventsPage } from "@/pages/admin3/site-spaces-events";
+import { SiteSpacesEventsCreatePage } from "@/pages/admin3/site-spaces-events-create";
+import EventsCustomizePage from "@/pages/admin3/events-customize";
+
+// Admin 2.0 imports
+import { AdminDashboardPage as Admin2DashboardPage } from "@/pages/admin2/dashboard";
+import { AdminContentPage as Admin2ContentPage } from "@/pages/admin2/content";
+import { AdminContent2Page as Admin2Content2Page } from "@/pages/admin2/content2";
+import { AdminContentEventsPage as Admin2ContentEventsPage } from "@/pages/admin2/content-events";
+import { AdminContentEventsCreatePage as Admin2ContentEventsCreatePage } from "@/pages/admin2/content-events-create";
+import { AdminPeoplePage as Admin2PeoplePage } from "@/pages/admin2/people";
+import { AdminGamificationPage as Admin2GamificationPage } from "@/pages/admin2/gamification";
+import { AdminSiteSettingsPage as Admin2SiteSettingsPage } from "@/pages/admin2/site-settings";
+import { AdminAuthenticationPage as Admin2AuthenticationPage } from "@/pages/admin2/authentication";
+import { AdminSitePage as Admin2SitePage } from "@/pages/admin2/site";
+import { SiteFilesPage as Admin2SiteFilesPage } from "@/pages/admin2/site-files";
+import { SiteSpacesEventsPage as Admin2SiteSpacesEventsPage } from "@/pages/admin2/site-spaces-events";
+import { SiteSpacesEventsCreatePage as Admin2SiteSpacesEventsCreatePage } from "@/pages/admin2/site-spaces-events-create";
+import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import { SiteEventPage } from "@/pages/site/event";
@@ -41,36 +58,67 @@ createRoot(document.getElementById("root")!).render(
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
                         
-                        {/* Admin Routes */}
-                        <Route path="/admin" element={<AdminDashboardPage />} />
-                        <Route path="/admin/content" element={<AdminContentPage />} />
-                        <Route path="/admin/content2" element={<Navigate to="/admin/content2/posts" replace />} />
-                        <Route path="/admin/content2/events" element={<AdminContent2Page />} />
-                        <Route path="/admin/content2/posts" element={<AdminContent2Page />} />
-                        <Route path="/admin/content2/spaces" element={<AdminContent2Page />} />
-                        <Route path="/admin/content2/tag" element={<AdminContent2Page />} />
-                        <Route path="/admin/content2/cms" element={<AdminContent2Page />} />
-                        <Route path="/admin/content/events" element={<AdminContentEventsPage />} />
-                        <Route path="/admin/content/events/create" element={<AdminContentEventsCreatePage />} />
-                        <Route path="/admin/people" element={<AdminPeoplePage />} />
-                        <Route path="/admin/setting" element={<Navigate to="/admin/setting/site-settings" replace />} />
-                        <Route path="/admin/setting/site-settings" element={<AdminSiteSettingsPage />} />
-                        <Route path="/admin/setting/authentication" element={<AdminAuthenticationPage />} />
-                        <Route path="/admin/setting/gamification" element={<AdminGamificationPage />} />
-                        <Route path="/admin/site" element={<AdminSitePage />} />
-                        <Route path="/admin/site/files" element={<SiteFilesPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/create" element={<SiteSpacesEventsCreatePage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/customize" element={<EventsCustomizePage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/members" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/analytics" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/audit-logs" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/seo" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/myfolder/events/danger" element={<SiteSpacesEventsPage />} />
+                        {/* Admin 3.0 Routes */}
+                        <Route path="/admin3" element={<AdminDashboardPage />} />
+                        <Route path="/admin3/content" element={<AdminContentPage />} />
+                        <Route path="/admin3/content2" element={<Navigate to="/admin3/content2/posts" replace />} />
+                        <Route path="/admin3/content2/events" element={<AdminContent2Page />} />
+                        <Route path="/admin3/content2/posts" element={<AdminContent2Page />} />
+                        <Route path="/admin3/content2/spaces" element={<AdminContent2Page />} />
+                        <Route path="/admin3/content2/tag" element={<AdminContent2Page />} />
+                        <Route path="/admin3/content2/cms" element={<AdminContent2Page />} />
+                        <Route path="/admin3/content/events" element={<AdminContentEventsPage />} />
+                        <Route path="/admin3/content/events/create" element={<AdminContentEventsCreatePage />} />
+                        <Route path="/admin3/people" element={<AdminPeoplePage />} />
+                        <Route path="/admin3/setting" element={<Navigate to="/admin3/setting/site-settings" replace />} />
+                        <Route path="/admin3/setting/site-settings" element={<AdminSiteSettingsPage />} />
+                        <Route path="/admin3/setting/authentication" element={<AdminAuthenticationPage />} />
+                        <Route path="/admin3/setting/gamification" element={<AdminGamificationPage />} />
+                        <Route path="/admin3/site" element={<AdminSitePage />} />
+                        <Route path="/admin3/site/files" element={<SiteFilesPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/create" element={<SiteSpacesEventsCreatePage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/customize" element={<EventsCustomizePage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/members" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/analytics" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/audit-logs" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/seo" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/myfolder/events/danger" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/private-space" element={<SiteSpacesEventsPage />} />
+                        <Route path="/admin3/site/spaces/private-space/customize" element={<EventsCustomizePage />} />
                         
-                        {/* Private Space Routes */}
-                        <Route path="/admin/site/spaces/private-space" element={<SiteSpacesEventsPage />} />
-                        <Route path="/admin/site/spaces/private-space/customize" element={<EventsCustomizePage />} />
+                        {/* Admin 2.0 Routes */}
+                        <Route path="/admin2" element={<Admin2DashboardPage />} />
+                        <Route path="/admin2/content" element={<Admin2ContentPage />} />
+                        <Route path="/admin2/content2" element={<Navigate to="/admin2/content2/posts" replace />} />
+                        <Route path="/admin2/content2/events" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content2/posts" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content2/spaces" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content2/tag" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content2/cms" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content/events" element={<Admin2ContentEventsPage />} />
+                        <Route path="/admin2/content/events/create" element={<Admin2ContentEventsCreatePage />} />
+                        <Route path="/admin2/people" element={<Admin2PeoplePage />} />
+                        <Route path="/admin2/setting" element={<Navigate to="/admin2/setting/site-settings" replace />} />
+                        <Route path="/admin2/setting/site-settings" element={<Admin2SiteSettingsPage />} />
+                        <Route path="/admin2/setting/authentication" element={<Admin2AuthenticationPage />} />
+                        <Route path="/admin2/setting/gamification" element={<Admin2GamificationPage />} />
+                        <Route path="/admin2/site" element={<Admin2SitePage />} />
+                        <Route path="/admin2/site/files" element={<Admin2SiteFilesPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/create" element={<Admin2SiteSpacesEventsCreatePage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/members" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/analytics" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/audit-logs" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/seo" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/events/danger" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/private-space" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/private-space/customize" element={<Admin2EventsCustomizePage />} />
+                        
+                        {/* Legacy Admin Routes - redirect to Admin 3.0 */}
+                        <Route path="/admin" element={<Navigate to="/admin3" replace />} />
+                        <Route path="/admin/*" element={<Navigate to="/admin3" replace />} />
                         
                         {/* Site Routes */}
                         <Route path="/site" element={<SiteHomePage />} />
@@ -78,9 +126,9 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/site/event" element={<SiteEventPage />} />
                         <Route path="/site/event/:id" element={<SiteEventDetailPage />} />
                         
-                        {/* Backwards compatibility routes */}
-                        <Route path="/content" element={<AdminContentPage />} />
-                        <Route path="/people" element={<AdminPeoplePage />} />
+                        {/* Backwards compatibility routes - redirect to Admin 3.0 */}
+                        <Route path="/content" element={<Navigate to="/admin3/content" replace />} />
+                        <Route path="/people" element={<Navigate to="/admin3/people" replace />} />
                         
                         {/* Admin Header Demo */}
                         <Route path="/admin-demo" element={<AdminDemo />} />

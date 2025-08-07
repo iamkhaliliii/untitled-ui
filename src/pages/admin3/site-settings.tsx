@@ -20,10 +20,8 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { Select } from "@/components/base/select/select";
 import { Badge } from "@/components/base/badges/badges";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useLocation } from "react-router";
 
 export const AdminSiteSettingsPage = () => {
-    const location = useLocation();
     const [formData, setFormData] = useState({
         communityName: "ACME Community",
         termsOfService: "",
@@ -78,7 +76,7 @@ export const AdminSiteSettingsPage = () => {
         <AdminLayout 
             title="Site settings"
             description="Configure general settings, permissions, and preferences for your community"
-            currentPath={location.pathname}
+            currentPath="/admin/setting/site-settings"
             headerActions={headerActions}
         >
             <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-3 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5 min-h-full relative">

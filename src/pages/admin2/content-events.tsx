@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { Table, TableCard } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
 import { AdminLayout } from "@/components/layouts/admin-layout";
+import { useLocation } from "react-router";
 import { Ticket01, Edit03, Move, BarChart03, ClipboardCheck, Trash01, AlertTriangle, Calendar, Copy01, Plus } from "@untitledui/icons";
 import { PaginationPageMinimalCenter } from "@/components/application/pagination/pagination";
 import { EventDetailSlideout } from "@/components/application/slideout-menus/event-detail-slideout";

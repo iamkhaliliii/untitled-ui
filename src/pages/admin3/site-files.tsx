@@ -3,7 +3,6 @@ import { AdminLayout } from "@/components/layouts/admin-layout";
 import { Button } from "@/components/base/buttons/button";
 import { Plus, Upload03, Download01, SearchLg } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
-import { useLocation } from "react-router";
 
 // File tree data for Site section
 const siteFileTree: TreeNode[] = [
@@ -103,7 +102,6 @@ const siteFileTree: TreeNode[] = [
 ];
 
 export const SiteFilesPage = () => {
-    const location = useLocation();
     const headerActions = (
         <div className="flex items-center gap-2">
             <Button size="sm" color="secondary" iconLeading={Upload03}>
@@ -119,7 +117,7 @@ export const SiteFilesPage = () => {
         <AdminLayout
             title="Site File Explorer"
             description="Browse and manage your site files and directories"
-            currentPath={location.pathname}
+            currentPath="/admin/site/files"
             headerActions={headerActions}
         >
             <div className="p-6">

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
-import { useLocation } from "react-router";
 import { Table, TableCard, TableRowActionsDropdown } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
@@ -136,7 +135,6 @@ const ContentActionsDropdown = () => {
 };
 
 export const AdminContentPage = () => {
-    const location = useLocation();
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
         column: "publishedAt",
         direction: "descending",
@@ -179,7 +177,7 @@ export const AdminContentPage = () => {
         <AdminLayout 
             title="Content Management"
             description="Manage your posts, pages, media, and comments"
-            currentPath={location.pathname}
+            currentPath="/admin/content"
         >
             <div className="p-4 ">
                 <TableCard.Root>

@@ -811,7 +811,7 @@ export const AdminContent2Page = () => {
         <AdminLayout 
             title="Content 2 Management"
             description="Manage content structure, events, discussions, spaces, tags and CMS"
-            currentPath={location.pathname}
+            currentPath="/admin/content2"
             hideHeader={false}
         >
             <div className="px-4 py-6 lg:px-6">

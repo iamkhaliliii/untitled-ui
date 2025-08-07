@@ -21,10 +21,8 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { Badge } from "@/components/base/badges/badges";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useLocation } from "react-router";
 
 export const AdminGamificationPage = () => {
-    const location = useLocation();
     const [gamificationEnabled, setGamificationEnabled] = useState(false);
     
     const [pointConfig, setPointConfig] = useState({
@@ -66,7 +64,7 @@ export const AdminGamificationPage = () => {
         <AdminLayout 
             title="Gamification"
             description="Configure rewards, points, badges and engagement systems"
-            currentPath={location.pathname}
+            currentPath="/admin/setting/gamification"
             headerActions={headerActions}
         >
             <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-3 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5 min-h-full relative">

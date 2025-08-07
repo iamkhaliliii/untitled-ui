@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { Table, TableCard } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { BadgeWithDot } from "@/components/base/badges/badges";
@@ -168,7 +168,6 @@ const EventsActions = ({ onViewDetails }: { onViewDetails: () => void }) => (
 
 export const AdminContentEventsPage = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
         column: "eventDate",
         direction: "ascending",
@@ -223,7 +222,7 @@ export const AdminContentEventsPage = () => {
         <AdminLayout 
             title="Events Management"
             description="Manage your events, workshops, conferences, and meetups"
-            currentPath={location.pathname}
+            currentPath="/admin/content/events"
         >
             <div className="p-4 ">
                 <TableCard.Root>

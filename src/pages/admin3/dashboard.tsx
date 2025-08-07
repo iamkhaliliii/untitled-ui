@@ -8,16 +8,13 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { BadgeWithDot } from "@/components/base/badges/badges";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useLocation } from "react-router";
 
 export const AdminDashboardPage = () => {
-    const location = useLocation();
-    
     return (
         <AdminLayout 
             title="Admin Dashboard"
             description="Welcome back! Here's what's happening with your application."
-            currentPath={location.pathname}
+            currentPath="/admin"
         >
             <div className="p-6">
                 <div className="mx-auto max-w-7xl">

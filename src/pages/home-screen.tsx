@@ -20,22 +20,41 @@ export const HomeScreen = () => {
                 </p>
 
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-                    <Link to="/admin">
-                        <div className="group p-8 border border-secondary rounded-lg bg-primary hover:bg-secondary transition-all duration-200 cursor-pointer hover:border-brand-solid">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-brand-solid/10 rounded-lg">
-                                        <Settings01 className="size-6 text-brand-solid" />
+                    <div className="space-y-3">
+                        <Link to="/admin3">
+                            <div className="group p-8 border border-secondary rounded-lg bg-primary hover:bg-secondary transition-all duration-200 cursor-pointer hover:border-brand-solid">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-brand-solid/10 rounded-lg">
+                                            <Settings01 className="size-6 text-brand-solid" />
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-primary">Admin Panel 3.0</h3>
                                     </div>
-                                    <h3 className="text-xl font-semibold text-primary">Admin Panel</h3>
+                                    <ArrowRight className="size-5 text-tertiary group-hover:text-brand-solid transition-colors" />
                                 </div>
-                                <ArrowRight className="size-5 text-tertiary group-hover:text-brand-solid transition-colors" />
+                                <p className="text-sm text-tertiary">
+                                    Access the latest admin dashboard with advanced features and modern interface.
+                                </p>
                             </div>
-                            <p className="text-sm text-tertiary">
-                                Access the admin dashboard to manage users, settings, analytics, and security controls.
-                            </p>
-                        </div>
-                    </Link>
+                        </Link>
+                        
+                        <Link to="/admin2">
+                            <div className="group p-6 border border-secondary rounded-lg bg-primary hover:bg-secondary transition-all duration-200 cursor-pointer hover:border-brand-solid">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-1.5 bg-gray-500/10 rounded-lg">
+                                            <Settings01 className="size-4 text-gray-500" />
+                                        </div>
+                                        <h3 className="text-lg font-semibold text-primary">Admin Panel 2.0</h3>
+                                    </div>
+                                    <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid transition-colors" />
+                                </div>
+                                <p className="text-xs text-tertiary">
+                                    Legacy admin panel for specific operations and compatibility.
+                                </p>
+                            </div>
+                        </Link>
+                    </div>
                     
                     <div className="space-y-3">
                         <Link to="/site">

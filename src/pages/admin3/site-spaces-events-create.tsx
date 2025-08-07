@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { ArrowLeft, Plus } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { AdminLayout } from "@/components/layouts/admin-layout";
@@ -7,8 +7,7 @@ import { EventForm } from "@/components/forms/event-form";
 
 export const SiteSpacesEventsCreatePage = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const currentPath = location.pathname;
+    const currentPath = window.location.pathname;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (data: any) => {

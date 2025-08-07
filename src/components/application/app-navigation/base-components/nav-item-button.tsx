@@ -1,4 +1,5 @@
 import type { FC, MouseEventHandler } from "react";
+import { Link } from "react-router";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import { cx } from "@/utils/cx";
 
@@ -38,8 +39,8 @@ export const NavItemButton = ({
     return (
         <Tooltip title={label} placement={tooltipPlacement}>
             <TooltipTrigger asChild>
-                <a
-                    href={href}
+                <Link
+                    to={href || "#"}
                     aria-label={label}
                     onClick={onClick}
                     className={cx(
@@ -50,7 +51,7 @@ export const NavItemButton = ({
                     )}
                 >
                     <Icon aria-hidden="true" className={cx("shrink-0 transition-inherit-all", styles[size].icon)} />
-                </a>
+                </Link>
             </TooltipTrigger>
         </Tooltip>
     );

@@ -37,6 +37,8 @@ export const AdminStickyHeader = ({
     // Get current page name based on URL
     const getCurrentPageName = () => {
         const path = location.pathname;
+        if (path.includes('/admin3')) return 'Admin Panel 3.0';
+        if (path.includes('/admin2')) return 'Admin Panel 2.0';
         if (path.includes('/admin')) return 'Admin Panel';
         if (path.includes('/site/feed')) return 'Site Feed';
         if (path.includes('/site/event')) return 'Events';
@@ -45,38 +47,48 @@ export const AdminStickyHeader = ({
         return 'Site Dashboard';
     };
 
+    // Determine current admin version
+    const getCurrentAdminVersion = () => {
+        const path = location.pathname;
+        if (path.includes('/admin2')) return 'admin2';
+        if (path.includes('/admin3')) return 'admin3';
+        return 'admin3'; // default to admin3
+    };
+
+    const currentAdminVersion = getCurrentAdminVersion();
+
     const adminTools = [
         { 
             icon: File04, 
             label: "Files",
-            onClick: () => navigate("/admin/site/files")
+            onClick: () => navigate(`/${currentAdminVersion}/site/files`)
         },
         { 
             icon: Database01, 
             label: "Database",
-            onClick: () => navigate("/admin/content")
+            onClick: () => navigate(`/${currentAdminVersion}/content`)
         },
         { 
             icon: BarChart03, 
             label: "Analytics",
-            onClick: () => navigate("/admin/report/analytics")
+            onClick: () => navigate(`/${currentAdminVersion}/report/analytics`)
         },
         { 
             icon: Shield01, 
             label: "Security",
-            onClick: () => navigate("/admin/setting/security-privacy")
+            onClick: () => navigate(`/${currentAdminVersion}/setting/security-privacy`)
         },
     ];
 
     const handleAddNew = () => {
-        navigate("/admin/site/spaces/myfolder/events/create");
+        navigate(`/${currentAdminVersion}/site/spaces/myfolder/events/create`);
     };
 
     const handleSettings = () => {
         if (isAdminPage) {
             navigate("/site");
         } else {
-            navigate("/admin/setting/site-settings");
+            navigate(`/${currentAdminVersion}/setting/site-settings`);
         }
     };
 

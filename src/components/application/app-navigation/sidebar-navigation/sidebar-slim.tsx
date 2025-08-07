@@ -34,6 +34,16 @@ interface SidebarNavigationSlimProps {
 
 export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationSlimProps) => {
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
+    
+    // Determine current admin version from activeUrl
+    const getCurrentAdminVersion = () => {
+        if (activeUrl?.includes('/admin2')) return 'admin2';
+        if (activeUrl?.includes('/admin3')) return 'admin3';
+        return 'admin3'; // default to admin3
+    };
+
+    const currentAdminVersion = getCurrentAdminVersion();
+    
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[1]);
     const [isHovering, setIsHovering] = useState(false);

@@ -55,146 +55,147 @@ import { ErrorBoundary } from "@/components/error-boundary";
 
 
 
-const navItemsDualTier: NavItemType[] = [
+// Helper function to generate navigation items for different admin versions
+const generateNavItems = (adminVersion: string): NavItemType[] => [
     {
         label: "Content",
-        href: "/admin/content",
+        href: `/${adminVersion}/content`,
         icon: Database01,
         items: [
-            { label: "Posts", href: "/admin/content/posts", icon: Package },
-            { label: "Pages", href: "/admin/content/pages", icon: Grid03 },
-            { label: "Media", href: "/admin/content/media", icon: Archive },
-            { label: "Categories", href: "/admin/content/categories", icon: Rows01 },
-            { label: "Comments", href: "/admin/content/comments", icon: Inbox01 },
+            { label: "Posts", href: `/${adminVersion}/content/posts`, icon: Package },
+            { label: "Pages", href: `/${adminVersion}/content/pages`, icon: Grid03 },
+            { label: "Media", href: `/${adminVersion}/content/media`, icon: Archive },
+            { label: "Categories", href: `/${adminVersion}/content/categories`, icon: Rows01 },
+            { label: "Comments", href: `/${adminVersion}/content/comments`, icon: Inbox01 },
         ],
     },
     {
         label: "Content 2",
-        href: "/admin/content2",
+        href: `/${adminVersion}/content2`,
         icon: Database01,
         items: [
             { 
                 label: "Contents", 
-                href: "/admin/content2/contents", 
+                href: `/${adminVersion}/content2/contents`, 
                 icon: Package,
                 items: [
-                    { label: "Events", href: "/admin/content2/contents/events", icon: Calendar },
-                    { label: "Discussion", href: "/admin/content2/contents/discussion", icon: MessageChatCircle },
+                    { label: "Events", href: `/${adminVersion}/content2/contents/events`, icon: Calendar },
+                    { label: "Discussion", href: `/${adminVersion}/content2/contents/discussion`, icon: MessageChatCircle },
                 ]
             },
             { 
                 label: "Spaces", 
-                href: "/admin/content2/spaces", 
+                href: `/${adminVersion}/content2/spaces`, 
                 icon: Archive,
                 items: [
-                    { label: "Events", href: "/admin/content2/spaces/events", icon: Calendar },
-                    { label: "Discussion", href: "/admin/content2/spaces/discussion", icon: MessageChatCircle },
+                    { label: "Events", href: `/${adminVersion}/content2/spaces/events`, icon: Calendar },
+                    { label: "Discussion", href: `/${adminVersion}/content2/spaces/discussion`, icon: MessageChatCircle },
                 ]
             },
-            { label: "Tag", href: "/admin/content2/tag", icon: Tag01 },
-            { label: "CMS", href: "/admin/content2/cms", icon: Settings01 },
+            { label: "Tag", href: `/${adminVersion}/content2/tag`, icon: Tag01 },
+            { label: "CMS", href: `/${adminVersion}/content2/cms`, icon: Settings01 },
         ],
     },
     {
         label: "Site",
-        href: "/admin/site",
+        href: `/${adminVersion}/site`,
         icon: CodeBrowser,
         items: [
-            { label: "Dashboard", href: "/admin/site/dashboard", icon: BarChartSquare02 },
-            { label: "File Explorer", href: "/admin/site/files", icon: Archive },
-            { label: "Themes", href: "/admin/site/themes", icon: Palette },
-            { label: "Plugins", href: "/admin/site/plugins", icon: Package },
-            { label: "Menu", href: "/admin/site/menu", icon: Grid03 },
-            { label: "Widgets", href: "/admin/site/widgets", icon: Stars01 },
+            { label: "Dashboard", href: `/${adminVersion}/site/dashboard`, icon: BarChartSquare02 },
+            { label: "File Explorer", href: `/${adminVersion}/site/files`, icon: Archive },
+            { label: "Themes", href: `/${adminVersion}/site/themes`, icon: Palette },
+            { label: "Plugins", href: `/${adminVersion}/site/plugins`, icon: Package },
+            { label: "Menu", href: `/${adminVersion}/site/menu`, icon: Grid03 },
+            { label: "Widgets", href: `/${adminVersion}/site/widgets`, icon: Stars01 },
         ],
     },
     {
         label: "People",
-        href: "/admin/people",
+        href: `/${adminVersion}/people`,
         icon: Users01,
         items: [
-            { label: "All Users", href: "/admin/people/all", icon: Users01 },
-            { label: "Administrators", href: "/admin/people/admins", icon: UserSquare },
-            { label: "Moderators", href: "/admin/people/moderators", icon: User01 },
-            { label: "Subscribers", href: "/admin/people/subscribers", icon: UsersPlus },
-            { label: "Banned Users", href: "/admin/people/banned", icon: Archive },
+            { label: "All Users", href: `/${adminVersion}/people/all`, icon: Users01 },
+            { label: "Administrators", href: `/${adminVersion}/people/admins`, icon: UserSquare },
+            { label: "Moderators", href: `/${adminVersion}/people/moderators`, icon: User01 },
+            { label: "Subscribers", href: `/${adminVersion}/people/subscribers`, icon: UsersPlus },
+            { label: "Banned Users", href: `/${adminVersion}/people/banned`, icon: Archive },
         ],
     },
     {
         label: "Moderation",
-        href: "/admin/moderation",
+        href: `/${adminVersion}/moderation`,
         icon: ShieldTick,
         items: [
-            { label: "Reports", href: "/admin/moderation/reports", icon: PieChart03, badge: 5 },
-            { label: "Spam", href: "/admin/moderation/spam", icon: Archive },
-            { label: "Pending", href: "/admin/moderation/pending", icon: ClockFastForward },
-            { label: "Logs", href: "/admin/moderation/logs", icon: Rows01 },
+            { label: "Reports", href: `/${adminVersion}/moderation/reports`, icon: PieChart03, badge: 5 },
+            { label: "Spam", href: `/${adminVersion}/moderation/spam`, icon: Archive },
+            { label: "Pending", href: `/${adminVersion}/moderation/pending`, icon: ClockFastForward },
+            { label: "Logs", href: `/${adminVersion}/moderation/logs`, icon: Rows01 },
         ],
     },
     {
         label: "Appearance",
-        href: "/admin/appearance",
+        href: `/${adminVersion}/appearance`,
         icon: Brush03,
         items: [
-            { label: "Themes", href: "/admin/appearance/themes", icon: Palette },
-            { label: "Customizer", href: "/admin/appearance/customizer", icon: Settings03 },
-            { label: "Menus", href: "/admin/appearance/menus", icon: Grid03 },
-            { label: "Widgets", href: "/admin/appearance/widgets", icon: Stars01 },
-            { label: "Background", href: "/admin/appearance/background", icon: Package },
+            { label: "Themes", href: `/${adminVersion}/appearance/themes`, icon: Palette },
+            { label: "Customizer", href: `/${adminVersion}/appearance/customizer`, icon: Settings03 },
+            { label: "Menus", href: `/${adminVersion}/appearance/menus`, icon: Grid03 },
+            { label: "Widgets", href: `/${adminVersion}/appearance/widgets`, icon: Stars01 },
+            { label: "Background", href: `/${adminVersion}/appearance/background`, icon: Package },
         ],
     },
     {
         label: "Setting",
-        href: "/admin/setting",
+        href: `/${adminVersion}/setting`,
         icon: Settings02,
         items: [
-            { label: "Site settings", href: "/admin/setting/site-settings", icon: Settings01 },
-            { label: "Authentication", href: "/admin/setting/authentication", icon: Key01 },
-            { label: "Domain", href: "/admin/setting/domain", icon: Globe01 },
-            { label: "Search", href: "/admin/setting/search", icon: SearchLg },
-            { label: "Messaging", href: "/admin/setting/messaging", icon: Mail01 },
-            { label: "Moderation", href: "/admin/setting/moderation", icon: Shield01 },
-            { label: "Localization", href: "/admin/setting/localization", icon: Flag02 },
-            { label: "Notifications", href: "/admin/setting/notifications", icon: Bell01 },
-            { label: "SEO settings", href: "/admin/setting/seo-settings", icon: SearchMd },
-            { label: "Security & Privacy", href: "/admin/setting/security-privacy", icon: Lock01 },
-            { label: "Gamification", href: "/admin/setting/gamification", icon: Trophy01 },
+            { label: "Site settings", href: `/${adminVersion}/setting/site-settings`, icon: Settings01 },
+            { label: "Authentication", href: `/${adminVersion}/setting/authentication`, icon: Key01 },
+            { label: "Domain", href: `/${adminVersion}/setting/domain`, icon: Globe01 },
+            { label: "Search", href: `/${adminVersion}/setting/search`, icon: SearchLg },
+            { label: "Messaging", href: `/${adminVersion}/setting/messaging`, icon: Mail01 },
+            { label: "Moderation", href: `/${adminVersion}/setting/moderation`, icon: Shield01 },
+            { label: "Localization", href: `/${adminVersion}/setting/localization`, icon: Flag02 },
+            { label: "Notifications", href: `/${adminVersion}/setting/notifications`, icon: Bell01 },
+            { label: "SEO settings", href: `/${adminVersion}/setting/seo-settings`, icon: SearchMd },
+            { label: "Security & Privacy", href: `/${adminVersion}/setting/security-privacy`, icon: Lock01 },
+            { label: "Gamification", href: `/${adminVersion}/setting/gamification`, icon: Trophy01 },
         ],
     },
     {
         label: "Billing",
-        href: "/admin/billing",
+        href: `/${adminVersion}/billing`,
         icon: CreditCard02,
         items: [
-            { label: "Overview", href: "/admin/billing/overview", icon: BarChartSquare02 },
-            { label: "Invoices", href: "/admin/billing/invoices", icon: Package },
-            { label: "Payments", href: "/admin/billing/payments", icon: CurrencyDollarCircle },
-            { label: "Subscriptions", href: "/admin/billing/subscriptions", icon: Stars01 },
-            { label: "History", href: "/admin/billing/history", icon: Archive },
+            { label: "Overview", href: `/${adminVersion}/billing/overview`, icon: BarChartSquare02 },
+            { label: "Invoices", href: `/${adminVersion}/billing/invoices`, icon: Package },
+            { label: "Payments", href: `/${adminVersion}/billing/payments`, icon: CurrencyDollarCircle },
+            { label: "Subscriptions", href: `/${adminVersion}/billing/subscriptions`, icon: Stars01 },
+            { label: "History", href: `/${adminVersion}/billing/history`, icon: Archive },
         ],
     },
     {
         label: "Report",
-        href: "/admin/report",
+        href: `/${adminVersion}/report`,
         icon: BarChartSquare02,
         items: [
-            { label: "Analytics", href: "/admin/report/analytics", icon: LineChartUp03 },
-            { label: "Traffic", href: "/admin/report/traffic", icon: BarChartSquare02 },
-            { label: "Users", href: "/admin/report/users", icon: Users01 },
-            { label: "Content", href: "/admin/report/content", icon: Package },
-            { label: "Performance", href: "/admin/report/performance", icon: Star01 },
+            { label: "Analytics", href: `/${adminVersion}/report/analytics`, icon: LineChartUp03 },
+            { label: "Traffic", href: `/${adminVersion}/report/traffic`, icon: BarChartSquare02 },
+            { label: "Users", href: `/${adminVersion}/report/users`, icon: Users01 },
+            { label: "Content", href: `/${adminVersion}/report/content`, icon: Package },
+            { label: "Performance", href: `/${adminVersion}/report/performance`, icon: Star01 },
         ],
     },
     {
         label: "AppStore",
-        href: "/admin/appstore",
+        href: `/${adminVersion}/appstore`,
         icon: Data,
         items: [
-            { label: "Browse", href: "/admin/appstore/browse", icon: Grid03 },
-            { label: "Installed", href: "/admin/appstore/installed", icon: CheckDone01 },
-            { label: "Updates", href: "/admin/appstore/updates", icon: ClockFastForward },
-            { label: "Favorites", href: "/admin/appstore/favorites", icon: Star01 },
-            { label: "Settings", href: "/admin/appstore/settings", icon: Settings01 },
+            { label: "Browse", href: `/${adminVersion}/appstore/browse`, icon: Grid03 },
+            { label: "Installed", href: `/${adminVersion}/appstore/installed`, icon: CheckDone01 },
+            { label: "Updates", href: `/${adminVersion}/appstore/updates`, icon: ClockFastForward },
+            { label: "Favorites", href: `/${adminVersion}/appstore/favorites`, icon: Star01 },
+            { label: "Settings", href: `/${adminVersion}/appstore/settings`, icon: Settings01 },
         ],
     },
 ];
@@ -215,14 +216,19 @@ export const AdminLayout = ({
     title = "Admin Dashboard", 
     description = "Welcome back! Here's what's happening with your application.",
     headerActions,
-    currentPath = "/admin",
+    currentPath = "/admin3", // This should always be overridden by pages
     hideHeader = false
 }: AdminLayoutProps) => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
+    
+    // Determine admin version from current path
+    const adminVersion = currentPath.includes('/admin2') ? 'admin2' : 'admin3';
+    const navItems = generateNavItems(adminVersion);
+    
     const SidebarNavigationDualDemo = () => (
         <SidebarNavigationDual
             activeUrl={currentPath}
-            items={navItemsDualTier}
+            items={navItems}
             footerItems={[
                 {
                     label: "Support",

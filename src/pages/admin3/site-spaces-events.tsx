@@ -17,14 +17,13 @@ import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Badge } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
 
 
 export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const currentPath = location.pathname;
+    const currentPath = window.location.pathname;
     const isEventsPage = currentPath.includes("/admin/site/spaces/myfolder/events");
     const isPrivateSpacePage = currentPath.includes("/admin/site/spaces/private-space");
     const isSpacePage = isEventsPage || isPrivateSpacePage;

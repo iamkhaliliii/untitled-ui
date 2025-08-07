@@ -9,10 +9,8 @@ import { Input } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useLocation } from "react-router";
 
 export const AdminAuthenticationPage = () => {
-    const location = useLocation();
     const [toggles, setToggles] = useState({
         emailAuth: false,
         googleAuth: false,
@@ -65,7 +63,7 @@ export const AdminAuthenticationPage = () => {
         <AdminLayout 
             title="Authentication"
             description="Configure login methods and authentication providers for your community"
-            currentPath={location.pathname}
+            currentPath="/admin/setting/authentication"
             headerActions={headerActions}
         >
             <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-3 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5 min-h-full relative">

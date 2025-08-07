@@ -56,6 +56,15 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const { toggleStates, updateToggleStates } = useWidgetConfig();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
 
+    // Determine current admin version from activeUrl
+    const getCurrentAdminVersion = () => {
+        if (activeUrl?.includes('/admin2')) return 'admin2';
+        if (activeUrl?.includes('/admin3')) return 'admin3';
+        return 'admin3'; // default to admin3
+    };
+
+    const currentAdminVersion = getCurrentAdminVersion();
+
     // State for tree expansion
     const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
     
@@ -71,13 +80,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // State for secondary sidebar selection
     const [selectedSecondaryItem, setSelectedSecondaryItem] = useState<string>(() => {
         // Set initial state based on current URL
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/customize")) return "customize";
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/members")) return "members";
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/analytics")) return "analytics";
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/seo")) return "seo";
-        if (activeUrl?.includes("/admin/site/spaces/myfolder/events/danger")) return "danger";
-        if (activeUrl?.includes("/admin/site/spaces/private-space/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/private-space/customize")) return "customize";
         return "general";
     });
 
@@ -102,7 +111,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         { 
                             id: "events", 
                             label: "Events",
-                            data: { href: "/admin/site/spaces/myfolder/events" }
+                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/events` }
                         },
                         { id: "blog", label: "Blog" },
                     ]
@@ -119,7 +128,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 { 
                     id: "privateSpace", 
                     label: "Private space",
-                    data: { href: "/admin/site/spaces/private-space" }
+                    data: { href: `/${currentAdminVersion}/site/spaces/private-space` }
                 },
                 { id: "memberProfile", label: "Member profile" },
             ]
@@ -394,8 +403,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     };
 
     // Check if we're on any events page or private space page
-    const isEventsPage = activeUrl?.includes("/admin/site/spaces/myfolder/events");
-    const isPrivateSpacePage = activeUrl?.includes("/admin/site/spaces/private-space");
+    const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events");
+    const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
     const isSpacePage = isEventsPage || isPrivateSpacePage;
 
     // State for form toggles
@@ -506,7 +515,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (item.href === activeUrl) return true;
         if (item.items?.some((subItem) => subItem.href === activeUrl)) return true;
         // Handle nested routes for Content 2
-        if (item.label === "Content 2" && activeUrl?.includes("/admin/content2")) return true;
+        if (item.label === "Content 2" && activeUrl?.includes("/content2")) return true;
         return false;
     });
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
@@ -645,8 +654,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : currentItem?.label}
                 </h3>
                 
-                {/* Show TreeView for Site section when on /admin/site page */}
-                {currentItem?.label === "Site" && activeUrl === "/admin/site" ? (
+                {/* Show TreeView for Site section when on admin site page */}
+                {currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
                     <div className="flex flex-col flex-1 mt-2">
                         <div className="flex-1 overflow-y-auto">
                             <TreeView
@@ -713,22 +722,22 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </button>
                         </div>
                     </div>
-                ) : currentItem?.label === "Content" && activeUrl?.includes("/admin/content") ? (
+                ) : currentItem?.label === "Content" && activeUrl?.includes("/content") ? (
                     <div className="mt-2 space-y-4">
                         {/* Content Status Section */}
                         <ul>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content"} href="/admin/content" icon={File01} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content`} href={`/${currentAdminVersion}/content`} icon={File01} type="link">
                                     All Content
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content/scheduled"} href="/admin/content/scheduled" icon={Calendar} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/scheduled`} href={`/${currentAdminVersion}/content/scheduled`} icon={Calendar} type="link">
                                     All Scheduled
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content/draft"} href="/admin/content/draft" icon={File04} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/draft`} href={`/${currentAdminVersion}/content/draft`} icon={File04} type="link">
                                     All Draft
                                 </NavItemBase>
                             </li>
@@ -744,47 +753,47 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </h4>
                             <ul className="mt-2">
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/job-board"} href="/admin/content/job-board" icon={Package} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/job-board`} href={`/${currentAdminVersion}/content/job-board`} icon={Package} type="link">
                                         Job Board
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/events"} href="/admin/content/events" icon={Calendar} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/events`} href={`/${currentAdminVersion}/content/events`} icon={Calendar} type="link">
                                         Events
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/qa"} href="/admin/content/qa" icon={MessageChatCircle} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/qa`} href={`/${currentAdminVersion}/content/qa`} icon={MessageChatCircle} type="link">
                                         Q&A
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/ideas"} href="/admin/content/ideas" icon={Lightbulb01} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/ideas`} href={`/${currentAdminVersion}/content/ideas`} icon={Lightbulb01} type="link">
                                         Ideas & Wishlist
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/knowledge-base"} href="/admin/content/knowledge-base" icon={BookOpen01} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/knowledge-base`} href={`/${currentAdminVersion}/content/knowledge-base`} icon={BookOpen01} type="link">
                                         Knowledge Base
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/blog"} href="/admin/content/blog" icon={Edit03} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/blog`} href={`/${currentAdminVersion}/content/blog`} icon={Edit03} type="link">
                                         Blog
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/discussions"} href="/admin/content/discussions" icon={MessageSquare01} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/discussions`} href={`/${currentAdminVersion}/content/discussions`} icon={MessageSquare01} type="link">
                                         Discussions
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === "/admin/content/changelog"} href="/admin/content/changelog" icon={FileX02} type="link">
+                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content/changelog`} href={`/${currentAdminVersion}/content/changelog`} icon={FileX02} type="link">
                                         Changelog
                                     </NavItemBase>
                                 </li>
                                 <li className="py-0.5">
-                                    <NavItemBase current={false} href="/admin/content/add-type" icon={Plus} type="link">
+                                    <NavItemBase current={false} href={`/${currentAdminVersion}/content/add-type`} icon={Plus} type="link">
                                         Add new content type
                                     </NavItemBase>
                                 </li>
@@ -810,7 +819,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     <div className="mt-2">
                         {/* Back Button */}
                         <button
-                            onClick={() => navigate("/admin/site")}
+                            onClick={() => navigate(`/${currentAdminVersion}/site`)}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors mb-4"
                         >
                             <ArrowLeft className="h-4 w-4" />
@@ -822,7 +831,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             <li>
                                 <button
                                     onClick={() => handleSecondaryItemClick("general", 
-                                        isPrivateSpacePage ? "/admin/site/spaces/private-space" : "/admin/site/spaces/myfolder/events"
+                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : `/${currentAdminVersion}/site/spaces/myfolder/events`
                                     )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "general"
@@ -837,7 +846,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             <li>
                                 <button
                                     onClick={() => handleSecondaryItemClick("customize", 
-                                        isPrivateSpacePage ? "/admin/site/spaces/private-space/customize" : "/admin/site/spaces/myfolder/events/customize"
+                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
                                     )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "customize"
@@ -854,7 +863,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("members", "/admin/site/spaces/myfolder/events/members")}
+                                            onClick={() => handleSecondaryItemClick("members", `/${currentAdminVersion}/site/spaces/myfolder/events/members`)}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "members"
                                                     ? "bg-active text-secondary_hover"
@@ -867,7 +876,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("analytics", "/admin/site/spaces/myfolder/events/analytics")}
+                                            onClick={() => handleSecondaryItemClick("analytics", `/${currentAdminVersion}/site/spaces/myfolder/events/analytics`)}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "analytics"
                                                     ? "bg-active text-secondary_hover"
@@ -880,7 +889,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("audit-logs", "/admin/site/spaces/myfolder/events/audit-logs")}
+                                            onClick={() => handleSecondaryItemClick("audit-logs", `/${currentAdminVersion}/site/spaces/myfolder/events/audit-logs`)}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "audit-logs"
                                                     ? "bg-active text-secondary_hover"
@@ -893,7 +902,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("seo", "/admin/site/spaces/myfolder/events/seo")}
+                                            onClick={() => handleSecondaryItemClick("seo", `/${currentAdminVersion}/site/spaces/myfolder/events/seo`)}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "seo"
                                                     ? "bg-active text-secondary_hover"
@@ -906,7 +915,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("danger", "/admin/site/spaces/myfolder/events/danger")}
+                                            onClick={() => handleSecondaryItemClick("danger", `/${currentAdminVersion}/site/spaces/myfolder/events/danger`)}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "danger"
                                                     ? "bg-active text-secondary_hover"
@@ -921,31 +930,31 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             )}
                         </ul>
                     </div>
-                ) : currentItem?.label === "Content 2" && activeUrl?.includes("/admin/content2") ? (
+                ) : currentItem?.label === "Content 2" && activeUrl?.includes("/content2") ? (
                     <div className="mt-2">
                         <ul>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content2/posts"} href="/admin/content2/posts" icon={Package} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/posts`} href={`/${currentAdminVersion}/content2/posts`} icon={Package} type="link">
                                     Posts
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content2/events"} href="/admin/content2/events" icon={Calendar} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/events`} href={`/${currentAdminVersion}/content2/events`} icon={Calendar} type="link">
                                     Events
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content2/spaces"} href="/admin/content2/spaces" icon={Folder} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/spaces`} href={`/${currentAdminVersion}/content2/spaces`} icon={Folder} type="link">
                                     Spaces
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content2/tag"} href="/admin/content2/tag" icon={Tag01} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/tag`} href={`/${currentAdminVersion}/content2/tag`} icon={Tag01} type="link">
                                     Tag
                                 </NavItemBase>
                             </li>
                             <li className="py-0.5">
-                                <NavItemBase current={activeUrl === "/admin/content2/cms"} href="/admin/content2/cms" icon={Settings01} type="link">
+                                <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/cms`} href={`/${currentAdminVersion}/content2/cms`} icon={Settings01} type="link">
                                     CMS
                                 </NavItemBase>
                             </li>

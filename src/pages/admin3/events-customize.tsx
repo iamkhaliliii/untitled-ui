@@ -5,11 +5,9 @@ import WidgetConfig from '@/components/application/app-navigation/sidebar-naviga
 import { AdminLayout } from '@/components/layouts/admin-layout';
 import { Calendar, Save01 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
-import { useLocation } from 'react-router';
 
 const EventsCustomizePage = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
+  const currentPath = window.location.pathname;
   const isPrivateSpacePage = currentPath.includes("/admin/site/spaces/private-space");
   
   const [selectedWidget] = useState({

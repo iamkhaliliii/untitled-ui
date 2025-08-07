@@ -12,7 +12,6 @@ import { useLocation } from "react-router";
 
 export const AdminDashboardPage = () => {
     const location = useLocation();
-    
     return (
         <AdminLayout 
             title="Admin Dashboard"

@@ -21,10 +21,8 @@ import { Badge } from "@/components/base/badges/badges";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Input } from "@/components/base/input/input";
 import { AdminLayout } from "@/components/layouts/admin-layout";
-import { useLocation } from "react-router";
 
 export const AdminPeoplePage = () => {
-    const location = useLocation();
     const headerActions = (
         <div className="flex items-center gap-2">
             <div className="relative">
@@ -44,7 +42,7 @@ export const AdminPeoplePage = () => {
         <AdminLayout 
             title="People Management"
             description="Manage users, roles, and permissions"
-            currentPath={location.pathname}
+            currentPath="/admin/people"
             headerActions={headerActions}
         >
             <div className="px-4 py-6 lg:px-6">
