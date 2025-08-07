@@ -87,7 +87,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin3/site/spaces/private-space/customize" element={<EventsCustomizePage />} />
                         
                         {/* Admin 2.0 Routes */}
-                        <Route path="/admin2" element={<Admin2DashboardPage />} />
+                        <Route path="/admin2" element={<Navigate to="/admin2/content2/posts" replace />} />
                         <Route path="/admin2/content2" element={<Navigate to="/admin2/content2/posts" replace />} />
                         <Route path="/admin2/content2/events" element={<Admin2Content2Page />} />
                         <Route path="/admin2/content2/events/create" element={<Admin2ContentEventsCreatePage />} />
