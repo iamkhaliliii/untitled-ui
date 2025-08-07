@@ -63,11 +63,11 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
             <div
                 className={cx(
                     "flex w-auto flex-col justify-between rounded-xl ring-1 ring-secondary transition duration-300 ring-inset",
-                    isAdmin && adminHeaderVisible ? "pt-3" : "pt-5", // Reduced padding when logo is hidden
+                    isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3' ? "pt-3" : "pt-5", // Reduced padding when logo is hidden
                     hideBorder && !isSecondarySidebarVisible && "ring-transparent",
                 )}
             >
-                {!(isAdmin && adminHeaderVisible) && (
+                {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
                     <div className="flex justify-center px-3">
                         <UntitledLogoMinimal className="size-8" />
                     </div>
@@ -176,7 +176,7 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
                             {/* Desktop sidebar navigation */}
                 <div
                     className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
-                        isAdmin && adminHeaderVisible
+                        isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
                             ? adminHeaderCollapsed
                                 ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
                                 : 'lg:top-12 lg:bottom-0' // Full header height
@@ -200,7 +200,7 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
             {/* Mobile header navigation */}
             <MobileNavigationHeader>
                 <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto bg-primary pt-4">
-                                            {!(isAdmin && adminHeaderVisible) && (
+                                            {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
                             <div className="px-4">
                                 <UntitledLogo className="h-8" />
                             </div>

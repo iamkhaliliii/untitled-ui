@@ -56,20 +56,27 @@ import { ErrorBoundary } from "@/components/error-boundary";
 
 
 // Helper function to generate navigation items for different admin versions
-const generateNavItems = (adminVersion: string): NavItemType[] => [
-    {
-        label: "Content",
-        href: `/${adminVersion}/content`,
-        icon: Database01,
-        items: [
-            { label: "Posts", href: `/${adminVersion}/content/posts`, icon: Package },
-            { label: "Pages", href: `/${adminVersion}/content/pages`, icon: Grid03 },
-            { label: "Media", href: `/${adminVersion}/content/media`, icon: Archive },
-            { label: "Categories", href: `/${adminVersion}/content/categories`, icon: Rows01 },
-            { label: "Comments", href: `/${adminVersion}/content/comments`, icon: Inbox01 },
-        ],
-    },
-    {
+const generateNavItems = (adminVersion: string): NavItemType[] => {
+    const items: NavItemType[] = [];
+    
+    // Add Content section only for admin3, not admin2
+    if (adminVersion === 'admin3') {
+        items.push({
+            label: "Content",
+            href: `/${adminVersion}/content`,
+            icon: Database01,
+            items: [
+                { label: "Posts", href: `/${adminVersion}/content/posts`, icon: Package },
+                { label: "Pages", href: `/${adminVersion}/content/pages`, icon: Grid03 },
+                { label: "Media", href: `/${adminVersion}/content/media`, icon: Archive },
+                { label: "Categories", href: `/${adminVersion}/content/categories`, icon: Rows01 },
+                { label: "Comments", href: `/${adminVersion}/content/comments`, icon: Inbox01 },
+            ],
+        });
+    }
+    
+    // Content 2 for both admin versions
+    items.push({
         label: "Content 2",
         href: `/${adminVersion}/content2`,
         icon: Database01,
@@ -95,8 +102,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Tag", href: `/${adminVersion}/content2/tag`, icon: Tag01 },
             { label: "CMS", href: `/${adminVersion}/content2/cms`, icon: Settings01 },
         ],
-    },
-    {
+    });
+    
+    // Site section
+    items.push({
         label: "Site",
         href: `/${adminVersion}/site`,
         icon: CodeBrowser,
@@ -108,8 +117,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Menu", href: `/${adminVersion}/site/menu`, icon: Grid03 },
             { label: "Widgets", href: `/${adminVersion}/site/widgets`, icon: Stars01 },
         ],
-    },
-    {
+    });
+    
+    // People section
+    items.push({
         label: "People",
         href: `/${adminVersion}/people`,
         icon: Users01,
@@ -120,8 +131,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Subscribers", href: `/${adminVersion}/people/subscribers`, icon: UsersPlus },
             { label: "Banned Users", href: `/${adminVersion}/people/banned`, icon: Archive },
         ],
-    },
-    {
+    });
+    
+    // Moderation section
+    items.push({
         label: "Moderation",
         href: `/${adminVersion}/moderation`,
         icon: ShieldTick,
@@ -131,8 +144,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Pending", href: `/${adminVersion}/moderation/pending`, icon: ClockFastForward },
             { label: "Logs", href: `/${adminVersion}/moderation/logs`, icon: Rows01 },
         ],
-    },
-    {
+    });
+    
+    // Appearance section
+    items.push({
         label: "Appearance",
         href: `/${adminVersion}/appearance`,
         icon: Brush03,
@@ -143,8 +158,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Widgets", href: `/${adminVersion}/appearance/widgets`, icon: Stars01 },
             { label: "Background", href: `/${adminVersion}/appearance/background`, icon: Package },
         ],
-    },
-    {
+    });
+    
+    // Setting section
+    items.push({
         label: "Setting",
         href: `/${adminVersion}/setting`,
         icon: Settings02,
@@ -161,8 +178,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Security & Privacy", href: `/${adminVersion}/setting/security-privacy`, icon: Lock01 },
             { label: "Gamification", href: `/${adminVersion}/setting/gamification`, icon: Trophy01 },
         ],
-    },
-    {
+    });
+    
+    // Billing section
+    items.push({
         label: "Billing",
         href: `/${adminVersion}/billing`,
         icon: CreditCard02,
@@ -173,8 +192,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Subscriptions", href: `/${adminVersion}/billing/subscriptions`, icon: Stars01 },
             { label: "History", href: `/${adminVersion}/billing/history`, icon: Archive },
         ],
-    },
-    {
+    });
+    
+    // Report section
+    items.push({
         label: "Report",
         href: `/${adminVersion}/report`,
         icon: BarChartSquare02,
@@ -185,8 +206,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Content", href: `/${adminVersion}/report/content`, icon: Package },
             { label: "Performance", href: `/${adminVersion}/report/performance`, icon: Star01 },
         ],
-    },
-    {
+    });
+    
+    // AppStore section
+    items.push({
         label: "AppStore",
         href: `/${adminVersion}/appstore`,
         icon: Data,
@@ -197,8 +220,10 @@ const generateNavItems = (adminVersion: string): NavItemType[] => [
             { label: "Favorites", href: `/${adminVersion}/appstore/favorites`, icon: Star01 },
             { label: "Settings", href: `/${adminVersion}/appstore/settings`, icon: Settings01 },
         ],
-    },
-];
+    });
+    
+    return items;
+};
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -246,8 +271,8 @@ export const AdminLayout = ({
 
     return (
         <div className="flex flex-col h-dvh">
-            {/* Admin Sticky Header - Only visible to admins */}
-            {isAdmin && (
+            {/* Admin Sticky Header - Only visible to admins and only for admin3 */}
+            {isAdmin && adminVersion === 'admin3' && (
                 <ErrorBoundary fallback={
                     <div className="h-12 bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 text-sm">
                         Admin header error - check console

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
     Calendar,
     MessageChatCircle,
@@ -453,6 +453,7 @@ const contentTreeData: TreeNode[] = [
 
 export const AdminContent2Page = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
     const [expandedNodes, setExpandedNodes] = useState<string[]>(['contents', 'spaces']);
 
@@ -477,11 +478,11 @@ export const AdminContent2Page = () => {
     };
 
     // Check if we're on a specific content type page
-    const isEventsPage = location.pathname === '/admin/content2/events';
-    const isPostsPage = location.pathname === '/admin/content2/posts';
-    const isSpacesPage = location.pathname === '/admin/content2/spaces';
-    const isTagPage = location.pathname === '/admin/content2/tag';
-    const isCmsPage = location.pathname === '/admin/content2/cms';
+    const isEventsPage = location.pathname === '/admin2/content2/events';
+    const isPostsPage = location.pathname === '/admin2/content2/posts';
+    const isSpacesPage = location.pathname === '/admin2/content2/spaces';
+    const isTagPage = location.pathname === '/admin2/content2/tag';
+    const isCmsPage = location.pathname === '/admin2/content2/cms';
     
     // Show content management table for specific pages
     const showContentTable = isEventsPage || isPostsPage || isSpacesPage || isTagPage;
@@ -537,8 +538,16 @@ export const AdminContent2Page = () => {
                                 <Button 
                                     color="primary"
                                     className="whitespace-nowrap"
+                                    onClick={() => {
+                                        if (isEventsPage) {
+                                            navigate("/admin2/content2/events/create");
+                                        } else {
+                                            // Handle other page types as needed
+                                            console.log("Add button clicked for:", getPageTitle());
+                                        }
+                                    }}
                                 >
-                                    {isSpacesPage ? "Add space" : isTagPage ? "Add tag" : "Add post"}
+                                    {isEventsPage ? "Add Event" : isSpacesPage ? "Add space" : isTagPage ? "Add tag" : "Add post"}
                                 </Button>
                             </div>
                         </div>

@@ -20,10 +20,9 @@ import EventsCustomizePage from "@/pages/admin3/events-customize";
 
 // Admin 2.0 imports
 import { AdminDashboardPage as Admin2DashboardPage } from "@/pages/admin2/dashboard";
-import { AdminContentPage as Admin2ContentPage } from "@/pages/admin2/content";
-import { AdminContent2Page as Admin2Content2Page } from "@/pages/admin2/content2";
-import { AdminContentEventsPage as Admin2ContentEventsPage } from "@/pages/admin2/content-events";
 import { AdminContentEventsCreatePage as Admin2ContentEventsCreatePage } from "@/pages/admin2/content-events-create";
+import { AdminContent2Page as Admin2Content2Page } from "@/pages/admin2/content2";
+
 import { AdminPeoplePage as Admin2PeoplePage } from "@/pages/admin2/people";
 import { AdminGamificationPage as Admin2GamificationPage } from "@/pages/admin2/gamification";
 import { AdminSiteSettingsPage as Admin2SiteSettingsPage } from "@/pages/admin2/site-settings";
@@ -89,15 +88,14 @@ createRoot(document.getElementById("root")!).render(
                         
                         {/* Admin 2.0 Routes */}
                         <Route path="/admin2" element={<Admin2DashboardPage />} />
-                        <Route path="/admin2/content" element={<Admin2ContentPage />} />
                         <Route path="/admin2/content2" element={<Navigate to="/admin2/content2/posts" replace />} />
                         <Route path="/admin2/content2/events" element={<Admin2Content2Page />} />
+                        <Route path="/admin2/content2/events/create" element={<Admin2ContentEventsCreatePage />} />
                         <Route path="/admin2/content2/posts" element={<Admin2Content2Page />} />
                         <Route path="/admin2/content2/spaces" element={<Admin2Content2Page />} />
                         <Route path="/admin2/content2/tag" element={<Admin2Content2Page />} />
                         <Route path="/admin2/content2/cms" element={<Admin2Content2Page />} />
-                        <Route path="/admin2/content/events" element={<Admin2ContentEventsPage />} />
-                        <Route path="/admin2/content/events/create" element={<Admin2ContentEventsCreatePage />} />
+
                         <Route path="/admin2/people" element={<Admin2PeoplePage />} />
                         <Route path="/admin2/setting" element={<Navigate to="/admin2/setting/site-settings" replace />} />
                         <Route path="/admin2/setting/site-settings" element={<Admin2SiteSettingsPage />} />
