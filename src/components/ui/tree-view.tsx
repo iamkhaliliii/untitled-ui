@@ -145,7 +145,7 @@ export function TreeView({
           className={cx(
             "group relative flex w-full cursor-pointer items-center rounded-md bg-primary outline-focus-ring transition duration-100 ease-linear select-none hover:bg-primary_hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
             isSelected && "bg-active hover:bg-secondary_hover",
-            "px-3 py-2",
+            "px-2 py-2",
           )}
           style={{ paddingLeft: level * indent + 12 }}
           onClick={(e) => {

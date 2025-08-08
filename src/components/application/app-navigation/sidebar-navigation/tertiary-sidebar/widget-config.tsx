@@ -859,14 +859,6 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 id="host-info"
               />
               
-              <PropertyToggle
-                icon={Heart}
-                label="Reactions counter"
-                isSelected={reactionsCounter}
-                onChange={(value) => updateEventsListConfig({ reactionsCounter: value })}
-                id="reactions-counter"
-              />
-              
               {!(style === 'card' && cardStyle === 'modern') && (
                 <PropertyToggle
                   icon={CheckCircle}
@@ -991,6 +983,60 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     );
   };
 
+  const renderSingleEventConfig = () => (
+    <div className="space-y-4">
+      {/* Info Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={InfoCircle}
+          title="Event Configuration"
+          isExpanded={infoExpanded}
+          onToggle={() => setInfoExpanded(!infoExpanded)}
+        />
+        {infoExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-2">
+            <div className="space-y-3">
+              <div>
+                <Input
+                  label='Event ID'
+                  id="event-id"
+                  value={title} // Using title field to store event ID for now
+                  onChange={(value) => updateEventsListConfig({ title: value })}
+                  placeholder="Please enter a Event id"
+                  hint="Example: event-123 or 456789"
+                />
+              </div>
+
+              {/* Helper Note */}
+              <div className={cx(
+                "p-3 rounded-md border",
+                theme === 'dark' 
+                  ? "bg-blue-900/20 border-blue-800/30 text-blue-200" 
+                  : "bg-blue-50 border-blue-200 text-blue-800"
+              )}>
+                <div className="flex items-start gap-2">
+                  <InfoCircle className={cx(
+                    "size-4 mt-0.5 flex-shrink-0",
+                    theme === 'dark' ? "text-blue-400" : "text-blue-600"
+                  )} />
+                  <div className="text-sm">
+                    <p className="font-medium mb-1">How to find your Event ID:</p>
+                    <ul className="space-y-1 text-xs opacity-90">
+                      <li>• Go to your events list in the admin panel</li>
+                      <li>• Click on the event you want to display</li>
+                      <li>• Copy the Event ID from the URL or event details</li>
+                      <li>• Paste it in the field above</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   const renderDefaultConfig = () => (
     <div className="space-y-4">
       {/* Info Section */}
@@ -1086,6 +1132,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         <div className="p-4 transition-all duration-300 ease-in-out">
           {selectedWidget.label === 'Events List' 
             ? renderEventsListConfig() 
+            : selectedWidget.label === 'Single Event'
+              ? renderSingleEventConfig()
             : selectedWidget.label === 'Space Header'
               ? renderSpaceHeaderConfig()
               : renderDefaultConfig()}

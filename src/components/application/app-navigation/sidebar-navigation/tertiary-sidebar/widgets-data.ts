@@ -108,6 +108,38 @@ export const availableWidgets: WidgetCategory[] = [
         author: "@bettermode"
       },
       { 
+        id: "eventsList", 
+        name: "Events List", 
+        icon: Calendar, 
+        description: "Display a customizable list of events with filtering and sorting options",
+        features: ["Event filtering", "Multiple layouts", "RSVP integration", "Date sorting", "Custom styling", "Responsive design"],
+        category: "Content",
+        type: "Advanced",
+        image: "https://blocks.tremor.so/_next/image?url=%2Fthumbnails%2Fevents-list.webp&w=1920&q=75",
+        previewImage: "/Presets.png",
+        usageExample: "Perfect for displaying upcoming and past events in communities",
+        author: "@bettermode",
+        badges: [
+          { type: "popular", icon: Star01, color: "bg-yellow-500" }
+        ]
+      },
+      { 
+        id: "singleEvent", 
+        name: "Single Event", 
+        icon: Calendar, 
+        description: "Showcase a single event with detailed information and RSVP functionality",
+        features: ["Event details", "RSVP button", "Location map", "Host information", "Share options", "Countdown timer"],
+        category: "Content",
+        type: "Advanced",
+        image: "https://blocks.tremor.so/_next/image?url=%2Fthumbnails%2Fsingle-event.webp&w=1920&q=75",
+        previewImage: "/Presets2.png",
+        usageExample: "Ideal for highlighting featured or important events",
+        author: "@bettermode",
+        badges: [
+          { type: "new", icon: Zap, color: "bg-green-500" }
+        ]
+      },
+      { 
         id: "trending-8", 
         name: "Feature Cards", 
         icon: File01, 

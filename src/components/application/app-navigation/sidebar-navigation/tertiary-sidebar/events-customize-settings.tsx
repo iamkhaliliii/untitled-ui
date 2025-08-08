@@ -183,6 +183,11 @@ export const EventsCustomizeSettings = ({
                           id: "eventsList", 
                           label: "Events List", 
                           icon: <Calendar className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
+                        },
+                        { 
+                          id: "singleEvent", 
+                          label: "Single Event", 
+                          icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
                         }
                       ]
                     },
