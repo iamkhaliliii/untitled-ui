@@ -40,6 +40,108 @@ import { EventsCustomizeSettings } from "./tertiary-sidebar/events-customize-set
 import { WidgetSelection } from "./tertiary-sidebar/widget-selection";
 import WidgetConfig from "./tertiary-sidebar/widget-config";
 
+// Space types for create page
+const spaceTypes = [
+    {
+        id: "explore",
+        label: "Explore",
+        description: "A general exploration space for community discovery",
+        icon: Package,
+        color: "bg-blue-100/20 text-blue-400"
+    },
+    {
+        id: "guidelines",
+        label: "Guidelines", 
+        description: "Community guidelines and rules",
+        icon: BookOpen01,
+        color: "bg-purple-100/20 text-purple-400"
+    },
+    {
+        id: "discussions",
+        label: "Discussions",
+        description: "Open discussions and conversations", 
+        icon: MessageSquare01,
+        color: "bg-green-100/20 text-green-400"
+    },
+    {
+        id: "questions",
+        label: "Questions",
+        description: "Q&A and help requests",
+        icon: MessageChatCircle,
+        color: "bg-orange-100/20 text-orange-400"
+    },
+    {
+        id: "articles",
+        label: "Articles",
+        description: "Blog posts and articles",
+        icon: Edit03,
+        color: "bg-indigo-100/20 text-indigo-400"
+    },
+    {
+        id: "events",
+        label: "Events",
+        description: "Community events and meetups",
+        icon: Calendar,
+        color: "bg-red-100/20 text-red-400"
+    },
+    {
+        id: "changelogs",
+        label: "Changelogs",
+        description: "Product updates and release notes",
+        icon: FileX02,
+        color: "bg-teal-100/20 text-teal-400"
+    },
+    {
+        id: "jobs",
+        label: "Jobs",
+        description: "Job postings and career opportunities",
+        icon: Rows01,
+        color: "bg-yellow-100/20 text-yellow-400"
+    },
+    {
+        id: "wishlist",
+        label: "Wishlist",
+        description: "Feature requests and ideas",
+        icon: Lightbulb01,
+        color: "bg-pink-100/20 text-pink-400"
+    },
+    {
+        id: "podcast",
+        label: "Podcast",
+        description: "Podcast episodes and audio content",
+        icon: User02,
+        color: "bg-cyan-100/20 text-cyan-400"
+    },
+    {
+        id: "blank",
+        label: "Blank",
+        description: "Start with a blank space",
+        icon: File01,
+        color: "bg-gray-100/20 text-gray-400"
+    },
+    {
+        id: "landing-page",
+        label: "Landing Page",
+        description: "Create a landing page for your community",
+        icon: Globe01,
+        color: "bg-emerald-100/20 text-emerald-400"
+    },
+    {
+        id: "experts-directory",
+        label: "Experts Directory",
+        description: "Directory of community experts",
+        icon: Users01,
+        color: "bg-violet-100/20 text-violet-400"
+    },
+    {
+        id: "partners-directory",
+        label: "Partners Directory", 
+        description: "Directory of partners and collaborators",
+        icon: Users01,
+        color: "bg-rose-100/20 text-rose-400"
+    }
+];
+
 interface SidebarNavigationDualProps {
     /** URL of the currently active item. */
     activeUrl?: string;
@@ -284,6 +386,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const [showSpaceConfigModal, setShowSpaceConfigModal] = useState(false);
     const [selectedContentType, setSelectedContentType] = useState<string>("");
     const [selectedFields, setSelectedFields] = useState<string[]>([]);
+    
+    // State for spaces create page
+    const [selectedSpaceType, setSelectedSpaceType] = useState<string>("explore");
 
     // Handle add widget click
     const handleAddWidgetClick = () => {
@@ -445,6 +550,14 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         // TODO: Add actual space creation logic
     };
 
+    // Handle space type selection
+    const handleSpaceTypeSelect = (spaceTypeId: string) => {
+        setSelectedSpaceType(spaceTypeId);
+        console.log("Selected space type:", spaceTypeId);
+        // TODO: Add space creation logic here
+        navigate(`/${currentAdminVersion}/site`);
+    };
+
     // Handle toggle changes
     const handleToggleChange = (nodeId: string, isToggled: boolean) => {
         updateToggleStates({
@@ -477,9 +590,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         navigate(href);
     };
 
-    // Check if we're on any events page or private space page
+    // Check if we're on any events page, private space page, or spaces create page
     const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events");
     const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
+    const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isSpacePage = isEventsPage || isPrivateSpacePage;
 
     // State for form toggles
@@ -903,7 +1017,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </div>
                         </div>
                     </div>
-                ) : isSpacePage ? (
+                ) : isSpacePage || isSpacesCreatePage ? (
                     <div className="mt-2">
                         {/* Back Button */}
                         <button
@@ -914,8 +1028,46 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             Back to Site
                         </button>
 
-                        {/* Space Menu */}
-                        <ul className="space-y-0.5">
+                        {/* Spaces Create Page */}
+                        {isSpacesCreatePage ? (
+                            <div className="flex-1 overflow-y-auto">
+                                <h3 className="text-sm font-semibold text-brand-secondary mb-4">
+                                    Create New Space
+                                </h3>
+                                <h4 className="px-3 py-1 text-xs font-medium text-tertiary uppercase tracking-wider mb-2">
+                                    Space Types
+                                </h4>
+                                <ul className="space-y-1">
+                                    {spaceTypes.map((type) => {
+                                        const IconComponent = type.icon;
+                                        const isSelected = selectedSpaceType === type.id;
+                                        return (
+                                            <li key={type.id}>
+                                                <button
+                                                    onClick={() => handleSpaceTypeSelect(type.id)}
+                                                    className={cx(
+                                                        "w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors text-left",
+                                                        isSelected
+                                                            ? "bg-active text-secondary_hover"
+                                                            : "text-secondary hover:text-primary hover:bg-secondary"
+                                                    )}
+                                                >
+                                                    <div className={cx(
+                                                        "p-1.5 rounded-md",
+                                                        isSelected ? type.color : "bg-secondary/60"
+                                                    )}>
+                                                        <IconComponent className="w-4 h-4" />
+                                                    </div>
+                                                    <span className="truncate">{type.label}</span>
+                                                </button>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        ) : (
+                            /* Space Menu */
+                            <ul className="space-y-0.5">
                             <li>
                                 <button
                                     onClick={() => handleSecondaryItemClick("general", 
@@ -1017,6 +1169,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 </>
                             )}
                         </ul>
+                        )}
                     </div>
                 ) : currentItem?.label === "Content 2" && activeUrl?.includes("/content2") ? (
                     activeUrl === `/${currentAdminVersion}/content2/cms` ? (
