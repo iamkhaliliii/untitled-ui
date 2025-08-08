@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Settings01, Heart, MessageCircle02, MessageSquare01, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rss01, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Browser, File04, Square, Maximize01, Minimize01, FileCheck01, MarkerPin01, Tag01, Users01, AlertCircle, CheckCircle, Database01, Zap, Menu01, SearchLg, Image01, PlayCircle, BarChart03, Plus, Share04 } from '@untitledui/icons';
+import React, { useState, useEffect } from 'react';
+import { useListData } from "react-stately";
+import { ArrowLeft, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Select } from '@/components/base/select/select';
+import { MultiSelect } from '@/components/base/select/multi-select';
 import { Toggle } from '@/components/base/toggle/toggle';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
-import { Dot } from '@/components/foundations/dot-icon';
-import { UntitledLogoMinimal } from '@/components/foundations/logo/untitledui-logo-minimal';
 import { useResolvedTheme } from '@/hooks/use-resolved-theme';
 import { cx } from '@/utils/cx';
 import { useWidgetConfig } from '@/providers/widget-config-provider';
+
+interface SpaceItem {
+  label: string;
+  id: string;
+  supportingText: string;
+  avatarUrl: string;
+}
 
 interface WidgetConfigProps {
   selectedWidget: {
@@ -21,9 +28,10 @@ interface WidgetConfigProps {
   };
   onBack: () => void;
   onSave: () => void;
+  onTabConfigChange?: (isTabConfig: boolean, tabLabel?: string) => void;
 }
 
-const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave }) => {
+const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave, onTabConfigChange }) => {
   const { eventsListConfig, updateEventsListConfig, spaceHeaderConfig, updateSpaceHeaderConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
@@ -34,7 +42,6 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     cardStyle, 
     groupView, 
     groupBy, 
-    openPageIn, 
     reactionsCounter, 
     rsvpAction, 
     eventDetails, 
@@ -46,14 +53,184 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     pastEventsTab,
     thisMonthEventsTab,
     title,
-    description
+    description,
+    eventSource,
+    selectedSpaces
   } = eventsListConfig;
   
   // Section collapse/expand states
   const [infoExpanded, setInfoExpanded] = useState(true);
+  const [tabViewsExpanded, setTabViewsExpanded] = useState(true);
   const [layoutExpanded, setLayoutExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
+  const [sourceExpanded, setSourceExpanded] = useState(true);
   const [customCSSExpanded, setCustomCSSExpanded] = useState(true);
+
+  // Selected spaces for MultiSelect
+  const selectedSpacesItems = useListData<SpaceItem>({
+    initialItems: [],
+  });
+
+  // Initialize selectedSpacesItems with current config
+  useEffect(() => {
+    const currentItems = selectedSpaces.map(id => spacesData.find(space => space.id === id)).filter((item): item is NonNullable<typeof item> => Boolean(item));
+    
+    // Only update if different
+    const currentIds = selectedSpacesItems.items.map(item => item.id);
+    if (JSON.stringify(currentIds.sort()) !== JSON.stringify(selectedSpaces.sort())) {
+      // Clear and repopulate
+      if (selectedSpacesItems.items.length > 0) {
+        selectedSpacesItems.remove(...selectedSpacesItems.items.map(item => item.id));
+      }
+      if (currentItems.length > 0) {
+        selectedSpacesItems.append(...currentItems);
+      }
+    }
+  }, [selectedSpaces]);
+
+  // Handle item insertion
+  const handleSpaceInserted = (key: React.Key) => {
+    const newSelectedSpaces = [...selectedSpaces, key.toString()];
+    updateEventsListConfig({ selectedSpaces: newSelectedSpaces });
+  };
+
+  // Handle item removal
+  const handleSpaceCleared = (key: React.Key) => {
+    const newSelectedSpaces = selectedSpaces.filter(id => id !== key.toString());
+    updateEventsListConfig({ selectedSpaces: newSelectedSpaces });
+  };
+
+  // Tab views state
+  const [tabViews, setTabViews] = useState([
+    { id: 'all', label: 'All', enabled: true },
+    { id: 'upcoming', label: 'Upcoming', enabled: false },
+    { id: 'past', label: 'Past', enabled: false }
+  ]);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  
+  // Tab configuration view state
+  const [isTabConfigView, setIsTabConfigView] = useState(false);
+  const [currentConfigTab, setCurrentConfigTab] = useState<{ id: string; label: string } | null>(null);
+  
+  // Filter items expanded state
+  const [expandedFilters, setExpandedFilters] = useState<Set<string>>(new Set(['tags', 'start_date_time']));
+
+  // Update tabView based on enabled tabs count on initial load
+  useEffect(() => {
+    const enabledTabsCount = tabViews.filter(tab => tab.enabled).length;
+    updateEventsListConfig({ tabView: enabledTabsCount > 1 });
+  }, []);
+
+  // Tab views handlers
+  const handleToggleTab = (tabId: string) => {
+    setTabViews(prev => {
+      const updatedTabs = prev.map(tab => 
+        tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
+      );
+      
+      // Update tabView based on enabled tabs count
+      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
+      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
+      
+      return updatedTabs;
+    });
+  };
+
+  const handleRenameTab = (tabId: string, newLabel: string) => {
+    setTabViews(prev => prev.map(tab => 
+      tab.id === tabId ? { ...tab, label: newLabel } : tab
+    ));
+  };
+
+  const handleDuplicateTab = (tabId: string) => {
+    const tabToDuplicate = tabViews.find(tab => tab.id === tabId);
+    if (tabToDuplicate) {
+      const newTab = {
+        ...tabToDuplicate,
+        id: `${tabId}_copy_${Date.now()}`,
+        label: `${tabToDuplicate.label} Copy`,
+        enabled: false
+      };
+      setTabViews(prev => {
+        const updatedTabs = [...prev, newTab];
+        
+        // Update tabView based on enabled tabs count
+        const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
+        updateEventsListConfig({ tabView: enabledTabsCount > 1 });
+        
+        return updatedTabs;
+      });
+    }
+  };
+
+  const handleDeleteTab = (tabId: string) => {
+    setTabViews(prev => {
+      const updatedTabs = prev.filter(tab => tab.id !== tabId);
+      
+      // Update tabView based on enabled tabs count
+      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
+      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
+      
+      return updatedTabs;
+    });
+  };
+
+  const handleAddView = () => {
+    const newTab = {
+      id: `view_${Date.now()}`,
+      label: 'New View',
+      enabled: false
+    };
+    setTabViews(prev => {
+      const updatedTabs = [...prev, newTab];
+      
+      // Update tabView based on enabled tabs count
+      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
+      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
+      
+      return updatedTabs;
+    });
+  };
+
+  const handleConfigTab = (tabId: string) => {
+    const tab = tabViews.find(t => t.id === tabId);
+    if (tab) {
+      setCurrentConfigTab({ id: tab.id, label: tab.label });
+      setIsTabConfigView(true);
+      onTabConfigChange?.(true, tab.label);
+    }
+  };
+
+  const handleBackFromConfig = () => {
+    setIsTabConfigView(false);
+    setCurrentConfigTab(null);
+    onTabConfigChange?.(false);
+  };
+
+  // Toggle filter expansion
+  const toggleFilterExpanded = (filterId: string) => {
+    setExpandedFilters(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(filterId)) {
+        newSet.delete(filterId);
+      } else {
+        newSet.add(filterId);
+      }
+      return newSet;
+    });
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openDropdownId && !(event.target as Element).closest('.relative')) {
+        setOpenDropdownId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openDropdownId]);
 
   const styleOptions = [
     { id: 'card', label: 'Card', icon: Grid01 },
@@ -73,25 +250,37 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     { id: 'simple', label: 'Simple Card', icon: Square }
   ];
 
-  const openPageOptions = [
-    { id: 'post', label: 'Post Page', icon: File04 },
-    { id: 'modal', label: 'Modal Content', icon: Browser }
+  const eventSourceOptions = [
+    { id: 'all_spaces', label: 'All spaces', icon: Globe05 },
+    { id: 'current_space', label: 'Current space', icon: Home01 },
+    { id: 'specific_spaces', label: 'Specific spaces', icon: Settings01 }
   ];
 
-  const groupByOptions = [
-    { id: 'date', label: 'Date', icon: Calendar },
-    { id: 'location', label: 'Location', icon: MarkerPin01 },
-    { id: 'type', label: 'Type', icon: Tag01 },
-    { id: 'author', label: 'Author', icon: User02 },
-    { id: 'host', label: 'Host', icon: Users01 },
-    { id: 'category', label: 'Category', icon: Grid01 },
-    { id: 'status', label: 'Status', icon: CheckCircle }
-  ];
-
-  const feedStyleOptions = [
-    { id: 'simple', label: 'Simple', icon: List },
-    { id: 'expendable', label: 'Expendable', icon: Maximize01 },
-    { id: 'withcomments', label: 'With Comments', icon: MessageCircle02 }
+  const spacesData: SpaceItem[] = [
+    {
+      label: "General Discussion",
+      id: "general",
+      supportingText: "Main community space",
+      avatarUrl: "https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80",
+    },
+    { 
+      label: "Product Updates", 
+      id: "product", 
+      supportingText: "Latest announcements", 
+      avatarUrl: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" 
+    },
+    {
+      label: "Technical Support",
+      id: "support",
+      supportingText: "Help and troubleshooting",
+      avatarUrl: "https://www.untitledui.com/images/avatars/lana-steiner?fm=webp&q=80",
+    },
+    { 
+      label: "Feature Requests", 
+      id: "features", 
+      supportingText: "Ideas and suggestions", 
+      avatarUrl: "https://www.untitledui.com/images/avatars/demi-wilkinson?fm=webp&q=80" 
+    }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -155,6 +344,162 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     );
   };
 
+  const TabViewItem = ({ tab, onToggle, onRename, onConfig, onDuplicate, onDelete }: {
+    tab: { id: string; label: string; enabled: boolean };
+    onToggle: (tabId: string) => void;
+    onRename: (tabId: string, newLabel: string) => void;
+    onConfig: (tabId: string) => void;
+    onDuplicate: (tabId: string) => void;
+    onDelete: (tabId: string) => void;
+  }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editLabel, setEditLabel] = useState(tab.label);
+    const isDropdownOpen = openDropdownId === tab.id;
+
+    const handleRename = () => {
+      onRename(tab.id, editLabel);
+      setIsEditing(false);
+      setOpenDropdownId(null);
+    };
+
+    return (
+      <div className={cx(
+        "flex items-center px-2 py-2 border rounded-lg transition-all duration-200",
+        theme === 'dark' 
+          ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+          : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+      )}>
+        {/* Drag Handle */}
+        <DotsGrid className={cx(
+          "size-4 mr-3 cursor-grab",
+          theme === 'dark' ? "text-gray-500" : "text-gray-400"
+        )} />
+
+        {/* Label */}
+        <div className="flex-1">
+          {isEditing ? (
+            <Input
+              value={editLabel}
+              onChange={(value) => setEditLabel(value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') {
+                  setEditLabel(tab.label);
+                  setIsEditing(false);
+                }
+              }}
+              size="sm"
+              autoFocus
+            />
+          ) : (
+            <span className={cx(
+              "text-sm font-medium",
+              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+            )}>
+              {tab.label}
+            </span>
+          )}
+        </div>
+
+        {/* Toggle */}
+        <div className="mr-2">
+          <Toggle
+            isSelected={tab.enabled}
+            onChange={() => onToggle(tab.id)}
+            size="sm"
+            slim
+          />
+        </div>
+
+        {/* More Actions */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenDropdownId(isDropdownOpen ? null : tab.id)}
+            className={cx(
+              "p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+              theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-500 hover:text-gray-700"
+            )}
+          >
+            <DotsHorizontal className="size-4" />
+          </button>
+
+          {isDropdownOpen && (
+            <div className={cx(
+              "absolute right-0 mt-1 w-36 rounded-md shadow-lg z-10",
+              theme === 'dark' ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-200"
+            )}>
+              <div className="py-1">
+                <button
+                  onClick={() => {
+                    setIsEditing(true);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                    theme === 'dark' 
+                      ? "text-gray-200 hover:bg-gray-700 hover:text-gray-100"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <Edit03 className="size-3 mr-2" />
+                  Rename
+                </button>
+                <button
+                  onClick={() => {
+                    onConfig(tab.id);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                    theme === 'dark' 
+                      ? "text-gray-200 hover:bg-gray-700 hover:text-gray-100"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <Settings01 className="size-3 mr-2" />
+                  Config
+                </button>
+                <button
+                  onClick={() => {
+                    onDuplicate(tab.id);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                    theme === 'dark' 
+                      ? "text-gray-200 hover:bg-gray-700 hover:text-gray-100"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <Copy01 className="size-3 mr-2" />
+                  Duplicate
+                </button>
+                {tab.id !== 'all' && (
+                  <button
+                    onClick={() => {
+                      onDelete(tab.id);
+                      setOpenDropdownId(null);
+                    }}
+                    className={cx(
+                      "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                      theme === 'dark' 
+                        ? "text-red-400 hover:bg-red-900/20 hover:text-red-300"
+                        : "text-red-600 hover:bg-red-50 hover:text-red-700"
+                    )}
+                  >
+                    <Trash01 className="size-3 mr-2" />
+                    Delete
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const SectionHeader = ({ icon: Icon, title, isExpanded, onToggle }: {
     icon: React.ComponentType<any>;
     title: string;
@@ -182,6 +527,113 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     </div>
   );
 
+  const renderTabConfigView = () => {
+    if (!currentConfigTab) return null;
+
+    return (
+      <div className="p-4 transition-all duration-300 ease-in-out">
+        {/* Header with Back Button */}
+        <div className="mb-6">
+          {/* Back Button Row */}
+          <div className="mb-3">
+            <Button
+              size="sm"
+              color="secondary"
+              iconLeading={ArrowLeft}
+              onClick={handleBackFromConfig}
+            />
+          </div>
+          
+          {/* Title Row */}
+          <div>
+            <h2 className={cx(
+              "text-lg font-semibold",
+              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+            )}>
+              "{currentConfigTab.label}" Tab Config
+            </h2>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {/* Filters Section */}
+          <div className="space-y-2">
+            {/* Filter Title */}
+            <div className="px-2">
+              <div>
+                <h3 className={cx(
+                  "text-sm font-semibold",
+                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                )}>
+                  <div className="flex justify-between items-center">
+                    Fixed filters
+                    <div className="text-sm font-normal">
+                      <a className={cx(
+                        "cursor-pointer rounded-base transition duration-200 focus:outline-none focus-visible:ring",
+                        theme === 'dark' 
+                          ? "text-blue-400 hover:text-blue-300 ring-blue-400" 
+                          : "text-blue-600 hover:text-blue-700 ring-blue-600"
+                      )}>
+                        Clear
+                      </a>
+                    </div>
+                  </div>
+                </h3>
+                <p className={cx(
+                  "text-sm mt-1",
+                  theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                )}>
+                  These filters are applied to all the content.
+                </p>
+              </div>
+            </div>
+            
+            <div className="h-px bg-secondary"></div>
+            
+            {/* Filter Items */}
+            {['Tags', 'Spaces', 'Title', 'Author', 'Published date', 'Start Date & Time', 'End Date & Time', 'Location Type', 'Location', 'Hosts'].map((filterName, index) => (
+              <div key={filterName}>
+                <div className="space-y-1 -mx-2">
+                  <button
+                    onClick={() => toggleFilterExpanded(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', ''))}
+                    className={cx(
+                      "w-full flex items-center text-start rounded-base focus:outline-none focus-visible:ring ring-inset ring-offset-0 font-medium py-2 px-2 text-md transition-colors",
+                      theme === 'dark' 
+                        ? "text-gray-100 bg-transparent hover:text-gray-50 hover:bg-gray-800/50" 
+                        : "text-gray-900 bg-transparent hover:text-gray-800 hover:bg-gray-50"
+                    )}
+                  >
+                    <span className="flex-grow truncate">
+                      <div className="flex space-x-1 flex-1 truncate justify-between items-center">
+                        <span className={cx(
+                          "font-semibold",
+                          (filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', ''))
+                            ? theme === 'dark' ? "text-blue-400" : "text-blue-600"
+                            : theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                        )}>
+                          {filterName}
+                        </span>
+                        {(filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', '')) && (
+                          <span className="inline-block shrink-0 rounded-full h-2 w-2 bg-blue-500"></span>
+                        )}
+                      </div>
+                    </span>
+                    <ChevronDown className={cx(
+                      "h-5 w-5 transform transition-all ease-in-out duration-150 flex-shrink-0 ms-2",
+                      (filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', '')) ? "rotate-180" : "",
+                      theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                    )} />
+                  </button>
+                </div>
+                {index < 9 && <div className="h-px bg-secondary"></div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderEventsListConfig = () => (
     <div className="space-y-4">
       {/* Info Section */}
@@ -197,7 +649,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             <div className="space-y-3">
               <div>
                 <Input
-                label='Widget Title'
+                  label='Widget Title'
                   id="widget-title"
                   value={title}
                   onChange={(value) => updateEventsListConfig({ title: value })}
@@ -215,6 +667,97 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   rows={3}
                 />
               </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Source Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={Database01}
+          title="Source"
+          isExpanded={sourceExpanded}
+          onToggle={() => setSourceExpanded(!sourceExpanded)}
+        />
+        {sourceExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-3">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="event-source">Event source</Label>
+                <Select 
+                  items={eventSourceOptions} 
+                  selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'all_spaces'}
+                  onSelectionChange={(key) => updateEventsListConfig({ 
+                    eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces',
+                    selectedSpaces: key === 'specific_spaces' ? selectedSpaces : []
+                  })}
+                >
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                </Select>
+              </div>
+
+              {eventSource === 'specific_spaces' && (
+                <div>
+                  <MultiSelect
+                    selectedItems={selectedSpacesItems}
+                    label="Select spaces"
+                    hint="Choose which spaces to include events from"
+                    placeholder="Search spaces"
+                    items={spacesData}
+                    onItemInserted={handleSpaceInserted}
+                    onItemCleared={handleSpaceCleared}
+                  >
+                    {(item) => (
+                      <MultiSelect.Item 
+                        id={item.id} 
+                        supportingText={item.supportingText} 
+                        avatarUrl={item.avatarUrl}
+                      >
+                        {item.label}
+                      </MultiSelect.Item>
+                    )}
+                  </MultiSelect>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tab Views Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={Menu01}
+          title="Tab views"
+          isExpanded={tabViewsExpanded}
+          onToggle={() => setTabViewsExpanded(!tabViewsExpanded)}
+        />
+        {tabViewsExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-3">
+            <div className="space-y-3">
+              {tabViews.map((tab) => (
+                <TabViewItem
+                  key={tab.id}
+                  tab={tab}
+                  onToggle={handleToggleTab}
+                  onRename={handleRenameTab}
+                  onConfig={handleConfigTab}
+                  onDuplicate={handleDuplicateTab}
+                  onDelete={handleDeleteTab}
+                />
+              ))}
+              
+              {/* Add View Button */}
+              <Button
+                onClick={handleAddView}
+                size="sm"
+                color="secondary"
+                iconLeading={Plus}
+                className="w-full mt-3"
+              >
+                Add view
+              </Button>
             </div>
           </div>
         )}
@@ -270,131 +813,12 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   </div>
                 </>
               )}
-
-              {style === 'list' && (
-                <>
-                </>
-              )}
-
-              {style === 'feed' && (
-                <>
-                  <div>
-                    <Label htmlFor="feed-layout">Feed Style</Label>
-                    <Select 
-                      items={feedStyleOptions} 
-                      selectedKey="simple"
-                      onSelectionChange={(key) => console.log('Feed layout:', key)}
-                    >
-                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                    </Select>
-                  </div>
-                </>
-              )}
-<div className="space-y-6">
-                  {/* Tab View Section */}
-                  <div className="shadow-xs ring-1 ring-primary rounded-lg bg-primary py-2 px-3 space-y-4 mb-6">
-
-<div className="flex items-center justify-between">
-<Label htmlFor="group-view" className="truncate text-md font-medium text-primary">Tab View</Label>
-<div className="ml-auto">
-<Toggle
-id="tab-view"
-isSelected={tabView}
-onChange={(value) => updateEventsListConfig({ tabView: value })}
-size="sm"
-slim
-/>
-</div>
-</div>
-
-                {tabView && (
-                  <div className={cx(
-                    "ml-1 space-y-3 border-l-2 pl-4 pb-2",
-                    theme === 'dark' ? "border-gray-700" : "border-gray-200"
-                  )}>
-                    <div className="flex items-center justify-between gap-2">
-                      <DotsGrid className={cx(
-                        "size-4",
-                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
-                      )} />
-                      <Checkbox label="All Events" size="sm" isDisabled={true} isSelected={allEventsTab} onChange={(value) => updateEventsListConfig({ allEventsTab: value })}/>
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <DotsGrid className={cx(
-                        "size-4",
-                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
-                      )} />
-                      <Checkbox label="Upcoming Events" size="sm" isSelected={upcomingEventsTab} onChange={(value) => updateEventsListConfig({ upcomingEventsTab: value })}/>
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <DotsGrid className={cx(
-                        "size-4",
-                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
-                      )} />
-                      <Checkbox label="Past Events" size="sm" isSelected={pastEventsTab} onChange={(value) => updateEventsListConfig({ pastEventsTab: value })}/>
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <DotsGrid className={cx(
-                        "size-4",
-                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
-                      )} />
-                      <Checkbox label="This Month Events" size="sm" isSelected={thisMonthEventsTab} onChange={(value) => updateEventsListConfig({ thisMonthEventsTab: value })}/>
-                    </div>
-
-</div>
-)}
-</div>
-{/* Group View Section */}
-{/* <div className="shadow-xs ring-1 ring-primary rounded-lg bg-primary py-2 px-3 space-y-4 ">
-
-<div className="flex items-center justify-between">
-<Label htmlFor="group-view" className="truncate text-md font-medium text-primary">Group View</Label>
-<div className="ml-auto">
-<Toggle
-id="group-view"
-isSelected={groupView}
-onChange={(value) => updateEventsListConfig({ groupView: value })}
-size="sm"
-slim
-/>
-</div>
-</div>
-
-                {groupView && (
-                  <div className={cx(
-                    "ml-1 space-y-3 border-l-2 pl-4 pb-2",
-                    theme === 'dark' ? "border-gray-700" : "border-gray-200"
-                  )}>
-  <div>
-    <Label htmlFor="group-by">Group by</Label>
-    <Select 
-      items={groupByOptions} 
-      selectedKey={groupBy}
-                            onSelectionChange={(key) => updateEventsListConfig({ groupBy: key as 'date' | 'location' | 'type' | 'author' | 'host' | 'category' | 'status' })}
-    >
-      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-    </Select>
-  </div>
-</div>
-)}
-                </div> */}
-
-</div>
-              <div>
-                <Label htmlFor="open-page-in">Open Page In</Label>
-                <Select 
-                  items={openPageOptions} 
-                  selectedKey={openPageIn}
-                  onSelectionChange={(key) => updateEventsListConfig({ openPageIn: key as 'post' | 'modal' })}
-                >
-                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                </Select>
-              </div>
             </div>
           </div>
         )}
       </div>
 
+      {/* Properties Section */}
       <div className="border border-secondary rounded-lg bg-primary p-2">
         <SectionHeader
           icon={Eye}
@@ -405,16 +829,16 @@ slim
         {propertiesExpanded && (
           <div className="bg-secondary/20 rounded-lg p-1">
             <div className="space-y-2">
-            {!(style === 'card' && cardStyle === 'modern') && (
+              {!(style === 'card' && cardStyle === 'modern') && (
+                <PropertyToggle
+                  icon={Monitor01}
+                  label="Cover image"
+                  isSelected={coverImage}
+                  onChange={(value) => updateEventsListConfig({ coverImage: value })}
+                  id="cover-image"
+                />
+              )}
               <PropertyToggle
-                icon={Monitor01}
-                label="Cover image"
-                isSelected={coverImage}
-                onChange={(value) => updateEventsListConfig({ coverImage: value })}
-                id="cover-image"
-              />
-            )}
-                            <PropertyToggle
                 icon={Calendar}
                 label="Event details"
                 isSelected={eventDetails}
@@ -422,14 +846,13 @@ slim
                 id="event-details"
               />
 
-            <PropertyToggle
+              <PropertyToggle
                 icon={User02}
                 label="Host info"
                 isSelected={hostInfo}
                 onChange={(value) => updateEventsListConfig({ hostInfo: value })}
                 id="host-info"
               />
-              
               
               <PropertyToggle
                 icon={Heart}
@@ -448,10 +871,6 @@ slim
                   id="rsvp-action"
                 />
               )}
-              
-
-              
-
             </div>
           </div>
         )}
@@ -467,7 +886,6 @@ slim
       { id: 'color', label: 'Color', icon: Zap },
       { id: 'image', label: 'Image', icon: Image01 },
       { id: 'video', label: 'Video', icon: PlayCircle },
-      { id: 'pattern', label: 'Pattern', icon: Grid01 },
       { id: 'gradient', label: 'Gradient', icon: Maximize01 }
     ];
 
@@ -492,7 +910,7 @@ slim
                         key={option.id}
                         option={option}
                         isSelected={style === option.id}
-                        onClick={() => updateSpaceHeaderConfig({ style: option.id as 'simple' | 'color' | 'image' | 'video' | 'pattern' | 'gradient' })}
+                        onClick={() => updateSpaceHeaderConfig({ style: option.id as 'simple' | 'color' | 'image' | 'video' | 'gradient' })}
                       />
                     ))}
                   </div>
@@ -583,7 +1001,7 @@ slim
             <div className="space-y-3">
               <div>
                 <Input
-                label='Widget Title'
+                  label='Widget Title'
                   id="widget-title"
                   value={title}
                   onChange={(value) => updateEventsListConfig({ title: value })}
@@ -656,14 +1074,20 @@ slim
   );
 
   return (
-    <div className="p-4 transition-all duration-300 ease-in-out">
-      {selectedWidget.label === 'Events List' 
-        ? renderEventsListConfig() 
-        : selectedWidget.label === 'Space Header'
-          ? renderSpaceHeaderConfig()
-          : renderDefaultConfig()}
-    </div>
+    <>
+      {isTabConfigView ? (
+        renderTabConfigView()
+      ) : (
+        <div className="p-4 transition-all duration-300 ease-in-out">
+          {selectedWidget.label === 'Events List' 
+            ? renderEventsListConfig() 
+            : selectedWidget.label === 'Space Header'
+              ? renderSpaceHeaderConfig()
+              : renderDefaultConfig()}
+        </div>
+      )}
+    </>
   );
 };
 
-export default WidgetConfig; 
+export default WidgetConfig;

@@ -14,9 +14,10 @@ export interface EventsListConfig {
   rsvpAction: boolean;
   eventDetails: boolean;
   coverImage: boolean;
-  openPageIn: 'post' | 'modal';
   title: string;
   description: string;
+  eventSource: 'all_spaces' | 'current_space' | 'specific_spaces';
+  selectedSpaces: string[];
 }
 
 export interface SpaceHeaderConfig {
@@ -46,9 +47,10 @@ export const defaultEventsListConfig: EventsListConfig = {
   rsvpAction: false,
   eventDetails: true,
   coverImage: true,
-  openPageIn: 'post',
   title: 'Events List Widget',
-  description: 'Display a list of upcoming and past events with customizable layout and features.'
+  description: 'Display a list of upcoming and past events with customizable layout and features.',
+  eventSource: 'current_space',
+  selectedSpaces: []
 };
 
 export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {

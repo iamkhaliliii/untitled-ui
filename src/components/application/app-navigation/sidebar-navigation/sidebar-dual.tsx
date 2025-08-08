@@ -271,6 +271,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // State for widget configuration
     const [showWidgetConfig, setShowWidgetConfig] = useState(false);
     const [selectedWidgetForConfig, setSelectedWidgetForConfig] = useState<any>(null);
+    const [isTabConfigMode, setIsTabConfigMode] = useState(false);
+    const [tabConfigLabel, setTabConfigLabel] = useState<string>('');
     
     // State for add space modal
     const [showAddSpaceModal, setShowAddSpaceModal] = useState(false);
@@ -311,6 +313,14 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const handleWidgetConfigBack = () => {
         setShowWidgetConfig(false);
         setSelectedWidgetForConfig(null);
+        setIsTabConfigMode(false);
+        setTabConfigLabel('');
+    };
+
+    // Handle tab config mode changes
+    const handleTabConfigChange = (isTabConfig: boolean, tabLabel?: string) => {
+        setIsTabConfigMode(isTabConfig);
+        setTabConfigLabel(tabLabel || '');
     };
 
     // Handle add space modal
@@ -483,6 +493,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
         
         if (showWidgetConfig && selectedWidgetForConfig) {
+            if (isTabConfigMode && tabConfigLabel) {
+                return `"${tabConfigLabel}" Tab Config`;
+            }
             return `Configure ${selectedWidgetForConfig.label}`;
         }
         
@@ -526,6 +539,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         console.log("Widget config saved");
                         handleWidgetConfigBack();
                     }}
+                    onTabConfigChange={handleTabConfigChange}
                 />
             );
         }
@@ -1129,7 +1143,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col">
                 {/* Header with title and actions */}
-                <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                {!isTabConfigMode && (
+                    <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
                     <div className="flex items-center gap-3">
                         {showWidgetSelection && (
                             <button
@@ -1139,7 +1154,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
                             </button>
                         )}
-                        {showWidgetConfig && (
+                        {showWidgetConfig && !isTabConfigMode && (
                             <button
                                 onClick={handleWidgetConfigBack}
                                 className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
@@ -1147,9 +1162,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
                             </button>
                         )}
-                        <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
+                        {!isTabConfigMode && (
+                            <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
+                        )}
                     </div>
-                    {showWidgetConfig ? (
+                    {showWidgetConfig && !isTabConfigMode ? (
                         <div className="flex items-center gap-2">
                             <ButtonUtility
                                 size="sm"
@@ -1162,7 +1179,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 }}
                             />
                         </div>
-                    ) : !showWidgetSelection && (
+                    ) : !showWidgetSelection && !isTabConfigMode && (
                         <div className="flex items-center gap-2">
                             <ButtonUtility
                                 size="sm"
@@ -1179,6 +1196,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         </div>
                     )}
                 </div>
+                )}
                 
                 {/* Content */}
                 <div className="flex-1">
