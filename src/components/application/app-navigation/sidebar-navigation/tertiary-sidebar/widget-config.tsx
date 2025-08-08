@@ -859,15 +859,13 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 id="host-info"
               />
               
-              {!(style === 'card' && cardStyle === 'modern') && (
-                <PropertyToggle
-                  icon={CheckCircle}
-                  label="RSVP Action"
-                  isSelected={rsvpAction}
-                  onChange={(value) => updateEventsListConfig({ rsvpAction: value })}
-                  id="rsvp-action"
-                />
-              )}
+              <PropertyToggle
+                icon={CheckCircle}
+                label="RSVP Action"
+                isSelected={rsvpAction}
+                onChange={(value) => updateEventsListConfig({ rsvpAction: value })}
+                id="rsvp-action"
+              />
             </div>
           </div>
         )}

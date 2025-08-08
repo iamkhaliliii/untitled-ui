@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { DotsHorizontal, ArrowRight, Calendar, Users01, Ticket01, Clock, MarkerPin01, Heart, SearchLg, Home01, Rss01, Bookmark, User01, MessageChatCircle, MessageCircle01, Check, X, HelpCircle, Share02, Star01, Globe01 } from "@untitledui/icons";
+import { DotsHorizontal, ArrowRight, Calendar, Users01, Ticket01, Clock, MarkerPin01, Heart, SearchLg, Home01, Rss01, Bookmark, User01, MessageChatCircle, MessageCircle01, Check, X, HelpCircle, Share02, Star01, Globe01, CheckCircle } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import type { Key } from "react-aria-components";
 import { Tabs } from "@/components/application/tabs/tabs";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
+import { Button } from '@/components/base/buttons/button';
+
 
 interface EventsListWidgetProps {
   className?: string;
@@ -160,11 +162,11 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
         }}>
           {/* Event Image */}
           {eventsListConfig.coverImage && (
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden aspect-[1/1]">
               <img 
                 src={event.image} 
                 alt={event.title}
-                className="h-40 w-full object-cover transition-all duration-500 group-hover:scale-102"
+                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-102"
               />
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
@@ -290,24 +292,53 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
             
             {/* Bottom content */}
             <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-              <div className="space-y-1">
+              <div className="space-y-2">
+                {/* Host Info */}
+                {eventsListConfig.hostInfo && (
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <div className="w-4 h-4 rounded-full overflow-hidden border border-white/30">
+                      <div className="w-full h-full bg-white/80"></div>
+                    </div>
+                    <span className="text-[0.7rem] text-white/90 font-medium drop-shadow-sm">
+                      by {event.organizer}
+                    </span>
+                  </div>
+                )}
+                
                 <h3 className="font-bold text-sm text-white line-clamp-2 drop-shadow-lg">
                   {event.title}
                   <ArrowRight className="inline w-4 h-4 text-white/80 group-hover:text-white opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300 ml-1" />
                 </h3>
                 
-                {eventsListConfig.eventDetails && (
-                  <div className="flex items-center justify-between text-[0.75rem] text-white/80 mb-3">
-                    <div className="flex items-center gap-1.5">
-                      <MarkerPin01 className="w-3 h-3" />
-                      <span className="truncate max-w-[120px]">{event.location}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Users01 className="w-3 h-3" />
-                      <span className="text-xs font-medium">105</span>
-                    </div>
+                {/* Location, Attendees, and RSVP in one line */}
+                <div className="flex items-center justify-between text-[0.75rem] text-white/80">
+                  <div className="flex items-center gap-3">
+                    {eventsListConfig.eventDetails && (
+                      <>
+                        <div className="flex items-center gap-1.5">
+                          <MarkerPin01 className="w-3 h-3" />
+                          <span className="truncate max-w-[120px]">{event.location}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Users01 className="w-3 h-3" />
+                          <span className="text-xs font-medium">105</span>
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
+                  
+                  {/* RSVP Button */}
+                  {eventsListConfig.rsvpAction && (
+                    <Button 
+                      color="tertiary" 
+                      size="sm" 
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      className="text-white rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 shadow-lg backdrop-blur-sm border border-blue-500/30"
+                    >
+                      RSVP
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
