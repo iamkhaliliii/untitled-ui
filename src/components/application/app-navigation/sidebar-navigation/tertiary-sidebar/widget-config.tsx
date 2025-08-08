@@ -108,6 +108,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     { id: 'past', label: 'Past', enabled: pastEventsTab }
   ]);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [editingTabId, setEditingTabId] = useState<string | null>(null);
   
   // Tab configuration view state
   const [isTabConfigView, setIsTabConfigView] = useState(false);
@@ -167,12 +168,17 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   };
 
   const handleAddView = () => {
+    const newTabId = `view_${Date.now()}`;
     const newTab = {
-      id: `view_${Date.now()}`,
+      id: newTabId,
       label: 'New View',
       enabled: false
     };
     setTabViews(prev => [...prev, newTab]);
+    
+    // Set the new tab to edit mode immediately
+    setEditingTabId(newTabId);
+    setOpenDropdownId(null); // Close any open dropdown
   };
 
   const handleConfigTab = (tabId: string) => {
@@ -339,14 +345,30 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     onDuplicate: (tabId: string) => void;
     onDelete: (tabId: string) => void;
   }) => {
-    const [isEditing, setIsEditing] = useState(false);
+    const isEditing = editingTabId === tab.id;
     const [editLabel, setEditLabel] = useState(tab.label);
     const isDropdownOpen = openDropdownId === tab.id;
 
+    // Update editLabel when tab.label changes or when entering edit mode
+    useEffect(() => {
+      setEditLabel(tab.label);
+    }, [tab.label]);
+
     const handleRename = () => {
       onRename(tab.id, editLabel);
-      setIsEditing(false);
+      setEditingTabId(null);
       setOpenDropdownId(null);
+    };
+
+    const handleStartEdit = () => {
+      setEditingTabId(tab.id);
+      setEditLabel(tab.label);
+      setOpenDropdownId(null);
+    };
+
+    const handleCancelEdit = () => {
+      setEditLabel(tab.label);
+      setEditingTabId(null);
     };
 
     return (
@@ -371,19 +393,19 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
               onBlur={handleRename}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleRename();
-                if (e.key === 'Escape') {
-                  setEditLabel(tab.label);
-                  setIsEditing(false);
-                }
+                if (e.key === 'Escape') handleCancelEdit();
               }}
               size="sm"
               autoFocus
             />
           ) : (
-            <span className={cx(
-              "text-sm font-medium",
-              theme === 'dark' ? "text-gray-100" : "text-gray-900"
-            )}>
+            <span 
+              className={cx(
+                "text-sm font-medium cursor-pointer",
+                theme === 'dark' ? "text-gray-100" : "text-gray-900"
+              )}
+              onDoubleClick={handleStartEdit}
+            >
               {tab.label}
             </span>
           )}
@@ -418,10 +440,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             )}>
               <div className="py-1">
                 <button
-                  onClick={() => {
-                    setIsEditing(true);
-                    setOpenDropdownId(null);
-                  }}
+                  onClick={handleStartEdit}
                   className={cx(
                     "flex items-center w-full px-3 py-2 text-sm transition-colors",
                     theme === 'dark' 
