@@ -18,6 +18,7 @@ interface SpaceItem {
   id: string;
   supportingText: string;
   avatarUrl: string;
+  icon?: React.FC | React.ReactNode;
 }
 
 interface WidgetConfigProps {
@@ -100,11 +101,11 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     updateEventsListConfig({ selectedSpaces: newSelectedSpaces });
   };
 
-  // Tab views state
+  // Tab views state - initialize based on current config
   const [tabViews, setTabViews] = useState([
-    { id: 'all', label: 'All', enabled: true },
-    { id: 'upcoming', label: 'Upcoming', enabled: false },
-    { id: 'past', label: 'Past', enabled: false }
+    { id: 'all', label: 'All', enabled: allEventsTab },
+    { id: 'upcoming', label: 'Upcoming', enabled: upcomingEventsTab },
+    { id: 'past', label: 'Past', enabled: pastEventsTab }
   ]);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   
@@ -115,11 +116,21 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   // Filter items expanded state
   const [expandedFilters, setExpandedFilters] = useState<Set<string>>(new Set(['tags', 'start_date_time']));
 
-  // Update tabView based on enabled tabs count on initial load
+  // Update tabView and individual tab configs whenever tabViews change
   useEffect(() => {
     const enabledTabsCount = tabViews.filter(tab => tab.enabled).length;
-    updateEventsListConfig({ tabView: enabledTabsCount > 1 });
-  }, []);
+    const allTab = tabViews.find(tab => tab.id === 'all');
+    const upcomingTab = tabViews.find(tab => tab.id === 'upcoming');
+    const pastTab = tabViews.find(tab => tab.id === 'past');
+    
+    updateEventsListConfig({ 
+      tabView: enabledTabsCount > 1,
+      allEventsTab: allTab?.enabled || false,
+      upcomingEventsTab: upcomingTab?.enabled || false,
+      pastEventsTab: pastTab?.enabled || false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabViews]);
 
   // Tab views handlers
   const handleToggleTab = (tabId: string) => {
@@ -127,10 +138,6 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       const updatedTabs = prev.map(tab => 
         tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
       );
-      
-      // Update tabView based on enabled tabs count
-      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
-      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
       
       return updatedTabs;
     });
@@ -151,28 +158,12 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         label: `${tabToDuplicate.label} Copy`,
         enabled: false
       };
-      setTabViews(prev => {
-        const updatedTabs = [...prev, newTab];
-        
-        // Update tabView based on enabled tabs count
-        const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
-        updateEventsListConfig({ tabView: enabledTabsCount > 1 });
-        
-        return updatedTabs;
-      });
+      setTabViews(prev => [...prev, newTab]);
     }
   };
 
   const handleDeleteTab = (tabId: string) => {
-    setTabViews(prev => {
-      const updatedTabs = prev.filter(tab => tab.id !== tabId);
-      
-      // Update tabView based on enabled tabs count
-      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
-      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
-      
-      return updatedTabs;
-    });
+    setTabViews(prev => prev.filter(tab => tab.id !== tabId));
   };
 
   const handleAddView = () => {
@@ -181,15 +172,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       label: 'New View',
       enabled: false
     };
-    setTabViews(prev => {
-      const updatedTabs = [...prev, newTab];
-      
-      // Update tabView based on enabled tabs count
-      const enabledTabsCount = updatedTabs.filter(tab => tab.enabled).length;
-      updateEventsListConfig({ tabView: enabledTabsCount > 1 });
-      
-      return updatedTabs;
-    });
+    setTabViews(prev => [...prev, newTab]);
   };
 
   const handleConfigTab = (tabId: string) => {
@@ -260,26 +243,30 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     {
       label: "General Discussion",
       id: "general",
-      supportingText: "Main community space",
-      avatarUrl: "https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80",
+      supportingText: "",
+      avatarUrl: "",
+      icon: MessageSquare01,
     },
     { 
       label: "Product Updates", 
       id: "product", 
-      supportingText: "Latest announcements", 
-      avatarUrl: "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" 
+      supportingText: "", 
+      avatarUrl: "",
+      icon: BarChart03,
     },
     {
       label: "Technical Support",
       id: "support",
-      supportingText: "Help and troubleshooting",
-      avatarUrl: "https://www.untitledui.com/images/avatars/lana-steiner?fm=webp&q=80",
+      supportingText: "",
+      avatarUrl: "",
+      icon: Settings01,
     },
     { 
       label: "Feature Requests", 
       id: "features", 
-      supportingText: "Ideas and suggestions", 
-      avatarUrl: "https://www.untitledui.com/images/avatars/demi-wilkinson?fm=webp&q=80" 
+      supportingText: "", 
+      avatarUrl: "",
+      icon: Plus,
     }
   ];
 
@@ -684,8 +671,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
           <div className="bg-secondary/20 rounded-lg p-3">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="event-source">Event source</Label>
                 <Select 
+                  label="Event source"
                   items={eventSourceOptions} 
                   selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'all_spaces'}
                   onSelectionChange={(key) => updateEventsListConfig({ 
@@ -711,8 +698,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                     {(item) => (
                       <MultiSelect.Item 
                         id={item.id} 
-                        supportingText={item.supportingText} 
-                        avatarUrl={item.avatarUrl}
+                        icon={item.icon}
                       >
                         {item.label}
                       </MultiSelect.Item>
@@ -791,8 +777,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
               {style === 'card' && (
                 <>
                   <div>
-                    <Label htmlFor="card-size">Card Size</Label>
                     <Select 
+                      label="Card Size"
                       items={cardSizeOptions} 
                       selectedKey={cardSize}
                       onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
@@ -802,8 +788,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   </div>
 
                   <div>
-                    <Label htmlFor="card-style">Card Style</Label>
                     <Select 
+                      label="Card Style"
                       items={cardStyleOptions} 
                       selectedKey={cardStyle}
                       onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
