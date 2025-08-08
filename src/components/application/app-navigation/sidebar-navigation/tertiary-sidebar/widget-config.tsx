@@ -720,8 +720,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
           onToggle={() => setTabViewsExpanded(!tabViewsExpanded)}
         />
         {tabViewsExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-3">
+          <div className="bg-secondary/20 rounded-lg p-1">
+            <div className="space-y-1.5">
               {tabViews.map((tab) => (
                 <TabViewItem
                   key={tab.id}
@@ -740,7 +740,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 size="sm"
                 color="secondary"
                 iconLeading={Plus}
-                className="w-full mt-3"
+                className="w-full mt-1"
               >
                 Add view
               </Button>
