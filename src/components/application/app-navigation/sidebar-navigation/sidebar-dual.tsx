@@ -325,7 +325,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Handle add space modal
     const handleAddSpaceClick = () => {
-        setShowAddSpaceModal(true);
+        if (currentAdminVersion === 'admin3') {
+            setShowAddSpaceModal(true);
+        } else {
+            // Admin 2: Navigate to spaces creation page
+            navigate(`/${currentAdminVersion}/site/spaces/create`);
+        }
     };
 
     const handleAddSpaceModalClose = () => {

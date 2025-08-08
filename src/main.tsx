@@ -31,6 +31,7 @@ import { AdminSitePage as Admin2SitePage } from "@/pages/admin2/site";
 import { SiteFilesPage as Admin2SiteFilesPage } from "@/pages/admin2/site-files";
 import { SiteSpacesEventsPage as Admin2SiteSpacesEventsPage } from "@/pages/admin2/site-spaces-events";
 import { SiteSpacesEventsCreatePage as Admin2SiteSpacesEventsCreatePage } from "@/pages/admin2/site-spaces-events-create";
+import { SiteSpacesCreatePage as Admin2SiteSpacesCreatePage } from "@/pages/admin2/site-spaces-create";
 import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
@@ -102,6 +103,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin2/setting/authentication" element={<Admin2AuthenticationPage />} />
                         <Route path="/admin2/setting/gamification" element={<Admin2GamificationPage />} />
                         <Route path="/admin2/site" element={<Admin2SitePage />} />
+                        <Route path="/admin2/site/spaces/create" element={<Admin2SiteSpacesCreatePage />} />
                         <Route path="/admin2/site/files" element={<Admin2SiteFilesPage />} />
                         <Route path="/admin2/site/spaces/myfolder/events" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/myfolder/events/create" element={<Admin2SiteSpacesEventsCreatePage />} />
