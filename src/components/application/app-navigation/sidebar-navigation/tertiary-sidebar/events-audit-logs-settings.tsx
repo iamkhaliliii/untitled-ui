@@ -169,140 +169,47 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
     const AuditLogItem = ({ log }: { log: AuditLogEntry }) => {
         const IconComponent = getActivityIcon(log.type);
         const iconColor = getActivityColor(log.type);
-        const badgeColor = getBadgeColor(log.type);
+
+        // Get background color for the circular icon based on type
+        const getIconBgColor = (type: string) => {
+            switch (type) {
+                case 'reaction': return 'bg-orange-100';
+                case 'wishlist': return 'bg-pink-100';
+                case 'reply': return 'bg-blue-100';
+                case 'member': return 'bg-green-100';
+                default: return 'bg-gray-100';
+            }
+        };
 
         return (
             <div className="relative flex gap-4 pb-6">
                 {/* Timeline line */}
-                <div className="absolute left-4 top-8 h-full w-px bg-secondary"></div>
+                <div className="absolute left-4 top-6 bottom-0 w-px bg-gray-200"></div>
                 
                 {/* Icon */}
-                <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary border-2 border-secondary`}>
+                <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full ${getIconBgColor(log.type)}`}>
                     <IconComponent className={`h-4 w-4 ${iconColor}`} />
                 </div>
                 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-sm font-medium text-primary">{log.user}</span>
-                                <Badge type="pill-color" color={badgeColor as any} size="sm">
-                                    {log.type}
-                                </Badge>
-                            </div>
-                            <p className="text-sm text-secondary leading-relaxed">
-                                {log.action}
-                            </p>
-                        </div>
-                        <span className="text-xs text-tertiary flex-shrink-0 mt-1">{log.timeAgo}</span>
-                    </div>
+                <div className="flex-1 min-w-0 pt-1">
+                    <p className="text-sm font-normal text-gray-900 leading-relaxed">
+                        {log.action}
+                    </p>
+                    <span className="text-xs text-gray-500">{log.timeAgo}</span>
                 </div>
             </div>
         );
     };
 
     return (
-        <div className="space-y-4 sm:space-y-6 p-3 sm:p-4">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                <div className="min-w-0 flex-1">
-                    <h2 className="text-lg sm:text-xl font-semibold text-primary">Audit Logs</h2>
-                    <p className="text-sm text-tertiary mt-1">Track all activities and changes in your space</p>
-                </div>
+        <div className="p-4">
+            {/* Simple Timeline Only */}
+            <div className="space-y-2">
+                {auditLogs.map((log) => (
+                    <AuditLogItem key={log.id} log={log} />
+                ))}
             </div>
-
-            {/* Filters */}
-            <div className="space-y-3">
-                {/* Search */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1">
-                        <Input
-                            placeholder="Search activities, users, or targets..."
-                            value={searchTerm}
-                            onChange={setSearchTerm}
-                            icon={SearchLg}
-                        />
-                    </div>
-                </div>
-
-                {/* Filter and Time Range */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1">
-                        <Select
-                            items={filterOptions}
-                            selectedKey={selectedFilter}
-                            onSelectionChange={(key) => setSelectedFilter(key as string)}
-                            placeholder="Filter by activity type"
-                        >
-                            {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                        </Select>
-                    </div>
-                    <div className="flex-1">
-                        <Select
-                            items={timeRangeOptions}
-                            selectedKey={selectedTimeRange}
-                            onSelectionChange={(key) => setSelectedTimeRange(key as string)}
-                            placeholder="Select time range"
-                        >
-                            {(item) => <Select.Item id={item.id} label={item.label} />}
-                        </Select>
-                    </div>
-                </div>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-primary border border-secondary rounded-lg p-3 text-center">
-                    <p className="text-lg font-bold text-primary">9</p>
-                    <p className="text-xs text-tertiary">Total Activities</p>
-                </div>
-                <div className="bg-primary border border-secondary rounded-lg p-3 text-center">
-                    <p className="text-lg font-bold text-primary">5</p>
-                    <p className="text-xs text-tertiary">Unique Users</p>
-                </div>
-                <div className="bg-primary border border-secondary rounded-lg p-3 text-center">
-                    <p className="text-lg font-bold text-primary">3</p>
-                    <p className="text-xs text-tertiary">Wishlists</p>
-                </div>
-                <div className="bg-primary border border-secondary rounded-lg p-3 text-center">
-                    <p className="text-lg font-bold text-primary">4</p>
-                    <p className="text-xs text-tertiary">Reactions</p>
-                </div>
-            </div>
-
-            {/* Timeline */}
-            <div className="border border-secondary rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-primary">Activity Timeline</h3>
-                    <Badge type="pill-color" color="brand" size="sm">
-                        {filteredLogs.length} activities
-                    </Badge>
-                </div>
-
-                {filteredLogs.length > 0 ? (
-                    <div className="space-y-2">
-                        {filteredLogs.map((log) => (
-                            <AuditLogItem key={log.id} log={log} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-8">
-                        <Clock className="h-12 w-12 text-tertiary mx-auto mb-3" />
-                        <p className="text-sm text-secondary">No activities found</p>
-                        <p className="text-xs text-tertiary">Try adjusting your filters</p>
-                    </div>
-                )}
-            </div>
-
-            {/* Load More */}
-            {filteredLogs.length > 0 && (
-                <div className="text-center">
-                    <Button size="sm" color="secondary" iconLeading={ChevronDown}>
-                        Load More Activities
-                    </Button>
-                </div>
-            )}
         </div>
     );
 }; 
