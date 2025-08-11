@@ -24,6 +24,7 @@ export type TreeViewProps = {
   onNodeClick?: (node: TreeNode) => void;
   onNodeExpand?: (nodeId: string, expanded: boolean) => void;
   onToggleChange?: (nodeId: string, isToggled: boolean) => void;
+  onNodeAdd?: (node: TreeNode) => void;
   defaultExpandedIds?: string[];
   expandedIds?: string[]; // Add controlled expansion support
   showLines?: boolean;
@@ -43,6 +44,7 @@ export function TreeView({
   onNodeClick,
   onNodeExpand,
   onToggleChange,
+  onNodeAdd,
   defaultExpandedIds = [],
   expandedIds,
   showLines = true,
@@ -224,7 +226,7 @@ export function TreeView({
                 className="opacity-0 group-hover:opacity-100 flex items-center justify-center size-4 rounded hover:bg-secondary/70 transition-all duration-200"
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("Add button clicked for:", node.label);
+                  onNodeAdd?.(node);
                 }}
               >
                 <Plus className="size-4 stroke-[2.5px] text-fg-quaternary" />

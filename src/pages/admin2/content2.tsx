@@ -480,6 +480,12 @@ export const AdminContent2Page = () => {
         console.log(`Toggle changed for ${nodeId}:`, isToggled);
     };
 
+    const handleNodeAdd = (node: TreeNode) => {
+        if (node.id === "cms") {
+            navigate("/admin2/site/spaces/create");
+        }
+    };
+
     const handleSelectionChange = (selectedIds: string[]) => {
         setSelectedNodes(selectedIds);
     };
@@ -1110,6 +1116,7 @@ export const AdminContent2Page = () => {
                                 onNodeClick={handleNodeClick}
                                 onNodeExpand={handleNodeExpand}
                                 onToggleChange={handleToggleChange}
+                                onNodeAdd={handleNodeAdd}
                                 onSelectionChange={handleSelectionChange}
                                 selectedIds={selectedNodes}
                                 expandedIds={expandedNodes}

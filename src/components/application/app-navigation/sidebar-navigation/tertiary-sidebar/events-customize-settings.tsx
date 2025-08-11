@@ -22,6 +22,7 @@ interface EventsCustomizeSettingsProps {
   }>) => void;
   onAddWidgetClick: () => void;
   onWidgetConfig: (widget: any) => void;
+  onEditGlobalWidgets: () => void;
 }
 
 export const EventsCustomizeSettings = ({ 
@@ -31,7 +32,8 @@ export const EventsCustomizeSettings = ({
   handleToggleChange, 
   updateToggleStates,
   onAddWidgetClick,
-  onWidgetConfig
+  onWidgetConfig,
+  onEditGlobalWidgets
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
   
@@ -51,9 +53,23 @@ export const EventsCustomizeSettings = ({
       
       {/* Global Widgets Section */}
       <div className="border border-secondary rounded-lg bg-primary p-2">
-        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
-          <LayoutAlt01 className="size-4 text-brand-secondary" />
-          <h5 className="text-xs font-semibold text-primary">Global Widgets</h5>
+        <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
+          <div className="flex items-center gap-2">
+            <LayoutAlt01 className="size-4 text-brand-secondary" />
+            <h5 className="text-xs font-semibold text-primary">Global Widgets</h5>
+          </div>
+          <button
+            className={cx(
+              "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
+              theme === 'dark'
+                ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
+                : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
+            )}
+            onClick={onEditGlobalWidgets}
+          >
+            <Settings01 className="size-3" />
+            Edit
+          </button>
         </div>
         <div className="bg-secondary/20 rounded-lg p-1">
           <TreeView
@@ -68,7 +84,7 @@ export const EventsCustomizeSettings = ({
                     label: "Header",
                     icon: <LayoutTop className="size-5 text-fg-quaternary" />,
                     showToggleButton: true,
-                    showAddButton: true,
+
                     toggleState: toggleStates.header,
                     children: [
                       { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
@@ -78,7 +94,6 @@ export const EventsCustomizeSettings = ({
                     id: "leftSidebar", 
                     label: "Sidebar",
                     icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
-                    showAddButton: true,
                     showToggleButton: true,
                     toggleState: toggleStates.leftSidebar,
                     children: [

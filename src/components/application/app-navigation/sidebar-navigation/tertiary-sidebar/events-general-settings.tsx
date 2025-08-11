@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01, X, Settings01 } from "@untitledui/icons";
+import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01, X, Settings01, Trash01 } from "@untitledui/icons";
 import { Input, InputBase } from "@/components/base/input/input";
 import { TextArea } from "@/components/base/textarea/textarea";
 import { Select } from "@/components/base/select/select";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { InputGroup } from "@/components/base/input/input-group";
 import { Badge } from "@/components/base/badges/badges";
+import { Button } from "@/components/base/buttons/button";
 
 interface FormToggles {
     inviteOnly: boolean;
@@ -25,6 +26,8 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
     const [privateMessage, setPrivateMessage] = useState<string>("");
     const [privateAction, setPrivateAction] = useState<string>("request-to-join");
     const [customUrl, setCustomUrl] = useState<string>("");
+    const [slug, setSlug] = useState<string>("");
+    const [showDisconnectModal, setShowDisconnectModal] = useState<boolean>(false);
 
     return (
         <div className="space-y-6 p-4 pb-6">
@@ -62,12 +65,19 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                     />
                 </div>
 
-                {/* Web address */}
+                {/* Slug */}
                 <div>
                     <Input
-                        label="Web address"
-                        placeholder="my-awesome-event"
+                        label="Slug"
+                        placeholder="your-slug"
+                        value={slug}
+                        tooltip="This will be your space's URL"
+                        onChange={(value) => setSlug(value)}
                     />
+                    <p className="text-xs text-tertiary mt-1">
+                        <span className="text-gray-500">bettermode.com/</span>   
+                        <span className="font-semibold">{slug || "your-slug"}</span>
+                    </p>
                 </div>
 
                 {/* Banner Upload */}
@@ -349,6 +359,15 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                             Event
                         </div>
                     </Badge>
+                    <div className="ml-auto">
+                        <button
+                            onClick={() => setShowDisconnectModal(true)}
+                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
+                            title="Disconnect CMS"
+                        >
+                            <Trash01 className="size-4" />
+                        </button>
+                    </div>
                 </div>
                 <div className="bg-secondary/20 rounded-lg p-3">
                     <div className="space-y-6">
@@ -656,6 +675,53 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                     </div>
                 </div>
             </div>
+
+            {/* Disconnect CMS Modal */}
+            {showDisconnectModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-primary border border-secondary rounded-lg shadow-lg max-w-md w-full mx-4">
+                        <div className="p-6">
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+                                        <Trash01 className="w-5 h-5 text-error" />
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-semibold text-primary mb-2">
+                                        Disconnect CMS
+                                    </h3>
+                                    <p className="text-sm text-secondary mb-4">
+                                        Are you sure you want to disconnect the CMS from this space? 
+                                        Bettermode no longer supports spaces with multiple CMS connections. 
+                                        Once disconnected, you won't be able to reconnect the CMS to this space.
+                                    </p>
+                                    <div className="flex gap-3 justify-end">
+                                        <Button
+                                            size="sm"
+                                            color="tertiary"
+                                            onClick={() => setShowDisconnectModal(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            color="primary-destructive"
+                                            onClick={() => {
+                                                // Handle disconnect logic here
+                                                console.log("CMS disconnected");
+                                                setShowDisconnectModal(false);
+                                            }}
+                                        >
+                                            Disconnect
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }; 

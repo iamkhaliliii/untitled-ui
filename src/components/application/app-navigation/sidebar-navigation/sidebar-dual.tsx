@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01 } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -159,6 +159,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const navigate = useNavigate();
     const { toggleStates, updateToggleStates } = useWidgetConfig();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
+    
+    // Check if user came from CMS page
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromCms = urlParams.get('from') === 'cms';
 
     // Determine current admin version from activeUrl
     const getCurrentAdminVersion = () => {
@@ -245,48 +249,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             label: "Navigation",
             icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
             children: [
-                { 
-                    id: "header", 
-                    label: "Header",
-                    icon: <LayoutTop className="size-5 text-fg-quaternary" />,
-                    showAddButton: true,
-                    showToggleButton: true,
-                    toggleState: toggleStates.header,
-                    children: [
-                        { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-                { 
-                    id: "leftSidebar", 
-                    label: "Sidebar",
-                    icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    showAddButton: true,
-                    toggleState: toggleStates.leftSidebar,
-                    children: [
-                        { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                },
-/*                 { 
-                    id: "rightSidebar", 
-                    label: "Right Sidebar",
-                    icon: <LayoutRight className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.rightSidebar,
-                    children: [
-                        { id: "leaderboard", label: "Leaderboard", icon: <User02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                }, */
-/*                 { 
-                    id: "footer", 
-                    label: "Footer",
-                    icon: <LayoutBottom className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.footer,
-                    children: [
-                        { id: "footerBlock", label: "Footer Block", icon: <FlexAlignBottom className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                }, */
+                { id: "Configuration", label: "Config" , icon: <Settings01 className="size-5 text-fg-quaternary" />},
             ]
         },
         {
@@ -389,6 +352,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     
     // State for spaces create page
     const [selectedSpaceType, setSelectedSpaceType] = useState<string>("explore");
+    
+    // State for navigation section
+    const [isNavigationSelected, setIsNavigationSelected] = useState<boolean>(false);
+    const [navigationExpandedIds, setNavigationExpandedIds] = useState<string[]>(["header-nav", "sidebar-nav"]);
+    
+    // State for showing navigation settings in tertiary sidebar
+    const [showNavigationInTertiary, setShowNavigationInTertiary] = useState<boolean>(false);
 
     // Handle add widget click
     const handleAddWidgetClick = () => {
@@ -576,6 +546,14 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const handleNodeClick = (node: any) => {
         console.log("Site file clicked:", node.label);
         
+        // Check if navigation item is clicked
+        if (node.id === "navigation") {
+            setIsNavigationSelected(true);
+            return;
+        } else {
+            setIsNavigationSelected(false);
+        }
+        
         // Navigate if the node has an href
         if (node.data?.href) {
             navigate(node.data.href);
@@ -616,6 +594,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 return `"${tabConfigLabel}" Tab Config`;
             }
             return `Configure ${selectedWidgetForConfig.label}`;
+        }
+        
+        if (showNavigationInTertiary) {
+            return "Header and sidebar";
         }
         
         switch (selectedSecondaryItem) {
@@ -663,6 +645,103 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             );
         }
         
+        if (showNavigationInTertiary) {
+            return (
+                <div className="p-4 space-y-4">
+                    {/* Description section */}
+                    <div>
+                        <p className="text-sm text-secondary leading-relaxed">
+                            Adjust layout settings for the Header and Sidebar, controlling their visibility and arrangement site-wide.
+                        </p>
+                    </div>
+                    
+                    {/* Navigation TreeView */}
+                    <div className="flex-1 overflow-y-auto">
+                        <TreeView
+                            data={[
+                                {
+                                    id: "header-nav",
+                                    label: "Header",
+                                    toggleState: toggleStates.header,
+                                    showToggleButton: true,
+                                    showAddButton: true,
+                                    icon: <LayoutTop className="size-5 text-fg-quaternary" />,
+                                    children: [
+                                        {
+                                            id: "top-navigation",
+                                            label: "Top navigation",
+                                            icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" />
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "sidebar-nav",
+                                    label: "Sidebar",
+                                    toggleState: toggleStates.leftSidebar,
+                                    showToggleButton: true,
+                                    showAddButton: true,
+                                    icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
+                                    children: [
+                                        {
+                                            id: "collection-menu",
+                                            label: "Collection menu",
+                                            icon: <FolderCode className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                                        },
+                                        {
+                                            id: "link-menu",
+                                            label: "Link menu",
+                                            icon: <Link01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
+                                        }
+                                    ]
+                                }
+                            ]}
+                            expandedIds={navigationExpandedIds}
+                            selectedIds={[]}
+                            onNodeClick={(node) => {
+                                console.log("Navigation item clicked:", node.label);
+                            }}
+                            onToggleChange={(nodeId, isToggled) => {
+                                const toggleKey = nodeId === "header-nav" ? "header" : "leftSidebar";
+                                updateToggleStates({ [toggleKey]: isToggled });
+                                
+                                if (isToggled) {
+                                    setNavigationExpandedIds(prev => [...prev, nodeId]);
+                                } else {
+                                    setNavigationExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                }
+                            }}
+                            onNodeExpand={(nodeId, expanded) => {
+                                if (expanded) {
+                                    setNavigationExpandedIds(prev => [...prev, nodeId]);
+                                } else {
+                                    setNavigationExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                }
+                                
+                                if (nodeId === "header-nav" || nodeId === "sidebar-nav") {
+                                    const toggleKey = nodeId === "header-nav" ? "header" : "leftSidebar";
+                                    updateToggleStates({ [toggleKey]: expanded });
+                                }
+                            }}
+                            className="border-none bg-transparent"
+                            showLines={false}
+                            showIcons={true}
+                        />
+                    </div>
+                    
+                    {/* Helper Note */}
+                    <div className="text-xs mt-4 flex items-start gap-2">
+                        <InfoCircle className="size-3 mt-0.5 flex-shrink-0 text-gray-400" />
+                        <div className="leading-relaxed text-gray-400">
+                            You can <span className="font-medium">show/hide</span> navigation sections for this space, but widget edits apply site-wide. 
+                            <button className="font-medium underline ml-1 hover:no-underline text-blue-400 hover:text-blue-300">
+                                Upgrade to Pro
+                            </button> for per-space customization.
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
         switch (selectedSecondaryItem) {
                         case "general":
                 return (
@@ -681,6 +760,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         updateToggleStates={updateToggleStates}
                         onAddWidgetClick={handleAddWidgetClick}
                         onWidgetConfig={handleWidgetConfig}
+                        onEditGlobalWidgets={() => setShowNavigationInTertiary(true)}
                     />
                 );
             case "members":
@@ -847,8 +927,110 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : currentItem?.label}
                 </h3>
                 
-                {/* Show TreeView for Site section when on admin site page */}
-                {currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
+                {/* Show Navigation Settings when navigation is selected */}
+                {isNavigationSelected ? (
+                    <div className="mt-2">
+                        {/* Back Button */}
+                        <button
+                            onClick={() => setIsNavigationSelected(false)}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors mb-4"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Back to Site
+                        </button>
+                        
+                        {/* Navigation Content */}
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="text-lg font-semibold text-primary mb-2">
+                                    Header and sidebar
+                                </h3>
+                                <p className="text-sm text-secondary leading-relaxed">
+                                    Adjust layout settings for the Header and Sidebar, controlling their visibility and arrangement site-wide.
+                                </p>
+                            </div>
+                            
+                            {/* Navigation TreeView */}
+                            <div className="flex-1 overflow-y-auto">
+                                <TreeView
+                                    data={[
+                                        {
+                                            id: "header-nav",
+                                            label: "Header",
+                                            toggleState: toggleStates.header,
+                                            showToggleButton: true,
+                                            showAddButton: true,
+                                            icon: <LayoutTop className="size-5 text-fg-quaternary" />,
+                                            children: [
+                                                { 
+                                                    id: "top-navigation", 
+                                                    label: "Top navigation",
+                                                    icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" />
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: "sidebar-nav",
+                                            label: "Sidebar",
+                                            toggleState: toggleStates.leftSidebar,
+                                            showToggleButton: true,
+                                            showAddButton: true,
+                                            icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
+                                            children: [
+                                                { 
+                                                    id: "collection-menu", 
+                                                    label: "Collection menu",
+                                                    icon: <FolderCode className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                                                },
+                                                { 
+                                                    id: "link-menu", 
+                                                    label: "Link menu",
+                                                    icon: <Link01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
+                                                }
+                                            ]
+                                        }
+                                    ]}
+                                    expandedIds={navigationExpandedIds}
+                                    selectedIds={[]}
+                                    onNodeClick={(node) => {
+                                        console.log("Navigation item clicked:", node.label);
+                                    }}
+                                    onToggleChange={(nodeId, isToggled) => {
+                                        // Handle toggle state changes
+                                        updateToggleStates({
+                                            [nodeId === "header-nav" ? "header" : "leftSidebar"]: isToggled
+                                        });
+                                        
+                                        // Update expansion state
+                                        if (isToggled) {
+                                            setNavigationExpandedIds(prev => [...prev, nodeId]);
+                                        } else {
+                                            setNavigationExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                        }
+                                    }}
+                                    onNodeExpand={(nodeId, expanded) => {
+                                        // Update expanded state
+                                        if (expanded) {
+                                            setNavigationExpandedIds(prev => [...prev, nodeId]);
+                                        } else {
+                                            setNavigationExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                        }
+                                        
+                                        // Sync with toggle state for layout items
+                                        if (nodeId === "header-nav" || nodeId === "sidebar-nav") {
+                                            updateToggleStates({
+                                                [nodeId === "header-nav" ? "header" : "leftSidebar"]: expanded
+                                            });
+                                        }
+                                    }}
+                                    className="border-none bg-transparent"
+                                    showLines={false}
+                                    showIcons={true}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                ) : currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
                     <div className="flex h-full flex-col flex-1 mt-2">
                         {/* Search Input */}
                         <div className="mb-4">
@@ -1021,11 +1203,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     <div className="mt-2">
                         {/* Back Button */}
                         <button
-                            onClick={() => navigate(`/${currentAdminVersion}/site`)}
+                            onClick={() => navigate(fromCms ? `/${currentAdminVersion}/content2/cms` : `/${currentAdminVersion}/site`)}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors mb-4"
                         >
                             <ArrowLeft className="h-4 w-4" />
-                            Back to Site
+                            {fromCms ? "Back to CMS" : "Back to Site"}
                         </button>
 
                         {/* Spaces Create Page */}
@@ -1213,8 +1395,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <div className="h-px bg-secondary/40 my-2"></div>
                                     <button 
                                         onClick={() => {
-                                            console.log("Add CMS clicked");
-                                            // TODO: Add CMS creation logic
+                                            navigate(`/${currentAdminVersion}/site/spaces/create?from=cms`);
                                         }}
                                         className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
                                     >
@@ -1320,6 +1501,14 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
                             </button>
                         )}
+                        {showNavigationInTertiary && (
+                            <button
+                                onClick={() => setShowNavigationInTertiary(false)}
+                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                            >
+                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                            </button>
+                        )}
                         {!isTabConfigMode && (
                             <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
                         )}
@@ -1337,7 +1526,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 }}
                             />
                         </div>
-                    ) : !showWidgetSelection && !isTabConfigMode && (
+                    ) : !showWidgetSelection && !isTabConfigMode && !showNavigationInTertiary && (
                         <div className="flex items-center gap-2">
                             <ButtonUtility
                                 size="sm"
