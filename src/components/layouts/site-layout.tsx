@@ -47,6 +47,8 @@ interface SiteLayoutProps {
     currentPath?: string;
     headerActions?: ReactNode;
     showBackButton?: boolean;
+    showRightSidebar?: boolean;
+    rightSidebarContent?: ReactNode;
 }
 
 const siteNavigation = [
@@ -149,7 +151,9 @@ export const SiteLayout = ({
     description,
     currentPath = "/site",
     headerActions,
-    showBackButton
+    showBackButton,
+    showRightSidebar = false,
+    rightSidebarContent
 }: SiteLayoutProps) => {
     const { theme } = useTheme();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed, toggleAdminHeader } = useAdmin();
@@ -213,7 +217,20 @@ export const SiteLayout = ({
 
                     {/* Main Content Area */}
                     <main className="flex-1 overflow-hidden">
-                        {children}
+                        {showRightSidebar ? (
+                            <div className="flex gap-6">
+                                <div className="flex-1">
+                                    {children}
+                                </div>
+                                {rightSidebarContent && (
+                                    <aside className="w-80 space-y-6">
+                                        {rightSidebarContent}
+                                    </aside>
+                                )}
+                            </div>
+                        ) : (
+                            children
+                        )}
                     </main>
                 </div>
             </div>
