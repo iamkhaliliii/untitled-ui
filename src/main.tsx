@@ -37,6 +37,7 @@ import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import { SiteEventPage } from "@/pages/site/event";
 import SiteEventDetailPage from "@/pages/site/event-detail";
+import PostViewPage from "@/pages/site/post-view";
 import { NotFound } from "@/pages/not-found";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
@@ -123,6 +124,7 @@ createRoot(document.getElementById("root")!).render(
                         {/* Site Routes */}
                         <Route path="/site" element={<SiteHomePage />} />
                         <Route path="/site/feed" element={<SiteFeedPage />} />
+                        <Route path="/site/post-view" element={<PostViewPage />} />
                         <Route path="/site/event" element={<SiteEventPage />} />
                         <Route path="/site/event/:id" element={<SiteEventDetailPage />} />
                         

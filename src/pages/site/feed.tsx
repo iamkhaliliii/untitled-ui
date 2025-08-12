@@ -255,7 +255,7 @@ export const SiteFeedPage = () => {
 
                                 {/* Post 1: Jordan Kim - Event Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                             <div className="p-6">
                                                 <div className="flex items-start justify-between mb-4">
@@ -348,13 +348,13 @@ export const SiteFeedPage = () => {
                                                                     
                                                                     {/* Event Action Buttons */}
                                                                     <div className="flex items-center gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg transition-colors bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 dark:hover:bg-green-900/30 font-medium flex-1">
-                                                                            <Check className="w-4 h-4" />
-                                                                            <span>RSVP</span>
-                                                                        </button>
-                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex-1">
+                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700 font-medium flex-1">
                                                                             <Calendar className="w-4 h-4" />
                                                                             <span>View Event Details</span>
+                                                                        </button>
+                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex-1">
+                                                                            <Check className="w-4 h-4" />
+                                                                            <span>RSVP</span>
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -398,11 +398,11 @@ export const SiteFeedPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                     {/* Post 2: Sarah Chen - Music Discussion with Playlist */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                             <div className="p-6">
                                                 <div className="flex items-start justify-between mb-4">
@@ -467,12 +467,12 @@ export const SiteFeedPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                                     {/* Post 3: Alex Rodriguez - Image Post with Reactions */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                             <div className="p-6">
                                                 <div className="flex items-start justify-between mb-4">
@@ -546,13 +546,13 @@ export const SiteFeedPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
 
                                     {/* Post 4: Emma Wilson - Video Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                             <div className="p-6">
                                                 <div className="flex items-start justify-between mb-4">
@@ -634,12 +634,12 @@ export const SiteFeedPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                                     {/* Post 5: Simple Text Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                             <div className="p-6">
                                                 <div className="flex items-start justify-between mb-4">
@@ -688,7 +688,7 @@ export const SiteFeedPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                             </div>

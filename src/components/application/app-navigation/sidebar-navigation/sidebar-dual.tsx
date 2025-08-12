@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, FileX02, File04, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -203,32 +203,221 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Dynamic tree data with additional folders
     const [additionalFolders, setAdditionalFolders] = useState<TreeNode[]>([]);
+    
+    // Lazy loading state
+    const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+    const [loadedCounts, setLoadedCounts] = useState<Record<string, number>>({});
+    
+
+    
+    // Paginate children for a node
+    const getPaginatedChildren = (nodeId: string, allChildren: TreeNode[], initialSize?: number): TreeNode[] => {
+        const defaultInitialSize = initialSize || 5;
+        const currentLoaded = loadedCounts[nodeId] || defaultInitialSize;
+        return allChildren.slice(0, currentLoaded);
+    };
+    
+    // Handle load more functionality - load ALL remaining items
+    const handleLoadMore = useCallback((nodeId: string, totalCount?: number) => {
+        setLoadingStates(prev => ({ ...prev, [nodeId]: true }));
+        
+        // Simulate network delay
+        setTimeout(() => {
+            setLoadedCounts(prev => ({
+                ...prev,
+                [nodeId]: totalCount || (prev[nodeId] || 5) + 5 // Load ALL items or fallback to +5
+            }));
+            setLoadingStates(prev => ({ ...prev, [nodeId]: false }));
+        }, 1500);
+    }, []);
+
+    // Handle show less functionality - collapse back to 5 items
+    const handleShowLess = useCallback((nodeId: string) => {
+        setLoadedCounts(prev => ({
+            ...prev,
+            [nodeId]: 5 // Reset to 5 items
+        }));
+    }, []);
+
+    // Helper function to create folder with children
+    const createFolderWithChildren = (folderId: string, folderLabel: string, childrenCount: number = 20) => {
+        const allChildren = [
+            { 
+                id: `${folderId}-events`, 
+                label: "Events",
+                icon: <File05 className="size-5 text-fg-quaternary" />,
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/events` } : undefined
+            },
+            { id: `${folderId}-blog`, label: "Blog", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: `${folderId}-help`, label: "Help", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: `${folderId}-posts`, label: "Posts", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: `${folderId}-wishlist`, label: "Wishlist", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            ...Array.from({ length: childrenCount }, (_, index) => ({
+                id: `${folderId}-item-${index + 6}`,
+                label: `${folderLabel} Item ${index + 6}`,
+                icon: <File05 className="size-5 text-fg-quaternary" />,
+            }))
+        ];
+        
+        const paginatedChildren = getPaginatedChildren(folderId, allChildren);
+        const loadedCount = loadedCounts[folderId] || 5;
+        
+        // Add skeleton items for loading state - show skeletons for ALL remaining items
+        const totalItems = 5 + childrenCount;
+        const remainingCount = Math.max(0, totalItems - loadedCount);
+        const skeletonItems = loadingStates[folderId] ? Array.from({ length: remainingCount }, (_, index) => ({
+            id: `skeleton-${folderId}-${index}`,
+            label: "Loading...",
+            icon: <div className="size-5 bg-gray-400/30 rounded relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-400/50 to-transparent animate-shimmer" style={{
+                    animationDelay: `${index * 0.05}s`
+                }} />
+            </div>,
+            isLoading: true,
+            data: { isSkeleton: true }
+        })) : [];
+        
+        const childrenWithSkeletons = [...paginatedChildren, ...skeletonItems];
+        
+        return {
+            id: folderId,
+            label: folderLabel,
+            icon: <Folder className="size-5 text-fg-quaternary" />,
+            children: childrenWithSkeletons,
+            hasMore: !loadingStates[folderId] && loadedCount < totalItems,
+            isLoading: loadingStates[folderId] || false,
+            totalCount: totalItems,
+            loadedCount: loadedCount
+        };
+    };
 
     // Initial file tree data for Site section
-    const getInitialSiteFileTree = (): TreeNode[] => [
-        {
-            id: "spaces",
-            label: "Collections & Spaces",
-            showAddButton: true,
-            icon: <Folder className="size-5 text-fg-quaternary" />,
-            children: [
-                { id: "feed", label: "Feed" },
-                { id: "explorer", label: "Explorer" },
-                { id: "members", label: "Members" },
-                { 
-                    id: "myFolder", 
-                    label: "MyFolder",
-                    children: [
-                        { 
-                            id: "events", 
-                            label: "Events",
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/events` }
-                        },
-                        { id: "blog", label: "Blog" },
-                    ]
-                },
-            ]
-        },
+    const getInitialSiteFileTree = (): TreeNode[] => {
+        // All base items (simple spaces without children)
+        const allBaseItems: TreeNode[] = [
+            { id: "feed", label: "Feed", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "explorer", label: "Explorer", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "members", label: "Members", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "help", label: "Help", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "showcase", label: "Showcase", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "announcements", label: "Announcements", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "general", label: "General Discussion", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "introductions", label: "Introductions", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "feedback", label: "Feedback", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "resources", label: "Resources", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "random", label: "Random", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "offtopic", label: "Off Topic", icon: <File05 className="size-5 text-fg-quaternary" /> },
+        ];
+
+        // Create multiple folders with independent pagination
+        const folders = [
+            createFolderWithChildren("myFolder", "MyFolder", 15),
+            createFolderWithChildren("myFolder2", "MyFolder2", 15),
+            createFolderWithChildren("myFolder3", "MyFolder3", 15),
+            createFolderWithChildren("myFolder4", "MyFolder4", 15),
+            createFolderWithChildren("myFolder5", "MyFolder5", 15),
+            createFolderWithChildren("myFolder6", "MyFolder6", 15),
+            createFolderWithChildren("myFolder7", "MyFolder7", 15),
+            createFolderWithChildren("myFolder8", "MyFolder8", 15),
+            createFolderWithChildren("myFolder9", "MyFolder9", 15),
+            createFolderWithChildren("myFolder10", "MyFolder10", 15),
+        ];
+
+        // Paginate simple items and folders separately
+        const paginatedBaseItems = getPaginatedChildren("spaces-simple", allBaseItems);
+        const paginatedFolders = getPaginatedChildren("spaces-folders", folders);
+        const simpleLoadedCount = loadedCounts["spaces-simple"] || 5;
+        const foldersLoadedCount = loadedCounts["spaces-folders"] || 5;
+
+        // Add skeleton items for loading states - show skeletons for ALL remaining items
+        const simpleRemainingCount = Math.max(0, allBaseItems.length - simpleLoadedCount);
+        const simpleSkeletonItems = loadingStates["spaces-simple"] ? Array.from({ length: simpleRemainingCount }, (_, index) => ({
+            id: `skeleton-simple-${index}`,
+            label: "Loading...",
+            icon: <div className="size-5 bg-gray-400/30 rounded relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-400/50 to-transparent animate-shimmer" style={{
+                    animationDelay: `${index * 0.05}s`
+                }} />
+            </div>,
+            isLoading: true,
+            data: { isSkeleton: true }
+        })) : [];
+
+        const foldersRemainingCount = Math.max(0, folders.length - foldersLoadedCount);
+        const foldersSkeletonItems = loadingStates["spaces-folders"] ? Array.from({ length: foldersRemainingCount }, (_, index) => ({
+            id: `skeleton-folders-${index}`,
+            label: "Loading...",
+            icon: <div className="size-5 bg-gray-400/30 rounded relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-400/50 to-transparent animate-shimmer" style={{
+                    animationDelay: `${index * 0.05}s`
+                }} />
+            </div>,
+            isLoading: true,
+            data: { isSkeleton: true }
+        })) : [];
+
+        // Combine paginated items with their respective load more buttons
+        const spacesChildren: TreeNode[] = [
+            ...paginatedBaseItems,
+            ...simpleSkeletonItems,
+            // Add load more or show less for simple items
+            ...(!loadingStates["spaces-simple"] && simpleLoadedCount < allBaseItems.length ? [{
+                id: "load-more-simple",
+                label: "More",
+                icon: <ChevronDown className="size-2.5 text-gray-400" />,
+                hasMore: true,
+                isLoading: false,
+                totalCount: allBaseItems.length,
+                loadedCount: simpleLoadedCount,
+                data: { loadMoreId: "spaces-simple", totalCount: allBaseItems.length }
+            }] : []),
+            ...(!loadingStates["spaces-simple"] && simpleLoadedCount >= allBaseItems.length && simpleLoadedCount > 5 ? [{
+                id: "show-less-simple",
+                label: "Show less",
+                icon: <ChevronUp className="size-2.5 text-gray-400" />,
+                hasMore: false,
+                isLoading: false,
+                totalCount: allBaseItems.length,
+                loadedCount: simpleLoadedCount,
+                data: { showLessId: "spaces-simple" }
+            }] : []),
+            ...paginatedFolders,
+            ...foldersSkeletonItems,
+            // Add load more or show less for folders
+            ...(!loadingStates["spaces-folders"] && foldersLoadedCount < folders.length ? [{
+                id: "load-more-folders",
+                label: "More",
+                icon: <ChevronDown className="size-2.5 text-gray-400" />,
+                hasMore: true,
+                isLoading: false,
+                totalCount: folders.length,
+                loadedCount: foldersLoadedCount,
+                data: { loadMoreId: "spaces-folders", totalCount: folders.length }
+            }] : []),
+            ...(!loadingStates["spaces-folders"] && foldersLoadedCount >= folders.length && foldersLoadedCount > 5 ? [{
+                id: "show-less-folders",
+                label: "Show less",
+                icon: <ChevronUp className="size-2.5 text-gray-400" />,
+                hasMore: false,
+                isLoading: false,
+                totalCount: folders.length,
+                loadedCount: foldersLoadedCount,
+                data: { showLessId: "spaces-folders" }
+            }] : [])
+        ];
+        
+        return [
+            {
+                id: "spaces",
+                label: "Collections & Spaces",
+                showAddButton: true,
+                icon: <Folder className="size-5 text-fg-quaternary" />,
+                children: spacesChildren,
+                hasMore: false, // No load more at this level since children handle it
+                isLoading: false,
+                totalCount: allBaseItems.length + folders.length,
+                loadedCount: simpleLoadedCount + foldersLoadedCount
+            },
         {
             id: "utilityPages",
             label: "Utility pages",
@@ -263,6 +452,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             ]
         },
     ];
+    };
 
     // Reactive tree data that updates when toggleStates change
     const siteTreeData = useMemo(() => {
@@ -273,7 +463,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             spacesNode.children = [...spacesNode.children, ...additionalFolders];
         }
         return baseTree;
-    }, [toggleStates, additionalFolders]);
+    }, [toggleStates, additionalFolders, loadedCounts, loadingStates]);
 
     // CMS tree data
     const cmsTreeData = useMemo((): TreeNode[] => [
@@ -545,6 +735,18 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // Handle node click and navigation
     const handleNodeClick = (node: any) => {
         console.log("Site file clicked:", node.label);
+        
+        // Handle load more buttons
+        if (node.data?.loadMoreId) {
+            handleLoadMore(node.data.loadMoreId, node.data.totalCount);
+            return;
+        }
+        
+        // Handle show less buttons
+        if (node.data?.showLessId) {
+            handleShowLess(node.data.showLessId);
+            return;
+        }
         
         // Check if navigation item is clicked
         if (node.id === "navigation") {
@@ -920,7 +1122,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const secondarySidebar = (
         <div
             style={{ width: SECONDARY_SIDEBAR_WIDTH }}
-            className={cx("relative h-full overflow-y-auto scrollbar-thin bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
+            className={cx("relative h-full overflow-hidden bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
@@ -1031,9 +1233,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         </div>
                     </div>
                 ) : currentItem?.label === "Site" && activeUrl === `/${currentAdminVersion}/site` ? (
-                    <div className="flex h-full flex-col flex-1 mt-2">
-                        {/* Search Input */}
-                        <div className="mb-4">
+                    <div className="flex h-full flex-col mt-2">
+                        {/* Fixed Header - Search Input */}
+                        <div className="flex-shrink-0 mb-4">
                             <Input 
                                 size="sm" 
                                 placeholder="Search files and folders..." 
@@ -1041,13 +1243,16 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 className="w-full"
                             />
                         </div>
-                        <div className="flex-1 overflow-y-auto">
+                        
+                        {/* Scrollable Content Area */}
+                        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none">
                             <TreeView
                                 data={siteTreeData}
                                 expandedIds={expandedIds}
                                 selectedIds={["spaces"]}
                                 onNodeClick={handleNodeClick}
                                 onToggleChange={handleToggleChange}
+                                onLoadMore={handleLoadMore}
                                 onNodeExpand={(nodeId, expanded) => {
                                     // Update expanded state
                                     if (expanded) {
@@ -1069,8 +1274,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             />
                         </div>
 
-                        {/* Footer Actions */}
-                        <div className="sticky bg-primary">
+                        {/* Fixed Footer Actions */}
+                        <div className="flex-shrink-0 bg-primary">
                             <div className="h-px bg-secondary/40 my-2"></div>
                             <button 
                                 onClick={handleAddSpaceClick}
@@ -1355,12 +1560,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     </div>
                 ) : currentItem?.label === "Content 2" && activeUrl?.includes("/content2") ? (
                     activeUrl === `/${currentAdminVersion}/content2/cms` ? (
-                        <div className="h-[calc(100vh-120px)] pt-2">
-                            {/* Back Button */}
-                            
-                            <div className="flex items-center gap-1 mb-4">
-                            <Button  onClick={() => navigate(`/${currentAdminVersion}/content2`)} color="tertiary" size="md" iconLeading={ArrowLeft} aria-label="Button CTA" />
-
+                        <div className="flex h-full flex-col pt-2">
+                            {/* Fixed Header - Back Button and Title */}
+                            <div className="flex-shrink-0 flex items-center gap-1 mb-4">
+                                <Button onClick={() => navigate(`/${currentAdminVersion}/content2`)} color="tertiary" size="md" iconLeading={ArrowLeft} aria-label="Button CTA" />
                                 <h3 className="text-lg font-semibold">
                                     CMS
                                 </h3>
@@ -1368,48 +1571,47 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     Beta
                                 </Badge>
                             </div>
-                            {/* CMS Models Tree */}
-                            <div className="flex h-full flex-col flex-1 mt-2">
-                                <div className="flex-1 overflow-y-auto">
-                                    <TreeView
-                                        data={cmsTreeData}
-                                        expandedIds={cmsExpandedIds}
-                                        selectedIds={[]}
-                                        onNodeClick={handleNodeClick}
-                                        onNodeExpand={(nodeId, expanded) => {
-                                            // Update expanded state
-                                            if (expanded) {
-                                                setCmsExpandedIds(prev => [...prev, nodeId]);
-                                            } else {
-                                                setCmsExpandedIds(prev => prev.filter(id => id !== nodeId));
-                                            }
-                                        }}
-                                        className="border-none bg-transparent"
-                                        showLines={false}
-                                        showIcons={true}
-                                    />
-                                </div>
+                            
+                            {/* Scrollable Content Area */}
+                            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none">
+                                <TreeView
+                                    data={cmsTreeData}
+                                    expandedIds={cmsExpandedIds}
+                                    selectedIds={[]}
+                                    onNodeClick={handleNodeClick}
+                                    onNodeExpand={(nodeId, expanded) => {
+                                        // Update expanded state
+                                        if (expanded) {
+                                            setCmsExpandedIds(prev => [...prev, nodeId]);
+                                        } else {
+                                            setCmsExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                        }
+                                    }}
+                                    className="border-none bg-transparent"
+                                    showLines={false}
+                                    showIcons={true}
+                                />
+                            </div>
 
-                                {/* Footer Actions */}
-                                <div className="sticky bg-primary">
-                                    <div className="h-px bg-secondary/40 my-2"></div>
-                                    <button 
-                                        onClick={() => {
-                                            navigate(`/${currentAdminVersion}/site/spaces/create?from=cms`);
-                                        }}
-                                        className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
-                                    >
-                                        <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
-                                            <Plus className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
-                                        </div>
-                                        <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
-                                            Add CMS
-                                        </span>
-                                        <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
-                                            <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
-                                        </div>
-                                    </button>
-                                </div>
+                            {/* Fixed Footer Actions */}
+                            <div className="flex-shrink-0 bg-primary">
+                                <div className="h-px bg-secondary/40 my-2"></div>
+                                <button 
+                                    onClick={() => {
+                                        navigate(`/${currentAdminVersion}/site/spaces/create?from=cms`);
+                                    }}
+                                    className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
+                                >
+                                    <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                                        <Plus className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                                    </div>
+                                    <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                                        Add CMS
+                                    </span>
+                                    <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                                        <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     ) : (
