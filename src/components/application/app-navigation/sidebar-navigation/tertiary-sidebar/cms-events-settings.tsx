@@ -22,7 +22,7 @@ interface DisclosureState {
 export const CmsEventsSettings = ({ formToggles, setFormToggles }: CmsEventsSettingsProps) => {
     const [disclosureStates, setDisclosureStates] = useState<DisclosureState>({
         general: true,
-        interactions: false,
+        interactions: true,
         fields: true,
     });
 
