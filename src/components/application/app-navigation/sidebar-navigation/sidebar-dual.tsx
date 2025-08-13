@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp, Heart } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -37,6 +37,7 @@ import { AddSpaceModal } from "../../modals/add-space-modal";
 import { SpaceConfigurationModal } from "../../modals/space-configuration-modal";
 import { FieldSelectionModal } from "../../modals/field-selection-modal";
 import { EventsCustomizeSettings } from "./tertiary-sidebar/events-customize-settings";
+import { CmsEventsSettings } from "./tertiary-sidebar/cms-events-settings";
 import { WidgetSelection } from "./tertiary-sidebar/widget-selection";
 import WidgetConfig from "./tertiary-sidebar/widget-config";
 
@@ -198,6 +199,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/events/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/private-space/customize")) return "customize";
+        if (activeUrl?.includes("/site/cms/events/customize")) return "customize";
+        if (activeUrl?.includes("/site/cms/events/settings")) return "general";
+        // For CMS events, default to customize
+        if (activeUrl?.includes("/site/cms/events")) return "customize";
         return "general";
     });
 
@@ -447,8 +452,36 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             showAddButton: true,
             icon: <Package className="size-5 text-fg-quaternary" />,
             children: [
-                { id: "events", label: "Events" },
-                { id: "blog", label: "Blog" },
+                {
+                    id: "models",
+                    label: "Models",
+                    icon: <Database01 className="size-5 text-fg-quaternary" />,
+                    children: [
+                        { 
+                            id: "cms-events", 
+                            label: "Events",
+                            icon: <Database01 className="size-5 text-violet-400" />,
+                            data: { href: `/${currentAdminVersion}/site/cms/events` }
+                        },
+                        { 
+                            id: "cms-blog", 
+                            label: "Blog",
+                            icon: <Database01 className="size-5 text-violet-400" />
+                        },
+                    ]
+                },
+                {
+                    id: "archived-models",
+                    label: "Archived models",
+                    icon: <Archive className="size-5 text-fg-quaternary" />,
+                    children: [
+                        { 
+                            id: "cms-wishlist", 
+                            label: "Wishlist",
+                            icon: <Database01 className="size-5 text-violet-400" />
+                        },
+                    ]
+                },
             ]
         },
     ];
@@ -770,11 +803,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         navigate(href);
     };
 
-    // Check if we're on any events page, private space page, or spaces create page
+    // Check if we're on any events page, private space page, spaces create page, or CMS events page
     const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events");
     const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
-    const isSpacePage = isEventsPage || isPrivateSpacePage;
+    const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
+    const isSpacePage = isEventsPage || isPrivateSpacePage || isCmsEventsPage;
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -804,9 +838,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         
         switch (selectedSecondaryItem) {
             case "general":
-                return "General Settings";
+                return isCmsEventsPage ? "CMS Settings" : "General Settings";
             case "customize":
-                return "Customization";
+                return isCmsEventsPage ? "CMS Customization" : "Customization";
             case "members":
                 return "Members";
             case "analytics":
@@ -857,6 +891,27 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         </p>
                     </div>
                     
+                    {/* Quick Toggle Checkboxes */}
+                    <div className="grid grid-cols-2 gap-2 p-2 border border-secondary rounded-lg bg-primary">
+                        <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                            <Checkbox
+                                isSelected={toggleStates.header}
+                                onChange={(isSelected) => updateToggleStates({ header: isSelected })}
+                                label="Header"
+                                size="sm"
+                            />
+                        </div>
+                        
+                        <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                            <Checkbox
+                                isSelected={toggleStates.leftSidebar}
+                                onChange={(isSelected) => updateToggleStates({ leftSidebar: isSelected })}
+                                label="Sidebar"
+                                size="sm"
+                            />
+                        </div>
+                    </div>
+                    
                     {/* Navigation TreeView */}
                     <div className="flex-1 overflow-y-auto">
                         <TreeView
@@ -865,7 +920,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     id: "header-nav",
                                     label: "Header",
                                     toggleState: toggleStates.header,
-                                    showToggleButton: true,
+                                    
                                     showAddButton: true,
                                     icon: <LayoutTop className="size-5 text-fg-quaternary" />,
                                     children: [
@@ -880,7 +935,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     id: "sidebar-nav",
                                     label: "Sidebar",
                                     toggleState: toggleStates.leftSidebar,
-                                    showToggleButton: true,
+                                    
                                     showAddButton: true,
                                     icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
                                     children: [
@@ -945,8 +1000,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
         
         switch (selectedSecondaryItem) {
-                        case "general":
-                return (
+            case "general":
+                return isCmsEventsPage ? (
+                    <CmsEventsSettings
+                        formToggles={formToggles}
+                        setFormToggles={setFormToggles}
+                    />
+                ) : (
                     <EventsGeneralSettings
                         formToggles={formToggles}
                         setFormToggles={setFormToggles}
@@ -991,6 +1051,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (item.items?.some((subItem) => subItem.href === activeUrl)) return true;
         // Handle nested routes for Content 2
         if (item.label === "Content 2" && activeUrl?.includes("/content2")) return true;
+        // Handle Site routes - specifically for CMS events
+        if (item.label === "Site" && activeUrl?.includes("/site")) return true;
         return false;
     });
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
@@ -1126,7 +1188,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
-                    {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : currentItem?.label}
+                    {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : isCmsEventsPage ? "CMS Events" : currentItem?.label}
                 </h3>
                 
                 {/* Show Navigation Settings when navigation is selected */}
@@ -1152,6 +1214,27 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 </p>
                             </div>
                             
+                            {/* Quick Toggle Checkboxes */}
+                            <div className="grid grid-cols-2 gap-2 p-2 border border-secondary rounded-lg bg-primary">
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                    <Checkbox
+                                        isSelected={toggleStates.header}
+                                        onChange={(isSelected) => updateToggleStates({ header: isSelected })}
+                                        label="Header"
+                                        size="sm"
+                                    />
+                                </div>
+                                
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                    <Checkbox
+                                        isSelected={toggleStates.leftSidebar}
+                                        onChange={(isSelected) => updateToggleStates({ leftSidebar: isSelected })}
+                                        label="Sidebar"
+                                        size="sm"
+                                    />
+                                </div>
+                            </div>
+                            
                             {/* Navigation TreeView */}
                             <div className="flex-1 overflow-y-auto">
                                 <TreeView
@@ -1160,7 +1243,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             id: "header-nav",
                                             label: "Header",
                                             toggleState: toggleStates.header,
-                                            showToggleButton: true,
+                                            
                                             showAddButton: true,
                                             icon: <LayoutTop className="size-5 text-fg-quaternary" />,
                                             children: [
@@ -1175,7 +1258,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             id: "sidebar-nav",
                                             label: "Sidebar",
                                             toggleState: toggleStates.leftSidebar,
-                                            showToggleButton: true,
+                                            
                                             showAddButton: true,
                                             icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
                                             children: [
@@ -1311,7 +1394,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </button>
                         </div>
                     </div>
-                ) : currentItem?.label === "Content" && activeUrl?.includes("/content") ? (
+                ) : currentItem?.label === "Content" && activeUrl?.includes("/content") && !isCmsEventsPage ? (
                     <div className="mt-2 space-y-4">
                         {/* Content Status Section */}
                         <ul>
@@ -1404,7 +1487,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </div>
                         </div>
                     </div>
-                ) : isSpacePage || isSpacesCreatePage ? (
+                ) : isSpacePage || isSpacesCreatePage || isCmsEventsPage ? (
                     <div className="mt-2">
                         {/* Back Button */}
                         <button
@@ -1455,24 +1538,29 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         ) : (
                             /* Space Menu */
                             <ul className="space-y-0.5">
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("general", 
-                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : `/${currentAdminVersion}/site/spaces/myfolder/events`
-                                    )}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "general"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <Globe01 className="h-4 w-4" />
-                                    General
-                                </button>
-                            </li>
+                            {/* Show General tab only for non-CMS pages */}
+                            {!isCmsEventsPage && (
+                                <li>
+                                    <button
+                                        onClick={() => handleSecondaryItemClick("general", 
+                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : `/${currentAdminVersion}/site/spaces/myfolder/events`
+                                        )}
+                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            selectedSecondaryItem === "general"
+                                                ? "bg-active text-secondary_hover"
+                                                : "text-secondary hover:text-primary hover:bg-secondary"
+                                        }`}
+                                    >
+                                        <Globe01 className="h-4 w-4" />
+                                        General
+                                    </button>
+                                </li>
+                            )}
+                            {/* Show Customize tab for both CMS and regular pages */}
                             <li>
                                 <button
                                     onClick={() => handleSecondaryItemClick("customize", 
+                                        isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
                                         isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
                                     )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -1485,6 +1573,22 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     Customize
                                 </button>
                             </li>
+                            {/* Show Settings tab only for CMS pages */}
+                            {isCmsEventsPage && (
+                                <li>
+                                    <button
+                                        onClick={() => handleSecondaryItemClick("general", `/${currentAdminVersion}/site/cms/events/settings`)}
+                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            selectedSecondaryItem === "general"
+                                                ? "bg-active text-secondary_hover"
+                                                : "text-secondary hover:text-primary hover:bg-secondary"
+                                        }`}
+                                    >
+                                        <Settings01 className="h-4 w-4" />
+                                        Settings
+                                    </button>
+                                </li>
+                            )}
                             {/* Only show these items for Events, not for Private Space */}
                             {isEventsPage && (
                                 <>

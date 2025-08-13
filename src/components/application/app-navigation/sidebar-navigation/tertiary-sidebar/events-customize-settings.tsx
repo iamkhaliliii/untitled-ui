@@ -3,6 +3,7 @@ import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlig
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
+import { Checkbox } from "@/components/base/checkbox/checkbox";
 
 interface EventsCustomizeSettingsProps {
   toggleStates: {
@@ -37,9 +38,10 @@ export const EventsCustomizeSettings = ({
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
   
-  // Detect if we're on a private space page
+  // Detect if we're on a private space page or CMS events page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
+  const isCmsEventsPage = currentPath.includes('/site/cms/events');
   
   // State for space widgets tree expansion
   const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(
@@ -56,7 +58,7 @@ export const EventsCustomizeSettings = ({
         <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
           <div className="flex items-center gap-2">
             <LayoutAlt01 className="size-4 text-brand-secondary" />
-            <h5 className="text-xs font-semibold text-primary">Global Widgets</h5>
+            <h5 className="text-xs font-semibold text-primary">Header and sidebar</h5>
           </div>
           <button
             className={cx(
@@ -71,73 +73,25 @@ export const EventsCustomizeSettings = ({
             Edit
           </button>
         </div>
-        <div className="bg-secondary/20 rounded-lg p-1">
-          <TreeView
-            data={[
-              {
-                id: "navigation",
-                label: "Navigation",
-                icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
-                children: [
-                  { 
-                    id: "header", 
-                    label: "Header",
-                    icon: <LayoutTop className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-
-                    toggleState: toggleStates.header,
-                    children: [
-                      { id: "topNavigation", label: "Top Navigation", icon: <FlexAlignTop className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                  },
-                  { 
-                    id: "leftSidebar", 
-                    label: "Sidebar",
-                    icon: <LayoutLeft className="size-5 text-fg-quaternary" />,
-                    showToggleButton: true,
-                    toggleState: toggleStates.leftSidebar,
-                    children: [
-                      { id: "menu", label: "Menu", icon: <Menu02 className="bg-violet-100/20 p-[1px] rounded-md size-5 text-violet-400" /> },
-                    ]
-                  },
-                ]
-              }
-            ]}
-            expandedIds={[...customizeExpandedIds,]}
-            selectedIds={[]}
-            onToggleChange={handleToggleChange}
-            onNodeExpand={(nodeId, expanded) => {
-              // Update customize expanded state
-              if (expanded) {
-                setCustomizeExpandedIds(prev => [...prev, nodeId]);
-              } else {
-                setCustomizeExpandedIds(prev => prev.filter(id => id !== nodeId));
-              }
-              
-              // Sync with toggle state for layout items if needed
-              if (nodeId === "header" || nodeId === "leftSidebar" || nodeId === "rightSidebar" || nodeId === "footer") {
-                updateToggleStates({
-                  [nodeId]: expanded
-                });
-              }
-            }}
-            className="border-none bg-transparent"
-            showLines={false}
-            showIcons={true}
-          />
-        </div>
         
-        {/* Helper Note */}
-        <div className="text-xs mt-2 flex items-start gap-2">
-          <InfoCircle className={cx("size-3 mt-0.5 flex-shrink-0", theme === 'dark' ? "text-gray-400" : "text-gray-500")} />
-          <div className={cx("leading-relaxed", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
-            You can <span className="font-medium">show/hide</span> navigation sections for this space, but widget edits apply site-wide. 
-            <button className={cx(
-              "font-medium underline ml-1 hover:no-underline",
-              theme === 'dark' ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"
-            )}>
-              Upgrade to Pro
-            </button> for per-space customization.
+        {/* Simple form for both CMS Events and Space Events */}
+        <div className="grid grid-cols-2 gap-2 p-2">
+          <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary border-secondary">
+            <Checkbox
+              isSelected={toggleStates.header}
+              onChange={(isSelected) => updateToggleStates({ header: isSelected })}
+              label="Header"
+              size="sm"
+            />
+          </div>
+          
+          <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary border-secondary">
+            <Checkbox
+              isSelected={toggleStates.leftSidebar}
+              onChange={(isSelected) => updateToggleStates({ leftSidebar: isSelected })}
+              label="Sidebar"
+              size="sm"
+            />
           </div>
         </div>
       </div>

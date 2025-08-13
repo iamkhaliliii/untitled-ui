@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload01, FolderCheck, Plus, Globe01, Lock01, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01, X, Settings01, Trash01 } from "@untitledui/icons";
+import { Upload01, FolderCheck, Plus, Globe01, Lock01, Eye, EyeOff, Users01, UsersPlus, UsersCheck, FaceSmile, SwitchVertical01, Heart, Shield01, Database01, Rss01, Home01, Link01, UserPlus01, X, Settings01, Trash01, ChevronDown, MessageSquare01, Package, Edit03, InfoCircle } from "@untitledui/icons";
 import { Input, InputBase } from "@/components/base/input/input";
 import { TextArea } from "@/components/base/textarea/textarea";
 import { Select } from "@/components/base/select/select";
@@ -28,6 +28,14 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
     const [customUrl, setCustomUrl] = useState<string>("");
     const [slug, setSlug] = useState<string>("");
     const [showDisconnectModal, setShowDisconnectModal] = useState<boolean>(false);
+    
+    // Content Permissions card states
+    const [contentPermissionsExpanded, setContentPermissionsExpanded] = useState({
+        event: false,
+        discussion: false,
+        blog: false,
+    });
+    const [showContentPermissions, setShowContentPermissions] = useState(true);
 
     return (
         <div className="space-y-6 p-4 pb-6">
@@ -115,115 +123,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                     </Select>
                 </div>
 
-                {/* Visibility */}
-                <div>
-                    <Select
-                        label="Visibility"
-                        placeholder="Select visibility"
-                        onSelectionChange={(selected) => setVisibility(String(selected))}
-                        items={[
-                            { label: "Public", id: "public", icon: Globe01 },
-                            { label: "Private", id: "private", icon: Lock01 },
-                            { label: "Private and hidden", id: "private-hidden", icon: EyeOff }
-                        ]}
-                    >
-                        {(item) => (
-                            <Select.Item id={item.id} icon={item.icon}>
-                                {item.label}
-                            </Select.Item>
-                        )}
-                    </Select>
-                </div>
 
-                {/* Private Visibility Settings */}
-                {visibility === "private" && (
-                    <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
-                        {/* Private Message */}
-                        <div>
-                            <label className="text-sm font-medium text-secondary mb-2 block">
-                                Message for visitors who cannot access
-                            </label>
-                            <TextArea
-                                placeholder="Enter a message explaining why this content is private and what visitors can do..."
-                                value={privateMessage}
-                                onChange={(e) => setPrivateMessage(e.target.value)}
-                                rows={4}
-                            />
-                            <p className="text-xs text-tertiary mt-1">
-                                This message will be shown to visitors who don't have access to this private space.
-                            </p>
-                        </div>
-
-                        {/* Private Action */}
-                        <div>
-                            <Select
-                                label="Button to show visitors"
-                                placeholder="Select button type"
-                                onSelectionChange={(selected) => setPrivateAction(String(selected))}
-                                items={[
-                                    { label: "Show 'Request to Join' button", id: "request-to-join", icon: UserPlus01 },
-                                    { label: "Show 'Go to Home' button", id: "go-to-home", icon: Home01 },
-                                    { label: "Show 'Visit Link' button", id: "custom-url", icon: Link01 }
-                                ]}
-                            >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                            <p className="text-xs text-tertiary mt-1">
-                                Choose what button visitors will see when they try to access this private content.
-                            </p>
-                        </div>
-
-                        {/* Custom URL Field (conditional) */}
-                        {privateAction === "custom-url" && (
-                            <div className="ml-4">
-                                <Input
-                                    label="Link URL for 'Visit Link' button"
-                                    placeholder="https://example.com/contact"
-                                    value={customUrl}
-                                    onChange={(value) => setCustomUrl(value)}
-                                />
-                                <p className="text-xs text-tertiary mt-1">
-                                    When visitors click the 'Visit Link' button, they will be redirected to this URL.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                )}
-                {/* Make private Toggle */}
-                <div>
-                    <Toggle
-                        label="Make private"
-                        size="sm"
-                        slim
-                        isSelected={formToggles.anyoneInvite}
-                        onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
-                    />
-                </div>
-                {/* Invite Only Toggle */}
-                <div>
-                    <Toggle
-                        label="Make invite-only"
-                        size="sm"
-                        slim
-                        isSelected={formToggles.inviteOnly}
-                        onChange={(value) => setFormToggles(prev => ({ ...prev, inviteOnly: value }))}
-                    />
-                </div>
-
-                {/* Anyone Invite Toggle */}
-                <div>
-                    <Toggle
-                        label="Anyone can invite"
-                        size="sm"
-                        slim
-                        isSelected={formToggles.anyoneInvite}
-                        onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
-                    />
-                </div>
 
 
                {/* Hide from Feed Toggle */}
@@ -239,446 +139,362 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                 </div>  */}
             </div>
 
-            {/* Module Configuration Section */}
-            <div className="border border-secondary rounded-lg bg-primary p-2 ">
+
+
+            {/* Space Permissions Section */}
+            <div className="border border-secondary rounded-lg bg-primary p-2">
                 <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
-                    <Settings01 className="size-4 text-brand-secondary" />
-                    <h5 className="text-xs font-semibold text-primary">Module Configuration</h5>
+                    <Shield01 className="size-4 text-brand-secondary" />
+                    <h5 className="text-xs font-semibold text-primary">Space Permissions</h5>
                 </div>
                 <div className="bg-secondary/20 rounded-lg p-3">
                     <div className="space-y-6">
-                        {/* Event Module Toggle */}
+                        {/* Visibility */}
+                        <div>
+                            <Select
+                                label="Visibility"
+                                placeholder="Select visibility"
+                                onSelectionChange={(selected) => setVisibility(String(selected))}
+                                items={[
+                                    { label: "Public", id: "public", icon: Globe01 },
+                                    { label: "Private", id: "private", icon: Lock01 },
+                                    { label: "Private and hidden", id: "private-hidden", icon: EyeOff }
+                                ]}
+                            >
+                                {(item) => (
+                                    <Select.Item id={item.id} icon={item.icon}>
+                                        {item.label}
+                                    </Select.Item>
+                                )}
+                            </Select>
+                        </div>
+
+                        {/* Private Visibility Settings */}
+                        {visibility === "private" && (
+                            <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
+                                {/* Private Message */}
+                                <div>
+                                    <label className="text-sm font-medium text-secondary mb-2 block">
+                                        Message for visitors who cannot access
+                                    </label>
+                                    <TextArea
+                                        placeholder="Enter a message explaining why this content is private and what visitors can do..."
+                                        value={privateMessage}
+                                        onChange={(e) => setPrivateMessage(e.target.value)}
+                                        rows={4}
+                                    />
+                                    <p className="text-xs text-tertiary mt-1">
+                                        This message will be shown to visitors who don't have access to this private space.
+                                    </p>
+                                </div>
+
+                                {/* Private Action */}
+                                <div>
+                                    <Select
+                                        label="Button to show visitors"
+                                        placeholder="Select button type"
+                                        onSelectionChange={(selected) => setPrivateAction(String(selected))}
+                                        items={[
+                                            { label: "Show 'Request to Join' button", id: "request-to-join", icon: UserPlus01 },
+                                            { label: "Show 'Go to Home' button", id: "go-to-home", icon: Home01 },
+                                            { label: "Show 'Visit Link' button", id: "custom-url", icon: Link01 }
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    <p className="text-xs text-tertiary mt-1">
+                                        Choose what button visitors will see when they try to access this private content.
+                                    </p>
+                                </div>
+
+                                {/* Custom URL Field (conditional) */}
+                                {privateAction === "custom-url" && (
+                                    <div className="ml-4">
+                                        <Input
+                                            label="Link URL for 'Visit Link' button"
+                                            placeholder="https://example.com/contact"
+                                            value={customUrl}
+                                            onChange={(value) => setCustomUrl(value)}
+                                        />
+                                        <p className="text-xs text-tertiary mt-1">
+                                            When visitors click the 'Visit Link' button, they will be redirected to this URL.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Make private Toggle */}
                         <div>
                             <Toggle
-                                label="Event"
-                                hint="Event module is active for this space"
+                                label="Make private"
                                 size="sm"
                                 slim
-                                isSelected={true}
-                                isDisabled={true}
-                                onChange={() => {}}
+                                isSelected={formToggles.anyoneInvite}
+                                onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
                             />
                         </div>
-                                
 
-                        {/* Comment Toggle */}
-{/*                         <div>
+                        {/* Invite Only Toggle */}
+                        <div>
                             <Toggle
-                                label="Comments"
-                                hint="Allow attendees to comment on the event"
+                                label="Make invite-only"
                                 size="sm"
                                 slim
-                                isSelected={formToggles.comments}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, comments: value }))}
+                                isSelected={formToggles.inviteOnly}
+                                onChange={(value) => setFormToggles(prev => ({ ...prev, inviteOnly: value }))}
                             />
-                        </div> */}
+                        </div>
 
-                        {/* Who Can Reply (conditional) - Only show when comments is enabled */}
-{/*                         {formToggles.comments && (
-                            <div className="ml-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can reply"
-                                    placeholder="Select who can reply"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-                            </div>
-                        )} */}
-
-                        {/* Reaction Toggle */}
-{/*                         <div>
+                        {/* Anyone Invite Toggle */}
+                        <div>
                             <Toggle
-                                label="Reactions"
-                                hint="Allow attendees to react to posts and comments"
+                                label="Anyone can invite"
                                 size="sm"
                                 slim
-                                isSelected={formToggles.reactions}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, reactions: value }))}
+                                isSelected={formToggles.anyoneInvite}
+                                onChange={(value) => setFormToggles(prev => ({ ...prev, anyoneInvite: value }))}
                             />
-                        </div> */}
-
-                        {/* Reaction settings (conditional) - Only show when reactions is enabled */}
-{/*                         {formToggles.reactions && (
-                            <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can react"
-                                    placeholder="Select who can react"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-
-                                <Select
-                                    label="Reaction type"
-                                    placeholder="Select reaction type"
-                                    items={[
-                                        { label: "Emojis", id: "emoji", icon: FaceSmile, supportingText: "Multiple reactions" },
-                                        { label: "Upvotes", id: "upvotes", icon: SwitchVertical01, supportingText: "Single reaction" },
-                                        { label: "Simple Like", id: "simple", icon: Heart, supportingText: "Single reaction" }
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon} supportingText={item.supportingText}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-                            </div>
-                        )} */}
-
-
-                        
+                        </div>
                     </div>
                 </div>
             </div>
-            {/* CMS Permissions Section */}
-            <div className="border border-secondary rounded-lg bg-primary p-2 ">
-                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
-                    <Shield01 className="size-4 text-brand-secondary" />
-                    <h5 className="text-xs font-semibold text-primary">CMS Permissions</h5>
-                    <Badge type="pill-color" color="brand" size="sm">
-                        <div className="flex items-center gap-1">
-                            <Database01 className="size-3" />
-                            Event
-                        </div>
-                    </Badge>
-                    <div className="ml-auto">
-                        <button
-                            onClick={() => setShowDisconnectModal(true)}
-                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
-                            title="Disconnect CMS"
-                        >
-                            <Trash01 className="size-4" />
-                        </button>
+
+            {/* Content Permissions Section */}
+            <div className="border border-secondary rounded-lg bg-primary p-2">
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
+                    <div className="flex items-center gap-2">
+                        <Database01 className="size-4 text-brand-secondary" />
+                        <h5 className="text-xs font-semibold text-primary">Content Permissions</h5>
                     </div>
+                    <button
+                        onClick={() => setShowContentPermissions(!showContentPermissions)}
+                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-secondary"
+                        title={showContentPermissions ? "Hide permissions" : "Show permissions"}
+                    >
+                        {showContentPermissions ? (
+                            <Eye className="size-4" />
+                        ) : (
+                            <EyeOff className="size-4" />
+                        )}
+                    </button>
                 </div>
                 <div className="bg-secondary/20 rounded-lg p-3">
-                    <div className="space-y-6">
-                        {/* Who can post */}
-                        <div>
-                            <Select
-                                label="Who can post"
-                                placeholder="Select who can post"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                ]}
+                    {showContentPermissions ? (
+                        <div className="space-y-3">
+                        {/* Event Permission Card */}
+                        <div className="border border-secondary rounded-lg bg-primary p-3">
+                            <div 
+                                className="flex items-center justify-between cursor-pointer"
+                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, event: !prev.event }))}
                             >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                        {/* Who can comment */}
-                        <div>
-                            <Select
-                                label="Who can comment"
-                                placeholder="Select who can comment"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    { label: "Nobody", id: "nobody", icon: X },
-                                ]}
-                            >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                        {/* Who can react */}
-                        <div>
-                            <Select
-                                label="Who can react"
-                                placeholder="Select who can react"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    { label: "Nobody", id: "nobody", icon: X },
-                                ]}
-                            >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                                
-
-                        {/* Comment Toggle */}
-{/*                         <div>
-                            <Toggle
-                                label="Comments"
-                                hint="Allow attendees to comment on the event"
-                                size="sm"
-                                slim
-                                isSelected={formToggles.comments}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, comments: value }))}
-                            />
-                        </div> */}
-
-                        {/* Who Can Reply (conditional) - Only show when comments is enabled */}
-{/*                         {formToggles.comments && (
-                            <div className="ml-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can reply"
-                                    placeholder="Select who can reply"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
+                                <div className="flex items-center gap-2">
+                                    <Package className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                    <span className="text-sm font-medium text-secondary">Event</span>
+                                    <Badge size="sm" color="gray" className="ml-1">
+                                        Beta
+                                    </Badge>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.event ? 'rotate-180' : ''} text-tertiary`} />
+                                </div>
                             </div>
-                        )} */}
-
-                        {/* Reaction Toggle */}
-{/*                         <div>
-                            <Toggle
-                                label="Reactions"
-                                hint="Allow attendees to react to posts and comments"
-                                size="sm"
-                                slim
-                                isSelected={formToggles.reactions}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, reactions: value }))}
-                            />
-                        </div> */}
-
-                        {/* Reaction settings (conditional) - Only show when reactions is enabled */}
-{/*                         {formToggles.reactions && (
-                            <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can react"
-                                    placeholder="Select who can react"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-
-                                <Select
-                                    label="Reaction type"
-                                    placeholder="Select reaction type"
-                                    items={[
-                                        { label: "Emojis", id: "emoji", icon: FaceSmile, supportingText: "Multiple reactions" },
-                                        { label: "Upvotes", id: "upvotes", icon: SwitchVertical01, supportingText: "Single reaction" },
-                                        { label: "Simple Like", id: "simple", icon: Heart, supportingText: "Single reaction" }
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon} supportingText={item.supportingText}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-                            </div>
-                        )} */}
-
-
-                        
-                    </div>
-                </div>
-            </div>
-                        {/* CMS Permissions Section */}
-                        <div className="border border-secondary rounded-lg bg-primary p-2 ">
-                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
-                    <Shield01 className="size-4 text-brand-secondary" />
-                    <h5 className="text-xs font-semibold text-primary">CMS Permissions</h5>
-                    <Badge type="pill-color" color="brand" size="sm">
-                        <div className="flex items-center gap-1">
-                            <Database01 className="size-3" />
-                            Discussion
+                            
+                            {contentPermissionsExpanded.event && (
+                                <div className="mt-4 pt-3 border-t border-secondary">
+                                    <div className="text-xs mt-4 flex items-start gap-2">
+                                        <InfoCircle className="size-3 mt-0.5 flex-shrink-0 text-tertiary" />
+                                        <div className="leading-relaxed text-tertiary">
+                                            The event module is active for this space. Events can be created, 
+                                            managed, and displayed to members based on your space permissions.
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </Badge>
-                </div>
-                <div className="bg-secondary/20 rounded-lg p-3">
-                    <div className="space-y-6">
-                        {/* Who can post */}
-                        <div>
-                            <Select
-                                label="Who can post"
-                                placeholder="Select who can post"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                ]}
+
+                        {/* Discussion Permission Card */}
+                        <div className="border border-secondary rounded-lg bg-primary p-3">
+                            <div 
+                                className="flex items-center justify-between cursor-pointer"
+                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, discussion: !prev.discussion }))}
                             >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                        {/* Who can comment */}
-                        <div>
-                            <Select
-                                label="Who can comment"
-                                placeholder="Select who can comment"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    { label: "Nobody", id: "nobody", icon: X },
-                                ]}
-                            >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                        {/* Who can react */}
-                        <div>
-                            <Select
-                                label="Who can react"
-                                placeholder="Select who can react"
-                                items={[
-                                    { label: "All members", id: "all-members", icon: Users01 },
-                                    { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                    { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    { label: "Nobody", id: "nobody", icon: X },
-                                ]}
-                            >
-                                {(item) => (
-                                    <Select.Item id={item.id} icon={item.icon}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                                
-
-                        {/* Comment Toggle */}
-{/*                         <div>
-                            <Toggle
-                                label="Comments"
-                                hint="Allow attendees to comment on the event"
-                                size="sm"
-                                slim
-                                isSelected={formToggles.comments}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, comments: value }))}
-                            />
-                        </div> */}
-
-                        {/* Who Can Reply (conditional) - Only show when comments is enabled */}
-{/*                         {formToggles.comments && (
-                            <div className="ml-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can reply"
-                                    placeholder="Select who can reply"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
+                                <div className="flex items-center gap-2">
+                                    <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                    <span className="text-sm font-medium text-secondary">Discussion</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowDisconnectModal(true);
+                                        }}
+                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
+                                        title="Disconnect CMS"
+                                    >
+                                        <Trash01 className="size-4" />
+                                    </button>
+                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.discussion ? 'rotate-180' : ''} text-tertiary`} />
+                                </div>
                             </div>
-                        )} */}
+                            
+                            {contentPermissionsExpanded.discussion && (
+                                <div className="mt-4 pt-3 border-t border-secondary space-y-4">
+                                    <Select
+                                        label="Who can post"
+                                        placeholder="Select who can post"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can comment"
+                                        placeholder="Select who can comment"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can react"
+                                        placeholder="Select who can react"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                </div>
+                            )}
+                        </div>
 
-                        {/* Reaction Toggle */}
-{/*                         <div>
-                            <Toggle
-                                label="Reactions"
-                                hint="Allow attendees to react to posts and comments"
-                                size="sm"
-                                slim
-                                isSelected={formToggles.reactions}
-                                onChange={(value) => setFormToggles(prev => ({ ...prev, reactions: value }))}
-                            />
-                        </div> */}
-
-                        {/* Reaction settings (conditional) - Only show when reactions is enabled */}
-{/*                         {formToggles.reactions && (
-                            <div className="ml-4 space-y-4 border-l-2 border-secondary pl-3">
-                                <Select
-                                    label="Who can react"
-                                    placeholder="Select who can react"
-                                    items={[
-                                        { label: "All members", id: "all-members", icon: Users01 },
-                                        { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                        { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
-
-                                <Select
-                                    label="Reaction type"
-                                    placeholder="Select reaction type"
-                                    items={[
-                                        { label: "Emojis", id: "emoji", icon: FaceSmile, supportingText: "Multiple reactions" },
-                                        { label: "Upvotes", id: "upvotes", icon: SwitchVertical01, supportingText: "Single reaction" },
-                                        { label: "Simple Like", id: "simple", icon: Heart, supportingText: "Single reaction" }
-                                    ]}
-                                >
-                                    {(item) => (
-                                        <Select.Item id={item.id} icon={item.icon} supportingText={item.supportingText}>
-                                            {item.label}
-                                        </Select.Item>
-                                    )}
-                                </Select>
+                        {/* Blog Permission Card */}
+                        <div className="border border-secondary rounded-lg bg-primary p-3">
+                            <div 
+                                className="flex items-center justify-between cursor-pointer"
+                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, blog: !prev.blog }))}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                    <span className="text-sm font-medium text-secondary">Blog</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowDisconnectModal(true);
+                                        }}
+                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
+                                        title="Disconnect CMS"
+                                    >
+                                        <Trash01 className="size-4" />
+                                    </button>
+                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.blog ? 'rotate-180' : ''} text-tertiary`} />
+                                </div>
                             </div>
-                        )} */}
-
-
-                        
-                    </div>
+                            
+                            {contentPermissionsExpanded.blog && (
+                                <div className="mt-4 pt-3 border-t border-secondary space-y-4">
+                                    <Select
+                                        label="Who can post"
+                                        placeholder="Select who can post"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can comment"
+                                        placeholder="Select who can comment"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can react"
+                                        placeholder="Select who can react"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                </div>
+                            )}
+                        </div>
+                        </div>
+                    ) : (
+                        <div className="text-center py-2">
+                            <div className="w-12 h-12 mx-auto rounded-full bg-secondary/30 flex items-center justify-center">
+                                <Database01 className="size-6 text-tertiary/60" />
+                            </div>
+                            <h4 className="text-sm font-medium text-secondary mb-1">Static space</h4>
+                            <p className="text-xs text-tertiary max-w-xs mx-auto leading-relaxed">
+                                This space has no dynamic content modules or CMS connections. 
+                                It serves static content only.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Disconnect CMS Modal */}
             {showDisconnectModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
                     <div className="bg-primary border border-secondary rounded-lg shadow-lg max-w-md w-full mx-4">
                         <div className="p-6">
                             <div className="flex items-start gap-3">

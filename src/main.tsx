@@ -33,6 +33,7 @@ import { SiteSpacesEventsPage as Admin2SiteSpacesEventsPage } from "@/pages/admi
 import { SiteSpacesEventsCreatePage as Admin2SiteSpacesEventsCreatePage } from "@/pages/admin2/site-spaces-events-create";
 import { SiteSpacesCreatePage as Admin2SiteSpacesCreatePage } from "@/pages/admin2/site-spaces-create";
 import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
+import { SiteCmsEventsPage as Admin2SiteCmsEventsPage } from "@/pages/admin2/site-cms-events";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import { SiteEventPage } from "@/pages/site/event";
@@ -116,6 +117,9 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin2/site/spaces/myfolder/events/danger" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/private-space" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/private-space/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/cms/events" element={<Navigate to="/admin2/site/cms/events/customize" replace />} />
+                        <Route path="/admin2/site/cms/events/settings" element={<Admin2SiteCmsEventsPage />} />
+                        <Route path="/admin2/site/cms/events/customize" element={<Admin2SiteCmsEventsPage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />

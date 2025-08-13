@@ -22,6 +22,11 @@ import {
     TrendUp02,
     Copy01,
     Download01,
+    FileCheck02,
+    Palette,
+    Shield01,
+    Share07,
+    LinkExternal01,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
@@ -816,6 +821,73 @@ export const AdminContent2Page = () => {
 
 
                                                             </>
+                                                        ) : isSpacesPage ? (
+                                                            <Dropdown.Root>
+                                                                <Dropdown.DotsButton />
+                                                                <Dropdown.Popover>
+                                                                    <Dropdown.Menu>
+                                                                        <Dropdown.Item 
+                                                                            key="view-space" 
+                                                                            icon={Eye}
+                                                                            onAction={() => window.open('http://localhost:5174/site/event', '_blank')}
+                                                                        >
+                                                                            <div className="flex items-center justify-between w-full">
+                                                                                <span>View Space</span>
+                                                                                <LinkExternal01 className="size-3 text-fg-quaternary ml-2" />
+                                                                            </div>
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Separator />
+                                                                        <Dropdown.Item 
+                                                                            key="settings" 
+                                                                            icon={Settings01}
+                                                                            onAction={() => navigate('/admin2/site/spaces/myfolder/events')}
+                                                                        >
+                                                                            Settings
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item 
+                                                                            key="manage-members" 
+                                                                            icon={Users01}
+                                                                            onAction={() => navigate('/admin2/site/spaces/myfolder/events/members')}
+                                                                        >
+                                                                            Manage Members
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item 
+                                                                            key="audit-logs" 
+                                                                            icon={FileCheck02}
+                                                                            onAction={() => navigate('/admin2/site/spaces/myfolder/events/audit-logs')}
+                                                                        >
+                                                                            Audit Logs
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item 
+                                                                            key="analytics" 
+                                                                            icon={BarChartSquare02}
+                                                                            onAction={() => navigate('/admin2/site/spaces/myfolder/events/analytics')}
+                                                                        >
+                                                                            Analytics
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item 
+                                                                            key="customize" 
+                                                                            icon={Palette}
+                                                                            onAction={() => navigate('/admin2/site/spaces/myfolder/events/customize')}
+                                                                        >
+                                                                            Customize
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key="moderation" icon={Shield01}>
+                                                                            <div className="flex items-center justify-between w-full">
+                                                                                <span>Moderation</span>
+                                                                                <LinkExternal01 className="size-3 text-fg-quaternary ml-2" />
+                                                                            </div>
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key="share" icon={Share07}>
+                                                                            Share
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Separator />
+                                                                        <Dropdown.Item key="delete" icon={Trash01} className="text-red-600">
+                                                                            Delete
+                                                                        </Dropdown.Item>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown.Popover>
+                                                            </Dropdown.Root>
                                                         ) : (
                                                             <ButtonUtility
                                                                 size="sm"
