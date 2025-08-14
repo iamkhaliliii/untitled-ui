@@ -198,6 +198,24 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/events/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/private-space/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/settings")) return "general";
@@ -253,9 +271,24 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/events` } : undefined
             },
-            { id: `${folderId}-blog`, label: "Blog", icon: <File05 className="size-5 text-fg-quaternary" /> },
-            { id: `${folderId}-help`, label: "Help", icon: <File05 className="size-5 text-fg-quaternary" /> },
-            { id: `${folderId}-posts`, label: "Posts", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { 
+                id: `${folderId}-blog`, 
+                label: "Blog", 
+                icon: <File05 className="size-5 text-fg-quaternary" />,
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : undefined
+            },
+            { 
+                id: `${folderId}-help`, 
+                label: "Help", 
+                icon: <File05 className="size-5 text-fg-quaternary" />,
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : undefined
+            },
+            { 
+                id: `${folderId}-posts`, 
+                label: "Posts", 
+                icon: <File05 className="size-5 text-fg-quaternary" />,
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : undefined
+            },
             { id: `${folderId}-wishlist`, label: "Wishlist", icon: <File05 className="size-5 text-fg-quaternary" /> },
             ...Array.from({ length: childrenCount }, (_, index) => ({
                 id: `${folderId}-item-${index + 6}`,
@@ -447,32 +480,25 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             ]
         },
         {
-            id: "modules",
-            label: "CMS Pages",
+            id: "content-types",
+            label: "Content Types",
             showAddButton: true,
             icon: <Package className="size-5 text-fg-quaternary" />,
             children: [
-                {
-                    id: "models",
-                    label: "Models",
-                    icon: <Database01 className="size-5 text-fg-quaternary" />,
-                    children: [
-                        { 
-                            id: "cms-events", 
-                            label: "Events",
-                            icon: <Database01 className="size-5 text-violet-400" />,
-                            data: { href: `/${currentAdminVersion}/site/cms/events` }
-                        },
-                        { 
-                            id: "cms-blog", 
-                            label: "Blog",
-                            icon: <Database01 className="size-5 text-violet-400" />
-                        },
-                    ]
+                { 
+                    id: "cms-events", 
+                    label: "Event",
+                    icon: <Database01 className="size-5 text-violet-400" />,
+                    data: { href: `/${currentAdminVersion}/site/cms/events` }
+                },
+                { 
+                    id: "cms-blog", 
+                    label: "Blog",
+                    icon: <Database01 className="size-5 text-violet-400" />
                 },
                 {
-                    id: "archived-models",
-                    label: "Archived models",
+                    id: "archived-content-types",
+                    label: "Archived Content type",
                     icon: <Archive className="size-5 text-fg-quaternary" />,
                     children: [
                         { 
@@ -803,12 +829,15 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         navigate(href);
     };
 
-    // Check if we're on any events page, private space page, spaces create page, or CMS events page
+    // Check if we're on any events page, blog page, help page, posts page, private space page, spaces create page, or CMS events page
     const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events");
+    const isBlogPage = activeUrl?.includes("/site/spaces/myfolder/blog");
+    const isHelpPage = activeUrl?.includes("/site/spaces/myfolder/help");
+    const isPostsPage = activeUrl?.includes("/site/spaces/myfolder/posts");
     const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
-    const isSpacePage = isEventsPage || isPrivateSpacePage || isCmsEventsPage;
+    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage;
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -1010,6 +1039,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     <EventsGeneralSettings
                         formToggles={formToggles}
                         setFormToggles={setFormToggles}
+                        pageType={isEventsPage ? 'events' : isBlogPage ? 'blog' : isHelpPage ? 'help' : isPostsPage ? 'posts' : 'events'}
                     />
                 );
             case "customize":
@@ -1188,7 +1218,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
-                    {isEventsPage ? "Events" : isPrivateSpacePage ? "Private Space" : isCmsEventsPage ? "CMS Events" : currentItem?.label}
+                    {isEventsPage ? "Events" : isBlogPage ? "Blog" : isHelpPage ? "Help" : isPostsPage ? "Posts" : isPrivateSpacePage ? "Private Space" : isCmsEventsPage ? "CMS Events" : currentItem?.label}
                 </h3>
                 
                 {/* Show Navigation Settings when navigation is selected */}
@@ -1543,7 +1573,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <li>
                                     <button
                                         onClick={() => handleSecondaryItemClick("general", 
-                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : `/${currentAdminVersion}/site/spaces/myfolder/events`
+                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
+                                            isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
+                                            isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
+                                            isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts` :
+                                            `/${currentAdminVersion}/site/spaces/myfolder/events`
                                         )}
                                         className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                             selectedSecondaryItem === "general"
@@ -1561,7 +1595,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <button
                                     onClick={() => handleSecondaryItemClick("customize", 
                                         isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
-                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
+                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
+                                        isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
+                                        isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
+                                        isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
+                                        `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
                                     )}
                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                         selectedSecondaryItem === "customize"
@@ -1589,12 +1627,17 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </button>
                                 </li>
                             )}
-                            {/* Only show these items for Events, not for Private Space */}
-                            {isEventsPage && (
+                            {/* Only show these items for Events, Blog, Help, and Posts, not for Private Space */}
+                            {(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && (
                                 <>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("members", `/${currentAdminVersion}/site/spaces/myfolder/events/members`)}
+                                            onClick={() => handleSecondaryItemClick("members", 
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/members` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/members` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/members` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/members`
+                                            )}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "members"
                                                     ? "bg-active text-secondary_hover"
@@ -1607,7 +1650,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("analytics", `/${currentAdminVersion}/site/spaces/myfolder/events/analytics`)}
+                                            onClick={() => handleSecondaryItemClick("analytics", 
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/analytics` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/analytics` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/analytics` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/analytics`
+                                            )}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "analytics"
                                                     ? "bg-active text-secondary_hover"
@@ -1620,7 +1668,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("audit-logs", `/${currentAdminVersion}/site/spaces/myfolder/events/audit-logs`)}
+                                            onClick={() => handleSecondaryItemClick("audit-logs", 
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/audit-logs` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/audit-logs` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/audit-logs` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/audit-logs`
+                                            )}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "audit-logs"
                                                     ? "bg-active text-secondary_hover"
@@ -1633,7 +1686,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("seo", `/${currentAdminVersion}/site/spaces/myfolder/events/seo`)}
+                                            onClick={() => handleSecondaryItemClick("seo", 
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/seo` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/seo` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/seo` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/seo`
+                                            )}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "seo"
                                                     ? "bg-active text-secondary_hover"
@@ -1646,7 +1704,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("danger", `/${currentAdminVersion}/site/spaces/myfolder/events/danger`)}
+                                            onClick={() => handleSecondaryItemClick("danger", 
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/danger` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/danger` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/danger` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/danger`
+                                            )}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "danger"
                                                     ? "bg-active text-secondary_hover"

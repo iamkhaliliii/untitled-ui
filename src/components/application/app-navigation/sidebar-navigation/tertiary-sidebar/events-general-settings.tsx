@@ -19,9 +19,10 @@ interface FormToggles {
 interface EventsGeneralSettingsProps {
     formToggles: FormToggles;
     setFormToggles: (callback: (prev: FormToggles) => FormToggles) => void;
+    pageType?: 'events' | 'blog' | 'help' | 'posts';
 }
 
-export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGeneralSettingsProps) => {
+export const EventsGeneralSettings = ({ formToggles, setFormToggles, pageType = 'events' }: EventsGeneralSettingsProps) => {
     const [visibility, setVisibility] = useState<string>("public");
     const [privateMessage, setPrivateMessage] = useState<string>("");
     const [privateAction, setPrivateAction] = useState<string>("request-to-join");
@@ -266,227 +267,284 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
 
             {/* Content Permissions Section */}
             <div className="border border-secondary rounded-lg bg-primary p-2">
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
-                    <div className="flex items-center gap-2">
-                        <Database01 className="size-4 text-brand-secondary" />
-                        <h5 className="text-xs font-semibold text-primary">Content Permissions</h5>
-                    </div>
-                    <button
-                        onClick={() => setShowContentPermissions(!showContentPermissions)}
-                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-secondary"
-                        title={showContentPermissions ? "Hide permissions" : "Show permissions"}
-                    >
-                        {showContentPermissions ? (
-                            <Eye className="size-4" />
-                        ) : (
-                            <EyeOff className="size-4" />
-                        )}
-                    </button>
+                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-secondary">
+                    <Database01 className="size-4 text-brand-secondary" />
+                    <h5 className="text-xs font-semibold text-primary">Content Permissions</h5>
                 </div>
-                <div className="bg-secondary/20 rounded-lg p-3">
-                    {showContentPermissions ? (
-                        <div className="space-y-3">
-                        {/* Event Permission Card */}
-                        <div className="border border-secondary rounded-lg bg-primary p-3">
-                            <div 
-                                className="flex items-center justify-between cursor-pointer"
-                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, event: !prev.event }))}
-                            >
+                <div className="bg-secondary/20 rounded-lg">
+                    {pageType === 'events' && (
+                        <div>
+                            {/* Event Permission Card */}
+                            <div className="bg-primary p-3">
                                 <div className="flex items-center gap-2">
                                     <Package className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
                                     <span className="text-sm font-medium text-secondary">Event</span>
-                                    <Badge size="sm" color="gray" className="ml-1">
+                                    <Badge size="sm" color="gray" className="ml-0">
                                         Beta
                                     </Badge>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.event ? 'rotate-180' : ''} text-tertiary`} />
-                                </div>
-                            </div>
-                            
-                            {contentPermissionsExpanded.event && (
+                                
                                 <div className="mt-4 pt-3 border-t border-secondary">
-                                    <div className="text-xs mt-4 flex items-start gap-2">
+                                    <div className="text-xs mt-1 flex items-start gap-2">
                                         <InfoCircle className="size-3 mt-0.5 flex-shrink-0 text-tertiary" />
                                         <div className="leading-relaxed text-tertiary">
-                                            The event module is active for this space. Events can be created, 
-                                            managed, and displayed to members based on your space permissions.
+                                            The Event module is active for this space. In the Beta version, events can be created, managed, and displayed to members by admins and staff.
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                            </div>
                         </div>
+                    )}
 
-                        {/* Discussion Permission Card */}
-                        <div className="border border-secondary rounded-lg bg-primary p-3">
-                            <div 
-                                className="flex items-center justify-between cursor-pointer"
-                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, discussion: !prev.discussion }))}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
-                                    <span className="text-sm font-medium text-secondary">Discussion</span>
+                    {pageType === 'blog' && (
+                        <div>
+                            {/* Discussion Permission Card */}
+                            <div className="bg-primary p-3">
+                                <div 
+                                    className="flex items-center justify-between cursor-pointer"
+                                    onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, discussion: !prev.discussion }))}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                        <span className="text-sm font-medium text-secondary">Discussion</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowDisconnectModal(true);
+                                            }}
+                                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
+                                            title="Disconnect CMS"
+                                        >
+                                            <Trash01 className="size-4" />
+                                        </button>
+                                        <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.discussion ? 'rotate-180' : ''} text-tertiary`} />
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowDisconnectModal(true);
-                                        }}
-                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
-                                        title="Disconnect CMS"
-                                    >
-                                        <Trash01 className="size-4" />
-                                    </button>
-                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.discussion ? 'rotate-180' : ''} text-tertiary`} />
+                                
+                                {contentPermissionsExpanded.discussion && (
+                                    <div className="mt-4 pt-3 border-t border-secondary space-y-4">
+                                        <Select
+                                            label="Who can post"
+                                            placeholder="Select who can post"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                        
+                                        <Select
+                                            label="Who can comment"
+                                            placeholder="Select who can comment"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                                { label: "Nobody", id: "nobody", icon: X },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                        
+                                        <Select
+                                            label="Who can react"
+                                            placeholder="Select who can react"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                                { label: "Nobody", id: "nobody", icon: X },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Divider */}
+                            <div className="border-t border-secondary"></div>
+                            
+                            {/* Blog Permission Card */}
+                            <div className="bg-primary p-3">
+                                <div 
+                                    className="flex items-center justify-between cursor-pointer"
+                                    onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, blog: !prev.blog }))}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                        <span className="text-sm font-medium text-secondary">Blog</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowDisconnectModal(true);
+                                            }}
+                                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
+                                            title="Disconnect CMS"
+                                        >
+                                            <Trash01 className="size-4" />
+                                        </button>
+                                        <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.blog ? 'rotate-180' : ''} text-tertiary`} />
+                                    </div>
                                 </div>
+                                
+                                {contentPermissionsExpanded.blog && (
+                                    <div className="mt-4 pt-3 border-t border-secondary space-y-4">
+                                        <Select
+                                            label="Who can post"
+                                            placeholder="Select who can post"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                        
+                                        <Select
+                                            label="Who can comment"
+                                            placeholder="Select who can comment"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                                { label: "Nobody", id: "nobody", icon: X },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                        
+                                        <Select
+                                            label="Who can react"
+                                            placeholder="Select who can react"
+                                            items={[
+                                                { label: "All members", id: "all-members", icon: Users01 },
+                                                { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                                { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                                { label: "Nobody", id: "nobody", icon: X },
+                                            ]}
+                                        >
+                                            {(item) => (
+                                                <Select.Item id={item.id} icon={item.icon}>
+                                                    {item.label}
+                                                </Select.Item>
+                                            )}
+                                        </Select>
+                                    </div>
+                                )}
                             </div>
                             
-                            {contentPermissionsExpanded.discussion && (
-                                <div className="mt-4 pt-3 border-t border-secondary space-y-4">
-                                    <Select
-                                        label="Who can post"
-                                        placeholder="Select who can post"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                    
-                                    <Select
-                                        label="Who can comment"
-                                        placeholder="Select who can comment"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                            { label: "Nobody", id: "nobody", icon: X },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                    
-                                    <Select
-                                        label="Who can react"
-                                        placeholder="Select who can react"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                            { label: "Nobody", id: "nobody", icon: X },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Blog Permission Card */}
-                        <div className="border border-secondary rounded-lg bg-primary p-3">
-                            <div 
-                                className="flex items-center justify-between cursor-pointer"
-                                onClick={() => setContentPermissionsExpanded(prev => ({ ...prev, blog: !prev.blog }))}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
-                                    <span className="text-sm font-medium text-secondary">Blog</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowDisconnectModal(true);
-                                        }}
-                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors text-tertiary hover:text-error"
-                                        title="Disconnect CMS"
-                                    >
-                                        <Trash01 className="size-4" />
-                                    </button>
-                                    <ChevronDown className={`size-4 transform transition-transform ${contentPermissionsExpanded.blog ? 'rotate-180' : ''} text-tertiary`} />
+                            {/* Bottom message after all cards */}
+                            <div className="text-xs px-3 mt-3 flex items-start gap-2">
+                                <InfoCircle className="size-3 mt-0.5 flex-shrink-0 text-tertiary" />
+                                <div className="leading-relaxed text-tertiary">
+                                    Bettermode now supports only one CMS connection per space. This space was created before the change and still has multiple CMS connections. If you remove a CMS, you can't reconnect it, and at least one CMS must remain connected.
                                 </div>
                             </div>
-                            
-                            {contentPermissionsExpanded.blog && (
-                                <div className="mt-4 pt-3 border-t border-secondary space-y-4">
-                                    <Select
-                                        label="Who can post"
-                                        placeholder="Select who can post"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                    
-                                    <Select
-                                        label="Who can comment"
-                                        placeholder="Select who can comment"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                            { label: "Nobody", id: "nobody", icon: X },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                    
-                                    <Select
-                                        label="Who can react"
-                                        placeholder="Select who can react"
-                                        items={[
-                                            { label: "All members", id: "all-members", icon: Users01 },
-                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
-                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
-                                            { label: "Nobody", id: "nobody", icon: X },
-                                        ]}
-                                    >
-                                        {(item) => (
-                                            <Select.Item id={item.id} icon={item.icon}>
-                                                {item.label}
-                                            </Select.Item>
-                                        )}
-                                    </Select>
-                                </div>
-                            )}
                         </div>
-                        </div>
-                    ) : (
-                        <div className="text-center py-2">
+                    )}
+
+                    {pageType === 'help' && (
+                        <div className="text-center py-2 px-4">
                             <div className="w-12 h-12 mx-auto rounded-full bg-secondary/30 flex items-center justify-center">
                                 <Database01 className="size-6 text-tertiary/60" />
                             </div>
                             <h4 className="text-sm font-medium text-secondary mb-1">Static space</h4>
                             <p className="text-xs text-tertiary max-w-xs mx-auto leading-relaxed">
-                                This space has no dynamic content modules or CMS connections. 
-                                It serves static content only.
+                                This space is static and has no CMS or dynamic content modules. That's why content permissions are not shown here.
                             </p>
+                            
+                        </div>
+                    )}
+
+                    {pageType === 'posts' && (
+                        <div>
+                            {/* Discussion Permission Card */}
+                            <div className="bg-primary p-3">
+                                <div className="flex items-center gap-2">
+                                    <Database01 className="size-4 text-violet-400 bg-violet-100/20 p-[1px] rounded-md" />
+                                    <span className="text-sm font-medium text-secondary">Discussion</span>
+                                </div>
+                                
+                                <div className="mt-4 pt-3 border-t border-secondary space-y-4">
+                                    <Select
+                                        label="Who can post"
+                                        placeholder="Select who can post"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, admins and moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can comment"
+                                        placeholder="Select who can comment"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                    
+                                    <Select
+                                        label="Who can react"
+                                        placeholder="Select who can react"
+                                        items={[
+                                            { label: "All members", id: "all-members", icon: Users01 },
+                                            { label: "Space members, Admins and Moderators", id: "space-members", icon: UsersPlus },
+                                            { label: "Admins and moderators", id: "admins-moderators", icon: UsersCheck },
+                                            { label: "Nobody", id: "nobody", icon: X },
+                                        ]}
+                                    >
+                                        {(item) => (
+                                            <Select.Item id={item.id} icon={item.icon}>
+                                                {item.label}
+                                            </Select.Item>
+                                        )}
+                                    </Select>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -508,9 +566,9 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                         Disconnect CMS
                                     </h3>
                                     <p className="text-sm text-secondary mb-4">
-                                        Are you sure you want to disconnect the CMS from this space? 
-                                        Bettermode no longer supports spaces with multiple CMS connections. 
-                                        Once disconnected, you won't be able to reconnect the CMS to this space.
+                                        Are you sure you want to disconnect this CMS from the space? 
+                                        Once removed, you won't be able to add it back, as Bettermode now supports only one CMS connection per space. 
+                                        At least one CMS must remain connected.
                                     </p>
                                     <div className="flex gap-3 justify-end">
                                         <Button

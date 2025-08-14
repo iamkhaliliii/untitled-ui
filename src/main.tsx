@@ -31,6 +31,9 @@ import { AdminSitePage as Admin2SitePage } from "@/pages/admin2/site";
 import { SiteFilesPage as Admin2SiteFilesPage } from "@/pages/admin2/site-files";
 import { SiteSpacesEventsPage as Admin2SiteSpacesEventsPage } from "@/pages/admin2/site-spaces-events";
 import { SiteSpacesEventsCreatePage as Admin2SiteSpacesEventsCreatePage } from "@/pages/admin2/site-spaces-events-create";
+import { SiteSpacesBlogPage as Admin2SiteSpacesBlogPage } from "@/pages/admin2/site-spaces-blog";
+import { SiteSpacesHelpPage as Admin2SiteSpacesHelpPage } from "@/pages/admin2/site-spaces-help";
+import { SiteSpacesPostsPage as Admin2SiteSpacesPostsPage } from "@/pages/admin2/site-spaces-posts";
 import { SiteSpacesCreatePage as Admin2SiteSpacesCreatePage } from "@/pages/admin2/site-spaces-create";
 import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
 import { SiteCmsEventsPage as Admin2SiteCmsEventsPage } from "@/pages/admin2/site-cms-events";
@@ -115,6 +118,27 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin2/site/spaces/myfolder/events/audit-logs" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/myfolder/events/seo" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/myfolder/events/danger" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/members" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/analytics" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/audit-logs" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/seo" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/blog/danger" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/members" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/analytics" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/audit-logs" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/seo" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/help/danger" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/members" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/analytics" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/audit-logs" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/seo" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/myfolder/posts/danger" element={<Admin2SiteSpacesPostsPage />} />
                         <Route path="/admin2/site/spaces/private-space" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/private-space/customize" element={<Admin2EventsCustomizePage />} />
                         <Route path="/admin2/site/cms/events" element={<Navigate to="/admin2/site/cms/events/customize" replace />} />
