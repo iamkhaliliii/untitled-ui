@@ -1804,11 +1804,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                         Tag
                                     </NavItemBase>
                                 </li>
-                                <li className="py-0.5">
-                                    <NavItemBase current={activeUrl === `/${currentAdminVersion}/content2/cms`} href={`/${currentAdminVersion}/content2/cms`} icon={Settings01} badge="beta" type="link">
-                                        CMS
-                                    </NavItemBase>
-                                </li>
+
                             </ul>
                         </div>
                     )
