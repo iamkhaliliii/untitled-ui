@@ -34,7 +34,8 @@ export const SiteCmsEventsPage = () => {
                             <input
                                 type="text"
                                 placeholder="Enter event title"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                disabled
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                             />
                         </div>
 
@@ -46,7 +47,8 @@ export const SiteCmsEventsPage = () => {
                             <textarea
                                 rows={4}
                                 placeholder="Describe your event in detail..."
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                disabled
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                             />
                         </div>
 
@@ -55,7 +57,7 @@ export const SiteCmsEventsPage = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Post in
                             </label>
-                            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <select disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed">
                                 <option>Select space</option>
                                 <option>Events</option>
                                 <option>Announcements</option>
@@ -71,7 +73,8 @@ export const SiteCmsEventsPage = () => {
                             <input
                                 type="text"
                                 placeholder="Search and select hosts..."
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                disabled
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                             />
                         </div>
 
@@ -83,7 +86,8 @@ export const SiteCmsEventsPage = () => {
                                 </label>
                                 <input
                                     type="datetime-local"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    disabled
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                                 />
                             </div>
                             <div>
@@ -93,9 +97,10 @@ export const SiteCmsEventsPage = () => {
                                 <div className="flex">
                                     <input
                                         type="datetime-local"
-                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        disabled
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                                     />
-                                    <select className="px-3 py-2 border-l-0 border-gray-300 rounded-r-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <select disabled className="px-3 py-2 border-l-0 border-gray-300 rounded-r-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed">
                                         <option>UTC</option>
                                         <option>EST</option>
                                         <option>PST</option>
@@ -109,7 +114,7 @@ export const SiteCmsEventsPage = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Location Type
                             </label>
-                            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <select disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed">
                                 <option>Physical Location - In-person event</option>
                                 <option>Virtual Event - Online event</option>
                                 <option>To Be Determined - Location will be decided later</option>
@@ -128,7 +133,8 @@ export const SiteCmsEventsPage = () => {
                                 <input
                                     type="text"
                                     placeholder="Enter area/district"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    disabled
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                                 />
                                 <p className="text-sm text-gray-500 mt-1">This location will be shown to everyone</p>
                             </div>
@@ -140,7 +146,8 @@ export const SiteCmsEventsPage = () => {
                                 <input
                                     type="text"
                                     placeholder="Enter physical address"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    disabled
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                                 />
                                 <p className="text-sm text-gray-500 mt-1">Only shown after RSVP</p>
                             </div>
@@ -152,7 +159,8 @@ export const SiteCmsEventsPage = () => {
                                 <input
                                     type="text"
                                     placeholder="Room information, building details, etc."
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    disabled
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                                 />
                                 <p className="text-sm text-gray-500 mt-1">Only shown after RSVP</p>
                             </div>
@@ -163,12 +171,12 @@ export const SiteCmsEventsPage = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Cover Image
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50 cursor-not-allowed">
                                 <svg className="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p className="mt-2 text-sm text-gray-600">Upload image</p>
-                                <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                                <p className="mt-2 text-sm text-gray-500">Upload image</p>
+                                <p className="text-xs text-gray-400">PNG, JPG up to 10MB</p>
                             </div>
                         </div>
 
@@ -180,8 +188,40 @@ export const SiteCmsEventsPage = () => {
                             <input
                                 type="number"
                                 placeholder="Maximum number of attendees"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                disabled
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed"
                             />
+                        </div>
+                    </div>
+
+                    {/* Form Footer */}
+                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+                        <div className="flex items-center justify-between">
+                            <button
+                                type="button"
+                                disabled
+                                className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed"
+                            >
+                                Cancel
+                            </button>
+                            <div className="flex items-center">
+                                <button
+                                    type="submit"
+                                    disabled
+                                    className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-300 border border-transparent rounded-l-lg cursor-not-allowed"
+                                >
+                                    Create Event
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled
+                                    className="px-2 py-2 text-gray-400 bg-gray-300 border-l border-gray-400 rounded-r-lg cursor-not-allowed"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

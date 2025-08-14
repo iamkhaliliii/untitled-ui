@@ -150,7 +150,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                 <div className="bg-secondary/20 rounded-lg p-3">
                     <div className="space-y-6">
                         {/* Visibility */}
-                        <div>
+                        {/* <div>
                             <Select
                                 label="Visibility"
                                 placeholder="Select visibility"
@@ -167,7 +167,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles }: EventsGen
                                     </Select.Item>
                                 )}
                             </Select>
-                        </div>
+                        </div> */}
 
                         {/* Private Visibility Settings */}
                         {visibility === "private" && (
