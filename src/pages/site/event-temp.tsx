@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X } from "@untitledui/icons";
-import { MarkerPin01 } from "@untitledui/icons";
+import { SearchLg, Plus, ImageX } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
 import { Badge, BadgeWithImage } from "@/components/base/badges/badges";
@@ -170,7 +169,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
     );
 };
 
-export default function SiteEventPage() {
+export const SiteEventPage = () => {
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -385,4 +384,4 @@ export default function SiteEventPage() {
         </div>
         </SiteLayout>
     );
-}
+};

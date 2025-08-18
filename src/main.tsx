@@ -39,7 +39,7 @@ import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
 import { SiteCmsEventsPage as Admin2SiteCmsEventsPage } from "@/pages/admin2/site-cms-events";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
-import { SiteEventPage } from "@/pages/site/event";
+import SiteEventPage from "@/pages/site/event";
 import SiteEventDetailPage from "@/pages/site/event-detail";
 import PostViewPage from "@/pages/site/post-view";
 import { NotFound } from "@/pages/not-found";
