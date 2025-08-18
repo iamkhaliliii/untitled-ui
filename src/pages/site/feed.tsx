@@ -294,7 +294,7 @@ export const SiteFeedPage = () => {
                                                             </div>
                                                             <div className="flex gap-4">
                                                                 <div className="flex-shrink-0">
-                                                                    <div className="w-24 h-24 rounded-lg overflow-hidden">
+                                                                    <div className="w-32 h-32 rounded-lg overflow-hidden">
                                                                         <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=200&h=200&fit=crop&crop=center" alt="Monthly Music Meetup - March 2024" className="w-full h-full object-cover" />
                                                                     </div>
                                                                 </div>
@@ -321,7 +321,7 @@ export const SiteFeedPage = () => {
                                                                         </div>
                                                                     </div>
                                                                     <div className="flex items-center gap-4">
-                                                                        <div className="flex items-center">
+                                                                       {/*  <div className="flex items-center">
                                                                             {[
                                                                                 "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face",
                                                                                 "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face",
@@ -339,23 +339,22 @@ export const SiteFeedPage = () => {
                                                                                     +2
                                                                                 </span>
                                                                             </span>
-                                                                        </div>
+                                                                        </div> */}
                                                                         <div className="flex items-center gap-2">
                                                                             <img className="w-6 h-6 rounded-full border-2 border-white dark:border-zinc-800" alt="Jordan Kim" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" />
                                                                             <span className="text-xs text-zinc-500 dark:text-zinc-400">By Event Host</span>
                                                                         </div>
                                                                     </div>
                                                                     
-                                                                    {/* Event Action Buttons */}
-                                                                    <div className="flex items-center gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700 font-medium flex-1">
-                                                                            <Calendar className="w-4 h-4" />
-                                                                            <span>View Event Details</span>
-                                                                        </button>
-                                                                        <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex-1">
-                                                                            <Check className="w-4 h-4" />
-                                                                            <span>RSVP</span>
-                                                                        </button>
+                                                                    {/* Event Action Button */}
+                                                                    <div className="flex items-center justify-end pt-0">
+                                                                        <Button 
+                                                                            color="secondary" 
+                                                                            size="sm" 
+                                                                            iconTrailing={ArrowRight}
+                                                                        >
+                                                                            View details and RSVP
+                                                                        </Button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -368,17 +367,20 @@ export const SiteFeedPage = () => {
                                                     <div className="flex items-center justify-between">
                                                         <div className="flex items-center gap-2">
                                                             <div className="flex items-center gap-1">
-                                                                <button type="button" className="flex items-center gap-1 px-2 py-1 text-sm rounded-full transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700">
-                                                                    <Check className="w-4 h-4" />
-                                                                    <span className="text-[0.8rem] font-medium">Yes</span>
+                                                                <button type="button" className="flex items-center gap-1 px-2 py-0.5 border border-zinc-100 dark:border-zinc-700 text-sm rounded-full transition-colors text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+                                                                    <span className="text-base">🙏</span>
+                                                                    <span className="text-[0.7rem] font-medium text-zinc-500 dark:text-zinc-400">42</span>
                                                                 </button>
-                                                                <button type="button" className="flex items-center gap-1 px-2 py-1 text-sm rounded-full transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700">
-                                                                    <X className="w-4 h-4" />
-                                                                    <span className="text-[0.8rem] font-medium">No</span>
+                                                                <button type="button" className="flex items-center gap-1 px-2 py-0.5 border border-zinc-100 dark:border-zinc-700 text-sm rounded-full transition-colors text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+                                                                    <span className="text-base">👏</span>
+                                                                    <span className="text-[0.7rem] font-medium text-zinc-500 dark:text-zinc-400">28</span>
                                                                 </button>
-                                                                <button type="button" className="flex items-center gap-1.5 px-2 py-1 text-sm rounded-full transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700">
-                                                                    <HelpCircle className="w-4 h-4" />
-                                                                    <span className="text-[0.8rem] font-medium">Maybe</span>
+                                                                <button type="button" className="flex items-center gap-1 px-2 py-0.5 border border-zinc-100 dark:border-zinc-700 text-sm rounded-full transition-colors text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+                                                                    <span className="text-base">🔥</span>
+                                                                    <span className="text-[0.7rem] font-medium text-zinc-500 dark:text-zinc-400">15</span>
+                                                                </button>
+                                                                <button type="button" className="flex items-center gap-1 px-1.5 py-1.5 text-sm rounded-full transition-colors text-zinc-400 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border border-zinc-100 dark:border-zinc-700">
+                                                                    <FaceSmile className="w-3.5 h-3.5" />
                                                                 </button>
                                                             </div>
                                                             <button type="button" className="flex items-center gap-1 px-2 py-1 text-sm rounded-full transition-colors bg-blue-50 text-blue-600 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">

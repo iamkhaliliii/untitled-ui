@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, MoreHorizontal, CheckCircle, Heart, Bell, Share, ChevronDown, MessageSquare } from 'lucide-react';
-import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, Ticket01 } from '@untitledui/icons';
+import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, Ticket01, ArrowRight } from '@untitledui/icons';
 import { SiteLayout } from '../../components/layouts/site-layout';
 import { ModalOverlay, Modal, Dialog } from '../../components/application/modals/modal';
 import { Button } from '../../components/base/buttons/button';
@@ -727,7 +727,7 @@ export default function PostView() {
                                     </div>
                                     <div className="flex gap-4">
                                         <div className="flex-shrink-0">
-                                            <div className="w-24 h-24 rounded-lg overflow-hidden">
+                                            <div className="w-42 h-42 rounded-lg overflow-hidden">
                                                 <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=200&h=200&fit=crop&crop=center" alt="Monthly Music Meetup - March 2024" className="w-full h-full object-cover" />
                                             </div>
                                         </div>
@@ -754,7 +754,7 @@ export default function PostView() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <div className="flex items-center">
+                                                {/* <div className="flex items-center">
                                                     {[
                                                         "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face",
                                                         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face",
@@ -772,23 +772,23 @@ export default function PostView() {
                                                             +2
                                                         </span>
                                                     </span>
-                                                </div>
+                                                </div> */}
                                                 <div className="flex items-center gap-2">
                                                     <img className="w-6 h-6 rounded-full border-2 border-white dark:border-zinc-800" alt="Jordan Kim" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" />
                                                     <span className="text-xs text-zinc-500 dark:text-zinc-400">By Event Host</span>
                                                 </div>
                                             </div>
                                             
-                                            {/* Event Action Buttons */}
-                                            <div className="flex items-center gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                                                <button type="button" onClick={handleEventDetailsClick} className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm rounded-lg transition-colors border text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 border-zinc-200 dark:border-zinc-700 font-medium flex-1">
-                                                    <Calendar className="w-4 h-4" />
-                                                    <span>View Event Details</span>
-                                                </button>
-                                                <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex-1">
-                                                    <Check className="w-4 h-4" />
-                                                    <span>RSVP</span>
-                                                </button>
+                                            {/* Event Action Button */}
+                                            <div className="flex items-center justify-end pt-4">
+                                                <Button 
+                                                    color="secondary" 
+                                                    size="sm" 
+                                                    iconTrailing={ArrowRight}
+                                                    onClick={handleEventDetailsClick}
+                                                >
+                                                    View details and RSVP
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
