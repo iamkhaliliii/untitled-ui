@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
-import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01 } from '@untitledui/icons';
+import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01, Link01, Share04 } from '@untitledui/icons';
 import EventMap from '../../base/map/event-map';
 import { ModalOverlay, Modal, Dialog } from './modal';
 import { Button } from '../../base/buttons/button';
@@ -215,7 +215,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             {/* Location Card */}
                                             <div className="flex items-center gap-2">
                                                 <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                    <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                                    {event.type === "online" ? (
+                                                        <Link01 className="h-4 w-4 text-gray-500" />
+                                                    ) : (
+                                                        <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                                    )}
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
@@ -224,7 +228,12 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                         </svg>
                                                     </div>
-                                                    <div className="text-xs text-gray-600">Full details available after RSVP</div>
+                                                    <div className="text-xs text-gray-600">
+                                                        {event.type === "online" 
+                                                            ? "Event join link available after RSVP" 
+                                                            : "Full details available after RSVP"
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -290,7 +299,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 <Button
                                                     size="md"
                                                     color="secondary"
-                                                    className="w-full max-md:text-base max-md:py-3"
+                                                    className="w-full max-md:text-base max-md:py-3 opacity-60 cursor-not-allowed"
                                                     disabled={true}
                                                 >
                                                     {rsvpConfig.label}
@@ -411,7 +420,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             {/* Location */}
                                             <div className="flex items-center gap-2">
                                                 <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                    <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                                    {event.type === "online" ? (
+                                                        <Link01 className="h-4 w-4 text-gray-500" />
+                                                    ) : (
+                                                        <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                                    )}
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
@@ -421,7 +434,30 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </svg>
                                                     </div>
                                                     <div className="text-xs text-gray-600">{event.fullAddress}</div>
-                                                    <div className="text-xs text-gray-600">Main auditorium, accessible entrance available</div>
+                                                    <div className="text-xs text-gray-600">
+                                                        {event.type === "online" 
+                                                            ? (
+                                                                <a 
+                                                                    href="https://zoom.us/j/123456789" 
+                                                                    className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    <img 
+                                                                        src="https://zoom.us/favicon.ico" 
+                                                                        alt="Zoom" 
+                                                                        className="w-3 h-3"
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                        }}
+                                                                    />
+                                                                    <span className="text-xs">https://zoom.us/j/123456789</span>
+                                                                    <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                                </a>
+                                                            )
+                                                            : "Main auditorium, accessible entrance available"
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -607,7 +643,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 {/* Location Card */}
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                        {event.type === "online" ? (
+                                                            <Link01 className="h-5 w-5 text-gray-500" />
+                                                        ) : (
+                                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
                                                         <div className="font-medium text-gray-900 text-base flex items-center gap-1">
@@ -616,7 +656,12 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                             </svg>
                                                         </div>
-                                                        <div className="text-sm text-gray-600">Full details available after RSVP</div>
+                                                        <div className="text-sm text-gray-600">
+                                                            {event.type === "online" 
+                                                                ? "Event join link available after RSVP" 
+                                                                : "Full details available after RSVP"
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -682,7 +727,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 {/* Location */}
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                        {event.type === "online" ? (
+                                                            <Link01 className="h-5 w-5 text-gray-500" />
+                                                        ) : (
+                                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
                                                         <div className="font-medium text-gray-900 text-base flex items-center gap-1">
@@ -692,7 +741,30 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </svg>
                                                         </div>
                                                         <div className="text-sm text-gray-600">{event.fullAddress}</div>
-                                                        <div className="text-sm text-gray-600">Main auditorium, accessible entrance available</div>
+                                                        <div className="text-sm text-gray-600">
+                                                            {event.type === "online" 
+                                                                ? (
+                                                                    <a 
+                                                                        href="https://zoom.us/j/123456789" 
+                                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                    >
+                                                                        <img 
+                                                                            src="https://zoom.us/favicon.ico" 
+                                                                            alt="Zoom" 
+                                                                            className="w-4 h-4"
+                                                                            onError={(e) => {
+                                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+                                                                            }}
+                                                                        />
+                                                                        <span className="text-sm">https://zoom.us/j/123456789</span>
+                                                                        <Share04 className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                                    </a>
+                                                                )
+                                                                : "Main auditorium, accessible entrance available"
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -826,7 +898,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             <Button
                                                 size="md"
                                                 color="secondary"
-                                                className="w-full text-base py-3"
+                                                className="w-full text-base py-3 opacity-60 cursor-not-allowed"
                                                 disabled={true}
                                             >
                                                 {rsvpConfig.label}
