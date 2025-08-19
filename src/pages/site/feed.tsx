@@ -35,9 +35,9 @@ const RightSidebarContent = () => (
     <>
         {/* Leaderboard */}
         <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Leaderboard</h2>
+            <h2 className="text-lg max-md:text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3 max-md:mb-4">Leaderboard</h2>
             <div className="rounded-lg border text-card-foreground shadow-sm bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-                <div className="space-y-3 p-4">
+                <div className="space-y-3 p-4 max-md:p-5">
                     <div className="flex gap-1 mb-4">
                         <button className="inline-flex items-center justify-center gap-0 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-sm hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 dark:hover:bg-blue-700 dark:active:bg-blue-800 h-8 text-xs px-3 py-1 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
                             All time
@@ -78,9 +78,9 @@ const RightSidebarContent = () => (
 
         {/* Next Event */}
         <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Next event</h2>
+            <h2 className="text-lg max-md:text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3 max-md:mb-4">Next event</h2>
             <div className="border text-card-foreground bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
-                <div className="p-6">
+                <div className="p-6 max-md:p-5">
                     <div className="space-y-4">
                         <div className="flex items-start justify-between mb-8">
                             <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
@@ -137,22 +137,22 @@ export const SiteFeedPage = () => {
             rightSidebarContent={<RightSidebarContent />}
         >
             <div className="flex-1">
-                <div className="flex gap-6">
-                    <div className="flex-1 space-y-8">
+                <div className="flex gap-6 max-lg:gap-4 max-md:flex-col max-md:gap-0">
+                    <div className="flex-1 space-y-8 max-lg:space-y-6 max-md:space-y-4">
                         {/* Pinned Posts */}
                         <div style={{ opacity: 1 }}>
-                            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Pinned posts</h2>
-                            <div className="space-y-4">
+                            <h2 className="text-lg max-md:text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3 max-md:mb-4">Pinned posts</h2>
+                            <div className="space-y-4 max-md:space-y-3">
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <div className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
+                                    <div className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Community Team" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Community Team" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Community Team</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Community Team</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">⭐</span>Admin
                                                                 </div>
@@ -169,7 +169,7 @@ export const SiteFeedPage = () => {
                                                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">🎯 Help us shape the future of music! What features would you love to see in our platform? Your ideas matter and directly influence our roadmap. Vote for your favorites below! 🚀</p>
                                                 
                                                 {/* Poll */}
-                                                <div className="space-y-4">
+                                                <div className="space-y-4 max-md:space-y-3">
                                                     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 overflow-hidden bg-zinc-50/30 dark:bg-zinc-800/30">
                                                         <div className="p-5">
                                                             <div className="flex items-center justify-between mb-4">
@@ -243,7 +243,7 @@ export const SiteFeedPage = () => {
                         {/* Feed Section */}
                         <div style={{ opacity: 1 }}>
                             <div className="flex items-center justify-between mb-3">
-                                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Feed</h2>
+                                <h2 className="text-lg max-md:text-xl font-semibold text-zinc-900 dark:text-zinc-100">Feed</h2>
                                 <button className="justify-center whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:bg-gray-200 focus-visible:ring-gray-500 dark:active:bg-gray-700 h-8 flex items-center gap-2 px-3 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg" type="button">
                                     <ArrowUp className="w-4 h-4" />
                                     <span className="capitalize">latest</span>
@@ -251,19 +251,19 @@ export const SiteFeedPage = () => {
                                 </button>
                             </div>
                             
-                            <div className="space-y-4 pb-8">
+                            <div className="space-y-4 pb-8 max-md:pb-4">
 
                                 {/* Post 1: Jordan Kim - Event Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
+                                    <a href="/site/post-view" className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Jordan Kim" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Jordan Kim" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Jordan Kim</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Jordan Kim</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">🎪</span>Event Host
                                                                 </div>
@@ -280,10 +280,10 @@ export const SiteFeedPage = () => {
                                                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">Join us for our Monthly Music Meetup! 🎵 We'll be showcasing new artists, discussing latest trends, and networking with fellow music enthusiasts. Free snacks and drinks provided!</p>
                                                 
                                                 {/* Event Card */}
-                                                <div className="space-y-4">
+                                                <div className="space-y-4 max-md:space-y-3">
                                                     <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-zinc-200 dark:border-zinc-700 bg-zinc-50/30 dark:bg-zinc-800/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/70">
-                                                        <div className="p-5">
-                                                            <div className="flex items-center justify-between mb-6">
+                                                        <div className="p-5 max-lg:p-4 max-md:p-4">
+                                                            <div className="flex items-center justify-between mb-6 max-md:mb-4">
                                                                 <div className="flex items-center gap-1.5">
                                                                     <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                                                                         <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -292,31 +292,31 @@ export const SiteFeedPage = () => {
                                                                 </div>
                                                                 <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-xs">Upcoming</div>
                                                             </div>
-                                                            <div className="flex gap-4">
-                                                                <div className="flex-shrink-0">
-                                                                    <div className="w-32 h-32 rounded-lg overflow-hidden">
+                                                            <div className="flex gap-4 max-md:flex-col max-md:gap-3">
+                                                                <div className="flex-shrink-0 max-md:flex-shrink">
+                                                                    <div className="w-32 max-lg:w-28 max-md:w-full aspect-square rounded-lg overflow-hidden">
                                                                         <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=200&h=200&fit=crop&crop=center" alt="Monthly Music Meetup - March 2024" className="w-full h-full object-cover" />
                                                                     </div>
                                                                 </div>
-                                                                <div className="w-px bg-zinc-100 dark:bg-zinc-700 my-1"></div>
-                                                                <div className="flex-1 min-w-0 space-y-2">
-                                                                    <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                                                                <div className="w-px bg-zinc-100 dark:bg-zinc-700 my-1 max-md:hidden"></div>
+                                                                <div className="flex-1 min-w-0 space-y-2 max-md:space-y-3">
+                                                                    <div className="flex items-center gap-2 text-xs max-md:text-sm font-medium text-zinc-500 dark:text-zinc-400 max-md:flex-wrap">
                                                                         <span>Saturday, March 23rd</span>
-                                                                        <div className="w-px h-3 bg-zinc-300 dark:bg-zinc-600"></div>
+                                                                        <div className="w-px h-3 bg-zinc-300 dark:bg-zinc-600 max-md:hidden"></div>
                                                                         <div className="flex items-center gap-1">
-                                                                            <Clock className="w-3 h-3" />
+                                                                            <Clock className="w-3 h-3 max-md:w-4 max-md:h-4" />
                                                                             <span>Starts from 7:00 PM</span>
                                                                         </div>
                                                                     </div>
-                                                                    <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">Monthly Music Meetup - March 2024</h3>
-                                                                    <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+                                                                    <h3 className="text-xl max-lg:text-lg max-md:text-xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">Monthly Music Meetup - March 2024</h3>
+                                                                    <div className="flex items-center gap-3 text-xs max-md:text-sm text-zinc-500 dark:text-zinc-400 max-md:flex-wrap">
                                                                         <div className="flex items-center gap-1">
-                                                                            <VideoRecorder className="w-3 h-3" />
+                                                                            <VideoRecorder className="w-3 h-3 max-md:w-4 max-md:h-4" />
                                                                             <span>Online Event</span>
                                                                         </div>
-                                                                        <div className="w-px h-3 bg-zinc-300 dark:bg-zinc-600"></div>
+                                                                        <div className="w-px h-3 bg-zinc-300 dark:bg-zinc-600 max-md:hidden"></div>
                                                                         <div className="flex items-center gap-1">
-                                                                            <MarkerPin01 className="w-3 h-3" />
+                                                                            <MarkerPin01 className="w-3 h-3 max-md:w-4 max-md:h-4" />
                                                                             <span>Community Center</span>
                                                                         </div>
                                                                     </div>
@@ -347,10 +347,11 @@ export const SiteFeedPage = () => {
                                                                     </div>
                                                                     
                                                                     {/* Event Action Button */}
-                                                                    <div className="flex items-center justify-end pt-0">
+                                                                    <div className="flex items-center justify-end max-md:justify-center pt-0">
                                                                         <Button 
                                                                             color="secondary" 
                                                                             size="sm" 
+                                                                            className="max-md:w-full max-md:text-base max-md:py-3"
                                                                             iconTrailing={ArrowRight}
                                                                         >
                                                                             View Details & Register
@@ -404,15 +405,15 @@ export const SiteFeedPage = () => {
                                 </div>
                                     {/* Post 2: Sarah Chen - Music Discussion with Playlist */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
+                                    <a href="/site/post-view" className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://mighty.tools/mockmind-api/content/human/129.jpg" alt="Sarah Chen" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://mighty.tools/mockmind-api/content/human/129.jpg" alt="Sarah Chen" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Sarah Chen</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Sarah Chen</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">👋</span>New member
                                                                 </div>
@@ -429,7 +430,7 @@ export const SiteFeedPage = () => {
                                                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">Just discovered this amazing playlist for coding sessions! The mix of lo-fi and ambient sounds really helps with focus. What do you all use for background music while working? 🎵</p>
                                                 
                                                 {/* Playlist Card */}
-                                                <div className="space-y-4">
+                                                <div className="space-y-4 max-md:space-y-3">
                                                     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 overflow-hidden bg-zinc-50/30 dark:bg-zinc-800/30 p-4">
                                                         <div className="flex items-start gap-3">
                                                             <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-700/50 flex items-center justify-center flex-shrink-0">
@@ -474,15 +475,15 @@ export const SiteFeedPage = () => {
 
                                     {/* Post 3: Alex Rodriguez - Image Post with Reactions */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
+                                    <a href="/site/post-view" className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Alex Rodriguez" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Alex Rodriguez" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Alex Rodriguez</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Alex Rodriguez</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">🎧</span>Expert
                                                                 </div>
@@ -498,7 +499,7 @@ export const SiteFeedPage = () => {
                                                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">PSA: Remember to take listening breaks every hour! Your ears will thank you later. I've been using the 60/60 rule - 60% volume for max 60 minutes, then a 10-minute break. Game changer for long mixing sessions! 🎧</p>
                                                 
                                                 {/* Image Grid */}
-                                                <div className="space-y-4">
+                                                <div className="space-y-4 max-md:space-y-3">
                                                     <div className="rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800/50">
                                                         <div className="grid grid-cols-3 h-64 gap-px bg-zinc-200 dark:bg-zinc-700">
                                                             <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&h=600&fit=crop" alt="Professional studio headphones on mixing desk" className="w-full h-full object-cover col-span-2" />
@@ -554,15 +555,15 @@ export const SiteFeedPage = () => {
 
                                     {/* Post 4: Emma Wilson - Video Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
+                                    <a href="/site/post-view" className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b7cf?w=150&h=150&fit=crop&crop=face" alt="Emma Wilson" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b7cf?w=150&h=150&fit=crop&crop=face" alt="Emma Wilson" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Emma Wilson</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Emma Wilson</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">🎹</span>Producer
                                                                 </div>
@@ -578,7 +579,7 @@ export const SiteFeedPage = () => {
                                                 <p className="text-zinc-600 dark:text-zinc-300 mb-4">Just finished mastering my latest track! The process took 3 weeks but I'm so happy with how it turned out. Sometimes patience really pays off in music production.</p>
                                                 
                                                 {/* Video Card */}
-                                                <div className="space-y-4">
+                                                <div className="space-y-4 max-md:space-y-3">
                                                     <div className="space-y-3">
                                                         <div className="aspect-video rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                                                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-zinc-800 dark:to-zinc-900">
@@ -641,15 +642,15 @@ export const SiteFeedPage = () => {
 
                                     {/* Post 5: Simple Text Post */}
                                 <div style={{ opacity: 1, transform: "none" }}>
-                                    <a href="/site/post-view" className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
+                                    <a href="/site/post-view" className="w-full max-w-2xl max-md:max-w-none mx-auto cursor-pointer bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow h-fit block">
                                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                                            <div className="p-6">
+                                            <div className="p-6 max-lg:p-5 max-md:p-4">
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-start gap-3">
-                                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Michael Johnson" className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-zinc-800" />
+                                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Michael Johnson" className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-full ring-2 ring-white dark:ring-zinc-800" />
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Michael Johnson</h3>
+                                                                <h3 className="text-base max-md:text-lg font-semibold text-zinc-900 dark:text-zinc-100">Michael Johnson</h3>
                                                                 <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 text-xs px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
                                                                     <span className="mr-0.5">🎤</span>Vocalist
                                                                 </div>
@@ -693,6 +694,11 @@ export const SiteFeedPage = () => {
                                     </a>
                                 </div>
 
+                            </div>
+
+                            {/* Mobile: Sidebar Content */}
+                            <div className="md:hidden space-y-6 mt-6">
+                                <RightSidebarContent />
                             </div>
                         </div>
                     </div>

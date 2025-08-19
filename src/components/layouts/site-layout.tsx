@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link } from "react-router";
 import {
     Globe01,
@@ -31,6 +31,7 @@ import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Input } from "@/components/base/input/input";
 import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
+import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
 import { cx } from "@/utils/cx";
 import { useTheme } from "@/providers/theme";
 import { NavMenuItemLink } from "@/components/marketing/header-navigation/base-components/nav-menu-item";
@@ -133,16 +134,96 @@ const DropdownMenuSimple = () => {
     );
 };
 
-const HeaderDropdownSimple = () => (
-    <Header
-        items={[
-            { label: "Products", href: "/products", menu: <DropdownMenuSimple /> },
-            { label: "Services", href: "/Services", menu: <DropdownMenuSimple /> },
-            { label: "Pricing", href: "/pricing" },
-            { label: "Resources", href: "/resources", menu: <DropdownMenuSimple /> },
-            { label: "About", href: "/about" },
-        ]}
-    />
+const HeaderDropdownSimple = ({ onMobileMenuToggle }: { onMobileMenuToggle?: () => void }) => (
+    <div className="flex max-w-container mx-auto items-center justify-between w-full px-4 sm:px-6 lg:px-8 py-4 max-sm:py-3 max-sm:px-3">
+        {/* Logo & Mobile Menu */}
+        <div className="flex items-center gap-3">
+            {/* Mobile Menu Button */}
+            <ButtonUtility 
+                size="sm" 
+                color="secondary"
+                icon={Menu02}
+                className="md:hidden w-10 h-10"
+                tooltip="Menu"
+                onClick={onMobileMenuToggle}
+            />
+            
+            {/* Logo - Full on desktop, icon only on mobile */}
+            <div className="flex items-center">
+                <UntitledLogo className="h-8 max-md:hidden" />
+                <UntitledLogoMinimal className="h-8 max-sm:h-6 md:hidden" />
+            </div>
+        </div>
+
+        {/* Search Box - Hidden on mobile */}
+        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <div className="relative w-full">
+                <Input
+                    placeholder="Search events, posts, or people..."
+                    className="w-full bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                    icon={SearchLg}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <kbd className="px-2 py-1 text-xs font-semibold text-white/70 bg-white/10 border border-white/20 rounded-md">
+                        ⌘K
+                    </kbd>
+                </div>
+            </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 max-md:gap-1">
+            {/* Search - Mobile only */}
+            <ButtonUtility 
+                size="sm" 
+                color="secondary"
+                icon={SearchLg}
+                className="md:hidden w-10 h-10"
+                tooltip="Search"
+            />
+            
+            {/* Messages */}
+            <div className="relative">
+                <ButtonUtility 
+                    size="sm" 
+                    color="secondary"
+                    icon={MessageCircle01}
+                    className="w-10 h-10"
+                    tooltip="Messages"
+                />
+                <span className="absolute -top-1 -right-1 w-5 h-5 max-sm:w-4 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center">
+                    2
+                </span>
+            </div>
+            
+            {/* Notifications */}
+            <div className="relative">
+                <ButtonUtility 
+                    size="sm" 
+                    color="secondary"
+                    icon={Bell01}
+                    className="w-10 h-10"
+                    tooltip="Notifications"
+                />
+                <span className="absolute -top-1 -right-1 w-6 h-5 max-sm:w-5 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center">
+                    99+
+                </span>
+            </div>
+            
+            {/* Add/Create Button */}
+            <ButtonUtility 
+                size="sm" 
+                color="secondary"
+                icon={Plus}
+                className="w-10 h-10"
+                tooltip="Create"
+            />
+            
+            {/* Profile Avatar */}
+            <Avatar status="online" size="sm" alt="Olivia Rhye" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" />
+
+        </div>
+    </div>
 );
 
 export const SiteLayout = ({ 
@@ -157,6 +238,11 @@ export const SiteLayout = ({
 }: SiteLayoutProps) => {
     const { theme } = useTheme();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed, toggleAdminHeader } = useAdmin();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const handleMobileMenuToggle = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
 
     return (
         <div className="flex min-h-screen flex-col bg-primary">
@@ -176,16 +262,54 @@ export const SiteLayout = ({
             )}
 
             {/* Header */}
-                               <div className={`sticky z-40 bg-primary/80 backdrop-blur-lg ${
-                       isAdmin && adminHeaderVisible && !adminHeaderCollapsed
-                           ? 'top-12' // Full admin header height (48px)
-                           : 'top-0'  // No admin header or collapsed (back to normal)
-                   }`}>
-                <HeaderDropdownSimple />
+            <div className={`sticky z-40 bg-primary/80 backdrop-blur-lg shadow-sm ${
+                isAdmin && adminHeaderVisible && !adminHeaderCollapsed
+                    ? 'top-12' // Full admin header height (48px)
+                    : 'top-0'  // No admin header or collapsed (back to normal)
+            }`}>
+                <HeaderDropdownSimple onMobileMenuToggle={handleMobileMenuToggle} />
+
             </div>
 
+            {/* Mobile Sidebar Overlay */}
+            {isMobileMenuOpen && (
+                <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={handleMobileMenuToggle}>
+                    <div className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-zinc-900 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
+                            <UntitledLogo className="h-8" />
+                            <ButtonUtility 
+                                size="sm" 
+                                color="secondary"
+                                icon={X}
+                                className="w-10 h-10"
+                                tooltip="Close"
+                                onClick={handleMobileMenuToggle}
+                            />
+                        </div>
+                        <nav className="p-4 space-y-2">
+                            {siteNavigation.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    to={item.href}
+                                    onClick={handleMobileMenuToggle}
+                                    className={cx(
+                                        "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium transition-colors",
+                                        currentPath === item.href
+                                            ? "bg-brand-50 text-brand-secondary"
+                                            : "text-secondary hover:bg-secondary hover:text-primary"
+                                    )}
+                                >
+                                    <item.icon className="h-5 w-5" />
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
+            )}
+
             {/* Main Content */}
-            <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto pt-4 max-w-container px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-1">
                     {/* Left Sidebar */}
                     <aside className="hidden lg:block w-64 bg-primary">
@@ -294,26 +418,7 @@ export const SiteLayout = ({
                 </div>
             </footer>
 
-            {/* Mobile Navigation */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 border-t border-secondary bg-primary/95 backdrop-blur-sm">
-                <div className="flex items-center justify-around px-4 py-2">
-                    {siteNavigation.slice(0, 5).map((item) => (
-                        <Link
-                            key={item.href}
-                            to={item.href}
-                            className={cx(
-                                "flex flex-col items-center gap-1 p-2 text-xs",
-                                currentPath === item.href
-                                    ? "text-brand-secondary"
-                                    : "text-tertiary"
-                            )}
-                        >
-                            <item.icon className="h-5 w-5" />
-                            <span className="text-xs">{item.label}</span>
-                        </Link>
-                    ))}
-                </div>
-            </div>
+
 
             {/* Admin Toggle for testing - can be removed in production */}
             <ErrorBoundary fallback={<div>Toggle error</div>}>

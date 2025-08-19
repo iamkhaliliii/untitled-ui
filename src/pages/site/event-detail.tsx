@@ -162,7 +162,7 @@ const SiteEventDetailPage = () => {
     };
 
     return (
-        <div className="h-screen flex flex-col">
+        <div className="h-screen flex flex-col overflow-hidden">
             {/* Sticky Header */}
             <div className="sticky top-0 z-50 p-4 bg-white border-b border-gray-200 shrink-0">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
@@ -218,41 +218,42 @@ const SiteEventDetailPage = () => {
             }} />
 
             {/* Main Content Area */}
-            <div className="flex flex-1 max-w-4xl mx-auto gap-6 py-6 min-h-0">
+            <div className="flex flex-1 max-w-4xl mx-auto gap-6 max-lg:gap-4 py-6 max-lg:py-4 min-h-0 max-md:hidden">
+                {/* Desktop & Tablet Layout */}
                 {/* Left Column - Image + Basic Info */}
-                <div className="w-3/8 rounded-3xl p-4 flex flex-col min-h-0">
+                <div className="w-3/8 max-lg:w-2/5 max-md:w-full rounded-3xl max-md:rounded-none p-4 max-lg:p-3 max-md:p-4 flex flex-col min-h-0">
                     <div className="flex flex-col h-full">
-                        <div className="pb-4 flex-shrink-0">
-                            <div className="w-full h-full">
+                        <div className="pb-4 max-lg:pb-3 max-md:pb-4 flex-shrink-0">
+                            <div className="w-full aspect-square">
                                 <img
                                     src={event.image}
                                     alt={event.title}
-                                    className="w-full h-full object-cover rounded-3xl aspect-square"
+                                    className="w-full h-full object-cover rounded-3xl max-md:rounded-2xl"
                                 />
                             </div>
                         </div>
                         
                         {/* Basic Event Info */}
                         <div 
-                            className="px-1 space-y-6 flex-1 overflow-y-auto min-h-0 event-scrollbar" 
+                            className="px-1 max-lg:px-1 max-md:px-1 space-y-6 max-lg:space-y-4 max-md:space-y-3 flex-1 overflow-y-auto min-h-0 event-scrollbar" 
                             style={scrollbarStyles}
                         >
                             <div className="space-y-2">
                                 {/* Event Title */}
-                                <h1 className="text-2xl font-bold leading-tight text-gray-900">
+                                <h1 className="text-2xl max-lg:text-xl max-md:text-lg font-bold leading-tight text-gray-900">
                                     {event.title}
                                 </h1>
                                 
                                 {/* Host */}
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                                    <div className="w-5 h-5 max-md:w-6 max-md:h-6 rounded-full overflow-hidden">
                                         <img 
                                             src={event.organizer.avatar} 
                                             alt={event.organizer.name}
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
-                                    <span className="text-sm">Hosted by {event.organizer.name}</span>
+                                    <span className="text-sm max-md:text-base">Hosted by {event.organizer.name}</span>
                                 </div>
                             </div>
                             
@@ -260,34 +261,34 @@ const SiteEventDetailPage = () => {
                             {rsvpStage === 'initial' && (
                                 <div className="space-y-3">
                                     {/* Date & Time Card */}
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                    <div className="flex items-center gap-2 max-md:gap-3">
+                                        <div className="w-10 h-10 max-md:w-12 max-md:h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
                                             <div className="text-xs text-gray-500 leading-none">
                                                 {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
                                             </div>
-                                            <div className="text-xs font-semibold text-gray-900 leading-none">
+                                            <div className="text-xs max-md:text-sm font-semibold text-gray-900 leading-none">
                                                 {new Date(event.date).getDate()}
                                             </div>
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-medium text-gray-900 text-sm">{event.date}</div>
-                                            <div className="text-xs text-gray-600">{event.time}</div>
+                                            <div className="font-medium text-gray-900 text-sm max-md:text-base">{event.date}</div>
+                                            <div className="text-xs max-md:text-sm text-gray-600">{event.time}</div>
                                         </div>
                                     </div>
 
                                     {/* Location Card */}
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                            <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                    <div className="flex items-center gap-2 max-md:gap-3">
+                                        <div className="w-10 h-10 max-md:w-12 max-md:h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                            <MarkerPin01 className="h-4 w-4 max-md:h-5 max-md:w-5 text-gray-500" />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
+                                            <div className="font-medium text-gray-900 text-sm max-md:text-base flex items-center gap-1">
                                                 {event.location}
                                                 <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                 </svg>
                                             </div>
-                                            <div className="text-xs text-gray-600">Full details available after RSVP</div>
+                                            <div className="text-xs max-md:text-sm text-gray-600">Full details available after RSVP</div>
                                         </div>
                                     </div>
                                 </div>
@@ -307,10 +308,10 @@ const SiteEventDetailPage = () => {
                     </div>
                     
                     {/* Action Buttons - Sticky Footer */}
-                    <div className="px-0 pt-0 mt-4 pb-2 border-t border-gray-200 flex-shrink-0">
+                    <div className="px-0 pt-0 mt-4 max-lg:mt-3 max-md:mt-4 pb-2 border-t border-gray-200 flex-shrink-0">
                         <div className="pt-2">
                             {/* RSVP Section */}
-                            <div className="rounded-xl p-4">
+                            <div className="rounded-xl p-4 max-lg:p-3 max-md:p-4">
                                 {rsvpStage === 'processing' ? (
                                     <div className="text-center">
                                         <div className="flex items-center justify-center gap-2 mb-2">
@@ -367,22 +368,22 @@ const SiteEventDetailPage = () => {
                 </div>
 
                 {/* Scrollable Right Column - Content Cards */}
-                <div className="w-5/8 flex flex-col min-h-0">
+                <div className="w-5/8 max-lg:w-3/5 max-md:w-full flex flex-col min-h-0">
                     <div 
-                        className="flex-1 space-y-6 min-h-0 event-scrollbar px-4 py-2 overflow-y-auto" 
+                        className="flex-1 space-y-6 max-lg:space-y-4 max-md:space-y-4 min-h-0 event-scrollbar px-4 max-lg:px-3 max-md:px-4 py-2 max-md:py-4 overflow-y-auto" 
                         style={scrollbarStyles}
                     >
                         {rsvpStage === 'confirmed' ? (
                             /* After RSVP - New Structured Layout */
                             <>
                                 {/* Success Message */}
-                                <div className="p-3 pb-2">
-                                    <h3 className="text-lg font-medium text-gray-900">Registration confirmed</h3>
+                                <div className="p-3 max-md:p-3 pb-2">
+                                    <h3 className="text-lg max-md:text-xl font-medium text-gray-900">Registration confirmed</h3>
                                 </div>
                                 
                                 {/* Event Information Title */}
-                                <div className="p-3 pb-0 pt-0">
-                                    <div className="text-sm text-gray-500 mb-3">Event Information</div>
+                                <div className="p-3 max-md:p-3 pb-0 pt-0">
+                                    <div className="text-sm max-md:text-base text-gray-500 mb-3 max-md:mb-4">Event Information</div>
                                 </div>
                                 
                                 {/* Event Data Cards */}
@@ -510,6 +511,292 @@ const SiteEventDetailPage = () => {
                                     </div>
                                 </div>
                             </>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile: Single Column Layout */}
+            <div className="md:hidden flex flex-col h-full max-h-full overflow-hidden">
+                {/* Mobile Content - Scrollable */}
+                <div className="flex-1 overflow-y-auto event-scrollbar min-h-0" style={scrollbarStyles}>
+                    {/* Mobile Image Section */}
+                    <div className="p-4">
+                        <div className="w-full aspect-square">
+                            <img
+                                src={event.image}
+                                alt={event.title}
+                                className="w-full h-full object-cover rounded-2xl"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Mobile Event Info */}
+                    <div className="px-4 pb-4">
+                        <div className="space-y-3">
+                            {/* Title & Host */}
+                            <div className="space-y-2">
+                                <h1 className="text-xl font-bold leading-tight text-gray-900">
+                                    {event.title}
+                                </h1>
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <div className="w-6 h-6 rounded-full overflow-hidden">
+                                        <img 
+                                            src={event.organizer.avatar} 
+                                            alt={event.organizer.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <span className="text-base">Hosted by {event.organizer.name}</span>
+                                </div>
+                            </div>
+
+                            {/* Date & Time and Location Cards - Only show before RSVP */}
+                            {rsvpStage === 'initial' && (
+                                <div className="space-y-3">
+                                    {/* Date & Time Card */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                            <div className="text-xs text-gray-500 leading-none">
+                                                {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
+                                            </div>
+                                            <div className="text-sm font-semibold text-gray-900 leading-none">
+                                                {new Date(event.date).getDate()}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-gray-900 text-base">{event.date}</div>
+                                            <div className="text-sm text-gray-600">{event.time}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Location Card */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                {event.location}
+                                                <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
+                                                </svg>
+                                            </div>
+                                            <div className="text-sm text-gray-600">Full details available after RSVP</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Confirmation Message (when RSVP confirmed) */}
+                            {rsvpStage === 'confirmed' && (
+                                <div className="bg-success-50 border border-success-200 rounded-xl p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <CheckCircle className="w-5 h-5 text-success-600" />
+                                        <span className="text-base font-medium text-success-700">You're All Set!</span>
+                                    </div>
+                                    <p className="text-sm text-success-600">Your RSVP has been confirmed. Event details will be sent to your email.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Mobile Content Sections */}
+                    <div className="space-y-4 px-4 pb-4">
+                        {rsvpStage === 'confirmed' ? (
+                            /* After RSVP - Mobile Structured Layout */
+                            <>
+                                {/* Success Message */}
+                                <div className="pb-2">
+                                    <h3 className="text-xl font-medium text-gray-900">Registration confirmed</h3>
+                                </div>
+                                
+                                {/* Event Information Title */}
+                                <div className="pb-0">
+                                    <div className="text-base text-gray-500 mb-4">Event Information</div>
+                                </div>
+                                
+                                {/* Event Data Cards */}
+                                <div className="space-y-4">
+                                    {/* Event Title & Host Card */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                            <Calendar className="h-5 w-5 text-gray-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-gray-900 text-base">{event.title}</div>
+                                            <div className="text-sm text-gray-600">Hosted by {event.organizer.name}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Date & Time Card */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                            <div className="text-xs text-gray-500 leading-none">
+                                                {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
+                                            </div>
+                                            <div className="text-sm font-semibold text-gray-900 leading-none">
+                                                {new Date(event.date).getDate()}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-gray-900 text-base">{event.date}</div>
+                                            <div className="text-sm text-gray-600">{event.time}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Location */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                {event.location}
+                                                <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
+                                                </svg>
+                                            </div>
+                                            <div className="text-sm text-gray-600">{event.fullAddress}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Interactive Map */}
+                                {event.type !== "online" && event.coordinates && (
+                                    <div>
+                                        <EventMap
+                                            location={event.location}
+                                            latitude={event.coordinates.latitude}
+                                            longitude={event.coordinates.longitude}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Event Details Section */}
+                                <div>
+                                    <div className="text-base text-gray-500 mb-4">Event Details</div>
+                                    <div className="space-y-3 text-sm text-gray-700">
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>Free snacks and drinks will be provided throughout the event</p>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>Networking opportunities with fellow photography enthusiasts and industry professionals</p>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>Hands-on practice with professional equipment</p>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>Expert guidance from award-winning photographers</p>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>Please arrive 15 minutes early for check-in and setup</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* About Event Section (Collapsible) */}
+                                <CollapsibleAboutEvent description={event.description} />
+                            </>
+                        ) : (
+                            /* Before RSVP - Mobile Original Layout */
+                            <>
+                                {/* About Event Card */}
+                                <div>
+                                    <div className="text-base text-gray-500 mb-4">About Event</div>
+                                    <div className="prose prose-gray max-w-none">
+                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                            {event.description}
+                                        </p>
+                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                            Join us for an immersive experience that brings together industry leaders, innovative thinkers, and passionate professionals. This carefully curated event is designed to foster meaningful connections, share cutting-edge insights, and explore the latest trends shaping our industry.
+                                        </p>
+                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                            Whether you're looking to expand your network, gain new perspectives, or simply enjoy engaging conversations with like-minded individuals, this event offers something valuable for everyone. Our speakers and participants represent diverse backgrounds and expertise levels, creating a rich environment for learning and collaboration.
+                                        </p>
+                                        <p className="text-gray-700 leading-relaxed text-base">
+                                            Don't miss this opportunity to be part of a dynamic community that's driving positive change and innovation. Reserve your spot today and prepare for an inspiring and transformative experience.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Location Card */}
+                                <div>
+                                    <div className="text-base text-gray-500 mb-4">Location</div>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <div className="font-medium text-gray-900 text-base">{event.location}</div>
+                                            <div className="text-base text-gray-600 mt-1">
+                                                {event.type === "online" 
+                                                    ? "Join link will be sent before the event" 
+                                                    : "Full address will be provided after registration"
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Mobile Footer - Fixed to Bottom */}
+                <div className="flex-shrink-0 border-t border-gray-200">
+                    <div className="rounded-xl p-4">
+                        {rsvpStage === 'processing' ? (
+                            <div className="text-center">
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <span className="text-base font-medium text-brand-600">Processing RSVP...</span>
+                                </div>
+                                <p className="text-sm text-gray-500">Please wait while we confirm your attendance</p>
+                            </div>
+                        ) : rsvpStage === 'confirmed' ? (
+                            <div className="text-center">
+                                <Button 
+                                    size="md" 
+                                    color="secondary" 
+                                    className="w-full text-base py-3"
+                                    iconLeading={Download01}
+                                >
+                                    Download ICS file
+                                </Button>
+                            </div>
+                        ) : rsvpState === 'open' ? (
+                            <div className="text-center">
+                                <div className="mb-3">
+                                    <h4 className="text-base font-medium text-gray-900 mb-1">Ready to join?</h4>
+                                    <p className="text-sm text-gray-600">Secure your spot at this event</p>
+                                </div>
+                                <Button 
+                                    size="md" 
+                                    color="primary" 
+                                    className="w-full text-base py-3"
+                                    onClick={handleRSVPClick}
+                                >
+                                    {rsvpConfig.label}
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="text-center">
+                                <div className="mb-3">
+                                    <h4 className="text-base font-medium text-gray-900 mb-1">Event Status</h4>
+                                    <p className="text-sm text-gray-600">{rsvpConfig.description}</p>
+                                </div>
+                                <Button
+                                    size="md"
+                                    color="secondary"
+                                    className="w-full text-base py-3"
+                                    disabled={true}
+                                >
+                                    {rsvpConfig.label}
+                                </Button>
+                            </div>
                         )}
                     </div>
                 </div>

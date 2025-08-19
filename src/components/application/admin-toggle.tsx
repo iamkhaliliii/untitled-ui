@@ -7,7 +7,7 @@ export const AdminToggle = () => {
     const { isAdmin, toggleAdminMode } = useAdmin();
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-4 right-4">
             <Button
                 size="sm"
                 color={isAdmin ? "primary" : "secondary"}

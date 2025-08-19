@@ -68,9 +68,9 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
         >
                     
             {/* Event Image */}
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden aspect-square">
                 {imageError ? (
-                    <div className="h-52 w-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
                         <div className="text-center">
                             <ImageX className="h-8 w-8 text-tertiary mx-auto mb-2" />
                             <p className="text-xs text-tertiary">Image unavailable</p>
@@ -80,7 +80,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                     <img
                         src={event.image}
                         alt={event.title}
-                        className={`h-52 w-full object-cover transition-all duration-500 ${
+                        className={`w-full h-full object-cover transition-all duration-500 ${
                             isHovered ? 'scale-102' : 'scale-100'
                         }`}
                         onError={handleImageError}
