@@ -236,7 +236,7 @@ export default function PostView() {
                                                     iconTrailing={ArrowRight}
                                                     onClick={handleEventDetailsClick}
                                                 >
-                                                    View details and RSVP
+                                                    View Details & Register
                                                 </Button>
                                             </div>
                                         </div>

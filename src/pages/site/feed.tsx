@@ -353,7 +353,7 @@ export const SiteFeedPage = () => {
                                                                             size="sm" 
                                                                             iconTrailing={ArrowRight}
                                                                         >
-                                                                            View details and RSVP
+                                                                            View Details & Register
                                                                         </Button>
                                                                     </div>
                                                                 </div>
