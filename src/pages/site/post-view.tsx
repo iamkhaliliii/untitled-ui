@@ -10,7 +10,7 @@ export default function PostView() {
     
     // Event data for the modal
     const eventData = {
-        id: 1,
+        id: 3, // Changed ID to get 'open' RSVP state (4 % 3 = 1, which maps to 'open')
         title: "Monthly Music Meetup - March 2024",
         description: "Join us for our Monthly Music Meetup! 🎵 We'll be showcasing new artists, discussing latest trends, and networking with fellow music enthusiasts. Free snacks and drinks provided!",
         image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=400&h=200&fit=crop&crop=center",
@@ -21,6 +21,8 @@ export default function PostView() {
         attendees: 44,
         maxAttendees: 50,
         type: "in-person",
+        locationType: "hybrid",
+        virtualUrls: ["https://zoom.us/j/123456789", "https://meet.google.com/abc-defg-hij", "https://youtube.com/watch?v=dQw4w9WgXcQ"],
         category: "Music",
         coordinates: {
             latitude: 40.7589,
@@ -194,7 +196,9 @@ export default function PostView() {
                                             <div className="flex items-center gap-3 text-xs max-md:text-sm text-zinc-500 dark:text-zinc-400 max-md:flex-wrap">
                                                 <div className="flex items-center gap-1">
                                                     <MarkerPin01 className="w-3 h-3 max-md:w-4 max-md:h-4" />
-                                                    <span>Community Center</span>
+                                                    <span>Community Center + </span>
+                                                    <VideoRecorder className="w-3 h-3 max-md:w-4 max-md:h-4" />
+                                                    <span>Virtual</span>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4">

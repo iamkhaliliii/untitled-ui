@@ -7,6 +7,8 @@ import {
     Download01,
     ChevronDown,
     ChevronUp,
+    VideoRecorder,
+    Share04,
 } from "@untitledui/icons";
 import { CheckCircle } from 'lucide-react';
 import { Button } from "@/components/base/buttons/button";
@@ -112,6 +114,8 @@ const SiteEventDetailPage = () => {
         fullAddress: "250 West 54th Street, New York, NY 10019",
         category: "Workshop",
         type: "in-person",
+        locationType: "hybrid",
+        virtualUrls: ["https://zoom.us/j/123456789", "https://meet.google.com/abc-defg-hij"],
         attendees: 50,
         coordinates: {
             latitude: 40.7589,
@@ -279,16 +283,33 @@ const SiteEventDetailPage = () => {
                                     {/* Location Card */}
                                     <div className="flex items-center gap-2 max-md:gap-3">
                                         <div className="w-10 h-10 max-md:w-12 max-md:h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                            <MarkerPin01 className="h-4 w-4 max-md:h-5 max-md:w-5 text-gray-500" />
+                                            {event.locationType === "virtual" ? (
+                                                <VideoRecorder className="h-4 w-4 max-md:h-5 max-md:w-5 text-gray-500" />
+                                            ) : event.locationType === "hybrid" ? (
+                                                <div className="flex items-center -space-x-1">
+                                                    <MarkerPin01 className="h-3.5 w-3.5 bg-white max-md:h-4 max-md:w-4 text-gray-500" />
+                                                    <VideoRecorder className="h-3.5 w-3.5 bg-white max-md:h-4 max-md:w-4 text-gray-500" />
+                                                </div>
+                                            ) : (
+                                                <MarkerPin01 className="h-4 w-4 max-md:h-5 max-md:w-5 text-gray-500" />
+                                            )}
                                         </div>
                                         <div className="flex-1">
                                             <div className="font-medium text-gray-900 text-sm max-md:text-base flex items-center gap-1">
-                                                {event.location}
-                                                <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
-                                                </svg>
+                                                {event.locationType === "virtual" ? "Virtual" : 
+                                                 event.locationType === "hybrid" ? (
+                                                    <span>{event.location} <span className="text-[0.7rem]">+ Virtual</span></span>
+                                                 ) :
+                                                 event.location}
                                             </div>
-                                            <div className="text-xs max-md:text-sm text-gray-600">Full details available after RSVP</div>
+                                            <div className="text-xs max-md:text-sm text-gray-600">
+                                                {event.locationType === "virtual"
+                                                    ? "Event join link available after RSVP"
+                                                    : event.locationType === "hybrid" 
+                                                    ? "Details and links shown after RSVP"
+                                                    : "Full details available after RSVP"
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -415,21 +436,92 @@ const SiteEventDetailPage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Location */}
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                            <MarkerPin01 className="h-4 w-4 text-gray-500" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
-                                                {event.location}
-                                                <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
-                                                </svg>
+                                    {/* Physical Location Card (for physical and hybrid) */}
+                                    {(event.locationType === "physical" || event.locationType === "hybrid") && (
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                <MarkerPin01 className="h-4 w-4 text-gray-500" />
                                             </div>
-                                            <div className="text-xs text-gray-600">{event.fullAddress}</div>
+                                            <div className="flex-1">
+                                                <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
+                                                    {event.location}
+                                                </div>
+                                                <div className="text-xs text-gray-600">{event.fullAddress}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {/* Virtual Location Card (for virtual and hybrid) */}
+                                    {(event.locationType === "virtual" || event.locationType === "hybrid") && (
+                                        <div className="flex items-start gap-2">
+                                            <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                <VideoRecorder className="h-4 w-4 text-gray-500" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
+                                                    Virtual links
+                                                </div>
+                                                <div className="text-xs text-gray-600 space-y-0">
+                                                    {/* Zoom Link */}
+                                                    <a 
+                                                        href="https://zoom.us/j/123456789" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://zoom.us/favicon.ico" 
+                                                            alt="Zoom" 
+                                                            className="w-3 h-3"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                            }}
+                                                        />
+                                                        <span className="text-xs">https://zoom.us/j/123456789</span>
+                                                        <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                    
+                                                    {/* Google Meet Link */}
+                                                    <a 
+                                                        href="https://meet.google.com/abc-defg-hij" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://meet.google.com/favicon.ico" 
+                                                            alt="Google Meet" 
+                                                            className="w-3 h-3"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                            }}
+                                                        />
+                                                        <span className="text-xs">https://meet.google.com/abc-defg-hij</span>
+                                                        <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                    
+                                                    {/* YouTube Link */}
+                                                    <a 
+                                                        href="https://youtube.com/watch?v=dQw4w9WgXcQ" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://youtube.com/favicon.ico" 
+                                                            alt="YouTube" 
+                                                            className="w-3 h-3"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNNSw0VjhMOCw2TDUsNFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
+                                                            }}
+                                                        />
+                                                        <span className="text-xs">https://youtube.com/watch?v=dQw4w9WgXcQ</span>
+                                                        <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 
                                 {/* Interactive Map */}
@@ -495,21 +587,7 @@ const SiteEventDetailPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Location Card */}
-                                <div className="p-3">
-                                    <div className="text-sm text-gray-500 mb-3">Location</div>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <div className="font-medium text-gray-900">{event.location}</div>
-                                            <div className="text-sm text-gray-600 mt-1">
-                                                {event.type === "online" 
-                                                    ? "Join link will be sent before the event" 
-                                                    : "Full address will be provided after registration"
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </>
                         )}
                     </div>
@@ -573,16 +651,36 @@ const SiteEventDetailPage = () => {
                                     {/* Location Card */}
                                     <div className="flex items-center gap-3">
                                         <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                            {event.locationType === "virtual" ? (
+                                                <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                            ) : event.locationType === "hybrid" ? (
+                                                <div className="flex items-center gap-1">
+                                                    <MarkerPin01 className="h-4 w-4 text-gray-500" />
+                                                    <VideoRecorder className="h-4 w-4 text-gray-500" />
+                                                </div>
+                                            ) : (
+                                                <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                            )}
                                         </div>
                                         <div className="flex-1">
                                             <div className="font-medium text-gray-900 text-base flex items-center gap-1">
-                                                {event.location}
+                                                {event.locationType === "virtual" ? "Virtual" : 
+                                                 event.locationType === "hybrid" ? (
+                                                    <span>{event.location} <span className="text-[0.7rem]">+ Virtual</span></span>
+                                                 ) :
+                                                 event.location}
                                                 <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                 </svg>
                                             </div>
-                                            <div className="text-sm text-gray-600">Full details available after RSVP</div>
+                                            <div className="text-sm text-gray-600">
+                                                {event.locationType === "virtual"
+                                                    ? "Event join link available after RSVP"
+                                                    : event.locationType === "hybrid" 
+                                                    ? "Details and links shown after RSVP"
+                                                    : "Full details available after RSVP"
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -645,21 +743,92 @@ const SiteEventDetailPage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Location */}
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                            <MarkerPin01 className="h-5 w-5 text-gray-500" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-gray-900 text-base flex items-center gap-1">
-                                                {event.location}
-                                                <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
-                                                </svg>
+                                    {/* Physical Location Card (for physical and hybrid) */}
+                                    {(event.locationType === "physical" || event.locationType === "hybrid") && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                <MarkerPin01 className="h-5 w-5 text-gray-500" />
                                             </div>
-                                            <div className="text-sm text-gray-600">{event.fullAddress}</div>
+                                            <div className="flex-1">
+                                                <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                    {event.location}
+                                                </div>
+                                                <div className="text-sm text-gray-600">{event.fullAddress}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {/* Virtual Location Card (for virtual and hybrid) */}
+                                    {(event.locationType === "virtual" || event.locationType === "hybrid") && (
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                    Virtual links
+                                                </div>
+                                                <div className="text-sm text-gray-600 space-y-0">
+                                                    {/* Zoom Link */}
+                                                    <a 
+                                                        href="https://zoom.us/j/123456789" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://zoom.us/favicon.ico" 
+                                                            alt="Zoom" 
+                                                            className="w-4 h-4"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+                                                            }}
+                                                        />
+                                                        <span className="text-sm">https://zoom.us/j/123456789</span>
+                                                        <Share04 className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                    
+                                                    {/* Google Meet Link */}
+                                                    <a 
+                                                        href="https://meet.google.com/abc-defg-hij" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://meet.google.com/favicon.ico" 
+                                                            alt="Google Meet" 
+                                                            className="w-4 h-4"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+                                                            }}
+                                                        />
+                                                        <span className="text-sm">https://meet.google.com/abc-defg-hij</span>
+                                                        <Share04 className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                    
+                                                    {/* YouTube Link */}
+                                                    <a 
+                                                        href="https://youtube.com/watch?v=dQw4w9WgXcQ" 
+                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <img 
+                                                            src="https://youtube.com/favicon.ico" 
+                                                            alt="YouTube" 
+                                                            className="w-4 h-4"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNNSw0VjhMOCw2TDUsNFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
+                                                            }}
+                                                        />
+                                                        <span className="text-sm">https://youtube.com/watch?v=dQw4w9WgXcQ</span>
+                                                        <Share04 className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 
                                 {/* Interactive Map */}
@@ -725,21 +894,7 @@ const SiteEventDetailPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Location Card */}
-                                <div>
-                                    <div className="text-base text-gray-500 mb-4">Location</div>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <div className="font-medium text-gray-900 text-base">{event.location}</div>
-                                            <div className="text-base text-gray-600 mt-1">
-                                                {event.type === "online" 
-                                                    ? "Join link will be sent before the event" 
-                                                    : "Full address will be provided after registration"
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </>
                         )}
                     </div>

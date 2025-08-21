@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from "react-router";
 import { useListData } from 'react-stately';
-import { ArrowLeft, Plus, Bell01, MessageChatCircle, Moon01, SearchLg, Zap, Edit03, FaceSmile, Image01, Paperclip, ChevronDown, Eye, EyeOff, X, Calendar, Clock, MarkerPin01, Users01, Tag01, Settings01, Globe01, ChevronUp, HelpCircle } from "@untitledui/icons";
+import { ArrowLeft, Plus, Bell01, MessageChatCircle, Moon01, SearchLg, Zap, Edit03, FaceSmile, Image01, Paperclip, ChevronDown, Eye, EyeOff, X, Calendar, Clock, MarkerPin01, Users01, Tag01, Settings01, Globe01, Globe06, VideoRecorder, ChevronUp, HelpCircle } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input, InputBase } from '@/components/base/input/input';
 import { InputGroup } from '@/components/base/input/input-group';
@@ -35,10 +35,10 @@ interface FormData {
     dateFrom: string;
     dateTo: string;
     timezone: string;
-    locationType: 'physical' | 'virtual' | 'tbd';
+    locationType: 'physical' | 'virtual' | 'hybrid' | 'tbd';
     address: string;
     area: string;
-    virtualUrl: string;
+    virtualUrls: { url: string; id: string }[];
     coverImage: File | null;
     eventDetails: string;
     additionalDetails: string;
@@ -91,7 +91,7 @@ export const AdminContentEventsCreatePage = () => {
         locationType: 'physical',
         address: '',
         area: '',
-        virtualUrl: '',
+        virtualUrls: [{ url: '', id: 'virtual-url-1' }],
         coverImage: null,
         eventDetails: '',
         additionalDetails: '',
@@ -195,7 +195,8 @@ export const AdminContentEventsCreatePage = () => {
 
     const locationTypes = useMemo(() => [
         { id: 'physical', label: 'Physical Location', supportingText: 'In-person event', icon: MarkerPin01 },
-        { id: 'virtual', label: 'Virtual Event', supportingText: 'Online event', icon: Globe01 },
+        { id: 'virtual', label: 'Virtual Event', supportingText: 'Online event', icon: VideoRecorder },
+        { id: 'hybrid', label: 'Physical location and virtual', supportingText: 'Both in-person and online', icon: Globe06 },
         { id: 'tbd', label: 'To Be Determined', supportingText: 'Location will be decided later', icon: HelpCircle }
     ], []);
     
@@ -508,7 +509,7 @@ export const AdminContentEventsCreatePage = () => {
                                         placeholder="Select location type"
                                         placeholderIcon={MarkerPin01}
                                         selectedKey={formData.locationType}
-                                        onSelectionChange={(value) => setFormData(prev => ({ ...prev, locationType: value as 'physical' | 'virtual' | 'tbd' }))}
+                                        onSelectionChange={(value) => setFormData(prev => ({ ...prev, locationType: value as 'physical' | 'virtual' | 'hybrid' | 'tbd' }))}
                                         items={locationTypes}
                                     >
                                         {(item) => (
@@ -519,7 +520,7 @@ export const AdminContentEventsCreatePage = () => {
                                     </Select>
 
                                     {/* Location Details */}
-                                    {formData.locationType === 'physical' && (
+                                    {(formData.locationType === 'physical' || formData.locationType === 'hybrid') && (
                                         <div className="relative pl-6 mt-2 space-y-4">
                                             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                             <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
@@ -565,21 +566,63 @@ export const AdminContentEventsCreatePage = () => {
                                         </div>
                                     )}
 
-                                    {formData.locationType === 'virtual' && (
+                                    {(formData.locationType === 'virtual' || formData.locationType === 'hybrid') && (
                                         <div className="relative pl-6 mt-2 space-y-4">
                                             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                             <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
                                             
-                                            <InputGroup 
-                                                label="Virtual URL" 
-                                                leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
-                                            >
-                                                <InputBase 
-                                                    placeholder="zoom.us/j/123456789"
-                                                    value={formData.virtualUrl}
-                                                    onChange={(value) => setFormData(prev => ({ ...prev, virtualUrl: value }))}
-                                                />
-                                            </InputGroup>
+                                            <div className="space-y-3">
+                                                <label className="block text-sm font-medium text-gray-700">Virtual Event Links</label>
+                                                {formData.virtualUrls.map((virtualUrl, index) => (
+                                                    <div key={virtualUrl.id} className="flex items-start gap-2">
+                                                        <div className="flex-1">
+                                                            <InputGroup
+                                                                leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
+                                                            >
+                                                                <InputBase 
+                                                                    placeholder="zoom.us/j/123456789"
+                                                                    value={virtualUrl.url}
+                                                                    onChange={(value) => {
+                                                                        const newUrls = [...formData.virtualUrls];
+                                                                        newUrls[index] = { ...newUrls[index], url: value };
+                                                                        setFormData(prev => ({ ...prev, virtualUrls: newUrls }));
+                                                                    }}
+                                                                />
+                                                            </InputGroup>
+                                                            <p className="mt-1 text-xs text-gray-500">Only shown after RSVP</p>
+                                                        </div>
+                                                        {formData.virtualUrls.length > 1 && index > 0 && (
+                                                            <Button
+                                                                type="button"
+                                                                size="sm"
+                                                                color="tertiary"
+                                                                iconLeading={X}
+                                                                onClick={() => {
+                                                                    const newUrls = formData.virtualUrls.filter((_, i) => i !== index);
+                                                                    setFormData(prev => ({ ...prev, virtualUrls: newUrls }));
+                                                                }}
+                                                                className="!p-2 !w-8 !h-8 mt-1"
+                                                            />
+                                                        )}
+                                                    </div>
+                                                ))}
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    color="tertiary"
+                                                    iconLeading={Plus}
+                                                    onClick={() => {
+                                                        const newUrl = {
+                                                            url: '',
+                                                            id: `virtual-url-${Date.now()}`
+                                                        };
+                                                        setFormData(prev => ({ ...prev, virtualUrls: [...prev.virtualUrls, newUrl] }));
+                                                    }}
+                                                    className="w-fit"
+                                                >
+                                                    Add another link
+                                                </Button>
+                                            </div>
                                         </div>
                                     )}
 

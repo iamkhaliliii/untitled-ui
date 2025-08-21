@@ -312,7 +312,9 @@ export const SiteFeedPage = () => {
                                                                     <div className="flex items-center gap-3 text-xs max-md:text-sm text-zinc-500 dark:text-zinc-400 max-md:flex-wrap">
                                                                         <div className="flex items-center gap-1">
                                                                             <MarkerPin01 className="w-3 h-3 max-md:w-4 max-md:h-4" />
-                                                                            <span>Community Center</span>
+                                                                            <span>Community Center + </span>
+                                                                            <VideoRecorder className="w-3 h-3 max-md:w-4 max-md:h-4" />
+                                                                            <span>Virtual</span>
                                                                         </div>
                                                                     </div>
                                                                     <div className="flex items-center gap-4">

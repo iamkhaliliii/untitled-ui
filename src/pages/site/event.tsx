@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X } from "@untitledui/icons";
+import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder } from "@untitledui/icons";
 import { MarkerPin01 } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
@@ -126,17 +126,36 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                 <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                         <Calendar className="h-3.5 w-3.5 text-brand-solid" />
-
                         <span className="font-medium">{event.date}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                         <Clock className="h-3.5 w-3.5 text-success-solid" />
                         <span>{event.time}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                        <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
-                        <span>{event.location}</span>
-                    </div>
+                    
+                    {/* Location Display Logic */}
+                    {event.locationType === 'physical' && (
+                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+                            <span>{event.location}</span>
+                        </div>
+                    )}
+                    
+                    {event.locationType === 'virtual' && (
+                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                            <VideoRecorder className="h-3.5 w-3.5 text-warning-solid" />
+                            <span>Virtual</span>
+                        </div>
+                    )}
+                    
+                    {event.locationType === 'hybrid' && (
+                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+                            <span className="flex items-center gap-1">
+                                {event.location} + <VideoRecorder className="h-3.5 w-3.5 text-warning-solid" /> Virtual
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Actions Footer */}
@@ -252,6 +271,7 @@ export default function SiteEventPage() {
                             fullAddress: "747 Howard Street, San Francisco, CA 94103",
                             attendees: 150,
                             maxAttendees: 200,
+                            locationType: "physical",
                             type: "in-person",
                             category: "Technology",
                             coordinates: {
@@ -271,9 +291,10 @@ export default function SiteEventPage() {
                             date: "March 18, 2024",
                             time: "2:00 PM - 5:00 PM",
                             location: "Online",
+                            virtualUrls: ["https://zoom.us/j/123456789"],
                             attendees: 89,
                             maxAttendees: 100,
-
+                            locationType: "virtual",
                             type: "online",
                             category: "Design",
                             organizer: {
@@ -290,8 +311,10 @@ export default function SiteEventPage() {
                             time: "7:00 PM - 10:00 PM",
                             location: "WeWork Times Square",
                             fullAddress: "1460 Broadway, New York, NY 10036",
+                            virtualUrls: ["https://teams.microsoft.com/meet/abc123"],
                             attendees: 75,
                             maxAttendees: 150,
+                            locationType: "hybrid",
                             type: "in-person",
                             category: "Business",
                             coordinates: {
@@ -311,9 +334,10 @@ export default function SiteEventPage() {
                             date: "March 25, 2024",
                             time: "10:00 AM - 4:00 PM",
                             location: "Online",
+                            virtualUrls: ["https://zoom.us/j/987654321"],
                             attendees: 234,
                             maxAttendees: 500,
-
+                            locationType: "virtual",
                             type: "online",
                             category: "Technology",
                             organizer: {
@@ -331,7 +355,7 @@ export default function SiteEventPage() {
                             location: "Los Angeles, CA",
                             attendees: 45,
                             maxAttendees: 80,
-
+                            locationType: "physical",
                             type: "in-person",
                             category: "Creative",
                             organizer: {
@@ -347,9 +371,10 @@ export default function SiteEventPage() {
                             date: "April 2, 2024",
                             time: "9:00 AM - 5:00 PM",
                             location: "Online",
+                            virtualUrls: ["https://meet.google.com/xyz-abc-def"],
                             attendees: 156,
                             maxAttendees: 200,
-
+                            locationType: "virtual",
                             type: "online",
                             category: "Marketing",
                             organizer: {
