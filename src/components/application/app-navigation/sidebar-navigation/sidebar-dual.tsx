@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp, Heart } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp, Heart, Shield01 } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -33,6 +33,7 @@ import { EventsMembersSettings } from "./tertiary-sidebar/events-members-setting
 import { EventsAnalyticsSettings } from "./tertiary-sidebar/events-analytics-settings";
 import { EventsAuditLogsSettings } from "./tertiary-sidebar/events-audit-logs-settings";
 import { EventsDangerSettings } from "./tertiary-sidebar/events-danger-settings";
+import { EventsPermissionsSettings } from "./tertiary-sidebar/events-permissions-settings";
 import { AddSpaceModal } from "../../modals/add-space-modal";
 import { SpaceConfigurationModal } from "../../modals/space-configuration-modal";
 import { FieldSelectionModal } from "../../modals/field-selection-modal";
@@ -193,24 +194,28 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const [selectedSecondaryItem, setSelectedSecondaryItem] = useState<string>(() => {
         // Set initial state based on current URL
         if (activeUrl?.includes("/site/spaces/myfolder/events/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/events/permissions")) return "permissions";
         if (activeUrl?.includes("/site/spaces/myfolder/events/members")) return "members";
         if (activeUrl?.includes("/site/spaces/myfolder/events/analytics")) return "analytics";
         if (activeUrl?.includes("/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/events/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/blog/permissions")) return "permissions";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/members")) return "members";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/analytics")) return "analytics";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/blog/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/myfolder/help/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/help/permissions")) return "permissions";
         if (activeUrl?.includes("/site/spaces/myfolder/help/members")) return "members";
         if (activeUrl?.includes("/site/spaces/myfolder/help/analytics")) return "analytics";
         if (activeUrl?.includes("/site/spaces/myfolder/help/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/help/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/help/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/myfolder/posts/permissions")) return "permissions";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/members")) return "members";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/analytics")) return "analytics";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/audit-logs")) return "audit-logs";
@@ -870,6 +875,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 return isCmsEventsPage ? "CMS Settings" : "General Settings";
             case "customize":
                 return isCmsEventsPage ? "CMS Customization" : "Customization";
+            case "permissions":
+                return "Permissions";
             case "members":
                 return "Members";
             case "analytics":
@@ -1053,6 +1060,14 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         onAddWidgetClick={handleAddWidgetClick}
                         onWidgetConfig={handleWidgetConfig}
                         onEditGlobalWidgets={() => setShowNavigationInTertiary(true)}
+                    />
+                );
+            case "permissions":
+                return (
+                    <EventsPermissionsSettings
+                        formToggles={formToggles}
+                        setFormToggles={setFormToggles}
+                        pageType={isEventsPage ? 'events' : isBlogPage ? 'blog' : isHelpPage ? 'help' : isPostsPage ? 'posts' : 'events'}
                     />
                 );
             case "members":
@@ -1611,6 +1626,28 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     Customize
                                 </button>
                             </li>
+                            {/* Show Permissions tab for non-CMS pages */}
+                            {!isCmsEventsPage && (
+                                <li>
+                                    <button
+                                        onClick={() => handleSecondaryItemClick("permissions", 
+                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
+                                            isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/permissions` :
+                                            isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/permissions` :
+                                            isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/permissions` :
+                                            `/${currentAdminVersion}/site/spaces/myfolder/events/permissions`
+                                        )}
+                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            selectedSecondaryItem === "permissions"
+                                                ? "bg-active text-secondary_hover"
+                                                : "text-secondary hover:text-primary hover:bg-secondary"
+                                        }`}
+                                    >
+                                        <Shield01 className="h-4 w-4" />
+                                        Permissions
+                                    </button>
+                                </li>
+                            )}
                             {/* Show Settings tab only for CMS pages */}
                             {isCmsEventsPage && (
                                 <li>

@@ -37,6 +37,7 @@ export const SiteSpacesBlogPage = () => {
         }
         
         if (currentPath.includes("/customize")) return "Customize your blog page layout and appearance";
+        if (currentPath.includes("/permissions")) return "Manage blog space and content permissions";
         if (currentPath.includes("/members")) return "Manage blog members and permissions";
         if (currentPath.includes("/seo")) return "Configure SEO settings for your blog";
         if (currentPath.includes("/danger")) return "Danger zone - irreversible actions";
