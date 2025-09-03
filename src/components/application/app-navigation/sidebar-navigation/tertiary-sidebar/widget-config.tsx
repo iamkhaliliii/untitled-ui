@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useListData } from "react-stately";
-import { ArrowLeft, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle } from '@untitledui/icons';
+import { ArrowLeft, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle, FileHeart01, FileCheck02, FileCheck03 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
@@ -283,9 +283,9 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   ];
 
   const eventSourceOptions = [
-    { id: 'all_spaces', label: 'All spaces', icon: Globe05 },
-    { id: 'current_space', label: 'Current space', icon: Home01 },
-    { id: 'specific_spaces', label: 'Specific spaces', icon: Settings01 },
+    { id: 'all_spaces', label: 'All spaces', icon: FileCheck03 },
+    { id: 'current_space', label: 'Current space', icon: FileCheck02 },
+    { id: 'specific_spaces', label: 'Specific spaces', icon: FileHeart01 },
     { id: 'specific_events', label: 'Specific events', icon: Calendar }
   ];
 
