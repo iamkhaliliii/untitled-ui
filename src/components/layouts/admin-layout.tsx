@@ -125,11 +125,11 @@ const generateNavItems = (adminVersion: string): NavItemType[] => {
         href: `/${adminVersion}/people`,
         icon: Users01,
         items: [
-            { label: "All Users", href: `/${adminVersion}/people/all`, icon: Users01 },
-            { label: "Administrators", href: `/${adminVersion}/people/admins`, icon: UserSquare },
-            { label: "Moderators", href: `/${adminVersion}/people/moderators`, icon: User01 },
-            { label: "Subscribers", href: `/${adminVersion}/people/subscribers`, icon: UsersPlus },
-            { label: "Banned Users", href: `/${adminVersion}/people/banned`, icon: Archive },
+            { label: "Members", href: `/${adminVersion}/people`, icon: Users01 },
+            { label: "Staff", href: `/${adminVersion}/people/staff`, icon: UserSquare },
+            { label: "Invitations", href: `/${adminVersion}/people/invitations`, icon: UsersPlus },
+            { label: "Profile fields", href: `/${adminVersion}/people/profile-fields`, icon: User01 },
+            { label: "Badges", href: `/${adminVersion}/people/badges`, icon: Archive },
         ],
     });
     

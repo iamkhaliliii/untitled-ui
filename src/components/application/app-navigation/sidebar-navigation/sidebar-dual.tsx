@@ -1151,11 +1151,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     hideBorder && "ring-transparent",
                 )}
             >
-                {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
-                    <div className="flex justify-center px-3">
-                        <UntitledLogoMinimal className="size-8" />
-                    </div>
-                )}
+                <div className="flex justify-center px-3">
+                    <UntitledLogoMinimal className="size-8" />
+                </div>
 
                 <ul className="mt-4 flex flex-col gap-0.5 px-3">
                     {items.map((item) => (
