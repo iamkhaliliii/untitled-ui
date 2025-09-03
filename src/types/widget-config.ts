@@ -16,8 +16,9 @@ export interface EventsListConfig {
   coverImage: boolean;
   title: string;
   description: string;
-  eventSource: 'all_spaces' | 'current_space' | 'specific_spaces';
+  eventSource: 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events';
   selectedSpaces: string[];
+  selectedEvents: string[];
 }
 
 export interface SpaceHeaderConfig {
@@ -50,7 +51,8 @@ export const defaultEventsListConfig: EventsListConfig = {
   title: 'Events List Widget',
   description: 'Display a list of upcoming and past events with customizable layout and features.',
   eventSource: 'current_space',
-  selectedSpaces: []
+  selectedSpaces: [],
+  selectedEvents: []
 };
 
 export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {

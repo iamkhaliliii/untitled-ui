@@ -21,6 +21,14 @@ interface SpaceItem {
   icon?: React.FC | React.ReactNode;
 }
 
+interface EventItem {
+  label: string;
+  id: string;
+  supportingText: string;
+  avatarUrl: string;
+  icon?: React.FC | React.ReactNode;
+}
+
 interface WidgetConfigProps {
   selectedWidget: {
     id: string;
@@ -56,7 +64,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     title,
     description,
     eventSource,
-    selectedSpaces
+    selectedSpaces,
+    selectedEvents
   } = eventsListConfig;
   
   // Section collapse/expand states
@@ -99,6 +108,40 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   const handleSpaceCleared = (key: React.Key) => {
     const newSelectedSpaces = selectedSpaces.filter(id => id !== key.toString());
     updateEventsListConfig({ selectedSpaces: newSelectedSpaces });
+  };
+
+  // Selected events for MultiSelect
+  const selectedEventsItems = useListData<EventItem>({
+    initialItems: [],
+  });
+
+  // Initialize selectedEventsItems with current config
+  useEffect(() => {
+    const currentItems = selectedEvents.map(id => eventsData.find(event => event.id === id)).filter((item): item is NonNullable<typeof item> => Boolean(item));
+    
+    // Only update if different
+    const currentIds = selectedEventsItems.items.map(item => item.id);
+    if (JSON.stringify(currentIds.sort()) !== JSON.stringify(selectedEvents.sort())) {
+      // Clear and repopulate
+      if (selectedEventsItems.items.length > 0) {
+        selectedEventsItems.remove(...selectedEventsItems.items.map(item => item.id));
+      }
+      if (currentItems.length > 0) {
+        selectedEventsItems.append(...currentItems);
+      }
+    }
+  }, [selectedEvents]);
+
+  // Handle event insertion
+  const handleEventInserted = (key: React.Key) => {
+    const newSelectedEvents = [...selectedEvents, key.toString()];
+    updateEventsListConfig({ selectedEvents: newSelectedEvents });
+  };
+
+  // Handle event removal
+  const handleEventCleared = (key: React.Key) => {
+    const newSelectedEvents = selectedEvents.filter(id => id !== key.toString());
+    updateEventsListConfig({ selectedEvents: newSelectedEvents });
   };
 
   // Tab views state - initialize based on current config
@@ -242,7 +285,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   const eventSourceOptions = [
     { id: 'all_spaces', label: 'All spaces', icon: Globe05 },
     { id: 'current_space', label: 'Current space', icon: Home01 },
-    { id: 'specific_spaces', label: 'Specific spaces', icon: Settings01 }
+    { id: 'specific_spaces', label: 'Specific spaces', icon: Settings01 },
+    { id: 'specific_events', label: 'Specific events', icon: Calendar }
   ];
 
   const spacesData: SpaceItem[] = [
@@ -273,6 +317,44 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       supportingText: "", 
       avatarUrl: "",
       icon: Plus,
+    }
+  ];
+
+  const eventsData: EventItem[] = [
+    {
+      label: "React Conference 2024",
+      id: "react-conf-2024",
+      supportingText: "Annual conference featuring the latest React developments",
+      avatarUrl: "",
+      icon: Calendar,
+    },
+    {
+      label: "TypeScript Workshop",
+      id: "typescript-workshop",
+      supportingText: "Hands-on workshop covering advanced TypeScript patterns",
+      avatarUrl: "",
+      icon: Calendar,
+    },
+    {
+      label: "Design System Meetup",
+      id: "design-system-meetup",
+      supportingText: "Monthly meetup for design system enthusiasts",
+      avatarUrl: "",
+      icon: Calendar,
+    },
+    {
+      label: "Product Launch Event",
+      id: "product-launch",
+      supportingText: "Celebrating the launch of our new product",
+      avatarUrl: "",
+      icon: Calendar,
+    },
+    {
+      label: "Community Q&A Session",
+      id: "community-qa",
+      supportingText: "Open Q&A session with the community team",
+      avatarUrl: "",
+      icon: Calendar,
     }
   ];
 
@@ -597,7 +679,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             <div className="h-px bg-secondary"></div>
             
             {/* Filter Items */}
-            {['Tags', 'Spaces', 'Title', 'Author', 'Published date', 'Start Date & Time', 'End Date & Time', 'Location Type', 'Location', 'Hosts'].map((filterName, index) => (
+            {['ID', 'Tags', 'Spaces', 'Title', 'Author', 'Published date', 'Start Date & Time', 'End Date & Time', 'Location Type', 'Location', 'Hosts'].map((filterName, index) => (
               <div key={filterName}>
                 <div className="space-y-1 -mx-2">
                   <button
@@ -695,8 +777,9 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   items={eventSourceOptions} 
                   selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'all_spaces'}
                   onSelectionChange={(key) => updateEventsListConfig({ 
-                    eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces',
-                    selectedSpaces: key === 'specific_spaces' ? selectedSpaces : []
+                    eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events',
+                    selectedSpaces: key === 'specific_spaces' ? selectedSpaces : [],
+                    selectedEvents: key === 'specific_events' ? selectedEvents : []
                   })}
                 >
                   {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
@@ -725,13 +808,37 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                   </MultiSelect>
                 </div>
               )}
+
+              {eventSource === 'specific_events' && (
+                <div>
+                  <MultiSelect
+                    selectedItems={selectedEventsItems}
+                    label="Select events"
+                    hint="Choose which specific events to display"
+                    placeholder="Search events"
+                    items={eventsData}
+                    onItemInserted={handleEventInserted}
+                    onItemCleared={handleEventCleared}
+                  >
+                    {(item) => (
+                      <MultiSelect.Item 
+                        id={item.id} 
+                        icon={item.icon}
+                      >
+                        {item.label}
+                      </MultiSelect.Item>
+                    )}
+                  </MultiSelect>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      {/* Tab Views Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
+      {/* Tab Views Section - Hidden when specific_events is selected */}
+      {eventSource !== 'specific_events' && (
+        <div className="border border-secondary rounded-lg bg-primary p-2">
         <SectionHeader
           icon={Menu01}
           title="Tab views"
@@ -767,6 +874,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
           </div>
         )}
       </div>
+      )}
 
       {/* Layout Section */}
       <div className="border border-secondary rounded-lg bg-primary p-2">
