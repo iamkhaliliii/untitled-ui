@@ -1,5 +1,5 @@
 export interface EventsListConfig {
-  style: 'card' | 'list' | 'feed';
+  style: 'card' | 'list' | 'feed' | 'carousel';
   cardSize: 'small' | 'medium' | 'large' | 'extralarge';
   cardStyle: 'modern' | 'simple';
   groupView: boolean;

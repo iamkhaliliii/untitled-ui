@@ -637,6 +637,101 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
     </div>
   );
 
+  const renderEventCarousel = (event: any, index: number) => (
+    <div key={index} className="flex-shrink-0 w-80 group bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+    style={{
+      animationDelay: `${index * 100}ms`,
+      animation: 'slideInRight 0.6s ease-out forwards'
+    }}>
+      {/* Cover Image */}
+      {eventsListConfig.coverImage && (
+        <div className="relative overflow-hidden aspect-[4/3] mb-4 rounded-lg">
+          <img 
+            src={event.image} 
+            alt={event.title}
+            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+          />
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+        </div>
+      )}
+
+      {/* Event Content */}
+      <div className="space-y-3">
+        {/* Host Badge */}
+        {eventsListConfig.hostInfo && (
+          <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
+            <div className="w-4 h-4 rounded-full overflow-hidden">
+              <img 
+                src="https://i.pravatar.cc/150?img=1" 
+                alt={event.organizer} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span>{event.organizer}</span>
+          </div>
+        )}
+
+        {/* Event Title */}
+        <h3 className="text-lg font-bold text-primary line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
+          {event.title}
+        </h3>
+
+        {/* Event Details */}
+        {eventsListConfig.eventDetails && (
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-sm text-secondary">
+              <Calendar className="h-3.5 w-3.5 text-brand-solid" />
+              <span className="font-medium">{event.date}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-secondary">
+              <Clock className="h-3.5 w-3.5 text-success-solid" />
+              <span>{event.time}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Location */}
+        <div className="flex items-center gap-2 text-sm text-secondary">
+          <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+          <span>{event.location}</span>
+        </div>
+
+        {/* Avatar Group and RSVP */}
+        <div className="flex items-center justify-between pt-2">
+          {eventsListConfig.attended ? (
+            <div className="flex items-center">
+              <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '20px', height: '20px', zIndex: 1}}>
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+              </span>
+              <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-1.5" style={{width: '20px', height: '20px', zIndex: 2}}>
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+              </span>
+              <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-1.5" style={{width: '20px', height: '20px', zIndex: 3}}>
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+              </span>
+              <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-1.5 justify-center text-gray-700 dark:text-gray-300 text-[0.5rem] font-semibold" style={{width: '20px', height: '20px', zIndex: 4}}>
+                +2
+              </span>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          
+          {/* RSVP Button */}
+          <Button
+            color="secondary"
+            size="sm"
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            className="px-3 py-1.5 text-xs"
+          >
+            RSVP Now
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={className}>
       {/* Widget Info Section */}
@@ -695,7 +790,8 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 eventsListConfig.style === 'card' && eventsListConfig.cardSize === 'large' && "grid-cols-2",
                 eventsListConfig.style === 'card' && eventsListConfig.cardSize === 'extralarge' && "grid-cols-1",
                 eventsListConfig.style === 'list' && "space-y-3",
-                eventsListConfig.style === 'feed' && "space-y-4"
+                eventsListConfig.style === 'feed' && "space-y-4",
+                eventsListConfig.style === 'carousel' && "flex gap-4 overflow-x-auto pb-2"
               )}>
                 {(events as any[]).map((event: any, index: number) => {
                   if (eventsListConfig.style === 'card') {
@@ -704,6 +800,8 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                     return renderEventList(event, index);
                   } else if (eventsListConfig.style === 'feed') {
                     return renderEventFeed(event, index);
+                  } else if (eventsListConfig.style === 'carousel') {
+                    return renderEventCarousel(event, index);
                   }
                   return null;
                 })}
@@ -721,7 +819,8 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
           eventsListConfig.style === 'card' && eventsListConfig.cardSize === 'large' && "grid-cols-2",
           eventsListConfig.style === 'card' && eventsListConfig.cardSize === 'extralarge' && "grid-cols-1",
           eventsListConfig.style === 'list' && "space-y-3",
-          eventsListConfig.style === 'feed' && "space-y-4"
+          eventsListConfig.style === 'feed' && "space-y-4",
+          eventsListConfig.style === 'carousel' && "flex gap-4 overflow-x-auto pb-2"
         )}
         key={`${eventsListConfig.style}-${eventsListConfig.cardSize}`}>
           {eventsData.map((event, index) => {
@@ -731,6 +830,8 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
               return renderEventList(event, index);
             } else if (eventsListConfig.style === 'feed') {
               return renderEventFeed(event, index);
+            } else if (eventsListConfig.style === 'carousel') {
+              return renderEventCarousel(event, index);
             }
             return null;
           })}

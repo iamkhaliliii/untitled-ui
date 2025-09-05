@@ -592,6 +592,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const [selectedWidgetForConfig, setSelectedWidgetForConfig] = useState<any>(null);
     const [isTabConfigMode, setIsTabConfigMode] = useState(false);
     const [tabConfigLabel, setTabConfigLabel] = useState<string>('');
+    const [isFilterViewMode, setIsFilterViewMode] = useState(false);
     
     // State for add space modal
     const [showAddSpaceModal, setShowAddSpaceModal] = useState(false);
@@ -650,6 +651,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const handleTabConfigChange = (isTabConfig: boolean, tabLabel?: string) => {
         setIsTabConfigMode(isTabConfig);
         setTabConfigLabel(tabLabel || '');
+    };
+
+    // Handle filter view mode changes
+    const handleFilterViewChange = (isFilterView: boolean) => {
+        setIsFilterViewMode(isFilterView);
     };
 
     // Handle add space modal
@@ -913,6 +919,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         handleWidgetConfigBack();
                     }}
                     onTabConfigChange={handleTabConfigChange}
+                    onFilterViewChange={handleFilterViewChange}
                 />
             );
         }
@@ -1882,7 +1889,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col">
                 {/* Header with title and actions */}
-                {!isTabConfigMode && (
+                {!isTabConfigMode && !isFilterViewMode && (
                     <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
                     <div className="flex items-center gap-3">
                         {showWidgetSelection && (
@@ -1909,7 +1916,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
                             </button>
                         )}
-                        {!isTabConfigMode && (
+                        {!isTabConfigMode && !isFilterViewMode && (
                             <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
                         )}
                     </div>

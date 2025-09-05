@@ -283,14 +283,13 @@ export const SiteFeedPage = () => {
                                                 <div className="space-y-4 max-md:space-y-3">
                                                     <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-zinc-200 dark:border-zinc-700 bg-zinc-50/30 dark:bg-zinc-800/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/70">
                                                         <div className="p-5 max-lg:p-4 max-md:p-4">
-                                                            <div className="flex items-center justify-between mb-6 max-md:mb-4">
+                                                            <div className="flex items-center mb-6 max-md:mb-4">
                                                                 <div className="flex items-center gap-1.5">
                                                                     <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                                                                         <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                                                                     </div>
                                                                     <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Event</h4>
                                                                 </div>
-                                                                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-xs">Upcoming</div>
                                                             </div>
                                                             <div className="flex gap-4 max-md:flex-col max-md:gap-3">
                                                                 <div className="flex-shrink-0 max-md:flex-shrink">
@@ -301,11 +300,14 @@ export const SiteFeedPage = () => {
                                                                 <div className="w-px bg-zinc-100 dark:bg-zinc-700 my-1 max-md:hidden"></div>
                                                                 <div className="flex-1 min-w-0 space-y-2 max-md:space-y-3">
                                                                     <div className="flex items-center gap-2 text-xs max-md:text-sm font-medium text-zinc-500 dark:text-zinc-400 max-md:flex-wrap">
-                                                                        <span>Saturday, March 23rd</span>
+                                                                        <div className="flex items-center gap-1">
+                                                                            <Calendar className="w-3 h-3 max-md:w-4 max-md:h-4" />
+                                                                            <span>Saturday, March 23rd</span>
+                                                                        </div>
                                                                         <div className="w-px h-3 bg-zinc-300 dark:bg-zinc-600 max-md:hidden"></div>
                                                                         <div className="flex items-center gap-1">
                                                                             <Clock className="w-3 h-3 max-md:w-4 max-md:h-4" />
-                                                                            <span>Starts from 7:00 PM</span>
+                                                                            <span>2:00 PM - 5:00 PM</span>
                                                                         </div>
                                                                     </div>
                                                                     <h3 className="text-xl max-lg:text-lg max-md:text-xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">Monthly Music Meetup - March 2024</h3>

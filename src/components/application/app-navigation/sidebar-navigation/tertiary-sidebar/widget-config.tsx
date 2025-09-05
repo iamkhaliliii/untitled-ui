@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useListData } from "react-stately";
-import { ArrowLeft, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle, FileHeart01, FileCheck02, FileCheck03 } from '@untitledui/icons';
+import { ArrowLeft, ArrowRight, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle, FileHeart01, FileCheck02, FileCheck03 } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
@@ -38,9 +38,10 @@ interface WidgetConfigProps {
   onBack: () => void;
   onSave: () => void;
   onTabConfigChange?: (isTabConfig: boolean, tabLabel?: string) => void;
+  onFilterViewChange?: (isFilterView: boolean) => void;
 }
 
-const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave, onTabConfigChange }) => {
+const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave, onTabConfigChange, onFilterViewChange }) => {
   const { eventsListConfig, updateEventsListConfig, spaceHeaderConfig, updateSpaceHeaderConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
@@ -76,6 +77,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
   const [sourceExpanded, setSourceExpanded] = useState(true);
   const [customCSSExpanded, setCustomCSSExpanded] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Selected spaces for MultiSelect
   const selectedSpacesItems = useListData<SpaceItem>({
@@ -157,6 +159,14 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   // Tab configuration view state
   const [isTabConfigView, setIsTabConfigView] = useState(false);
   const [currentConfigTab, setCurrentConfigTab] = useState<{ id: string; label: string } | null>(null);
+  
+  // Filter configuration view state
+  const [isFilterView, setIsFilterView] = useState(false);
+
+  // Notify parent when filter view changes
+  useEffect(() => {
+    onFilterViewChange?.(isFilterView);
+  }, [isFilterView, onFilterViewChange]);
   
   // Filter items expanded state
   const [expandedFilters, setExpandedFilters] = useState<Set<string>>(new Set(['tags', 'start_date_time']));
@@ -268,11 +278,18 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [openDropdownId]);
 
-  const styleOptions = [
-    { id: 'card', label: 'Card', icon: Grid01 },
-    { id: 'list', label: 'List', icon: Dotpoints02 },
-    { id: 'feed', label: 'Feed', icon: Rows02 }
-  ];
+  const styleOptions = selectedWidget.label === 'Custom Events List' 
+    ? [
+        { id: 'card', label: 'Card', icon: Grid01 },
+        { id: 'list', label: 'List', icon: Dotpoints02 },
+        { id: 'feed', label: 'Feed', icon: Rows02 },
+        { id: 'carousel', label: 'Carousel', icon: ArrowRight }
+      ]
+    : [
+        { id: 'card', label: 'Card', icon: Grid01 },
+        { id: 'list', label: 'List', icon: Dotpoints02 },
+        { id: 'feed', label: 'Feed', icon: Rows02 }
+      ];
 
   const cardSizeOptions = [
     { id: 'small', label: 'Small', icon: Minimize01 },
@@ -418,7 +435,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         onClick={onClick}
       >
         <IconComponent className="h-6 w-6 mb-2" />
-        <span className="text-sm font-medium">{option.label}</span>
+        <span className="text-xs font-medium">{option.label}</span>
       </div>
     );
   };
@@ -727,6 +744,111 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     );
   };
 
+  const renderFilterView = () => {
+    return (
+      <div className="p-4 transition-all duration-300 ease-in-out">
+        {/* Header with Back Button */}
+        <div className="mb-6">
+          {/* Back Button Row */}
+          <div className="mb-3">
+            <Button
+              size="sm"
+              color="secondary"
+              iconLeading={ArrowLeft}
+              onClick={() => setIsFilterView(false)}
+            />
+          </div>
+          
+          {/* Title Row */}
+          <div>
+            <h2 className={cx(
+              "text-lg font-semibold",
+              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+            )}>
+              Event Filters
+            </h2>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {/* Filters Section */}
+          <div className="space-y-2">
+            {/* Filter Title */}
+            <div className="px-2">
+              <div>
+                <h3 className={cx(
+                  "text-sm font-semibold",
+                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                )}>
+                  <div className="flex justify-between items-center">
+                    Available filters
+                    <div className="text-sm font-normal">
+                      <a className={cx(
+                        "cursor-pointer rounded-base transition duration-200 focus:outline-none focus-visible:ring",
+                        theme === 'dark' 
+                          ? "text-blue-400 hover:text-blue-300 ring-blue-400" 
+                          : "text-blue-600 hover:text-blue-700 ring-blue-600"
+                      )}>
+                        Clear all
+                      </a>
+                    </div>
+                  </div>
+                </h3>
+                <p className={cx(
+                  "text-sm mt-1",
+                  theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                )}>
+                  Configure filters to customize which events are displayed.
+                </p>
+              </div>
+            </div>
+            
+            <div className="h-px bg-secondary"></div>
+            
+            {/* Filter Items */}
+            {['Tags', 'Spaces', 'Title', 'Author', 'Published date', 'Start Date & Time', 'End Date & Time', 'Location Type', 'Location', 'Hosts'].map((filterName, index) => (
+              <div key={filterName}>
+                <div className="space-y-1 -mx-2">
+                  <button
+                    onClick={() => toggleFilterExpanded(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', ''))}
+                    className={cx(
+                      "w-full flex items-center text-start rounded-base focus:outline-none focus-visible:ring ring-inset ring-offset-0 font-medium py-2 px-2 text-md transition-colors",
+                      theme === 'dark' 
+                        ? "text-gray-100 bg-transparent hover:text-gray-50 hover:bg-gray-800/50" 
+                        : "text-gray-900 bg-transparent hover:text-gray-800 hover:bg-gray-50"
+                    )}
+                  >
+                    <span className="flex-grow truncate">
+                      <div className="flex space-x-1 flex-1 truncate justify-between items-center">
+                        <span className={cx(
+                          "font-semibold",
+                          (filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', ''))
+                            ? theme === 'dark' ? "text-blue-400" : "text-blue-600"
+                            : theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                        )}>
+                          {filterName}
+                        </span>
+                        {(filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', '')) && (
+                          <span className="inline-block shrink-0 rounded-full h-2 w-2 bg-blue-500"></span>
+                        )}
+                      </div>
+                    </span>
+                    <ChevronDown className={cx(
+                      "h-5 w-5 transform transition-all ease-in-out duration-150 flex-shrink-0 ms-2",
+                      (filterName === 'Tags' || filterName === 'Start Date & Time') && expandedFilters.has(filterName.toLowerCase().replace(/\s+/g, '_').replace('&', '')) ? "rotate-180" : "",
+                      theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                    )} />
+                  </button>
+                </div>
+                {index < 9 && <div className="h-px bg-secondary"></div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderEventsListConfig = () => (
     <div className="space-y-4">
       {/* Info Section */}
@@ -900,7 +1022,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                       key={option.id}
                       option={option}
                       isSelected={style === option.id}
-                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' })}
+                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
                     />
                   ))}
                 </div>
@@ -1100,7 +1222,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       <div className="border border-secondary rounded-lg bg-primary p-2">
         <SectionHeader
           icon={InfoCircle}
-          title="Event Configuration"
+          title="Info"
           isExpanded={infoExpanded}
           onToggle={() => setInfoExpanded(!infoExpanded)}
         />
@@ -1109,38 +1231,216 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             <div className="space-y-3">
               <div>
                 <Input
-                  label='Event ID'
-                  id="event-id"
-                  value={title} // Using title field to store event ID for now
+                  label='Widget Title'
+                  id="widget-title"
+                  value={title}
                   onChange={(value) => updateEventsListConfig({ title: value })}
-                  placeholder="Please enter a Event id"
-                  hint="Example: event-123 or 456789"
+                  placeholder="Enter widget title"
                 />
               </div>
 
-              {/* Helper Note */}
-              <div className={cx(
-                "p-3 rounded-md border",
-                theme === 'dark' 
-                  ? "bg-blue-900/20 border-blue-800/30 text-blue-200" 
-                  : "bg-blue-50 border-blue-200 text-blue-800"
-              )}>
-                <div className="flex items-start gap-2">
-                  <InfoCircle className={cx(
-                    "size-4 mt-0.5 flex-shrink-0",
-                    theme === 'dark' ? "text-blue-400" : "text-blue-600"
-                  )} />
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">How to find your Event ID:</p>
-                    <ul className="space-y-1 text-xs opacity-90">
-                      <li>• Go to your events list in the admin panel</li>
-                      <li>• Click on the event you want to display</li>
-                      <li>• Copy the Event ID from the URL or event details</li>
-                      <li>• Paste it in the field above</li>
-                    </ul>
-                  </div>
+              <div>
+                <TextArea
+                  label='Description'
+                  id="description"
+                  value={description}
+                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
+                  placeholder="Enter widget description"
+                  rows={3}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Resource Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={Database01}
+          title="Resource"
+          isExpanded={sourceExpanded}
+          onToggle={() => setSourceExpanded(!sourceExpanded)}
+        />
+        {sourceExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-3">
+            <div className="space-y-4">
+              <div>
+                <Select 
+                  label="Event source"
+                  items={eventSourceOptions} 
+                  selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'specific_events'}
+                  onSelectionChange={(key) => updateEventsListConfig({ 
+                    eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events',
+                    selectedSpaces: key === 'specific_spaces' ? selectedSpaces : [],
+                    selectedEvents: key === 'specific_events' ? selectedEvents : []
+                  })}
+                >
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                </Select>
+              </div>
+
+              {eventSource === 'specific_spaces' && (
+                <div>
+                  <MultiSelect
+                    selectedItems={selectedSpacesItems}
+                    label="Select spaces"
+                    hint="Choose which spaces to include events from"
+                    placeholder="Search spaces"
+                    items={spacesData}
+                    onItemInserted={handleSpaceInserted}
+                    onItemCleared={handleSpaceCleared}
+                  >
+                    {(item) => (
+                      <MultiSelect.Item 
+                        id={item.id} 
+                        icon={item.icon}
+                      >
+                        {item.label}
+                      </MultiSelect.Item>
+                    )}
+                  </MultiSelect>
+                </div>
+              )}
+
+              {eventSource === 'specific_events' && (
+                <div>
+                  <MultiSelect
+                    selectedItems={selectedEventsItems}
+                    label="Select events"
+                    hint="Choose which specific events to display"
+                    placeholder="Search events"
+                    items={eventsData}
+                    onItemInserted={handleEventInserted}
+                    onItemCleared={handleEventCleared}
+                  >
+                    {(item) => (
+                      <MultiSelect.Item 
+                        id={item.id} 
+                        icon={item.icon}
+                      >
+                        {item.label}
+                      </MultiSelect.Item>
+                    )}
+                  </MultiSelect>
+                </div>
+              )}
+
+              {/* Add Filter Button */}
+              <div className="pt-2">
+                <Button
+                  onClick={() => setIsFilterView(true)}
+                  size="sm"
+                  color="secondary"
+                  iconLeading={Plus}
+                  className="w-full"
+                >
+                  Add filter
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Layout Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={LayoutAlt01}
+          title="Layout"
+          isExpanded={layoutExpanded}
+          onToggle={() => setLayoutExpanded(!layoutExpanded)}
+        />
+        {layoutExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-3">
+            <div className="space-y-6">
+              <div>
+                <Label htmlFor="style">Style</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {styleOptions.map((option) => (
+                    <StyleTile
+                      key={option.id}
+                      option={option}
+                      isSelected={style === option.id}
+                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
+                    />
+                  ))}
                 </div>
               </div>
+
+              {style === 'card' && (
+                <>
+                  <div>
+                    <Select 
+                      label="Card Size"
+                      items={cardSizeOptions} 
+                      selectedKey={cardSize}
+                      onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
+                    >
+                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Select 
+                      label="Card Style"
+                      items={cardStyleOptions} 
+                      selectedKey={cardStyle}
+                      onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
+                    >
+                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                    </Select>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Properties Section */}
+      <div className="border border-secondary rounded-lg bg-primary p-2">
+        <SectionHeader
+          icon={Eye}
+          title="Properties"
+          isExpanded={propertiesExpanded}
+          onToggle={() => setPropertiesExpanded(!propertiesExpanded)}
+        />
+        {propertiesExpanded && (
+          <div className="bg-secondary/20 rounded-lg p-1">
+            <div className="space-y-2">
+              {!(style === 'card' && cardStyle === 'modern') && (
+                <PropertyToggle
+                  icon={Image01}
+                  label="Event cover"
+                  isSelected={coverImage}
+                  onChange={(value) => updateEventsListConfig({ coverImage: value })}
+                  id="cover-image"
+                />
+              )}
+              <PropertyToggle
+                icon={Calendar}
+                label="Event details"
+                isSelected={eventDetails}
+                onChange={(value) => updateEventsListConfig({ eventDetails: value })}
+                id="event-details"
+              />
+
+              <PropertyToggle
+                icon={User02}
+                label="Host info"
+                isSelected={hostInfo}
+                onChange={(value) => updateEventsListConfig({ hostInfo: value })}
+                id="host-info"
+              />
+
+              <PropertyToggle
+                icon={CheckCircle}
+                label="Attended"
+                isSelected={attended}
+                onChange={(value) => updateEventsListConfig({ attended: value })}
+                id="attended"
+              />
             </div>
           </div>
         )}
@@ -1239,11 +1539,13 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     <>
       {isTabConfigView ? (
         renderTabConfigView()
+      ) : isFilterView ? (
+        renderFilterView()
       ) : (
         <div className="p-4 transition-all duration-300 ease-in-out">
           {selectedWidget.label === 'Events List' 
             ? renderEventsListConfig() 
-            : selectedWidget.label === 'Single Event'
+            : selectedWidget.label === 'Custom Events List'
               ? renderSingleEventConfig()
             : selectedWidget.label === 'Space Header'
               ? renderSpaceHeaderConfig()

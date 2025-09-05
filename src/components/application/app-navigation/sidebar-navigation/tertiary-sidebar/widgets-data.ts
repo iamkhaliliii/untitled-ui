@@ -125,15 +125,15 @@ export const availableWidgets: WidgetCategory[] = [
       },
       { 
         id: "singleEvent", 
-        name: "Single Event", 
+        name: "Custom Events List", 
         icon: Calendar, 
-        description: "Showcase a single event with detailed information and RSVP functionality",
-        features: ["Event details", "RSVP button", "Location map", "Host information", "Share options", "Countdown timer"],
+        description: "Showcase a custom list of selected events with detailed information and RSVP functionality",
+        features: ["Event details", "RSVP button", "Location map", "Host information", "Share options", "Custom selection"],
         category: "Content",
         type: "Advanced",
         image: "https://blocks.tremor.so/_next/image?url=%2Fthumbnails%2Fsingle-event.webp&w=1920&q=75",
         previewImage: "/Presets2.png",
-        usageExample: "Ideal for highlighting featured or important events",
+        usageExample: "Ideal for highlighting featured or important events with custom selection",
         author: "@bettermode",
         badges: [
           { type: "new", icon: Zap, color: "bg-green-500" }

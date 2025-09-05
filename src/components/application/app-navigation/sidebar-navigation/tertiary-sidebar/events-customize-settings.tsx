@@ -155,7 +155,7 @@ export const EventsCustomizeSettings = ({
                         },
                         { 
                           id: "singleEvent", 
-                          label: "Single Event", 
+                          label: "Custom Events List", 
                           icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
                         }
                       ]
