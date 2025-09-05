@@ -154,7 +154,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
     if (eventsListConfig.cardStyle === 'simple') {
       return (
         <div key={index} className={cx(
-          "group relative rounded-2xl border border-gray-300 bg-white dark:bg-gray-900 overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:shadow-md hover:shadow-gray-100/10 hover:border-blue-200 dark:hover:border-gray-600"
+          "group relative rounded-2xl border border-gray-300 bg-primary overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:shadow-md hover:shadow-gray-100/10 hover:border-brand-200"
         )}
         style={{
           animationDelay: `${index * 100}ms`,
@@ -162,7 +162,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
         }}>
           {/* Event Image */}
           {eventsListConfig.coverImage && (
-            <div className="relative overflow-hidden aspect-[1/1]">
+            <div className="relative overflow-hidden aspect-square">
               <img 
                 src={event.image} 
                 alt={event.title}
@@ -171,12 +171,6 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
               
-              {/* Category badge */}
-              <div className="absolute top-3 left-3 z-20">
-                <span className="backdrop-blur-sm bg-white/95 shadow-sm border border-white/20 px-2 py-1 rounded-full text-xs font-medium text-gray-700">
-                  {event.category || 'Event'}
-                </span>
-              </div>
             </div>
           )}
 
@@ -185,49 +179,78 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
             {/* Organizer Badge */}
             {eventsListConfig.hostInfo && (
               <div className="mb-2">
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full">
+                <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
                   <div className="w-4 h-4 rounded-full overflow-hidden">
-                    <div className="w-full h-full bg-gray-300 dark:bg-gray-600"></div>
+                    <img 
+                      src="https://i.pravatar.cc/150?img=1" 
+                      alt={event.organizer} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{event.organizer}</span>
+                  <span>{event.organizer}</span>
                 </div>
               </div>
             )}
 
             {/* Event Title */}
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+            <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
               {event.title}
             </h3>
 
             {/* Event Details */}
-            {eventsListConfig.eventDetails && (
-              <div className="space-y-1 flex-1">
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                  <Calendar className="h-3.5 w-3.5 text-blue-600" />
-                  <span className="font-medium">{event.date}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                  <Clock className="h-3.5 w-3.5 text-green-600" />
-                  <span>{event.time}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                  <MarkerPin01 className="h-3.5 w-3.5 text-yellow-600" />
-                  <span>{event.location}</span>
-                </div>
+            <div className="space-y-1 flex-1">
+              {eventsListConfig.eventDetails && (
+                <>
+                  <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                    <Calendar className="h-3.5 w-3.5 text-brand-solid" />
+                    <span className="font-medium">{event.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                    <Clock className="h-3.5 w-3.5 text-success-solid" />
+                    <span>{event.time}</span>
+                  </div>
+                </>
+              )}
+              
+              {/* Location - Always visible */}
+              <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+                <span>{event.location}</span>
               </div>
-            )}
+            </div>
 
             {/* Actions Footer */}
-            <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700 group-hover:border-gray-300 dark:group-hover:border-gray-600 transition-colors">
-              <div className="flex items-center justify-end">
-                {eventsListConfig.rsvpAction && (
-                  <button 
-                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors duration-200 hover:text-blue-600 dark:hover:text-blue-400"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    RSVP →
-                  </button>
+            <div className="pt-3 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
+              <div className="flex items-center justify-between">
+                {/* Avatar Group - Left Side */}
+                {eventsListConfig.attended ? (
+                  <div className="flex items-center">
+                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
+                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                    </span>
+                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
+                      <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                    </span>
+                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
+                      <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                    </span>
+                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
+                      +2
+                    </span>
+                  </div>
+                ) : (
+                  <div></div>
                 )}
+                
+                {/* RSVP Button - Right Side */}
+                <Button
+                  color="secondary"
+                  size="sm"
+                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                  className="px-4 py-2"
+                >
+                  RSVP Now
+                </Button>
               </div>
             </div>
           </div>
@@ -268,27 +291,18 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10"></div>
             
-            {/* Top badges */}
-            <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className="inline-flex items-center bg-black/50 backdrop-blur-sm text-white text-[0.65rem] px-1.5 py-0.5 font-medium shadow-sm border-0 rounded-md">
-                  {event.category}
-                </div>
-                <div className="inline-flex items-center rounded-full bg-blue-600 text-white text-xs px-1.5 py-1 font-medium shadow-lg w-fit">
-                  <Star01 className="w-3 h-3 fill-current" />
-                </div>
-              </div>
-            </div>
             
             {/* Date badge */}
-            <div className="absolute top-3 right-3 z-10">
-              <div className="bg-black/50 backdrop-blur-sm text-white rounded-lg px-2 py-1.5">
-                <div className="text-center">
-                  <div className="text-[0.6rem] font-medium uppercase tracking-wider opacity-90">Jul</div>
-                  <div className="text-[0.75rem] font-bold leading-none">25</div>
+            {eventsListConfig.eventDetails && (
+              <div className="absolute top-3 right-3 z-10">
+                <div className="bg-black/50 backdrop-blur-sm text-white rounded-lg px-2 py-1.5">
+                  <div className="text-center">
+                    <div className="text-[0.6rem] font-medium uppercase tracking-wider opacity-90">Jul</div>
+                    <div className="text-[0.75rem] font-bold leading-none">25</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             
             {/* Bottom content */}
             <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
@@ -313,31 +327,27 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 {/* Location, Attendees, and RSVP in one line */}
                 <div className="flex items-center justify-between text-[0.75rem] text-white/80">
                   <div className="flex items-center gap-3">
-                    {eventsListConfig.eventDetails && (
-                      <>
-                        <div className="flex items-center gap-1.5">
-                          <MarkerPin01 className="w-3 h-3" />
-                          <span className="truncate max-w-[120px]">{event.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Users01 className="w-3 h-3" />
-                          <span className="text-xs font-medium">105</span>
-                        </div>
-                      </>
+                    <div className="flex items-center gap-1.5">
+                      <MarkerPin01 className="w-3 h-3" />
+                      <span className="truncate max-w-[120px]">{event.location}</span>
+                    </div>
+                    {eventsListConfig.attended && (
+                      <div className="flex items-center gap-1.5">
+                        <Users01 className="w-3 h-3" />
+                        <span className="text-xs font-medium">105</span>
+                      </div>
                     )}
                   </div>
                   
                   {/* RSVP Button */}
-                  {eventsListConfig.rsvpAction && (
-                    <Button 
-                      color="tertiary" 
-                      size="sm" 
-                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                      className="text-white rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 shadow-lg backdrop-blur-sm border border-blue-500/30"
-                    >
-                      RSVP
-                    </Button>
-                  )}
+                  <Button 
+                    color="tertiary" 
+                    size="sm" 
+                    onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                    className="text-white rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 shadow-lg backdrop-blur-sm border border-blue-500/30"
+                  >
+                    RSVP Now
+                  </Button>
                 </div>
               </div>
             </div>
@@ -356,16 +366,22 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 <span>{event.date}</span>
               </div>
             )}
+            {/* Member Count */}
+            {eventsListConfig.attended && (
+              <div className="flex items-center gap-1.5 mb-3">
+                <Users01 className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">105</span>
+              </div>
+            )}
+            
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <MarkerPin01 className="w-3 h-3" />
                 <span className="text-xs text-gray-600 dark:text-gray-400">{event.location}</span>
               </div>
-              {eventsListConfig.rsvpAction && (
-                <button className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">
-                  RSVP
-                </button>
-              )}
+              <button className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">
+                RSVP Now
+              </button>
             </div>
           </div>
         )}
@@ -374,79 +390,95 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
   };
 
   const renderEventList = (event: any, index: number) => (
-    <div key={index} className="group bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer"
+    <div key={index} className="group bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer"
     style={{
       animationDelay: `${index * 80}ms`,
       animation: 'slideInLeft 0.5s ease-out forwards'
     }}>
-      <div className="flex items-start gap-5">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="inline-flex items-center transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-gray-200/50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-[0.75rem] px-1.5 py-0.5 font-medium border-0 rounded-md">
-              {event.category}
-            </div>
-            {eventsListConfig.eventDetails && (
-              <span className="text-[0.7rem] font-medium text-gray-700 dark:text-gray-300">{event.time}</span>
-            )}
-            <div className="flex items-center gap-2">
-              <div className="inline-flex items-center rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-600 text-white text-xs px-1.5 py-0.5">
-                <Star01 className="w-2.5 h-2.5 fill-current" />
-              </div>
-            </div>
-          </div>
-          
-          <h4 className="font-semibold text-[1.4rem] mb-4 mt-2 line-clamp-2 text-gray-900 dark:text-gray-100">
-            {event.title}
-            <ArrowRight className="inline w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300 ml-1" />
-          </h4>
-          
-          <div className="flex items-center gap-2 text-[0.8rem] text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-2">
-              {/* Avatar Group */}
-              <div className="flex items-center">
-                <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '26px', height: '26px', zIndex: 1}}>
-                  <img src="https://i.pravatar.cc/150?img=1" alt="Avatar" className="w-full h-full object-cover" />
-                </span>
-                <span className="inline-flex items-center -ml-2 rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '26px', height: '26px', zIndex: 2}}>
-                  <img src="https://i.pravatar.cc/150?img=2" alt="Avatar" className="w-full h-full object-cover" />
-                </span>
-                <span className="inline-flex items-center -ml-2 rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '26px', height: '26px', zIndex: 3}}>
-                  <img src="https://i.pravatar.cc/150?img=3" alt="Avatar" className="w-full h-full object-cover" />
-                </span>
-                <span className="inline-flex items-center -ml-2 rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '26px', height: '26px', zIndex: 4}}>
-                  <img src="https://i.pravatar.cc/150?img=4" alt="Avatar" className="w-full h-full object-cover" />
-                </span>
-                <span className="inline-flex items-center -ml-2 rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] leading-3 font-semibold" style={{width: '26px', height: '26px', zIndex: 5}}>
-                  +6
-                </span>
-              </div>
-            </div>
-            
-            {eventsListConfig.hostInfo && (
-              <div className="flex items-center gap-1 bg-gray-200/50 dark:bg-gray-800 rounded-full px-2 py-1">
-                <img src="https://i.pravatar.cc/150?img=1" alt="Host" className="w-5 h-5 rounded-full border border-gray-100 dark:border-gray-700" />
-                <span>By <span className="font-semibold">{event.organizer}</span></span>
-              </div>
-            )}
-            
-            <div className="flex items-center gap-1">
-              <MarkerPin01 className="w-3 h-3" />
-              <span className="truncate max-w-[120px]">{event.location}</span>
-            </div>
-          </div>
-        </div>
-        
+      <div className="flex gap-4">
+        {/* Cover Image - Left Side */}
         {eventsListConfig.coverImage && (
-          <div className="flex-shrink-0 relative">
-            <div className="w-24 h-24 rounded-xl overflow-hidden group-hover:shadow-lg transition-shadow duration-300">
+          <div className="flex-shrink-0">
+            <div className="w-24 h-24 rounded-lg overflow-hidden">
               <img 
                 src={event.image} 
                 alt={event.title} 
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
         )}
+        
+        <div className="w-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+        
+        <div className="flex-1 min-w-0 space-y-2">
+          {eventsListConfig.eventDetails && (
+            <div className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span>{event.date}</span>
+              <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                <span>{event.time}</span>
+              </div>
+            </div>
+          )}
+          
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+            {event.title}
+          </h3>
+          
+          <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1">
+              <MarkerPin01 className="w-3 h-3" />
+              <span>{event.location}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Avatar Group */}
+              {eventsListConfig.attended && (
+                <div className="flex items-center">
+                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                  </span>
+                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                  </span>
+                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                  </span>
+                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
+                    +2
+                  </span>
+                </div>
+              )}
+              
+              {eventsListConfig.hostInfo && (
+                <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
+                  <div className="w-4 h-4 rounded-full overflow-hidden">
+                    <img 
+                      src="https://i.pravatar.cc/150?img=1" 
+                      alt={event.organizer} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span>{event.organizer}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* RSVP Button on the right side */}
+            <Button
+              color="secondary"
+              size="sm"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="px-3 py-1.5 text-xs"
+            >
+              RSVP Now
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -462,28 +494,22 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-start gap-3">
-              {eventsListConfig.hostInfo && (
-                <img 
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
-                  alt={event.organizer} 
-                  className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-gray-800"
-                />
-              )}
+              <img 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                alt={event.organizer} 
+                className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-gray-800"
+              />
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-0.5">
-                  {eventsListConfig.hostInfo && (
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{event.organizer}</h3>
-                  )}
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{event.organizer}</h3>
                   <div className="inline-flex items-center rounded-full border border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-normal">
                     <span className="mr-0.5">🎪</span>Event Host
                   </div>
                   <span className="text-base">🥉</span>
                 </div>
-                {eventsListConfig.eventDetails && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    8h ago<span> • posted on events</span>
-                  </p>
-                )}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  8h ago<span> • posted on events</span>
+                </p>
               </div>
             </div>
             <button type="button" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
@@ -492,21 +518,20 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
           </div>
 
           {/* Content */}
-          <p className="text-gray-600 dark:text-gray-300 mb-4">{event.description}</p>
+          {eventsListConfig.eventDetails && (
+            <p className="text-gray-600 dark:text-gray-300 mb-4">{event.description}</p>
+          )}
 
           {/* Event Card */}
           <div className="space-y-4">
             <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/30 hover:bg-gray-50 dark:hover:bg-gray-800/70">
               <div className="p-5">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center mb-6">
                   <div className="flex items-center gap-1.5">
                     <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                       <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">Event</h4>
-                  </div>
-                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold border-transparent bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-xs">
-                    Upcoming
                   </div>
                 </div>
 
@@ -543,79 +568,59 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                     
                     <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-1">
-                        <Globe01 className="w-3 h-3" />
-                        <span>{event.type}</span>
-                      </div>
-                      <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
-                      <div className="flex items-center gap-1">
                         <MarkerPin01 className="w-3 h-3" />
                         <span>{event.location}</span>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4">
-                      {/* Avatar Group */}
-                      <div className="flex items-center">
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
-                          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
-                          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
-                          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
-                          +2
-                        </span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        {/* Avatar Group */}
+                        {eventsListConfig.attended && (
+                          <div className="flex items-center">
+                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
+                              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                            </span>
+                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
+                              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                            </span>
+                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
+                              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                            </span>
+                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
+                              +2
+                            </span>
+                          </div>
+                        )}
+                        
+                        {eventsListConfig.hostInfo && (
+                          <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
+                            <div className="w-4 h-4 rounded-full overflow-hidden">
+                              <img 
+                                src="https://i.pravatar.cc/150?img=1" 
+                                alt={event.organizer} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <span>{event.organizer}</span>
+                          </div>
+                        )}
                       </div>
                       
-                      {eventsListConfig.hostInfo && (
-                        <div className="flex items-center gap-2">
-                          <img 
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
-                            alt={event.organizer} 
-                            className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
-                          />
-                          <span className="text-xs text-gray-500 dark:text-gray-400">By {event.organizer}</span>
-                        </div>
-                      )}
+                      {/* RSVP Button on the right side */}
+                      <Button
+                        color="secondary"
+                        size="sm"
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        className="px-3 py-1.5 text-xs"
+                      >
+                        RSVP Now
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Actions */}
-        <div className="mt-4 p-6 pt-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <button type="button" className="p-2 text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-                <Share02 className="w-4 h-4" />
-              </button>
-              <button type="button" className="p-2 rounded-full transition-colors text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                <Bookmark className="w-4 h-4" />
-              </button>
-            </div>
-            
-            {eventsListConfig.rsvpAction && (
-              <div className="flex items-center gap-1">
-                <button type="button" className="flex items-center gap-1 px-2 py-1 text-sm rounded-full transition-colors border text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 border-gray-200 dark:border-gray-700">
-                  <Check className="w-4 h-4" />
-                  <span className="text-[0.8rem] font-medium">Yes</span>
-                </button>
-                <button type="button" className="flex items-center gap-1 px-2 py-1 text-sm rounded-full transition-colors border text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 border-gray-200 dark:border-gray-700">
-                  <X className="w-4 h-4" />
-                  <span className="text-[0.8rem] font-medium">No</span>
-                </button>
-                <button type="button" className="flex items-center gap-1.5 px-2 py-1 text-sm rounded-full transition-colors border text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 border-gray-200 dark:border-gray-700">
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="text-[0.8rem] font-medium">Maybe</span>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

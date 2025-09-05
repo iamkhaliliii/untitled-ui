@@ -1,4 +1,4 @@
-import { Settings01, Globe01, ArrowRight } from "@untitledui/icons";
+import { Settings01, Globe01, ArrowRight, UsersPlus, Building01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
 import { BackgroundPattern } from "@/components/shared-assets/background-patterns";
@@ -29,8 +29,8 @@ export const HomeScreen = () => {
                     </p>
                 </div>
 
-                {/* Two-column navigation: Admin / Site */}
-                <div className="mt-10 grid w-full max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+                {/* Three-column navigation: Admin / Site / Signup */}
+                <div className="mt-10 grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
                     {/* Admin column */}
                     <div>
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Admin</div>
@@ -76,6 +76,42 @@ export const HomeScreen = () => {
                                                 <Globe01 className="size-5 text-secondary" />
                                             </span>
                                             <span className="text-sm font-medium text-primary">Website</span>
+                                        </div>
+                                        <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Signup column */}
+                    <div>
+                        <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Get Started</div>
+                        <div className="space-y-3">
+                            <Link to="/signup" className="group">
+                                <div className="rounded-lg border border-secondary bg-gradient-to-br from-green-50 to-emerald-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-400 hover:shadow-lg">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-3">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-green-500/10 p-2">
+                                                <UsersPlus className="size-5 text-green-600" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Sign Up</span>
+                                        </div>
+                                        <ArrowRight className="size-4 text-tertiary group-hover:text-green-600" />
+                                    </div>
+                                    <p className="text-xs text-tertiary leading-relaxed">
+                                        Create your B2B SaaS community in minutes. Multi-step onboarding with smart plan recommendations.
+                                    </p>
+                                </div>
+                            </Link>
+                            <Link to="/login" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-2">
+                                                <Building01 className="size-5 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Login</span>
                                         </div>
                                         <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
                                     </div>

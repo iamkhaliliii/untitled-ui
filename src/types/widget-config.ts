@@ -14,6 +14,7 @@ export interface EventsListConfig {
   rsvpAction: boolean;
   eventDetails: boolean;
   coverImage: boolean;
+  attended: boolean;
   title: string;
   description: string;
   eventSource: 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events';
@@ -45,9 +46,10 @@ export const defaultEventsListConfig: EventsListConfig = {
   thisMonthEventsTab: false,
   hostInfo: false,
   reactionsCounter: true,
-  rsvpAction: false,
+  rsvpAction: true,
   eventDetails: true,
   coverImage: true,
+  attended: false,
   title: 'Events List Widget',
   description: 'Display a list of upcoming and past events with customizable layout and features.',
   eventSource: 'current_space',

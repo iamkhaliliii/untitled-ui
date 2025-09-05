@@ -56,6 +56,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     eventDetails, 
     hostInfo, 
     coverImage,
+    attended,
     tabView,
     allEventsTab,
     upcomingEventsTab,
@@ -503,8 +504,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
           />
         </div>
 
-        {/* More Actions */}
-        <div className="relative">
+        {/* More Actions - Removed dots menu, keeping only toggle */}
+        {/* <div className="relative">
           <button
             onClick={() => setOpenDropdownId(isDropdownOpen ? null : tab.id)}
             className={cx(
@@ -583,7 +584,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -760,8 +761,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         )}
       </div>
 
-      {/* Source Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
+      {/* Source Section - Commented out */}
+      {/* <div className="border border-secondary rounded-lg bg-primary p-2">
         <SectionHeader
           icon={Database01}
           title="Source"
@@ -834,7 +835,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Tab Views Section - Hidden when specific_events is selected */}
       {eventSource !== 'specific_events' && (
@@ -860,8 +861,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 />
               ))}
               
-              {/* Add View Button */}
-              <Button
+              {/* Add View Button - Removed */}
+              {/* <Button
                 onClick={handleAddView}
                 size="sm"
                 color="secondary"
@@ -869,7 +870,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 className="w-full mt-1"
               >
                 Add view
-              </Button>
+              </Button> */}
             </div>
           </div>
         )}
@@ -966,13 +967,13 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 onChange={(value) => updateEventsListConfig({ hostInfo: value })}
                 id="host-info"
               />
-              
+
               <PropertyToggle
                 icon={CheckCircle}
-                label="RSVP Action"
-                isSelected={rsvpAction}
-                onChange={(value) => updateEventsListConfig({ rsvpAction: value })}
-                id="rsvp-action"
+                label="Attended"
+                isSelected={attended}
+                onChange={(value) => updateEventsListConfig({ attended: value })}
+                id="attended"
               />
             </div>
           </div>

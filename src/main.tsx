@@ -43,6 +43,8 @@ import SiteEventPage from "@/pages/site/event";
 import SiteEventDetailPage from "@/pages/site/event-detail";
 import PostViewPage from "@/pages/site/post-view";
 import { NotFound } from "@/pages/not-found";
+import { SignupPage } from "@/pages/signup";
+import { LoginPage } from "@/pages/login";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
 import { AdminDemo } from "@/components/application/admin-demo";
@@ -62,6 +64,8 @@ createRoot(document.getElementById("root")!).render(
                             <RouteProvider>
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
+                        <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/login" element={<LoginPage />} />
                         
                         {/* Admin 3.0 Routes */}
                         <Route path="/admin3" element={<AdminDashboardPage />} />
