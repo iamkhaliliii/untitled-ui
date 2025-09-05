@@ -179,6 +179,9 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
 
   // Tab views handlers
   const handleToggleTab = (tabId: string) => {
+    // Prevent disabling the "All" tab
+    if (tabId === 'all') return;
+    
     setTabViews(prev => {
       const updatedTabs = prev.map(tab => 
         tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
@@ -501,6 +504,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             onChange={() => onToggle(tab.id)}
             size="sm"
             slim
+            isDisabled={tab.id === 'all'}
           />
         </div>
 
@@ -944,13 +948,13 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
           <div className="bg-secondary/20 rounded-lg p-1">
             <div className="space-y-2">
               {!(style === 'card' && cardStyle === 'modern') && (
-                <PropertyToggle
-                  icon={Monitor01}
-                  label="Cover image"
-                  isSelected={coverImage}
-                  onChange={(value) => updateEventsListConfig({ coverImage: value })}
-                  id="cover-image"
-                />
+                              <PropertyToggle
+                icon={Image01}
+                label="Event cover"
+                isSelected={coverImage}
+                onChange={(value) => updateEventsListConfig({ coverImage: value })}
+                id="cover-image"
+              />
               )}
               <PropertyToggle
                 icon={Calendar}

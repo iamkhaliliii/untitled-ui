@@ -44,12 +44,12 @@ export const defaultEventsListConfig: EventsListConfig = {
   upcomingEventsTab: false,
   pastEventsTab: false,
   thisMonthEventsTab: false,
-  hostInfo: false,
+  hostInfo: true,
   reactionsCounter: true,
   rsvpAction: true,
   eventDetails: true,
   coverImage: true,
-  attended: false,
+  attended: true,
   title: 'Events List Widget',
   description: 'Display a list of upcoming and past events with customizable layout and features.',
   eventSource: 'current_space',
@@ -58,7 +58,7 @@ export const defaultEventsListConfig: EventsListConfig = {
 };
 
 export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {
-  style: 'simple',
+  style: 'video',
   description: 'Welcome to the "Ask the Community" channel!',
   showDescription: false,
   showIcon: true,

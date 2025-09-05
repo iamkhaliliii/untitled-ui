@@ -409,12 +409,17 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
           </div>
         )}
         
-        <div className="w-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+        {eventsListConfig.coverImage && (
+          <div className="w-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+        )}
         
         <div className="flex-1 min-w-0 space-y-2">
           {eventsListConfig.eventDetails && (
             <div className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-              <span>{event.date}</span>
+              <div className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                <span>{event.date}</span>
+              </div>
               <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
               <div className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
@@ -548,12 +553,17 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                     </div>
                   )}
                   
-                  <div className="w-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+                  {eventsListConfig.coverImage && (
+                    <div className="w-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+                  )}
                   
                   <div className="flex-1 min-w-0 space-y-2">
                     {eventsListConfig.eventDetails && (
                       <div className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                        <span>{event.date}</span>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{event.date}</span>
+                        </div>
                         <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
