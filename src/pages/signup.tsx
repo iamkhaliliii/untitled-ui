@@ -1347,7 +1347,7 @@ export const SignupPage = () => {
                 <span className="font-bold">communities</span> are empowered by{" "}
                 <div className="inline-flex items-end mt-1 ">
                   <img 
-                    src="./src/logo/Logo Final.svg" 
+                    src="/logo-bettermode.svg" 
                     alt="bettermode" 
                     className="h-7 w-auto ml-1"
                   />
@@ -1423,7 +1423,7 @@ export const SignupPage = () => {
             {/* Logo */}
                   <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
                     <img 
-                      src="./src/logo/Logo Final.svg" 
+                      src="/logo-bettermode.svg" 
                       alt="bettermode" 
                       className="h-6 w-auto"
                     />
@@ -1432,7 +1432,7 @@ export const SignupPage = () => {
                   {/* Mobile Logo */}
                   <div className="flex items-center justify-center md:hidden">
                     <img 
-                      src="./src/logo/Logo Final.svg" 
+                      src="/logo-bettermode.svg" 
                       alt="bettermode" 
                       className="h-8 w-auto"
                     />
