@@ -29,6 +29,7 @@ import {
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { InputGroup } from "@/components/base/input/input-group";
 import { Label } from "@/components/base/input/label";
 import { Select } from "@/components/base/select/select";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
@@ -37,9 +38,11 @@ import { cx } from "@/utils/cx";
 interface SignupFormData {
   email: string;
   authMethod: 'email' | 'google';
+  verificationCode: string;
   password: string;
   firstName: string;
   lastName: string;
+  role: string;
   jobTitle: string;
   companyName: string;
   companySize: string;
@@ -95,7 +98,8 @@ const SAAS_TOOLS = [
   { id: "hotjar", name: "Hotjar", logo: "./src/logo/s/hotjar-icon logo.svg" },
   { id: "amplitude", name: "Amplitude", logo: "./src/logo/s/amplitude-icon logo.svg" },
   { id: "mailchimp", name: "Mailchimp", logo: "./src/logo/s/mailchimp logo.svg" },
-  { id: "mixpanel", name: "Mixpanel", logo: "./src/logo/s/Mixpanel_Symbol_0.svg" }
+  { id: "mixpanel", name: "Mixpanel", logo: "./src/logo/s/Mixpanel_Symbol_0.svg" },
+  { id: "other", name: "Other tools", logo: null }
 ];
 
 const ENTERPRISE_FEATURES = [
@@ -143,13 +147,20 @@ export const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showAllPlans, setShowAllPlans] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [showIndustrySearch, setShowIndustrySearch] = useState(false);
+  const [showRoleSearch, setShowRoleSearch] = useState(false);
+  const [customRole, setCustomRole] = useState("");
+  const [billingPeriod, setBillingPeriod] = useState<'annual' | 'monthly'>('annual');
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
     authMethod: 'email',
+    verificationCode: "",
     password: "",
     firstName: "",
     lastName: "",
+    role: "",
     jobTitle: "",
     companyName: "",
     companySize: "",
@@ -178,6 +189,20 @@ export const SignupPage = () => {
     }));
   };
 
+  const handleResendCode = () => {
+    // Simulate sending code
+    setResendCooldown(30);
+    const timer = setInterval(() => {
+      setResendCooldown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
     
@@ -187,21 +212,26 @@ export const SignupPage = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Invalid email format";
         break;
       case 2:
-        if (formData.authMethod === 'email' && !formData.password) newErrors.password = "Password is required";
-        if (formData.authMethod === 'email' && formData.password.length < 8) newErrors.password = "Password must be at least 8 characters";
-        if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-        if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-        if (!formData.jobTitle.trim()) newErrors.jobTitle = "Job title is required";
+        if (!formData.verificationCode.trim()) newErrors.verificationCode = "Verification code is required";
+        if (formData.verificationCode.length !== 6) newErrors.verificationCode = "Code must be 6 characters";
         break;
       case 3:
-        if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
-        if (!formData.companySize) newErrors.companySize = "Company size is required";
-        if (!formData.industry) newErrors.industry = "Industry is required";
+        if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+        if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
         break;
       case 4:
-        if (!formData.primaryUseCase) newErrors.primaryUseCase = "Primary use case is required";
+        if (!formData.industry) newErrors.industry = "Industry is required";
+        break;
+      case 5:
+        if (!formData.role) newErrors.role = "Role is required";
         break;
       case 6:
+        if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
+        break;
+      case 7:
+        if (!formData.companySize) newErrors.companySize = "Company size is required";
+        break;
+      case 10:
         if (!formData.expectedUserCount) newErrors.expectedUserCount = "Expected user count is required";
         break;
     }
@@ -210,9 +240,9 @@ export const SignupPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 7));
+  const handleNext = (skipValidation = false) => {
+    if (skipValidation || validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 12));
     }
   };
 
@@ -250,17 +280,22 @@ export const SignupPage = () => {
   };
 
   const getStepTitle = () => {
-    const titles = ["Get started", "Basic information", "Company profile", "Primary use case", "Current tools", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
+    const titles = ["First, enter your email", "Check your email for a code", "What is your name?", "What industry are you in?", "Which best describes your role?", "What is your company's name?", `How many people work at ${formData.companyName || 'your company'}?`, `What is ${formData.companyName || 'your company'}'s website?`, "Communities are much more powerful with awesome integrations.", "How many users do you expect?", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
     return titles[currentStep - 1];
   };
 
   const getStepDescription = () => {
     const descriptions = [
-      "Create your account to begin building your community.",
-      "Tell us about yourself to personalize your experience.",
-      "Help us understand your company details.",
-      "What's your main goal for building a community?",
-      "Select tools you use for seamless integration.",
+      "We need to use the email address you use at work.",
+      `We've sent a 6-character code to ${formData.email}. The code expires shortly, so please enter it soon.`,
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Choose as many as you want, it helps us guide you to the right plan.",
+      "",
       "Configure enterprise security and compliance features.",
       ""
     ];
@@ -271,15 +306,24 @@ export const SignupPage = () => {
   const renderStep1 = () => (
     <div className="flex flex-col gap-5">
       <Input
-        label="Work email"
         type="email"
-        placeholder="john@company.com"
+        placeholder="name@work-email.com"
         value={formData.email}
         onChange={handleInputChange('email')}
         isInvalid={!!errors.email}
         hint={errors.email}
         isRequired
       />
+      
+      {/* Continue Button - Always show in step 1 */}
+      <Button
+        className="w-full"
+        iconTrailing={ArrowRight}
+        onClick={() => handleNext()}
+        size="md"
+      >
+        Continue
+      </Button>
       
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -309,61 +353,469 @@ export const SignupPage = () => {
     </div>
   );
 
-  // Step 2: Basic Info
-  const renderStep2 = () => (
-    <div className="flex flex-col gap-5">
-      {formData.authMethod === 'email' && (
-        <Input
-          label="Password"
-          type="password"
-          placeholder="••••••••"
-          value={formData.password}
-          onChange={handleInputChange('password')}
-          isInvalid={!!errors.password}
-          hint={errors.password || "Must be at least 8 characters"}
-          isRequired
-        />
-      )}
+  // Step 2: Email Verification
+  const renderStep2 = () => {
+    const handleCodeChange = (value: string) => {
+      // Only allow alphanumeric characters and limit to 6
+      const cleanValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+      handleInputChange('verificationCode')(cleanValue);
+    };
+
+    const renderCodeInputs = () => {
+      const code = formData.verificationCode;
+      const inputs = [];
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      for (let i = 0; i < 6; i++) {
+        inputs.push(
+          <div key={i} className="relative">
+            <input
+              type="text"
+              maxLength={1}
+              value={code[i] || ''}
+              onChange={(e) => {
+                const newCode = code.split('');
+                newCode[i] = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                const updatedCode = newCode.join('').slice(0, 6);
+                handleInputChange('verificationCode')(updatedCode);
+                
+                // Auto-focus next input
+                if (e.target.value && i < 5) {
+                  const target = e.target as HTMLInputElement;
+                  // Find all code inputs in the document
+                  const allInputs = document.querySelectorAll('input[type="text"][maxlength="1"]');
+                  const nextInput = allInputs[i + 1] as HTMLInputElement;
+                  nextInput?.focus();
+                }
+              }}
+              onKeyDown={(e) => {
+                // Handle backspace
+                if (e.key === 'Backspace' && !code[i] && i > 0) {
+                  const target = e.target as HTMLInputElement;
+                  // Find all code inputs in the document
+                  const allInputs = document.querySelectorAll('input[type="text"][maxlength="1"]');
+                  const prevInput = allInputs[i - 1] as HTMLInputElement;
+                  prevInput?.focus();
+                }
+              }}
+              className={cx(
+                "w-14 h-14 text-center text-lg font-semibold border rounded-lg",
+                "focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-brand-solid",
+                errors.verificationCode ? "border-error-primary" : "border-gray-300"
+              )}
+            />
+          </div>
+        );
+      }
+      
+      return inputs;
+    };
+
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-center gap-3 w-full">
+          <div className="flex gap-3">
+            {renderCodeInputs().slice(0, 3)}
+          </div>
+          <span className="text-gray-400 text-lg mx-2">-</span>
+          <div className="flex gap-3">
+            {renderCodeInputs().slice(3, 6)}
+          </div>
+        </div>
+        
+        {errors.verificationCode && (
+          <p className="text-sm text-error-primary text-center">{errors.verificationCode}</p>
+        )}
+
+        <Button
+          className="w-full"
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="md"
+          isDisabled={formData.verificationCode.length !== 6}
+        >
+          Next
+        </Button>
+
+        <div className="text-center space-y-3">
+          <div className="text-sm text-tertiary">
+            Didn't get the email?{" "}
+            {resendCooldown > 0 ? (
+              <span className="text-gray-400">Resend in {resendCooldown}s</span>
+            ) : (
+              <button 
+                onClick={handleResendCode}
+                className="text-brand-secondary hover:text-brand-secondary_hover font-medium"
+              >
+                Resend
+              </button>
+            )}
+            {" "}or{" "}
+            <button 
+              onClick={() => setCurrentStep(1)}
+              className="text-brand-secondary hover:text-brand-secondary_hover font-medium"
+            >
+              edit your email address
+            </button>
+          </div>
+          
+          <p className="text-sm text-tertiary">
+            Can't find your code? Check your spam folder!
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  // Step 3: Basic Info
+  const renderStep3 = () => (
+    <div className="flex flex-col gap-5">
         <Input
           label="First name"
-          placeholder="John"
+        placeholder=""
           value={formData.firstName}
           onChange={handleInputChange('firstName')}
           isInvalid={!!errors.firstName}
           hint={errors.firstName}
           isRequired
         />
+      
         <Input
           label="Last name" 
-          placeholder="Doe"
+        placeholder=""
           value={formData.lastName}
           onChange={handleInputChange('lastName')}
           isInvalid={!!errors.lastName}
           hint={errors.lastName}
           isRequired
         />
-      </div>
 
-      <Input
-        label="Job title"
-        placeholder="CEO, CTO, Product Manager..."
-        value={formData.jobTitle}
-        onChange={handleInputChange('jobTitle')}
-        isInvalid={!!errors.jobTitle}
-        hint={errors.jobTitle}
-        isRequired
-      />
+      <div className="flex justify-end">
+        <Button
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="sm"
+          isDisabled={!formData.firstName.trim() || !formData.lastName.trim()}
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 
-  // Step 3: Company Profile
-  const renderStep3 = () => (
+  // Step 4: Industry Selection
+  const renderStep4 = () => {
+    const industries = [
+      { id: "marketing", name: "Marketing and Advertising" },
+      { id: "technology", name: "Technology and Services" },
+      { id: "software", name: "Computer Software" },
+      { id: "realestate", name: "Real Estate" },
+      { id: "financial", name: "Financial Services" },
+      { id: "health", name: "Health, Wellness and Fitness" },
+      { id: "education", name: "Education" },
+      { id: "consulting", name: "Consulting" },
+      { id: "retail", name: "Retail" }
+    ];
+
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {industries.map(industry => (
+            <button
+              key={industry.id}
+              onClick={() => {
+                handleInputChange('industry')(industry.id);
+                // Auto-advance to next step after selection
+                setTimeout(() => {
+                  handleNext(true);
+                }, 300);
+              }}
+              className={cx(
+                "p-4 h-16 rounded-lg border text-center transition-all hover:shadow-sm flex items-center justify-center",
+                formData.industry === industry.id
+                  ? "border-brand-solid bg-brand-50 shadow-sm"
+                  : "border-gray-300 hover:border-gray-400"
+              )}
+            >
+              <span className="text-sm font-medium text-primary">{industry.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {!showIndustrySearch ? (
+          <button
+            onClick={() => setShowIndustrySearch(true)}
+            className="mx-auto text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+          >
+            Doesn't fit? Search all industries
+          </button>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <Select.ComboBox 
+              label="Search industries" 
+              placeholder="Type to search..." 
+              items={[
+                { label: "Accounting", id: "accounting" },
+                { label: "Advertising & Marketing", id: "advertising" },
+                { label: "Aerospace & Defense", id: "aerospace" },
+                { label: "Agriculture", id: "agriculture" },
+                { label: "Airlines/Aviation", id: "airlines" },
+                { label: "Alternative Dispute Resolution", id: "adr" },
+                { label: "Alternative Medicine", id: "alternative-medicine" },
+                { label: "Animation", id: "animation" },
+                { label: "Apparel & Fashion", id: "apparel" },
+                { label: "Architecture & Planning", id: "architecture" },
+                { label: "Arts & Crafts", id: "arts" },
+                { label: "Automotive", id: "automotive" },
+                { label: "Aviation & Aerospace", id: "aviation" },
+                { label: "Banking", id: "banking" },
+                { label: "Biotechnology", id: "biotechnology" },
+                { label: "Broadcast Media", id: "broadcast" },
+                { label: "Building Materials", id: "building-materials" },
+                { label: "Business Supplies & Equipment", id: "business-supplies" },
+                { label: "Capital Markets", id: "capital-markets" },
+                { label: "Chemicals", id: "chemicals" },
+                { label: "Civic & Social Organization", id: "civic" },
+                { label: "Civil Engineering", id: "civil-engineering" },
+                { label: "Commercial Real Estate", id: "commercial-real-estate" },
+                { label: "Computer & Network Security", id: "cybersecurity" },
+                { label: "Computer Games", id: "gaming" },
+                { label: "Computer Hardware", id: "hardware" },
+                { label: "Computer Networking", id: "networking" },
+                { label: "Computer Software", id: "software" },
+                { label: "Construction", id: "construction" },
+                { label: "Consumer Electronics", id: "consumer-electronics" },
+                { label: "Consumer Goods", id: "consumer-goods" },
+                { label: "Consumer Services", id: "consumer-services" },
+                { label: "Cosmetics", id: "cosmetics" },
+                { label: "Dairy", id: "dairy" },
+                { label: "Defense & Space", id: "defense" },
+                { label: "Design", id: "design" },
+                { label: "E-Learning", id: "elearning" },
+                { label: "Education Management", id: "education" },
+                { label: "Electrical/Electronic Manufacturing", id: "electronics" },
+                { label: "Entertainment", id: "entertainment" },
+                { label: "Environmental Services", id: "environmental" },
+                { label: "Events Services", id: "events" },
+                { label: "Executive Office", id: "executive" },
+                { label: "Facilities Services", id: "facilities" },
+                { label: "Farming", id: "farming" },
+                { label: "Financial Services", id: "financial" },
+                { label: "Fine Art", id: "fine-art" },
+                { label: "Fishery", id: "fishery" },
+                { label: "Food & Beverages", id: "food" },
+                { label: "Food Production", id: "food-production" },
+                { label: "Fund-Raising", id: "fundraising" },
+                { label: "Furniture", id: "furniture" },
+                { label: "Gambling & Casinos", id: "gambling" },
+                { label: "Glass, Ceramics & Concrete", id: "glass" },
+                { label: "Government Administration", id: "government" },
+                { label: "Government Relations", id: "government-relations" },
+                { label: "Graphic Design", id: "graphic-design" },
+                { label: "Health, Wellness & Fitness", id: "health" },
+                { label: "Healthcare", id: "healthcare" },
+                { label: "Higher Education", id: "higher-education" },
+                { label: "Hospital & Health Care", id: "hospital" },
+                { label: "Hospitality", id: "hospitality" },
+                { label: "Human Resources", id: "hr" },
+                { label: "Import & Export", id: "import-export" },
+                { label: "Individual & Family Services", id: "family-services" },
+                { label: "Industrial Automation", id: "automation" },
+                { label: "Information Services", id: "information-services" },
+                { label: "Information Technology & Services", id: "technology" },
+                { label: "Insurance", id: "insurance" },
+                { label: "International Affairs", id: "international" },
+                { label: "International Trade & Development", id: "trade" },
+                { label: "Internet", id: "internet" },
+                { label: "Investment Banking", id: "investment-banking" },
+                { label: "Investment Management", id: "investment" },
+                { label: "Judiciary", id: "judiciary" },
+                { label: "Law Enforcement", id: "law-enforcement" },
+                { label: "Law Practice", id: "law" },
+                { label: "Legal Services", id: "legal" },
+                { label: "Legislative Office", id: "legislative" },
+                { label: "Leisure, Travel & Tourism", id: "travel" },
+                { label: "Libraries", id: "libraries" },
+                { label: "Logistics & Supply Chain", id: "logistics" },
+                { label: "Luxury Goods & Jewelry", id: "luxury" },
+                { label: "Machinery", id: "machinery" },
+                { label: "Management Consulting", id: "consulting" },
+                { label: "Maritime", id: "maritime" },
+                { label: "Market Research", id: "market-research" },
+                { label: "Marketing & Advertising", id: "marketing" },
+                { label: "Mechanical or Industrial Engineering", id: "engineering" },
+                { label: "Media Production", id: "media" },
+                { label: "Medical Devices", id: "medical-devices" },
+                { label: "Medical Practice", id: "medical" },
+                { label: "Mental Health Care", id: "mental-health" },
+                { label: "Military", id: "military" },
+                { label: "Mining & Metals", id: "mining" },
+                { label: "Motion Pictures & Film", id: "film" },
+                { label: "Museums & Institutions", id: "museums" },
+                { label: "Music", id: "music" },
+                { label: "Nanotechnology", id: "nanotechnology" },
+                { label: "Newspapers", id: "newspapers" },
+                { label: "Non-Profit Organization Management", id: "nonprofit" },
+                { label: "Oil & Energy", id: "oil-energy" },
+                { label: "Online Media", id: "online-media" },
+                { label: "Outsourcing/Offshoring", id: "outsourcing" },
+                { label: "Package/Freight Delivery", id: "delivery" },
+                { label: "Packaging & Containers", id: "packaging" },
+                { label: "Paper & Forest Products", id: "paper" },
+                { label: "Performing Arts", id: "performing-arts" },
+                { label: "Pharmaceuticals", id: "pharmaceuticals" },
+                { label: "Philanthropy", id: "philanthropy" },
+                { label: "Photography", id: "photography" },
+                { label: "Plastics", id: "plastics" },
+                { label: "Political Organization", id: "political" },
+                { label: "Primary/Secondary Education", id: "education-k12" },
+                { label: "Printing", id: "printing" },
+                { label: "Professional Training & Coaching", id: "training" },
+                { label: "Program Development", id: "program-development" },
+                { label: "Public Policy", id: "public-policy" },
+                { label: "Public Relations & Communications", id: "pr" },
+                { label: "Public Safety", id: "public-safety" },
+                { label: "Publishing", id: "publishing" },
+                { label: "Railroad Manufacture", id: "railroad" },
+                { label: "Ranching", id: "ranching" },
+                { label: "Real Estate", id: "real-estate" },
+                { label: "Recreational Facilities & Services", id: "recreation" },
+                { label: "Religious Institutions", id: "religious" },
+                { label: "Renewables & Environment", id: "renewables" },
+                { label: "Research", id: "research" },
+                { label: "Restaurants", id: "restaurants" },
+                { label: "Retail", id: "retail" },
+                { label: "Security & Investigations", id: "security" },
+                { label: "Semiconductors", id: "semiconductors" },
+                { label: "Shipbuilding", id: "shipbuilding" },
+                { label: "Sporting Goods", id: "sporting-goods" },
+                { label: "Sports", id: "sports" },
+                { label: "Staffing & Recruiting", id: "staffing" },
+                { label: "Supermarkets", id: "supermarkets" },
+                { label: "Telecommunications", id: "telecom" },
+                { label: "Textiles", id: "textiles" },
+                { label: "Think Tanks", id: "think-tanks" },
+                { label: "Tobacco", id: "tobacco" },
+                { label: "Translation & Localization", id: "translation" },
+                { label: "Transportation/Trucking/Railroad", id: "transportation" },
+                { label: "Utilities", id: "utilities" },
+                { label: "Venture Capital & Private Equity", id: "venture-capital" },
+                { label: "Veterinary", id: "veterinary" },
+                { label: "Warehousing", id: "warehousing" },
+                { label: "Wholesale", id: "wholesale" },
+                { label: "Wine & Spirits", id: "wine" },
+                { label: "Wireless", id: "wireless" },
+                { label: "Writing & Editing", id: "writing" }
+              ]}
+              onSelectionChange={(value) => {
+                if (value) {
+                  handleInputChange('industry')(value as string);
+                  setTimeout(() => {
+                    handleNext(true);
+                  }, 300);
+                }
+              }}
+            >
+              {(item) => (
+                <Select.Item id={item.id} supportingText={item.supportingText}>
+                  {item.label}
+                </Select.Item>
+              )}
+            </Select.ComboBox>
+          </div>
+        )}
+
+        {errors.industry && (
+          <p className="text-sm text-error-primary text-center">{errors.industry}</p>
+        )}
+      </div>
+    );
+  };
+
+  // Step 5: Role Selection
+  const renderStep5 = () => {
+    const roles = [
+      { id: "owner", name: "Owner" },
+      { id: "executive", name: "Executive Team" },
+      { id: "manager", name: "Manager" },
+      { id: "employee", name: "Employee" },
+      { id: "student", name: "Student/Intern" },
+      { id: "freelancer", name: "Freelancer" }
+    ];
+
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {roles.map(role => (
+            <button
+              key={role.id}
+              onClick={() => {
+                handleInputChange('role')(role.id);
+                // Auto-advance to next step after selection
+                setTimeout(() => {
+                  handleNext(true);
+                }, 300);
+              }}
+              className={cx(
+                "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
+                formData.role === role.id
+                  ? "border-brand-solid bg-brand-50 shadow-sm"
+                  : "border-gray-300 hover:border-gray-400"
+              )}
+            >
+              <span className="text-sm font-medium text-primary">{role.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {!showRoleSearch ? (
+          <button
+            onClick={() => setShowRoleSearch(true)}
+            className="mx-auto text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+          >
+            None of these describe my role
+          </button>
+        ) : (
+          <div className="flex flex-col gap-3">
+      <Input
+              label="Describe your role"
+              placeholder="Type your role..."
+              value={customRole}
+              onChange={setCustomRole}
+              autoFocus
+            />
+            
+            {customRole.trim() && (
+              <div className="flex justify-end">
+                <Button
+                  iconTrailing={ArrowRight}
+                  onClick={() => {
+                    handleInputChange('role')(customRole);
+                    setTimeout(() => {
+                      handleNext(true);
+                    }, 300);
+                  }}
+                  size="sm"
+                >
+                  Continue
+                </Button>
+              </div>
+            )}
+            </div>
+        )}
+
+        {errors.role && (
+          <p className="text-sm text-error-primary text-center">{errors.role}</p>
+        )}
+    </div>
+  );
+  };
+
+  // Step 6: Company Profile
+  const renderStep6 = () => (
     <div className="flex flex-col gap-5">
       <Input
         label="Company name"
-        placeholder="Acme Inc."
+        placeholder=""
         value={formData.companyName}
         onChange={handleInputChange('companyName')}
         isInvalid={!!errors.companyName}
@@ -371,91 +823,124 @@ export const SignupPage = () => {
         isRequired
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Select
-          label="Company size"
-          placeholder="Select size"
-          selectedKey={formData.companySize}
-          onSelectionChange={(value) => handleInputChange('companySize')(value as string)}
-          isInvalid={!!errors.companySize}
-          hint={errors.companySize}
-          isRequired
+      <div className="flex justify-end">
+        <Button
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="sm"
+          isDisabled={!formData.companyName.trim()}
         >
-          {COMPANY_SIZES.map(size => (
-            <Select.Item key={size.value} id={size.value}>
-              {size.label}
-            </Select.Item>
-          ))}
-        </Select>
-
-        <Select
-          label="Industry"
-          placeholder="Select industry"
-          selectedKey={formData.industry}
-          onSelectionChange={(value) => handleInputChange('industry')(value as string)}
-          isInvalid={!!errors.industry}
-          hint={errors.industry}
-          isRequired
-        >
-          {INDUSTRIES.map(industry => (
-            <Select.Item key={industry.value} id={industry.value}>
-              {industry.label}
-            </Select.Item>
-          ))}
-        </Select>
+          Continue
+        </Button>
       </div>
-
-      <Input
-        label="Company website"
-        placeholder="https://yourcompany.com"
-        value={formData.website}
-        onChange={handleInputChange('website')}
-        hint="Optional"
-      />
     </div>
   );
 
-  // Step 4: Primary Use Case
-  const renderStep4 = () => (
-    <div className="flex flex-col gap-5">
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {USE_CASES.map(useCase => (
-            <div key={useCase.value} className={cx(
-              "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm",
-              formData.primaryUseCase === useCase.value 
-                ? "border-brand-solid bg-brand-50 shadow-sm" 
-                : "border-secondary hover:border-gray-300"
-            )}
-            onClick={() => handleInputChange('primaryUseCase')(useCase.value)}
+  // Step 7: Company Size Selection
+  const renderStep7 = () => {
+    const companySizes = [
+      { id: "just-me", name: "Just me" },
+      { id: "2-5", name: "2 to 5" },
+      { id: "6-10", name: "6 to 10" },
+      { id: "11-25", name: "11 to 25" },
+      { id: "26-50", name: "26 to 50" },
+      { id: "51-200", name: "51 to 200" },
+      { id: "201-1000", name: "201 to 1,000" },
+      { id: "1001-10000", name: "1,001 to 10,000" },
+      { id: "10000+", name: "10,001 or more" }
+    ];
+
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {companySizes.map(size => (
+            <button
+              key={size.id}
+              onClick={() => {
+                handleInputChange('companySize')(size.id);
+                // Auto-advance to next step after selection
+                setTimeout(() => {
+                  handleNext(true);
+                }, 300);
+              }}
+              className={cx(
+                "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
+                formData.companySize === size.id
+                  ? "border-brand-solid bg-brand-50 shadow-sm"
+                  : "border-gray-300 hover:border-gray-400"
+              )}
             >
-              <input
-                type="radio"
-                name="primaryUseCase"
-                value={useCase.value}
-                checked={formData.primaryUseCase === useCase.value}
-                onChange={(e) => handleInputChange('primaryUseCase')(e.target.value)}
-                className="mr-3 pointer-events-none"
-              />
-              <div className="pointer-events-none flex-1 min-w-0">
-                <div className="font-medium text-primary text-sm mb-1 truncate">{useCase.label}</div>
-                <div className="text-xs text-tertiary truncate">{useCase.description}</div>
-              </div>
-            </div>
+              <span className="text-sm font-medium text-primary">{size.name}</span>
+            </button>
           ))}
-        </div>
-        {errors.primaryUseCase && (
-          <p className="mt-2 text-sm text-error-primary">{errors.primaryUseCase}</p>
+      </div>
+
+        {errors.companySize && (
+          <p className="text-sm text-error-primary text-center">{errors.companySize}</p>
         )}
+    </div>
+  );
+  };
+
+  // Step 8: Company Website
+  const renderStep8 = () => (
+    <div className="flex flex-col gap-5">
+      <InputGroup 
+        label={`${formData.companyName || 'Company'} website URL`}
+        leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
+      >
+        <Input 
+          placeholder="www.companywebsite.com" 
+          value={formData.website}
+          onChange={handleInputChange('website')}
+        />
+      </InputGroup>
+
+      <div className="flex justify-end items-center gap-6">
+        <button
+          onClick={() => handleNext()}
+          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+        >
+          Skip
+        </button>
+        
+        <Button
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="sm"
+          isDisabled={!formData.website.trim()}
+        >
+          Continue
+        </Button>
       </div>
     </div>
   );
 
-  // Step 5: Popular Integrations - Compact Design
-  const renderStep5 = () => (
-    <div className="flex flex-col gap-5">
+  // Step 9: Popular Integrations - Compact Design
+  const renderStep9 = () => (
+    <div className="flex flex-col gap-6">
       <div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="flex justify-end mb-3">
+          <button
+            onClick={() => {
+              const allToolIds = SAAS_TOOLS.map(tool => tool.id);
+              const allSelected = allToolIds.every(id => formData.currentTools.includes(id));
+              
+              if (allSelected) {
+                // Unselect all tools
+                setFormData(prev => ({ ...prev, currentTools: [] }));
+              } else {
+                // Select all tools
+                setFormData(prev => ({ ...prev, currentTools: allToolIds }));
+              }
+            }}
+            className="text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+          >
+            {SAAS_TOOLS.every(tool => formData.currentTools.includes(tool.id)) ? 'Unselect all' : 'Select all'}
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {SAAS_TOOLS.map(tool => (
             <div key={tool.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
@@ -466,6 +951,7 @@ export const SignupPage = () => {
             onClick={() => handleArrayToggle('currentTools')(tool.id)}
             >
               {/* Logo - Left side */}
+              {tool.logo && (
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3">
                 <img 
                   src={tool.logo} 
@@ -473,8 +959,9 @@ export const SignupPage = () => {
                   className="max-w-full max-h-full object-contain"
                 />
               </div>
+              )}
               
-              {/* Text content - Right side */}
+              {/* Text content */}
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-primary text-sm truncate">{tool.name}</div>
               </div>
@@ -482,13 +969,92 @@ export const SignupPage = () => {
           ))}
         </div>
       </div>
+
+
+      <div className="flex justify-end items-center gap-6">
+        <button
+          onClick={() => handleNext()}
+          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+        >
+          Skip for now
+        </button>
+        
+        <Button
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="sm"
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 
-  // Step 6: Enterprise Features - Compact Design
-  const renderStep6 = () => (
+  // Step 10: Expected Users
+  const renderStep10 = () => {
+    const userCounts = [
+      { id: "under-10000", name: "Under 10,000" },
+      { id: "10000-25000", name: "10,000 to 25,000" },
+      { id: "25000-50000", name: "25,000 to 50,000" },
+      { id: "over-50000", name: "Over 50,000" }
+    ];
+
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {userCounts.map(count => (
+            <button
+              key={count.id}
+              onClick={() => {
+                handleInputChange('expectedUserCount')(count.id);
+                // Auto-advance to next step after selection
+                setTimeout(() => {
+                  handleNext(true);
+                }, 300);
+              }}
+              className={cx(
+                "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
+                formData.expectedUserCount === count.id
+                  ? "border-brand-solid bg-brand-50 shadow-sm"
+                  : "border-gray-300 hover:border-gray-400"
+              )}
+            >
+              <span className="text-sm font-medium text-primary">{count.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {errors.expectedUserCount && (
+          <p className="text-sm text-error-primary text-center">{errors.expectedUserCount}</p>
+        )}
+      </div>
+    );
+  };
+
+  // Step 11: Enterprise Features - Compact Design
+  const renderStep11 = () => (
     <div className="flex flex-col gap-5">
       <div>
+        <div className="flex justify-end mb-3">
+          <button
+            onClick={() => {
+              const allFeatureIds = ENTERPRISE_FEATURES.map(feature => feature.id);
+              const allSelected = allFeatureIds.every(id => formData.enterpriseFeatures.includes(id));
+              
+              if (allSelected) {
+                // Unselect all features
+                setFormData(prev => ({ ...prev, enterpriseFeatures: [] }));
+              } else {
+                // Select all features
+                setFormData(prev => ({ ...prev, enterpriseFeatures: allFeatureIds }));
+              }
+            }}
+            className="text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+          >
+            {ENTERPRISE_FEATURES.every(feature => formData.enterpriseFeatures.includes(feature.id)) ? 'Unselect all' : 'Select all'}
+          </button>
+        </div>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {ENTERPRISE_FEATURES.map(feature => (
             <div key={feature.id} className={cx(
@@ -504,85 +1070,104 @@ export const SignupPage = () => {
                 <div className="font-medium text-primary text-sm mb-1">{feature.name}</div>
                 <div className="text-xs text-tertiary">{feature.description}</div>
               </div>
-              {formData.enterpriseFeatures.includes(feature.id) && (
-                <CheckCircle className="w-4 h-4 text-green-500 ml-2" />
-              )}
             </div>
           ))}
         </div>
       </div>
 
-      <Select
-        label="Expected users"
-        placeholder="Select user count"
-        selectedKey={formData.expectedUserCount}
-        onSelectionChange={(value) => handleInputChange('expectedUserCount')(value as string)}
-        isInvalid={!!errors.expectedUserCount}
-        hint={errors.expectedUserCount}
-        isRequired
-      >
-        <Select.Item id="1-20">1-20 users</Select.Item>
-        <Select.Item id="21-50">21-50 users</Select.Item>
-        <Select.Item id="51-100">51-100 users</Select.Item>
-        <Select.Item id="101-500">101-500 users</Select.Item>
-        <Select.Item id="500+">500+ users</Select.Item>
-      </Select>
+      <div className="flex justify-end items-center gap-6">
+        <button
+          onClick={() => handleNext()}
+          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+        >
+          Skip
+        </button>
+        
+        <Button
+          iconTrailing={ArrowRight}
+          onClick={() => handleNext()}
+          size="sm"
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 
-  // Step 7: Plan Selection
-  const renderStep7 = () => {
+  // Step 12: Plan Selection
+  const renderStep12 = () => {
     const recommendedPlanType = getRecommendedPlan();
     
     const plans = [
       {
         id: "starter",
         name: "Starter",
-        price: "$0",
+        price: "$399",
         period: "/month",
-        description: "Ideal for hobbyists and individuals exploring web app creation.",
+        annualPrice: "$333",
+        annualPeriod: "/month",
+        annualTotal: "($4,000/year)",
+        monthlyTotal: "($4,788/year)",
+        members: "10,000",
+        collaborators: "3",
+        spaces: "20",
+        description: "",
         features: [
-          { icon: Globe01, text: "Bettermode.io Domain" },
-          { icon: Star01, text: "Bettermode Badge" },
-          { icon: Users01, text: "100 Members" },
-          { icon: Building01, text: "20 Spaces" }
+          { icon: Globe01, text: "Custom Domain" },
+          { icon: Users01, text: "Unlimited Members" },
+          { icon: TrendUp01, text: "Advanced Analytics" },
+          { icon: Headphones01, text: "Priority Support" }
         ],
-        buttonText: "Start for free",
-        buttonStyle: "secondary",
+        buttonText: "14-days trial",
+        buttonStyle: "primary",
         recommended: recommendedPlanType === "starter"
       },
       {
-        id: "pro", 
-        name: "Pro",
-        price: "$49",
+        id: "growth", 
+        name: "Growth",
+        price: "$1,750",
         period: "/month",
-        description: "Designed for creators and startups scaling their products.",
+        annualPrice: "$1,500",
+        annualPeriod: "/month",
+        annualTotal: "($18,000/year)",
+        monthlyTotal: "($21,000/year)",
+        members: "25,000",
+        collaborators: "10",
+        spaces: "100",
+        description: "",
         features: [
-          { icon: Users01, text: "Unlimited Members" },
-          { icon: Globe01, text: "Custom Domain" },
-          { icon: Headphones01, text: "Priority support" },
-          { icon: TrendUp01, text: "Advanced Analytics" },
-          { icon: Zap, text: "Scale with add-ons" }
+          { icon: Users01, text: "Everything in Starter" },
+          { icon: Zap, text: "Ask AI" },
+          { icon: Target01, text: "Federated search" },
+          { icon: Code01, text: "API and Webhooks" },
+          { icon: Lock01, text: "OAuth2" }
         ],
-        buttonText: "Try free for 14 days",
+        buttonText: "Request a demo",
         buttonStyle: "primary",
         recommended: recommendedPlanType === "professional"
       },
       {
         id: "enterprise",
         name: "Enterprise",
-        price: "Custom",
-        period: "",
-        description: "Tailored for excellence in scalability, security, and support.",
+        price: billingPeriod === 'annual' ? "$45,000" : "Contact Us",
+        period: billingPeriod === 'annual' ? "/year" : "",
+        annualPrice: null,
+        annualPeriod: null,
+        annualTotal: "",
+        monthlyTotal: "Not Available",
+        members: "50,000",
+        collaborators: "20",
+        spaces: "500",
+        description: "",
         features: [
-          { icon: CheckCircle, text: "Guaranteed SLA" },
+          { icon: CheckCircle, text: "Everything in Growth" },
           { icon: Globe01, text: "Data Residency" },
           { icon: Shield01, text: "SOC 2 (Type 2)" },
-          { icon: Lock01, text: "Advanced security & controls" },
-          { icon: User01, text: "Dedicated account support" }
+          { icon: Lock01, text: "Custom Security Controls" },
+          { icon: User01, text: "Dedicated Account Manager" }
         ],
-        buttonText: "Book a Demo",
-        buttonStyle: "dark",
+        buttonText: "Talk to Sales",
+        buttonStyle: "primary",
         recommended: recommendedPlanType === "enterprise"
       }
     ];
@@ -590,89 +1175,144 @@ export const SignupPage = () => {
     const displayPlans = showAllPlans ? plans : plans.filter(plan => plan.id === recommendedPlanType);
 
     return (
-      <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+      <div className="">
+        
         <div className={cx(
-          "gap-4 max-w-5xl mx-auto px-8",
-          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "flex justify-center"
+          "gap-4 w-full px-8",
+          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "grid grid-cols-1 lg:grid-cols-3 max-w-7xl mx-auto"
         )}>
           {displayPlans.map(plan => (
           <div key={plan.id} className={cx(
-            "relative p-6 rounded-xl border-2 cursor-pointer transition-all hover:shadow-lg flex flex-col",
-            formData.selectedPlan === plan.id && plan.recommended
-              ? "border-purple-300 bg-gradient-to-b from-purple-100/50 to-white"
-              : formData.selectedPlan === plan.id
-              ? "border-brand-300 bg-brand-25"
+            "relative p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md flex flex-col",
+            formData.selectedPlan === plan.id
+              ? "border-brand-solid bg-brand-50 shadow-sm"
               : plan.recommended
-              ? "border-gray-200 bg-gradient-to-b from-purple-50/40 to-white hover:border-gray-300"
+              ? "border-purple-300 bg-purple-50/30 hover:border-purple-400"
               : "border-gray-200 hover:border-gray-300",
-            !showAllPlans && "max-w-md"
+            "min-h-[400px]",
+            plan.id === "enterprise" && billingPeriod === 'monthly' && "opacity-20"
           )}
           onClick={() => setFormData(prev => ({ ...prev, selectedPlan: plan.id }))}
           >
+            {plan.recommended && (
+              <div className="absolute -top-4 left-3 ">
+                <span className="bg-black text-white text-[0.8rem] font-medium px-3 py-1 rounded-md ">
+                  Recommended based on your needs
+                </span>
+              </div>
+            )}
             
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
-                {plan.recommended && (
-                  <span className="bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-md">
-                    Recommended
-                  </span>
+            <div className="mb-3">
+              <div className="mb-2">
+                <h3 className="text-base font-semibold text-gray-900">{plan.name}</h3>
+              </div>
+              <div className="mb-3 min-h-[100px] flex flex-col justify-center">
+                {billingPeriod === 'annual' && plan.annualPrice && plan.price !== plan.annualPrice ? (
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[0.9rem] font-bold text-gray-400 line-through">{plan.price}</span>
+                      <span className="bg-green-100 text-green-700 text-xs font-medium px-1 py-0.5 rounded-md">
+                        Save {Math.round(((parseFloat(plan.price.replace('$', '').replace(',', '')) - parseFloat(plan.annualPrice.replace('$', '').replace(',', ''))) / parseFloat(plan.price.replace('$', '').replace(',', ''))) * 100)}%
+                      </span>
+                    </div>
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900">{plan.annualPrice}</span>
+                        <span className="text-gray-600 ml-1">/m</span>
+                        <span className="text-sm text-gray-500 ml-2">{plan.annualTotal}</span>
+                      </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-center h-full">
+                    <div className="flex items-baseline">
+                <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
+                 <span className="text-gray-600 ml-1">/m</span>
+                 {billingPeriod === 'monthly' && plan.monthlyTotal && plan.monthlyTotal !== "Not Available" && (
+                   <span className="text-sm text-gray-500 ml-2">{plan.monthlyTotal}</span>
+                 )}
+                    </div>
+                    {billingPeriod === 'monthly' && plan.monthlyTotal === "Not Available" && (
+                      <div className="text-sm text-black mt-1 font-medium">Only Annually</div>
+                    )}
+                  </div>
                 )}
               </div>
-              <div className="mb-3">
-                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                <span className="text-gray-600 ml-1">{plan.period}</span>
+              
+              {/* Members, Collaborators, and Spaces */}
+              <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-900">{plan.members}</div>
+                  <div className="text-xs text-gray-500">Members</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-900">{plan.collaborators}</div>
+                  <div className="text-xs text-gray-500">Collaborators</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-900">{plan.spaces}</div>
+                  <div className="text-xs text-gray-500">Spaces</div>
+                </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">{plan.description}</p>
             </div>
 
-            <div className="space-y-2 mb-4">
+            <div className="space-y-1 mb-4 mt-4">
               {plan.features.map((feature, index) => (
-                <div key={index} className="flex items-center text-sm text-gray-700">
-                  <feature.icon className="w-4 h-4 mr-3 text-gray-600" />
+                <div key={index} className="flex items-center text-xs text-gray-600">
+                  <feature.icon className="w-3 h-3 mr-2 text-gray-500" />
                   {feature.text}
                 </div>
               ))}
             </div>
 
-            {plan.id === "pro" && (
-              <div className="mb-4">
-                <p className="text-xs text-gray-600 mb-2">Integrations</p>
-                <div className="flex space-x-2">
-                  <img src="./src/logo/s/zapier.svg" alt="Zapier" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/slack-new-logo.svg" alt="Slack" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/google-analytics-3.svg" alt="Analytics" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/Jira logo.svg" alt="Jira" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/hotjar-icon logo.svg" alt="Hotjar" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/mailchimp logo.svg" alt="MailChimp" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/make.svg" alt="Make" className="w-6 h-6 rounded" />
+            {(plan.id === "growth" || plan.id === "enterprise") && (
+              <div className="mb-4 mt-4">
+                <p className="text-xs text-gray-500 mb-1">Integrations</p>
+                <div className="flex space-x-1.5">
+                  {plan.id === "growth" ? (
+                    <>
+                      <img src="./src/logo/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/google-analytics-3.svg" alt="Analytics" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/stripe-4.svg" alt="Stripe" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/mailchimp logo.svg" alt="MailChimp" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/make.svg" alt="Make" className="w-5 h-5 rounded" />
+                    </>
+                  ) : (
+                    <>
+                      <img src="./src/logo/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/hubspot-1.svg" alt="HubSpot" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
+                      <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
+                    </>
+                  )}
                 </div>
               </div>
             )}
 
-            {plan.id === "enterprise" && (
-              <div className="mb-4">
-                <p className="text-xs text-gray-600 mb-2">Integrations</p>
-                <div className="flex space-x-2">
-                  <img src="./src/logo/s/salesforce.svg" alt="Salesforce" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/hubspot-1.svg" alt="HubSpot" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/zendesk-3.svg" alt="Zendesk" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/amplitude-icon logo.svg" alt="Amplitude" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-6 h-6 rounded" />
-                  <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-6 h-6 rounded" />
-                </div>
-              </div>
-            )}
-
-            {/* Card Footer - See more link */}
-            <div className="mt-auto pt-3 border-t border-gray-200">
+            {/* Card Footer - Action Button */}
+            <div className="mt-auto pt-4 border-t border-gray-100">
+              <Button
+                className="w-full"
+                color={plan.buttonStyle === "primary" ? "primary" : plan.buttonStyle === "secondary" ? "secondary" : "tertiary"}
+                size="sm"
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, selectedPlan: plan.id }));
+                  handleSubmit();
+                }}
+                isLoading={isLoading && formData.selectedPlan === plan.id}
+              >
+                {plan.buttonText}
+              </Button>
+              
               <a 
                 href="https://bettermode.com/pricing" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors"
+                className="block text-center text-xs text-gray-400 hover:text-gray-600 transition-colors mt-1.5"
               >
-                See more details →
+                See details →
               </a>
             </div>
             </div>
@@ -778,11 +1418,9 @@ export const SignupPage = () => {
       <section className="flex min-h-screen bg-primary lg:grid lg:grid-cols-1 xl:grid xl:grid-cols-[2fr_1fr]">
         {/* Left Column - Form (2/3) - Scrollable */}
         <div className="flex w-full flex-col bg-primary xl:h-screen xl:overflow-hidden">
-          <div className="flex-1 xl:overflow-y-auto xl:scrollbar-thin">
-            <div className="flex justify-center px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-16">
-              <div className="flex w-full flex-col gap-6 sm:gap-8 max-w-xl lg:max-w-2xl xl:max-w-lg pb-8">
-                {/* Logo and Step Indicator */}
-                <div className="flex flex-col gap-6">
+          {/* Header */}
+          <header className="flex flex-col gap-6 px-4 py-6 sm:px-6 md:px-8 lg:px-8 xl:px-8">
+            {/* Logo */}
                   <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
                     <img 
                       src="./src/logo/Logo Final.svg" 
@@ -804,13 +1442,152 @@ export const SignupPage = () => {
                   <div className="w-full bg-purple-100 rounded-full h-0.5">
                     <div 
                       className="h-full bg-purple-600 rounded-full transition-all duration-500"
-                      style={{ width: `${((currentStep - 1) / 6) * 100}%` }}
+                style={{ width: `${((currentStep - 1) / 11) * 100}%` }}
                     />
                   </div>
+          </header>
 
+          <div className="flex-1 xl:overflow-y-auto xl:scrollbar-thin">
+            <div className="flex justify-center items-center min-h-full px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-8">
+              <div className={cx(
+                "flex w-full flex-col gap-6 sm:gap-8 pb-8",
+                currentStep === 12 
+                  ? "max-w-7xl lg:max-w-7xl xl:max-w-6xl" 
+                  : "max-w-3xl lg:max-w-3xl xl:max-w-2xl"
+              )}>
+                {/* Form Content */}
+                <div className="flex flex-col gap-6">
                   {/* Step Content */}
-                  <div className="flex flex-col gap-2 mt-10">
-                    <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
+                  <div className="flex flex-col gap-2">
+                    {currentStep === 4 && (
+                      <div className="">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                        <p className="text-lg text-tertiary">Nice to meet you <span className="font-bold">{formData.firstName}</span>!</p>
+                      </div>
+                    )}
+                    {currentStep === 5 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 6 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 7 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 8 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 9 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 10 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 11 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    {currentStep === 12 && (
+                      <div className="">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-1"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
+                      {currentStep === 12 && (
+                        <div className="flex bg-gray-100 rounded-lg p-1">
+                          <button
+                            onClick={() => setBillingPeriod('annual')}
+                            className={cx(
+                              "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                              billingPeriod === 'annual'
+                                ? "bg-white text-gray-900 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                            )}
+                          >
+                            Annually
+                          </button>
+                          <button
+                            onClick={() => setBillingPeriod('monthly')}
+                            className={cx(
+                              "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                              billingPeriod === 'monthly'
+                                ? "bg-white text-gray-900 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                            )}
+                          >
+                            Monthly
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <p className="text-md text-tertiary">{getStepDescription()}</p>
                   </div>
                 </div>
@@ -845,9 +1622,14 @@ export const SignupPage = () => {
                   {currentStep === 5 && renderStep5()}
                   {currentStep === 6 && renderStep6()}
                   {currentStep === 7 && renderStep7()}
+                  {currentStep === 8 && renderStep8()}
+                  {currentStep === 9 && renderStep9()}
+                  {currentStep === 10 && renderStep10()}
+                  {currentStep === 11 && renderStep11()}
+                  {currentStep === 12 && renderStep12()}
 
                   {/* Mobile testimonial - shows on small screens */}
-                  {(currentStep === 3 || currentStep === 5) && (
+                  {(currentStep === 7 || currentStep === 9) && (
                     <div className="xl:hidden bg-gray-50 rounded-lg p-4 border">
                       <div className="flex items-start gap-3">
                         <img 
@@ -905,7 +1687,7 @@ export const SignupPage = () => {
           {/* Mobile Navigation */}
           <div className="xl:hidden p-4 border-t border-gray-200">
             <div className="flex gap-3">
-              {currentStep > 1 && (
+              {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && currentStep !== 12 && (
                 <Button 
                   className="flex-1"
                   color="secondary" 
@@ -917,31 +1699,16 @@ export const SignupPage = () => {
                 </Button>
               )}
               
-              {currentStep < 7 ? (
+              {false ? (
                 <Button 
                   className={currentStep > 1 ? "flex-[4]" : "w-full"}
                   iconTrailing={ArrowRight}
-                  onClick={handleNext}
+                  onClick={() => handleNext()}
                   size="md"
                 >
                   Continue
                 </Button>
-              ) : (
-                <Button 
-                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
-                  isLoading={isLoading}
-                  onClick={handleSubmit}
-                  size="md"
-                >
-                  {formData.selectedPlan === "starter" 
-                    ? "Create Account" 
-                    : formData.selectedPlan === "pro" 
-                    ? "Try free for 14 days"
-                    : formData.selectedPlan === "enterprise" 
-                    ? "Book Demo" 
-                    : "Try free for 14 days"}
-                </Button>
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -951,7 +1718,7 @@ export const SignupPage = () => {
             
             {/* Navigation Buttons */}
             <div className="flex gap-3">
-              {currentStep > 1 && (
+              {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && currentStep !== 12 && (
                 <Button 
                   className="flex-1"
                   color="secondary" 
@@ -963,31 +1730,16 @@ export const SignupPage = () => {
                 </Button>
               )}
               
-              {currentStep < 7 ? (
+              {false ? (
                 <Button 
                   className={currentStep > 1 ? "flex-[4]" : "w-full"}
                   iconTrailing={ArrowRight}
-                  onClick={handleNext}
+                  onClick={() => handleNext()}
                   size="md"
                 >
                   Continue
                 </Button>
-              ) : (
-                <Button 
-                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
-                  isLoading={isLoading}
-                  onClick={handleSubmit}
-                  size="md"
-                >
-                  {formData.selectedPlan === "starter" 
-                    ? "Create Account" 
-                    : formData.selectedPlan === "pro" 
-                    ? "Try free for 14 days"
-                    : formData.selectedPlan === "enterprise" 
-                    ? "Book Demo" 
-                    : "Try free for 14 days"}
-                </Button>
-              )}
+              ) : null}
             </div>
           </footer>
         </div>
