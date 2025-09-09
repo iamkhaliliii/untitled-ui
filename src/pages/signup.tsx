@@ -947,7 +947,7 @@ export const SignupPage = () => {
 
           {/* Desktop Footer */}
           <footer className="hidden xl:flex xl:items-center xl:justify-between p-8 pt-4">
-            <p className="text-sm text-tertiary">© CommunityOS 2024</p>
+            <p className="text-sm text-tertiary">© Bettermode 2025</p>
             
             {/* Navigation Buttons */}
             <div className="flex gap-3">
