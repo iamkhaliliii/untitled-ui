@@ -83,22 +83,22 @@ const USE_CASES = [
 ];
 
 const SAAS_TOOLS = [
-  { id: "salesforce", name: "Salesforce", logo: "./src/logo/s/salesforce.svg" },
-  { id: "hubspot", name: "HubSpot", logo: "./src/logo/s/hubspot-1.svg" },
-  { id: "intercom", name: "Intercom", logo: "./src/logo/s/intercom-2.svg" },
-  { id: "zendesk", name: "Zendesk", logo: "./src/logo/s/zendesk-3.svg" },
-  { id: "slack", name: "Slack", logo: "./src/logo/s/slack-new-logo.svg" },
-  { id: "teams", name: "MS Teams", logo: "./src/logo/s/microsoft-teams-1.svg" },
-  { id: "analytics", name: "Google Analytics", logo: "./src/logo/s/google-analytics-3.svg" },
-  { id: "stripe", name: "Stripe", logo: "./src/logo/s/stripe-4.svg" },
-  { id: "tag-manager", name: "Google Tag Manager", logo: "./src/logo/s/google-tag-manager logo.svg" },
-  { id: "zapier", name: "Zapier", logo: "./src/logo/s/zapier.svg" },
-  { id: "jira", name: "Jira", logo: "./src/logo/s/Jira logo.svg" },
-  { id: "make", name: "Make", logo: "./src/logo/s/make.svg" },
-  { id: "hotjar", name: "Hotjar", logo: "./src/logo/s/hotjar-icon logo.svg" },
-  { id: "amplitude", name: "Amplitude", logo: "./src/logo/s/amplitude-icon logo.svg" },
-  { id: "mailchimp", name: "Mailchimp", logo: "./src/logo/s/mailchimp logo.svg" },
-  { id: "mixpanel", name: "Mixpanel", logo: "./src/logo/s/Mixpanel_Symbol_0.svg" },
+  { id: "salesforce", name: "Salesforce", logo: "/logos/s/salesforce.svg" },
+  { id: "hubspot", name: "HubSpot", logo: "/logos/s/hubspot-1.svg" },
+  { id: "intercom", name: "Intercom", logo: "/logos/s/intercom-2.svg" },
+  { id: "zendesk", name: "Zendesk", logo: "/logos/s/zendesk-3.svg" },
+  { id: "slack", name: "Slack", logo: "/logos/s/slack-new-logo.svg" },
+  { id: "teams", name: "MS Teams", logo: "/logos/s/microsoft-teams-1.svg" },
+  { id: "analytics", name: "Google Analytics", logo: "/logos/s/google-analytics-3.svg" },
+  { id: "stripe", name: "Stripe", logo: "/logos/s/stripe-4.svg" },
+  { id: "tag-manager", name: "Google Tag Manager", logo: "/logos/s/google-tag-manager logo.svg" },
+  { id: "zapier", name: "Zapier", logo: "/logos/s/zapier.svg" },
+  { id: "jira", name: "Jira", logo: "/logos/s/Jira logo.svg" },
+  { id: "make", name: "Make", logo: "/logos/s/make.svg" },
+  { id: "hotjar", name: "Hotjar", logo: "/logos/s/hotjar-icon logo.svg" },
+  { id: "amplitude", name: "Amplitude", logo: "/logos/s/amplitude-icon logo.svg" },
+  { id: "mailchimp", name: "Mailchimp", logo: "/logos/s/mailchimp logo.svg" },
+  { id: "mixpanel", name: "Mixpanel", logo: "/logos/s/Mixpanel_Symbol_0.svg" },
   { id: "other", name: "Other tools", logo: null }
 ];
 
@@ -1269,22 +1269,22 @@ export const SignupPage = () => {
                 <div className="flex space-x-1.5">
                   {plan.id === "growth" ? (
                     <>
-                      <img src="./src/logo/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/google-analytics-3.svg" alt="Analytics" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/stripe-4.svg" alt="Stripe" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/mailchimp logo.svg" alt="MailChimp" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/make.svg" alt="Make" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/google-analytics-3.svg" alt="Analytics" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/stripe-4.svg" alt="Stripe" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/mailchimp logo.svg" alt="MailChimp" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/make.svg" alt="Make" className="w-5 h-5 rounded" />
                     </>
                   ) : (
                     <>
-                      <img src="./src/logo/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/hubspot-1.svg" alt="HubSpot" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
-                      <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/hubspot-1.svg" alt="HubSpot" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
+                      <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
                     </>
                   )}
                 </div>
@@ -1752,19 +1752,19 @@ export const SignupPage = () => {
             {/* Bottom trust signals */}
             <div className="mt-auto">
               <div className="flex items-end gap-4 overflow-x-auto">
-                <img src="./src/logo/G2/G2 - high performer.svg" alt="G2 High Performer" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="/logos/G2/G2 - high performer.svg" alt="G2 High Performer" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
                 <div className="flex flex-col items-center flex-shrink-0">
                   <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
                   <span className="text-xs text-tertiary font-medium">SOC 2</span>
                 </div>
-                <img src="./src/logo/G2/Ease of use -.svg" alt="G2 Ease of Use" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <img src="./src/logo/G2/G2 -leaders.svg" alt="G2 Leaders" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="/logos/G2/Ease of use -.svg" alt="G2 Ease of Use" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="/logos/G2/G2 -leaders.svg" alt="G2 Leaders" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
                 <div className="flex flex-col items-center flex-shrink-0">
                   <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
                   <span className="text-xs text-tertiary font-medium">GDPR</span>
                 </div>
-                <img src="./src/logo/G2/G2 momentom leader.svg" alt="G2 Momentum Leader" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <img src="./src/logo/G2/G2 -support.svg" alt="G2 Support" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="/logos/G2/G2 momentom leader.svg" alt="G2 Momentum Leader" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="/logos/G2/G2 -support.svg" alt="G2 Support" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
               </div>
             </div>
           </div>
