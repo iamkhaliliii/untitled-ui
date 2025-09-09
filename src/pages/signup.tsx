@@ -112,21 +112,28 @@ const TESTIMONIALS = [
     author: "Kyle Foster",
     title: "Marketing Manager",
     company: "HubSpot",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face"
+    avatar: "https://randomuser.me/api/portraits/men/1.jpg"
   },
   {
     quote: "Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users.",
     author: "Lizbeth Ramos", 
     title: "Developer Community Manager",
     company: "XANO",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face"
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg"
   },
   {
     quote: "Bettermode's automated reputation system and robust content organization features helped us drive engagement with a personalized approach.",
     author: "Marlee Margolin",
     title: "CSR Activation Manager", 
     company: "IBM",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face"
+    avatar: "https://randomuser.me/api/portraits/women/3.jpg"
+  },
+  {
+    quote: "Great platform for building communities.",
+    author: "Alex Johnson",
+    title: "Product Manager", 
+    company: "Tech Corp",
+    avatar: "https://randomuser.me/api/portraits/men/4.jpg"
   }
 ];
 
@@ -692,51 +699,43 @@ export const SignupPage = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="flex flex-col gap-6 h-full">
-            <div className="text-center">
-              <h2 className="text-sm font-bold text-primary mb-6 leading-relaxed">
-                More than <span className="text-xl font-extrabold">4 million</span> people across <span className="text-xl font-extrabold">2,000</span> enterprise communities are empowered by <span className="text-brand-solid">Bettermode</span>
+          <div className="flex flex-col gap-8 h-full mt-16 px-8">
+            <div className="text-left">
+              <div className="text-left flex flex-col gap-4">
+              <h2 className=" text-2xl font-base text-primary mb-8 leading-relaxed">
+                More than <span className="font-bold">4 million</span> people across <span className="font-bold">2,000 enterprise </span>
+                <span className="font-bold">communities</span> are empowered by{" "}
+                <div className="inline-flex items-end mt-1 ">
+                  <img 
+                    src="./src/logo/Logo Final.svg" 
+                    alt="bettermode" 
+                    className="h-7 w-auto ml-1"
+                  />
+                </div>
               </h2>
+              </div>
               
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div className="text-center">
-                  <div className="text-3xl font-extrabold text-primary">4,000,000+</div>
+              <div className="grid grid-cols-2 gap-8 mb-8">
+                <div className="text-left">
+                  <div className="text-3xl font-bold text-primary mb-2">4,000,000<span className="text-2xl">+</span></div>
                   <div className="text-sm text-tertiary font-medium">People</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-extrabold text-primary">2,000+</div>
+                <div className="text-left">
+                  <div className="text-3xl font-bold text-primary mb-2">2,000<span className="text-2xl">+</span></div>
                   <div className="text-sm text-tertiary font-medium">Enterprise communities</div>
                 </div>
               </div>
 
-              <div className="flex justify-center items-center mb-6">
-                <div className="flex -space-x-2">
-                  {TESTIMONIALS.slice(0, 3).map((t, i) => (
-                    <img key={i} className="w-10 h-10 rounded-full border-2 border-white" src={t.avatar} alt="" />
+              <div className="flex justify-left items-center">
+                <div className="flex -space-x-3">
+                  {TESTIMONIALS.slice(0, 4).map((t, i) => (
+                    <img key={i} className="w-10 h-10 rounded-full border-3 border-white shadow-sm" src={t.avatar} alt="" />
                   ))}
-                  <div className="w-10 h-10 rounded-full border-2 border-white bg-gray-800 flex items-center justify-center">
-                    <span className="text-white text-xs font-medium">•••</span>
+                  <div className="w-10 h-10 rounded-full border-3 border-white bg-black flex items-center justify-center shadow-sm">
+                    <span className="text-white text-sm font-bold">•••</span>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm flex-1">
-              <h3 className="font-semibold text-primary mb-4">Why choose our platform?</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center text-sm text-secondary">
-                  <CheckCircle className="w-4 h-4 text-green-400 mr-3" />
-                  Setup in under 5 minutes
-                </li>
-                <li className="flex items-center text-sm text-secondary">
-                  <CheckCircle className="w-4 h-4 text-green-400 mr-3" />
-                  50+ pre-built integrations
-                </li>
-                <li className="flex items-center text-sm text-secondary">
-                  <CheckCircle className="w-4 h-4 text-green-400 mr-3" />
-                  Enterprise-grade security
-                </li>
-              </ul>
             </div>
           </div>
         );
@@ -1000,19 +999,20 @@ export const SignupPage = () => {
             
             {/* Bottom trust signals */}
             <div className="mt-auto">
-              <div className="flex items-center gap-4 text-xs text-tertiary">
-                <div className="flex items-center">
-                  <Shield01 className="w-3 h-3 mr-1 text-green-400" />
-                  SOC 2
+              <div className="flex items-end gap-4 overflow-x-auto">
+                <img src="./src/logo/G2/G2 - high performer.svg" alt="G2 High Performer" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
+                  <span className="text-xs text-tertiary font-medium">SOC 2</span>
                 </div>
-                <div className="flex items-center">
-                  <Shield01 className="w-3 h-3 mr-1 text-green-400" />
-                  GDPR
+                <img src="./src/logo/G2/Ease of use -.svg" alt="G2 Ease of Use" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="./src/logo/G2/G2 -leaders.svg" alt="G2 Leaders" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
+                  <span className="text-xs text-tertiary font-medium">GDPR</span>
                 </div>
-                <div className="flex items-center">
-                  <Shield01 className="w-3 h-3 mr-1 text-green-400" />
-                  99.9% Uptime
-                </div>
+                <img src="./src/logo/G2/G2 momentom leader.svg" alt="G2 Momentum Leader" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
+                <img src="./src/logo/G2/G2 -support.svg" alt="G2 Support" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
               </div>
             </div>
           </div>
