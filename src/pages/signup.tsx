@@ -75,18 +75,27 @@ const USE_CASES = [
   { value: "community-building", label: "Community Building", description: "Build customer communities" },
   { value: "customer-support", label: "Customer Support", description: "Better support & docs" },
   { value: "employee-engagement", label: "Employee Engagement", description: "Internal collaboration" },
-  { value: "product-feedback", label: "Product Feedback", description: "Collect user feedback" }
+  { value: "product-feedback", label: "Product Feedback", description: "Collect user feedback" },
+  { value: "other", label: "Other", description: "Custom use case for your needs" }
 ];
 
 const SAAS_TOOLS = [
-  { id: "salesforce", name: "Salesforce", category: "CRM", icon: "🏢" },
-  { id: "hubspot", name: "HubSpot", category: "CRM", icon: "🎯" },
-  { id: "intercom", name: "Intercom", category: "Support", icon: "💬" },
-  { id: "zendesk", name: "Zendesk", category: "Support", icon: "🎧" },
-  { id: "slack", name: "Slack", category: "Communication", icon: "💼" },
-  { id: "teams", name: "MS Teams", category: "Communication", icon: "📹" },
-  { id: "analytics", name: "Analytics", category: "Analytics", icon: "📊" },
-  { id: "stripe", name: "Stripe", category: "Payments", icon: "💳" }
+  { id: "salesforce", name: "Salesforce", logo: "./src/logo/s/salesforce.svg" },
+  { id: "hubspot", name: "HubSpot", logo: "./src/logo/s/hubspot-1.svg" },
+  { id: "intercom", name: "Intercom", logo: "./src/logo/s/intercom-2.svg" },
+  { id: "zendesk", name: "Zendesk", logo: "./src/logo/s/zendesk-3.svg" },
+  { id: "slack", name: "Slack", logo: "./src/logo/s/slack-new-logo.svg" },
+  { id: "teams", name: "MS Teams", logo: "./src/logo/s/microsoft-teams-1.svg" },
+  { id: "analytics", name: "Google Analytics", logo: "./src/logo/s/google-analytics-3.svg" },
+  { id: "stripe", name: "Stripe", logo: "./src/logo/s/stripe-4.svg" },
+  { id: "tag-manager", name: "Google Tag Manager", logo: "./src/logo/s/google-tag-manager logo.svg" },
+  { id: "zapier", name: "Zapier", logo: "./src/logo/s/zapier.svg" },
+  { id: "jira", name: "Jira", logo: "./src/logo/s/Jira logo.svg" },
+  { id: "make", name: "Make", logo: "./src/logo/s/make.svg" },
+  { id: "hotjar", name: "Hotjar", logo: "./src/logo/s/hotjar-icon logo.svg" },
+  { id: "amplitude", name: "Amplitude", logo: "./src/logo/s/amplitude-icon logo.svg" },
+  { id: "mailchimp", name: "Mailchimp", logo: "./src/logo/s/mailchimp logo.svg" },
+  { id: "mixpanel", name: "Mixpanel", logo: "./src/logo/s/Mixpanel_Symbol_0.svg" }
 ];
 
 const ENTERPRISE_FEATURES = [
@@ -126,6 +135,7 @@ export const SignupPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showAllPlans, setShowAllPlans] = useState(false);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
@@ -142,7 +152,7 @@ export const SignupPage = () => {
     currentTools: [],
     enterpriseFeatures: [],
     expectedUserCount: "",
-    selectedPlan: ""
+    selectedPlan: "pro"
   });
 
   const handleInputChange = (field: keyof SignupFormData) => (value: string) => {
@@ -180,9 +190,11 @@ export const SignupPage = () => {
         if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
         if (!formData.companySize) newErrors.companySize = "Company size is required";
         if (!formData.industry) newErrors.industry = "Industry is required";
+        break;
+      case 4:
         if (!formData.primaryUseCase) newErrors.primaryUseCase = "Primary use case is required";
         break;
-      case 5:
+      case 6:
         if (!formData.expectedUserCount) newErrors.expectedUserCount = "Expected user count is required";
         break;
     }
@@ -193,7 +205,7 @@ export const SignupPage = () => {
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 6));
+      setCurrentStep(prev => Math.min(prev + 1, 7));
     }
   };
 
@@ -231,7 +243,7 @@ export const SignupPage = () => {
   };
 
   const getStepTitle = () => {
-    const titles = ["Get started", "Basic information", "Company profile", "Current tools", "Enterprise features", "Choose your plan"];
+    const titles = ["Get started", "Basic information", "Company profile", "Primary use case", "Current tools", "Enterprise features", "Recommended plan for you"];
     return titles[currentStep - 1];
   };
 
@@ -239,10 +251,11 @@ export const SignupPage = () => {
     const descriptions = [
       "Create your account to begin building your community.",
       "Tell us about yourself to personalize your experience.",
-      "Help us understand your company and goals.",
+      "Help us understand your company details.",
+      "What's your main goal for building a community?",
       "Select tools you use for seamless integration.",
       "Configure enterprise security and compliance features.",
-      `Based on your profile, we recommend the ${getRecommendedPlan()} plan.`
+      ""
     ];
     return descriptions[currentStep - 1];
   };
@@ -275,13 +288,15 @@ export const SignupPage = () => {
         color="secondary"
         size="md"
         onClick={() => setFormData(prev => ({ ...prev, authMethod: 'google' }))}
+        iconLeading={({ className }) => (
+          <svg className={cx(className, "w-5 h-5")} viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+        )}
       >
-        <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
         Continue with Google
       </Button>
     </div>
@@ -390,10 +405,14 @@ export const SignupPage = () => {
         onChange={handleInputChange('website')}
         hint="Optional"
       />
+    </div>
+  );
 
+  // Step 4: Primary Use Case
+  const renderStep4 = () => (
+    <div className="flex flex-col gap-5">
       <div>
-        <Label isRequired>Primary use case</Label>
-        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {USE_CASES.map(useCase => (
             <div key={useCase.value} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm",
@@ -411,13 +430,10 @@ export const SignupPage = () => {
                 onChange={(e) => handleInputChange('primaryUseCase')(e.target.value)}
                 className="mr-3 pointer-events-none"
               />
-              <div className="pointer-events-none flex-1">
-                <div className="font-medium text-primary text-sm">{useCase.label}</div>
-                <div className="text-xs text-tertiary">{useCase.description}</div>
+              <div className="pointer-events-none flex-1 min-w-0">
+                <div className="font-medium text-primary text-sm mb-1 truncate">{useCase.label}</div>
+                <div className="text-xs text-tertiary truncate">{useCase.description}</div>
               </div>
-              {formData.primaryUseCase === useCase.value && (
-                <CheckCircle className="w-4 h-4 text-green-500 pointer-events-none" />
-              )}
             </div>
           ))}
         </div>
@@ -428,30 +444,33 @@ export const SignupPage = () => {
     </div>
   );
 
-  // Step 4: Popular Integrations - Compact Design
-  const renderStep4 = () => (
+  // Step 5: Popular Integrations - Compact Design
+  const renderStep5 = () => (
     <div className="flex flex-col gap-5">
       <div>
-        <Label>Select your current tools</Label>
-        <p className="text-sm text-tertiary mb-4">We'll prioritize these integrations</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {SAAS_TOOLS.map(tool => (
             <div key={tool.id} className={cx(
-              "flex flex-col items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
+              "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.currentTools.includes(tool.id)
                 ? "border-brand-solid bg-brand-50 shadow-sm"
                 : "border-secondary hover:border-gray-300"
             )}
             onClick={() => handleArrayToggle('currentTools')(tool.id)}
             >
-              <div className="text-2xl mb-2">{tool.icon}</div>
-              <div className="text-center">
-                <div className="font-medium text-primary text-sm mb-1">{tool.name}</div>
-                <div className="text-xs text-tertiary">{tool.category}</div>
+              {/* Logo - Left side */}
+              <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3">
+                <img 
+                  src={tool.logo} 
+                  alt={tool.name}
+                  className="max-w-full max-h-full object-contain"
+                />
               </div>
-              {formData.currentTools.includes(tool.id) && (
-                <CheckCircle className="w-4 h-4 text-green-500 mt-2" />
-              )}
+              
+              {/* Text content - Right side */}
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-primary text-sm truncate">{tool.name}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -459,12 +478,10 @@ export const SignupPage = () => {
     </div>
   );
 
-  // Step 5: Enterprise Features - Compact Design
-  const renderStep5 = () => (
+  // Step 6: Enterprise Features - Compact Design
+  const renderStep6 = () => (
     <div className="flex flex-col gap-5">
       <div>
-        <Label>Enterprise features needed</Label>
-        <p className="text-sm text-tertiary mb-4">Select any enterprise requirements</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {ENTERPRISE_FEATURES.map(feature => (
             <div key={feature.id} className={cx(
@@ -506,88 +523,165 @@ export const SignupPage = () => {
     </div>
   );
 
-  // Step 6: Plan Selection
-  const renderStep6 = () => {
-    const recommendedPlan = getRecommendedPlan();
+  // Step 7: Plan Selection
+  const renderStep7 = () => {
+    const recommendedPlanType = getRecommendedPlan();
     
     const plans = [
       {
         id: "starter",
         name: "Starter",
-        price: "$29",
+        price: "$0",
         period: "/month",
-        description: "Perfect for small teams",
-        features: ["Up to 50 members", "Basic integrations", "Standard support"],
-        recommended: recommendedPlan === "starter"
+        description: "Ideal for hobbyists and individuals exploring web app creation.",
+        features: [
+          { icon: Globe01, text: "Bettermode.io Domain" },
+          { icon: Star01, text: "Bettermode Badge" },
+          { icon: Users01, text: "100 Members" },
+          { icon: Building01, text: "20 Spaces" }
+        ],
+        buttonText: "Start for free",
+        buttonStyle: "secondary",
+        recommended: recommendedPlanType === "starter"
       },
       {
-        id: "professional", 
-        name: "Professional",
-        price: "$99",
+        id: "pro", 
+        name: "Pro",
+        price: "$49",
         period: "/month",
-        description: "For growing companies",
-        features: ["Up to 500 members", "Advanced integrations", "Priority support"],
-        recommended: recommendedPlan === "professional"
+        description: "Designed for creators and startups scaling their products.",
+        features: [
+          { icon: Users01, text: "Unlimited Members" },
+          { icon: Globe01, text: "Custom Domain" },
+          { icon: Headphones01, text: "Priority support" },
+          { icon: TrendUp01, text: "Advanced Analytics" },
+          { icon: Zap, text: "Scale with add-ons" }
+        ],
+        buttonText: "Try free for 14 days",
+        buttonStyle: "primary",
+        recommended: recommendedPlanType === "professional"
       },
       {
         id: "enterprise",
         name: "Enterprise",
         price: "Custom",
         period: "",
-        description: "For large organizations",
-        features: ["Unlimited members", "All integrations", "Dedicated CSM"],
-        recommended: recommendedPlan === "enterprise"
+        description: "Tailored for excellence in scalability, security, and support.",
+        features: [
+          { icon: CheckCircle, text: "Guaranteed SLA" },
+          { icon: Globe01, text: "Data Residency" },
+          { icon: Shield01, text: "SOC 2 (Type 2)" },
+          { icon: Lock01, text: "Advanced security & controls" },
+          { icon: User01, text: "Dedicated account support" }
+        ],
+        buttonText: "Book a Demo",
+        buttonStyle: "dark",
+        recommended: recommendedPlanType === "enterprise"
       }
     ];
 
+    const displayPlans = showAllPlans ? plans : plans.filter(plan => plan.id === recommendedPlanType);
+
     return (
-      <div className="flex flex-col gap-3">
-        {plans.map(plan => (
+      <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className={cx(
+          "gap-4 max-w-5xl mx-auto px-8",
+          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "flex justify-center"
+        )}>
+          {displayPlans.map(plan => (
           <div key={plan.id} className={cx(
-            "flex items-start p-4 rounded-lg border-2 cursor-pointer transition-colors",
-            plan.recommended 
-              ? "border-brand-solid bg-brand-50" 
+            "relative p-6 rounded-xl border-2 cursor-pointer transition-all hover:shadow-lg flex flex-col",
+            formData.selectedPlan === plan.id && plan.recommended
+              ? "border-purple-300 bg-gradient-to-b from-purple-100/50 to-white"
               : formData.selectedPlan === plan.id
-              ? "border-brand-solid bg-brand-50"
-              : "border-secondary hover:border-gray-300"
+              ? "border-brand-300 bg-brand-25"
+              : plan.recommended
+              ? "border-gray-200 bg-gradient-to-b from-purple-50/40 to-white hover:border-gray-300"
+              : "border-gray-200 hover:border-gray-300",
+            !showAllPlans && "max-w-md"
           )}
           onClick={() => setFormData(prev => ({ ...prev, selectedPlan: plan.id }))}
           >
-            <input
-              type="radio"
-              name="selectedPlan"
-              value={plan.id}
-              checked={formData.selectedPlan === plan.id}
-              onChange={(e) => setFormData(prev => ({ ...prev, selectedPlan: e.target.value }))}
-              className="mt-1 mr-3 pointer-events-none"
-            />
-            <div className="flex-1 pointer-events-none">
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-semibold text-primary">{plan.name}</div>
-                <div className="text-right">
-                  <span className="text-lg font-bold text-primary">{plan.price}</span>
-                  <span className="text-tertiary text-sm">{plan.period}</span>
-                </div>
-              </div>
-              <p className="text-sm text-tertiary mb-3">{plan.description}</p>
-              <ul className="space-y-1">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-xs text-tertiary">
-                    <CheckCircle className="w-3 h-3 text-green-500 mr-2 flex-shrink-0" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              {plan.recommended && (
-                <div className="mt-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+            
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
+                {plan.recommended && (
+                  <span className="bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-md">
                     Recommended
                   </span>
-                </div>
-              )}
+                )}
+              </div>
+              <div className="mb-3">
+                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                <span className="text-gray-600 ml-1">{plan.period}</span>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed">{plan.description}</p>
             </div>
-          </div>
-        ))}
+
+            <div className="space-y-2 mb-4">
+              {plan.features.map((feature, index) => (
+                <div key={index} className="flex items-center text-sm text-gray-700">
+                  <feature.icon className="w-4 h-4 mr-3 text-gray-600" />
+                  {feature.text}
+                </div>
+              ))}
+            </div>
+
+            {plan.id === "pro" && (
+              <div className="mb-4">
+                <p className="text-xs text-gray-600 mb-2">Integrations</p>
+                <div className="flex space-x-2">
+                  <img src="./src/logo/s/zapier.svg" alt="Zapier" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/slack-new-logo.svg" alt="Slack" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/google-analytics-3.svg" alt="Analytics" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/Jira logo.svg" alt="Jira" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/hotjar-icon logo.svg" alt="Hotjar" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/mailchimp logo.svg" alt="MailChimp" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/make.svg" alt="Make" className="w-6 h-6 rounded" />
+                </div>
+              </div>
+            )}
+
+            {plan.id === "enterprise" && (
+              <div className="mb-4">
+                <p className="text-xs text-gray-600 mb-2">Integrations</p>
+                <div className="flex space-x-2">
+                  <img src="./src/logo/s/salesforce.svg" alt="Salesforce" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/hubspot-1.svg" alt="HubSpot" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/zendesk-3.svg" alt="Zendesk" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/amplitude-icon logo.svg" alt="Amplitude" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-6 h-6 rounded" />
+                  <img src="./src/logo/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-6 h-6 rounded" />
+                </div>
+              </div>
+            )}
+
+            {/* Card Footer - See more link */}
+            <div className="mt-auto pt-3 border-t border-gray-200">
+              <a 
+                href="https://bettermode.com/pricing" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors"
+              >
+                See more details →
+              </a>
+            </div>
+            </div>
+          ))}
+          
+          {!showAllPlans && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setShowAllPlans(true)}
+                className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors"
+              >
+                Other plans →
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -691,41 +785,32 @@ export const SignupPage = () => {
                 {/* Logo and Step Indicator */}
                 <div className="flex flex-col gap-6">
                   <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
-                    <Building01 className="w-8 h-8 text-brand-solid mr-2" />
-                    <span className="text-xl font-bold text-primary">CommunityOS</span>
+                    <img 
+                      src="./src/logo/Logo Final.svg" 
+                      alt="bettermode" 
+                      className="h-6 w-auto"
+                    />
                   </div>
                   
                   {/* Mobile Logo */}
                   <div className="flex items-center justify-center md:hidden">
-                    <Building01 className="w-10 h-10 text-brand-solid" />
+                    <img 
+                      src="./src/logo/Logo Final.svg" 
+                      alt="bettermode" 
+                      className="h-8 w-auto"
+                    />
                   </div>
 
-                  {/* Progress Steps */}
-                  <div className="flex items-center justify-center xl:justify-start overflow-x-auto">
-                    <div className="flex items-center min-w-max">
-                      {[1, 2, 3, 4, 5, 6].map((step) => (
-                        <div key={step} className="flex items-center">
-                          <div className={cx(
-                            "flex items-center justify-center w-7 h-7 rounded-full text-xs font-medium transition-all",
-                            step < currentStep ? "bg-green-100 text-green-700" : 
-                            step === currentStep ? "bg-brand-solid text-white shadow-lg" : 
-                            "bg-gray-100 text-gray-400"
-                          )}>
-                            {step < currentStep ? <CheckCircle className="w-3.5 h-3.5" /> : step}
-                          </div>
-                          {step < 6 && (
-                            <div className={cx(
-                              "w-6 h-0.5 mx-1.5 transition-all",
-                              step < currentStep ? "bg-green-200" : "bg-gray-200"
-                            )} />
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                  {/* Purple Minimal Progress */}
+                  <div className="w-full bg-purple-100 rounded-full h-0.5">
+                    <div 
+                      className="h-full bg-purple-600 rounded-full transition-all duration-500"
+                      style={{ width: `${((currentStep - 1) / 6) * 100}%` }}
+                    />
                   </div>
 
                   {/* Step Content */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 mt-10">
                     <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
                     <p className="text-md text-tertiary">{getStepDescription()}</p>
                   </div>
@@ -760,6 +845,7 @@ export const SignupPage = () => {
                   {currentStep === 4 && renderStep4()}
                   {currentStep === 5 && renderStep5()}
                   {currentStep === 6 && renderStep6()}
+                  {currentStep === 7 && renderStep7()}
 
                   {/* Mobile testimonial - shows on small screens */}
                   {(currentStep === 3 || currentStep === 5) && (
@@ -789,41 +875,6 @@ export const SignupPage = () => {
                     </div>
                   )}
 
-                  {/* Navigation */}
-                  <div className="flex flex-col gap-4">
-                    {currentStep < 6 ? (
-                      <Button 
-                        className="w-full"
-                        iconTrailing={ArrowRight}
-                        onClick={handleNext}
-                        size="md"
-                      >
-                        Continue
-                      </Button>
-                    ) : (
-                      <Button 
-                        className="w-full"
-                        isLoading={isLoading}
-                        onClick={handleSubmit}
-                        iconTrailing={CheckCircle}
-                        size="md"
-                      >
-                        {formData.selectedPlan === "enterprise" ? "Contact Sales" : "Create Account"}
-                      </Button>
-                    )}
-
-                    {currentStep > 1 && (
-                      <Button 
-                        className="w-full"
-                        color="secondary" 
-                        iconLeading={ArrowLeft}
-                        onClick={handleBack}
-                        size="md"
-                      >
-                        Back
-                      </Button>
-                    )}
-                  </div>
 
                   {/* Sign in link */}
                   {currentStep === 1 && (
@@ -852,9 +903,93 @@ export const SignupPage = () => {
             </div>
           </div>
           
-          {/* Footer */}
-          <footer className="hidden xl:block p-8 pt-4">
+          {/* Mobile Navigation */}
+          <div className="xl:hidden p-4 border-t border-gray-200">
+            <div className="flex gap-3">
+              {currentStep > 1 && (
+                <Button 
+                  className="flex-1"
+                  color="secondary" 
+                  iconLeading={ArrowLeft}
+                  onClick={handleBack}
+                  size="md"
+                >
+                  Back
+                </Button>
+              )}
+              
+              {currentStep < 7 ? (
+                <Button 
+                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
+                  iconTrailing={ArrowRight}
+                  onClick={handleNext}
+                  size="md"
+                >
+                  Continue
+                </Button>
+              ) : (
+                <Button 
+                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
+                  isLoading={isLoading}
+                  onClick={handleSubmit}
+                  size="md"
+                >
+                  {formData.selectedPlan === "starter" 
+                    ? "Create Account" 
+                    : formData.selectedPlan === "pro" 
+                    ? "Try free for 14 days"
+                    : formData.selectedPlan === "enterprise" 
+                    ? "Book Demo" 
+                    : "Try free for 14 days"}
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Desktop Footer */}
+          <footer className="hidden xl:flex xl:items-center xl:justify-between p-8 pt-4">
             <p className="text-sm text-tertiary">© CommunityOS 2024</p>
+            
+            {/* Navigation Buttons */}
+            <div className="flex gap-3">
+              {currentStep > 1 && (
+                <Button 
+                  className="flex-1"
+                  color="secondary" 
+                  iconLeading={ArrowLeft}
+                  onClick={handleBack}
+                  size="md"
+                >
+                  Back
+                </Button>
+              )}
+              
+              {currentStep < 7 ? (
+                <Button 
+                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
+                  iconTrailing={ArrowRight}
+                  onClick={handleNext}
+                  size="md"
+                >
+                  Continue
+                </Button>
+              ) : (
+                <Button 
+                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
+                  isLoading={isLoading}
+                  onClick={handleSubmit}
+                  size="md"
+                >
+                  {formData.selectedPlan === "starter" 
+                    ? "Create Account" 
+                    : formData.selectedPlan === "pro" 
+                    ? "Try free for 14 days"
+                    : formData.selectedPlan === "enterprise" 
+                    ? "Book Demo" 
+                    : "Try free for 14 days"}
+                </Button>
+              )}
+            </div>
           </footer>
         </div>
 
