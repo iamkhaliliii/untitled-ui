@@ -243,7 +243,7 @@ export const SignupPage = () => {
   };
 
   const getStepTitle = () => {
-    const titles = ["Get started", "Basic information", "Company profile", "Primary use case", "Current tools", "Enterprise features", "Recommended plan for you"];
+    const titles = ["Get started", "Basic information", "Company profile", "Primary use case", "Current tools", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
     return titles[currentStep - 1];
   };
 
