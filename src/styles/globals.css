@@ -23,6 +23,35 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
+/* Infinite scroll animation */
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes infinite-scroll-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 20s linear infinite;
+  width: max-content;
+}
+
+.animate-infinite-scroll-reverse {
+  animation: infinite-scroll-reverse 20s linear infinite;
+  width: max-content;
+}
+
 @import "./theme.css";
 @import "./typography.css";
 @import "leaflet/dist/leaflet.css";

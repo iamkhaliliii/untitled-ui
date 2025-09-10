@@ -25,7 +25,9 @@ import {
   GraduationHat01,
   Settings01,
   Headphones01,
-  TrendUp01
+  TrendUp01,
+  ChevronLeft,
+  ChevronRight
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
@@ -103,11 +105,15 @@ const SAAS_TOOLS = [
 ];
 
 const ENTERPRISE_FEATURES = [
-  { id: "sso", name: "Single Sign-On", description: "SAML, OAuth authentication" },
-  { id: "security", name: "Advanced Security", description: "2FA, IP restrictions, audit logs" },
-  { id: "branding", name: "Custom Branding", description: "White-label solution" },
-  { id: "api", name: "API Access", description: "Full REST API access" },
-  { id: "compliance", name: "Compliance", description: "SOC 2, GDPR, HIPAA" }
+  { id: "saml-sso", name: "SAML single sign-on", description: "Seamlessly enable enterprise-grade authentication and secure access.", icon: Lock01 },
+  { id: "data-residency", name: "Data residency", description: "Control where your data resides, ensuring compliance with regional regulations.", icon: Globe01 },
+  { id: "soc2", name: "SOC 2 (Type 2)", description: "Certifies our security policies and controls meet the highest industry standards.", icon: Shield01 },
+  { id: "gdpr-ccpa", name: "GDPR & CCPA", description: "Your data privacy is safeguarded with full compliance with EU regulations.", icon: Lock01 },
+  { id: "uptime-sla", name: "Uptime SLA", description: "We guarantee exceptional service reliability with a robust uptime commitment.", icon: Target01 },
+  { id: "custom-ssl", name: "Custom SSL", description: "Secure your connections with dedicated SSL certificates tailored to your needs.", icon: Shield01 },
+  { id: "data-encryption", name: "Data Encryption", description: "Your data is always protected with industry-leading encryption in transit and at rest.", icon: Lock01 },
+  { id: "jwt", name: "JWT", description: "Leverage secure, stateless authentication tokens for fast and reliable access control.", icon: Shield01 },
+  { id: "audit-log", name: "Audit Log", description: "Monitor a detailed trail of user actions, ensuring transparency and security.", icon: Database01 }
 ];
 
 const TESTIMONIALS = [
@@ -152,6 +158,7 @@ export const SignupPage = () => {
   const [showRoleSearch, setShowRoleSearch] = useState(false);
   const [customRole, setCustomRole] = useState("");
   const [billingPeriod, setBillingPeriod] = useState<'annual' | 'monthly'>('annual');
+  const [g2CarouselIndex, setG2CarouselIndex] = useState(0);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
@@ -273,7 +280,7 @@ export const SignupPage = () => {
     if (hasEnterpriseFeatures || isLargeCompany || expectedUsers > 100) {
       return "enterprise";
     } else if (expectedUsers > 20) {
-      return "professional";
+      return "growth";
     } else {
       return "starter";
     }
@@ -1055,7 +1062,7 @@ export const SignupPage = () => {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {ENTERPRISE_FEATURES.map(feature => (
             <div key={feature.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
@@ -1065,7 +1072,7 @@ export const SignupPage = () => {
             )}
             onClick={() => handleArrayToggle('enterpriseFeatures')(feature.id)}
             >
-              <Shield01 className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0" />
+              <feature.icon className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0" />
               <div className="flex-1">
                 <div className="font-medium text-primary text-sm mb-1">{feature.name}</div>
                 <div className="text-xs text-tertiary">{feature.description}</div>
@@ -1098,6 +1105,11 @@ export const SignupPage = () => {
   const renderStep12 = () => {
     const recommendedPlanType = getRecommendedPlan();
     
+    // Auto-select recommended plan if no plan is selected yet
+    if (formData.selectedPlan === "pro" || !formData.selectedPlan) {
+      setFormData(prev => ({ ...prev, selectedPlan: recommendedPlanType }));
+    }
+    
     const plans = [
       {
         id: "starter",
@@ -1110,7 +1122,8 @@ export const SignupPage = () => {
         monthlyTotal: "($4,788/year)",
         members: "10,000",
         collaborators: "3",
-        spaces: "20",
+        spaces: "100",
+        storage: "1TB",
         description: "",
         features: [
           { icon: Globe01, text: "Custom Domain" },
@@ -1133,7 +1146,8 @@ export const SignupPage = () => {
         monthlyTotal: "($21,000/year)",
         members: "25,000",
         collaborators: "10",
-        spaces: "100",
+        spaces: "200",
+        storage: "3TB",
         description: "",
         features: [
           { icon: Users01, text: "Everything in Starter" },
@@ -1144,7 +1158,7 @@ export const SignupPage = () => {
         ],
         buttonText: "Request a demo",
         buttonStyle: "primary",
-        recommended: recommendedPlanType === "professional"
+        recommended: recommendedPlanType === "growth"
       },
       {
         id: "enterprise",
@@ -1158,6 +1172,7 @@ export const SignupPage = () => {
         members: "50,000",
         collaborators: "20",
         spaces: "500",
+        storage: "5TB",
         description: "",
         features: [
           { icon: CheckCircle, text: "Everything in Growth" },
@@ -1206,7 +1221,7 @@ export const SignupPage = () => {
               <div className="mb-2">
                 <h3 className="text-base font-semibold text-gray-900">{plan.name}</h3>
               </div>
-              <div className="mb-3 min-h-[100px] flex flex-col justify-center">
+              <div className=" min-h-[60px] flex flex-col justify-center">
                 {billingPeriod === 'annual' && plan.annualPrice && plan.price !== plan.annualPrice ? (
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
@@ -1237,8 +1252,8 @@ export const SignupPage = () => {
                 )}
               </div>
               
-              {/* Members, Collaborators, and Spaces */}
-              <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100">
+              {/* Members, Collaborators, Spaces, and Storage */}
+              <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-gray-100">
                 <div className="text-center">
                   <div className="text-sm font-semibold text-gray-900">{plan.members}</div>
                   <div className="text-xs text-gray-500">Members</div>
@@ -1250,6 +1265,10 @@ export const SignupPage = () => {
                 <div className="text-center">
                   <div className="text-sm font-semibold text-gray-900">{plan.spaces}</div>
                   <div className="text-xs text-gray-500">Spaces</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-900">{plan.storage}</div>
+                  <div className="text-xs text-gray-500">Storage</div>
                 </div>
               </div>
             </div>
@@ -1339,7 +1358,7 @@ export const SignupPage = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="flex flex-col gap-8 h-full mt-16 px-8">
+          <div className="flex flex-col gap-8 px-8">
             <div className="text-left">
               <div className="text-left flex flex-col gap-4">
               <h2 className=" text-2xl font-base text-primary mb-8 leading-relaxed">
@@ -1375,6 +1394,686 @@ export const SignupPage = () => {
                     <span className="text-white text-sm font-bold">•••</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* HubSpot Logo at the top */}
+              <div className="mb-8">
+                <img 
+                  src="/logos/hubspot.svg" 
+                  alt="HubSpot" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
+                  Using Bettermode has been a game-changer for us. Its powerful capabilities and features have revolutionized the way we engage with our community, leading to more effective connections and experiences.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3">
+                <img 
+                  src={TESTIMONIALS[0].avatar}
+                  alt="Kyle Foster"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Kyle Foster")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Kyle Foster</p>
+                  <cite className="text-sm text-tertiary not-italic">Marketing Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="flex flex-col gap-6 text-center ">
+            <div>
+              {/* Title */}
+              <div className="text-left flex flex-col gap-2 max-w-md mx-auto">
+                <h2 className="text-3xl font-base text-primary">
+                  Why Leading Brands Choose{" "}
+                  <span className="font-bold">Bettermode</span>
+                </h2>
+                <p className="text-xl text-tertiary mb-6">
+                  Empower your enterprise with an all-in-one hub for communities, knowledge sharing, events, and more.
+                </p>
+              </div>
+              
+              {/* Animated Image Slider - Single Row */}
+              <div className="relative overflow-hidden">
+                <div className="flex animate-infinite-scroll space-x-3">
+                  {/* First set of images */}
+                  <img src="/pic/95hMxryJzJLwIzpyQvtnfZqoog.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/Ci88GhZcPHBGHwo56ttsBK32A8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/cM4QAxyw8qFYPzk1xc0MZXgtKHc.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/qIhdSSEYqJe7mwsNooYK73vvUy8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/z4CBLhwG80urLcB09PG3eSA84E.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/bSro1RJlbMgQy3VFBrz4U5o8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  
+                  {/* Duplicate set for seamless infinite loop */}
+                  <img src="/pic/95hMxryJzJLwIzpyQvtnfZqoog.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/Ci88GhZcPHBGHwo56ttsBK32A8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/cM4QAxyw8qFYPzk1xc0MZXgtKHc.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/qIhdSSEYqJe7mwsNooYK73vvUy8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/z4CBLhwG80urLcB09PG3eSA84E.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                  <img src="/pic/bSro1RJlbMgQy3VFBrz4U5o8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Xano Logo at the top */}
+              <div className="mb-8">
+                <img 
+                  src="/logos/l_backup/xano.svg" 
+                  alt="Xano" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
+                  Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users, and we're excited to see it evolve further with our community.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3">
+                <img 
+                  src={TESTIMONIALS[1].avatar}
+                  alt="Lizbeth Ramos"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Lizbeth Ramos")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Lizbeth Ramos</p>
+                  <cite className="text-sm text-tertiary not-italic">Developer Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Title */}
+              <div className="text-left flex flex-col gap-2">
+                <h2 className="text-3xl font-base text-primary">
+                  Works with the tools you already{" "}
+                  <span className="font-bold">trust</span>
+                </h2>
+                <p className="text-base text-tertiary mb-8">
+                  Use Bettermode as your standalone platform or embed it into your existing eco-system, website/application
+                </p>
+              </div>
+              
+              {/* Integration Logos Grid */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/hubspot-1.svg" alt="HubSpot" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/zapier.svg" alt="Zapier" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/stripe-4.svg" alt="Stripe" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/intercom-2.svg" alt="Intercom" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/mailchimp logo.svg" alt="MailChimp" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/make.svg" alt="Make" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="h-8 w-auto opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* IBM Logo at the top */}
+              <div className="mb-8">
+                <img 
+                  src="/logos/l_backup/ibm.svg" 
+                  alt="IBM" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
+                  Bettermode's automated reputation system, robust content organization features, and balanced communication capabilities helped us drive engagement with a personalized approach.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3">
+                <img 
+                  src={TESTIMONIALS[2].avatar}
+                  alt="Marlee Margolin"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Marlee Margolin")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Marlee Margolin</p>
+                  <cite className="text-sm text-tertiary not-italic">CSR Activation Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Title */}
+              <div className="text-left flex flex-col gap-2">
+                <h2 className="text-3xl font-base text-primary mb-8">
+                  Built for businesses. Rated by{" "}
+                  <span className="font-bold">experts</span>
+                </h2>
+              </div>
+              
+              {/* G2 Awards Carousel */}
+              <div className="relative mt-20">
+                <div className="flex items-center justify-center">
+                  {/* Left Arrow */}
+                  <button
+                    onClick={() => setG2CarouselIndex(prev => prev === 0 ? 5 : prev - 1)}
+                    className="absolute left-0 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+                  >
+                    <ChevronLeft className="w-6 h-6 text-gray-600" />
+                  </button>
+
+                  {/* G2 Award Display */}
+                  <div className="flex justify-center items-center h-80 w-full">
+                    {(() => {
+                      const g2Awards = [
+                        { src: "/logos/G2/G2 - high performer.svg", alt: "G2 High Performer" },
+                        { src: "/logos/G2/G2 -leaders.svg", alt: "G2 Leaders" },
+                        { src: "/logos/G2/G2 momentom leader.svg", alt: "G2 Momentum Leader" },
+                        { src: "/logos/G2/Ease of use -.svg", alt: "G2 Ease of Use" },
+                        { src: "/logos/G2/G2 - ease of use bussines.svg", alt: "G2 Ease of Use Business" },
+                        { src: "/logos/G2/G2 -support.svg", alt: "G2 Support" }
+                      ];
+                      const currentAward = g2Awards[g2CarouselIndex];
+                      return (
+                        <img 
+                          src={currentAward.src} 
+                          alt={currentAward.alt} 
+                          className="h-72 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" 
+                        />
+                      );
+                    })()}
+                  </div>
+
+                  {/* Right Arrow */}
+                  <button
+                    onClick={() => setG2CarouselIndex(prev => prev === 5 ? 0 : prev + 1)}
+                    className="absolute right-0 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+                  >
+                    <ChevronRight className="w-6 h-6 text-gray-600" />
+                  </button>
+                </div>
+
+                {/* Carousel Dots */}
+                <div className="flex justify-center mt-6 space-x-2">
+                  {[0, 1, 2, 3, 4, 5].map((index) => (
+                    <button
+                      key={index}
+                      onClick={() => setG2CarouselIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        g2CarouselIndex === index ? 'bg-purple-600' : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 8:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* CoachHub Logo at the top */}
+              <div className="mb-8">
+                <img 
+                  src="/logos/l_backup/CoachHub.svg" 
+                  alt="CoachHub" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
+                  Bettermode was selected for its ease of use and for filling in almost all of our coaches' wishlist.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3">
+                <img 
+                  src={TESTIMONIALS[3].avatar}
+                  alt="Jennifer Serrat"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Jennifer Serrat")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Jennifer Serrat</p>
+                  <cite className="text-sm text-tertiary not-italic">Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Title */}
+              <div className="text-left flex flex-col gap-4">
+                {/* Professional services badge */}
+                <div className="inline-flex w-fit">
+                  <span className="bg-gray-200 text-gray-700 text-sm font-medium px-3 py-1.5 rounded-full">
+                    Professional services
+                  </span>
+                </div>
+                
+                <h2 className="text-4xl text-primary">
+                  Let our experts take care of{" "}
+                  <span className="font-bold">everything</span>
+                </h2>
+                <p className="text-2xl text-tertiary mb-8">
+                  From strategy to grow, our dedicated team supports every step, ensuring your community thrives.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 10:
+        return (
+          <div className="flex flex-col gap-6  text-center max-w-md mx-auto">
+            <div>
+              {/* Title */}
+              <div className="text-left flex flex-col gap-2 mb-6">
+                <h2 className="text-3xl font-base text-primary">
+                  The Community Platform Behind{" "}
+                  <span className="font-bold">Top Brands</span>
+                </h2>
+              </div>
+              
+              {/* Brand Logos Slider - 3 Horizontal Rows */}
+              <div className="space-y-4">
+                {/* First Row - Moving Left */}
+                <div className="relative overflow-hidden">
+                  <div className="flex animate-infinite-scroll space-x-3">
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain" />
+                    </div>
+                    
+                    {/* Duplicate for seamless loop */}
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Second Row - Moving Right */}
+                <div className="relative overflow-hidden">
+                  <div className="flex animate-infinite-scroll-reverse space-x-3">
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain" />
+                    </div>
+                    
+                    {/* Duplicate for seamless loop */}
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Third Row - Moving Left */}
+                <div className="relative overflow-hidden">
+                  <div className="flex animate-infinite-scroll space-x-3">
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain" />
+                    </div>
+                    
+                    {/* Duplicate for seamless loop */}
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain" />
+                    </div>
+                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 11:
+        return (
+            <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Title */}
+              <div className="text-left flex flex-col gap-4">
+                {/* Grow with confidence badge */}
+                <div className="inline-flex w-fit">
+                  <span className="bg-gray-200 text-gray-700 text-sm font-medium px-3 py-1.5 rounded-full">
+                    Grow with confidence
+                  </span>
+                </div>
+                
+                <h2 className="text-4xl font-base text-primary">
+                  Enterprise-grade {" "}
+                  
+                  <span className="font-bold">security & compliance</span>
+                </h2>
+                <p className="text-xl text-tertiary mb-8 leading-relaxed">
+                  Built from day one with a privacy-focused design and compliant approach to securing your data.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 12:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Personalized Recommendation Letter */}
+              <div className="space-y-6">
+                <div className="">
+                  <div className="text-2xl text-primary leading-normal">
+                    <div className="mb-2 space-y-0.5">
+                      <p>Dear <span className="font-semibold">{formData.firstName} {formData.lastName}</span>,</p>
+                      <p>
+                        As <span className="font-semibold capitalize">{formData.role || 'your role'}</span> from{" "}
+                        <span className="font-semibold">{formData.companyName || 'your company'}</span>
+                      </p>
+                    </div>
+                     <div className="mb-1">
+                       <p className="inline">
+                         We will try to recommend the best plan to fit your needs in the{" "}
+                         <span className="font-semibold capitalize">
+                           {formData.industry ? 
+                             formData.industry.replace('-', ' ') : 
+                             'your selected industry'
+                           }
+                         </span>{" "}
+                         industry and for a{" "}
+                         <span className="font-semibold">
+                           {formData.companySize ? 
+                             (formData.companySize === "just-me" ? "solo" : 
+                              formData.companySize.includes("-") ? formData.companySize + " people" : 
+                              formData.companySize + " people") : 
+                             'your company size'
+                           }
+                         </span>{" "}
+                         company
+                       </p>
+                       {formData.currentTools.length > 0 && (
+                         <span className="inline">
+                           {" "}using{" "}
+                           <span className="inline-flex items-center mx-1">
+                             <span className="flex -space-x-1">
+                               {formData.currentTools.slice(0, 5).map(toolId => {
+                                 const tool = SAAS_TOOLS.find(t => t.id === toolId);
+                                 return tool && tool.logo ? (
+                                   <div key={toolId} className="w-7 h-7 bg-white rounded-full border border-gray-200 shadow-sm flex items-center justify-center">
+                                     <img 
+                                       src={tool.logo} 
+                                       alt={tool.name}
+                                       className="w-5 h-5 object-contain"
+                                     />
+                                   </div>
+                                 ) : null;
+                               })}
+                               {formData.currentTools.length > 5 && (
+                                 <div className="w-7 h-7 bg-gray-100 rounded-full border border-gray-200 shadow-sm flex items-center justify-center">
+                                   <span className="text-[10px] font-medium text-gray-600">
+                                     +{formData.currentTools.length - 5}
+                                   </span>
+                                 </div>
+                               )}
+                             </span>
+                           </span>
+                           {formData.expectedUserCount && ", and "}
+                         </span>
+                       )}
+                       {formData.expectedUserCount && (
+                         <span className="inline">
+                           {!formData.currentTools.length && " "}expecting{" "}
+                           <span className="font-semibold">
+                             {(() => {
+                               const count = formData.expectedUserCount;
+                               if (count.startsWith('under-')) {
+                                 return count.replace('under-', 'under ').replace('10000', '10,000');
+                               } else if (count.startsWith('over-')) {
+                                 return count.replace('over-', 'over ').replace('50000', '50,000');
+                               } else {
+                                 return count.replace('-', ' to ').replace('10000', '10,000').replace('25000', '25,000').replace('50000', '50,000');
+                               }
+                             })()} users
+                           </span>
+                         </span>
+                       )}
+                       <span className="inline">.</span>
+                     </div>
+                     <p className="text-lg mt-12 font-semibold text-primary">
+                       Our recommendation: <span className="text-purple-600 capitalize">{getRecommendedPlan()}</span> Plan
+                     </p>
+                  </div>
+                </div>
+
+                {/* Plan Recommendation Reasoning */}
+                <div className={` ${
+                  formData.selectedPlan === getRecommendedPlan() 
+                    ? "" 
+                    : ""
+                }`}>
+                  <h3 className="text-sm font-semibold text-primary mb-3">
+                    {formData.selectedPlan === getRecommendedPlan() 
+                      ? `Why we recommend the ${getRecommendedPlan()} plan`
+                      : `Why ${formData.selectedPlan} might not be ideal for you`
+                    }
+                  </h3>
+                  <div className="text-sm text-tertiary leading-relaxed">
+                    {(() => {
+                      const recommendedPlan = getRecommendedPlan();
+                      const selectedPlan = formData.selectedPlan;
+                      const hasEnterpriseFeatures = formData.enterpriseFeatures.length > 0;
+                      const isLargeCompany = ["201-500", "501-1000", "1000+"].includes(formData.companySize);
+                      const expectedUsers = parseInt(formData.expectedUserCount?.split('-')?.[0] || '0');
+                      
+                      // If selected plan matches recommended plan
+                      if (selectedPlan === recommendedPlan) {
+                        if (recommendedPlan === "enterprise") {
+                          const reasons = [];
+                          if (hasEnterpriseFeatures) reasons.push("enterprise features selected");
+                          if (isLargeCompany) reasons.push("large company size");
+                          if (expectedUsers > 100) reasons.push(`${expectedUsers}+ expected users`);
+                          
+                          return `Based on your ${reasons.join(", ")}, the Enterprise plan offers the security, scalability, and dedicated support your organization needs.`;
+                        } else if (recommendedPlan === "growth") {
+                          return `With ${expectedUsers > 0 ? expectedUsers + "+ expected users" : "your expected user count"} and growth plans, the Growth plan provides the right balance of features and scalability.`;
+                        } else {
+                          return "The Starter plan is perfect for getting started with all essential community features while maintaining cost efficiency.";
+                        }
+                      }
+                      
+                      // If selected plan is different from recommended
+                      const missingFeatures = [];
+                      
+                      if (recommendedPlan === "enterprise" && selectedPlan !== "enterprise") {
+                        if (hasEnterpriseFeatures) missingFeatures.push("enterprise security features you selected");
+                        if (isLargeCompany) missingFeatures.push("scalability for your company size");
+                        if (expectedUsers > 100) missingFeatures.push("capacity for your expected user count");
+                        
+                        return `You'll be missing: ${missingFeatures.join(", ")}. Consider upgrading to Enterprise for better fit.`;
+                      } else if (recommendedPlan === "growth" && selectedPlan === "starter") {
+                        missingFeatures.push("advanced integrations", "API access");
+                        if (expectedUsers > 20) missingFeatures.push("sufficient user capacity");
+                        
+                        return `You'll be missing: ${missingFeatures.join(", ")}. Consider upgrading to Growth for better scalability.`;
+                      } else if (recommendedPlan === "starter" && selectedPlan !== "starter") {
+                        return "You're selecting more features than needed based on your requirements. The Starter plan would be more cost-effective.";
+                      }
+                      
+                      return "Your selection looks good!";
+                    })()}
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -1746,27 +2445,8 @@ export const SignupPage = () => {
 
         {/* Right Column - Dynamic Marketing Content (1/3) - Fixed */}
         <div className="relative hidden w-full bg-tertiary xl:flex xl:flex-col xl:h-screen xl:overflow-hidden">
-          <div className="flex flex-col gap-6 p-6 xl:p-8 h-full">
+          <div className="flex flex-col justify-center items-center h-full p-6 xl:p-8">
             {renderRightSideContent()}
-            
-            {/* Bottom trust signals */}
-            <div className="mt-auto">
-              <div className="flex items-end gap-4 overflow-x-auto">
-                <img src="/logos/G2/G2 - high performer.svg" alt="G2 High Performer" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
-                  <span className="text-xs text-tertiary font-medium">SOC 2</span>
-                </div>
-                <img src="/logos/G2/Ease of use -.svg" alt="G2 Ease of Use" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <img src="/logos/G2/G2 -leaders.svg" alt="G2 Leaders" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <Shield01 className="w-8 h-8 text-gray-400 grayscale opacity-60 hover:opacity-100 transition-all mb-1" />
-                  <span className="text-xs text-tertiary font-medium">GDPR</span>
-                </div>
-                <img src="/logos/G2/G2 momentom leader.svg" alt="G2 Momentum Leader" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-                <img src="/logos/G2/G2 -support.svg" alt="G2 Support" className="h-14 w-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all flex-shrink-0" />
-              </div>
-            </div>
           </div>
         </div>
       </section>
