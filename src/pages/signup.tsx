@@ -1126,10 +1126,14 @@ export const SignupPage = () => {
         storage: "1TB",
         description: "",
         features: [
+          { icon: Users01, text: "Up to 10,000 members and 3 collaborators" },
+          { icon: Database01, text: "100 spaces and 1TB storage" },
           { icon: Globe01, text: "Custom Domain" },
-          { icon: Users01, text: "Unlimited Members" },
-          { icon: TrendUp01, text: "Advanced Analytics" },
-          { icon: Headphones01, text: "Priority Support" }
+          { icon: TrendUp01, text: "Basic Analytics" },
+          { icon: Star01, text: "Core apps: Q&A, Discussion, Events, Polls" },
+          { icon: Mail01, text: "Private messaging & chat" },
+          { icon: Lock01, text: "Social login" },
+          { icon: Headphones01, text: "Chat & Email Support" }
         ],
         buttonText: "14-days trial",
         buttonStyle: "primary",
@@ -1150,10 +1154,15 @@ export const SignupPage = () => {
         storage: "3TB",
         description: "",
         features: [
-          { icon: Users01, text: "Everything in Starter" },
-          { icon: Zap, text: "Ask AI" },
-          { icon: Target01, text: "Federated search" },
-          { icon: Code01, text: "API and Webhooks" },
+          { icon: Users01, text: "Up to 25,000 members and 10 collaborators" },
+          { icon: Database01, text: "200 spaces and 3TB storage" },
+          { icon: CheckCircle, text: "Everything in Starter" },
+          { icon: Zap, text: "Ask AI and Federated search" },
+          { icon: Shield01, text: "Remove Powered by Bettermode" },
+          { icon: Mail01, text: "Sender email customization" },
+          { icon: Code01, text: "API, Webhooks, and Sandbox Environment" },
+          { icon: Settings01, text: "Activity Log" },
+          { icon: Headphones01, text: "Onboarding and Migration Support" },
           { icon: Lock01, text: "OAuth2" }
         ],
         buttonText: "Request a demo",
@@ -1175,11 +1184,15 @@ export const SignupPage = () => {
         storage: "5TB",
         description: "",
         features: [
+          { icon: Users01, text: "Up to 50,000 members and 20 collaborators" },
+          { icon: Database01, text: "500 spaces and 5TB storage" },
           { icon: CheckCircle, text: "Everything in Growth" },
-          { icon: Globe01, text: "Data Residency" },
-          { icon: Shield01, text: "SOC 2 (Type 2)" },
-          { icon: Lock01, text: "Custom Security Controls" },
-          { icon: User01, text: "Dedicated Account Manager" }
+          { icon: Settings01, text: "Audit log (90 days)" },
+          { icon: Shield01, text: "SOC II, JWT, and SAML" },
+          { icon: User01, text: "Customer Success Manager" },
+          { icon: TrendUp01, text: "99.9% Uptime SLA" },
+          { icon: CreditCard01, text: "Custom billing" },
+          { icon: Lock01, text: "Security and legal review" }
         ],
         buttonText: "Talk to Sales",
         buttonStyle: "primary",
@@ -1251,26 +1264,6 @@ export const SignupPage = () => {
                   </div>
                 )}
               </div>
-              
-              {/* Members, Collaborators, Spaces, and Storage */}
-              <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-gray-100">
-                <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900">{plan.members}</div>
-                  <div className="text-xs text-gray-500">Members</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900">{plan.collaborators}</div>
-                  <div className="text-xs text-gray-500">Collaborators</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900">{plan.spaces}</div>
-                  <div className="text-xs text-gray-500">Spaces</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900">{plan.storage}</div>
-                  <div className="text-xs text-gray-500">Storage</div>
-                </div>
-              </div>
             </div>
 
             <div className="space-y-1 mb-4 mt-4">
@@ -1282,33 +1275,68 @@ export const SignupPage = () => {
               ))}
             </div>
 
-            {(plan.id === "growth" || plan.id === "enterprise") && (
-              <div className="mb-4 mt-4">
-                <p className="text-xs text-gray-500 mb-1">Integrations</p>
-                <div className="flex space-x-1.5">
-                  {plan.id === "growth" ? (
-                    <>
-                      <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/google-analytics-3.svg" alt="Analytics" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/stripe-4.svg" alt="Stripe" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/mailchimp logo.svg" alt="MailChimp" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/make.svg" alt="Make" className="w-5 h-5 rounded" />
-                    </>
-                  ) : (
-                    <>
-                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/hubspot-1.svg" alt="HubSpot" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
-                      <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="w-5 h-5 rounded" />
-                    </>
-                  )}
-                </div>
+            <div className="mb-4 mt-4">
+              <p className="text-xs text-gray-500 mb-1">Integrations</p>
+              <div className="flex flex-wrap gap-2 justify-start">
+                {plan.id === "starter" ? (
+                  <>
+                    <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/discord.svg" alt="Discord" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
+                  </>
+                ) : plan.id === "growth" ? (
+                  <>
+                    <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/discord.svg" alt="Discord" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentric" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/hotjar-icon logo.svg" alt="Hotjar" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/hubspot-1.svg" alt="Hubspot" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/intercom-2.svg" alt="Intercom" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Jira logo.svg" alt="Jira" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
+                  </>
+                ) : (
+                  <>
+                    <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/discord.svg" alt="Discord" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentric" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/hotjar-icon logo.svg" alt="Hotjar" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Mixpanel_Symbol_0.svg" alt="Mixpanel" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/hubspot-1.svg" alt="Hubspot" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/intercom-2.svg" alt="Intercom" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Jira logo.svg" alt="Jira" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/salesforce.svg" alt="Salesforce" className="w-5 h-5 rounded" />
+                  </>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Card Footer - Action Button */}
             <div className="mt-auto pt-4 border-t border-gray-100">
@@ -2412,35 +2440,7 @@ export const SignupPage = () => {
           </div>
 
           {/* Desktop Footer */}
-          <footer className="hidden xl:flex xl:items-center xl:justify-between p-8 pt-4">
-            <p className="text-sm text-tertiary">© Bettermode 2025</p>
-            
-            {/* Navigation Buttons */}
-            <div className="flex gap-3">
-              {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && currentStep !== 12 && (
-                <Button 
-                  className="flex-1"
-                  color="secondary" 
-                  iconLeading={ArrowLeft}
-                  onClick={handleBack}
-                  size="md"
-                >
-                  Back
-                </Button>
-              )}
-              
-              {false ? (
-                <Button 
-                  className={currentStep > 1 ? "flex-[4]" : "w-full"}
-                  iconTrailing={ArrowRight}
-                  onClick={() => handleNext()}
-                  size="md"
-                >
-                  Continue
-                </Button>
-              ) : null}
-            </div>
-          </footer>
+
         </div>
 
         {/* Right Column - Dynamic Marketing Content (1/3) - Fixed */}
