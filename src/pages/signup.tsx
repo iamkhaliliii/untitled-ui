@@ -85,23 +85,26 @@ const USE_CASES = [
 ];
 
 const SAAS_TOOLS = [
-  { id: "salesforce", name: "Salesforce", logo: "/logos/s/salesforce.svg" },
-  { id: "hubspot", name: "HubSpot", logo: "/logos/s/hubspot-1.svg" },
-  { id: "intercom", name: "Intercom", logo: "/logos/s/intercom-2.svg" },
-  { id: "zendesk", name: "Zendesk", logo: "/logos/s/zendesk-3.svg" },
-  { id: "slack", name: "Slack", logo: "/logos/s/slack-new-logo.svg" },
-  { id: "teams", name: "MS Teams", logo: "/logos/s/microsoft-teams-1.svg" },
-  { id: "analytics", name: "Google Analytics", logo: "/logos/s/google-analytics-3.svg" },
-  { id: "stripe", name: "Stripe", logo: "/logos/s/stripe-4.svg" },
-  { id: "tag-manager", name: "Google Tag Manager", logo: "/logos/s/google-tag-manager logo.svg" },
+  { id: "google-analytics", name: "Google Analytics", logo: "/logos/s/google-analytics-3.svg" },
+  { id: "cookie-consent", name: "Cookie Consent Manager", logo: "/logos/s/cookie-svgrepo-com.svg" },
   { id: "zapier", name: "Zapier", logo: "/logos/s/zapier.svg" },
-  { id: "jira", name: "Jira", logo: "/logos/s/Jira logo.svg" },
-  { id: "make", name: "Make", logo: "/logos/s/make.svg" },
+  { id: "make", name: "Make.com", logo: "/logos/s/make.svg" },
+  { id: "slack", name: "Slack", logo: "/logos/s/slack-new-logo.svg" },
+  { id: "discord", name: "Discord", logo: "/logos/s/discord.svg" },
+  { id: "mailchimp", name: "Mailchimp", logo: "/logos/s/mailchimp logo.svg" },
+  { id: "google-tag-manager", name: "Google Tag Manager", logo: "/logos/s/google-tag-manager logo.svg" },
+  { id: "custom-code", name: "Custom Code Snippet", logo: "/logos/s/Custom-Code-Snippet.svg" },
+  { id: "usercentric", name: "Usercentric", logo: "/logos/s/Usercentrics_idibjbvDVZ_0.svg" },
+  { id: "onetrust", name: "OneTrust", logo: "/logos/s/OneTrust.svg" },
+  { id: "fullstory", name: "Fullstory", logo: "/logos/s/fullstory-logo.svg" },
   { id: "hotjar", name: "Hotjar", logo: "/logos/s/hotjar-icon logo.svg" },
   { id: "amplitude", name: "Amplitude", logo: "/logos/s/amplitude-icon logo.svg" },
-  { id: "mailchimp", name: "Mailchimp", logo: "/logos/s/mailchimp logo.svg" },
   { id: "mixpanel", name: "Mixpanel", logo: "/logos/s/Mixpanel_Symbol_0.svg" },
-  { id: "other", name: "Other tools", logo: null }
+  { id: "hubspot", name: "Hubspot", logo: "/logos/s/hubspot-1.svg" },
+  { id: "zendesk", name: "Zendesk", logo: "/logos/s/zendesk-3.svg" },
+  { id: "intercom", name: "Intercom", logo: "/logos/s/intercom-2.svg" },
+  { id: "jira", name: "Jira", logo: "/logos/s/Jira logo.svg" },
+  { id: "salesforce", name: "Salesforce", logo: "/logos/s/salesforce.svg" }
 ];
 
 const ENTERPRISE_FEATURES = [
