@@ -241,9 +241,9 @@ export const SignupPage = () => {
       case 7:
         if (!formData.companySize) newErrors.companySize = "Company size is required";
         break;
-      case 10:
-        if (!formData.expectedUserCount) newErrors.expectedUserCount = "Expected user count is required";
-        break;
+      // case 10: COMMENTED OUT - Expected user count step
+      // if (!formData.expectedUserCount) newErrors.expectedUserCount = "Expected user count is required";
+      // break;
     }
     
     setErrors(newErrors);
@@ -252,7 +252,7 @@ export const SignupPage = () => {
 
   const handleNext = (skipValidation = false) => {
     if (skipValidation || validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 12));
+      setCurrentStep(prev => Math.min(prev + 1, 11));
     }
   };
 
@@ -290,7 +290,7 @@ export const SignupPage = () => {
   };
 
   const getStepTitle = () => {
-    const titles = ["First, enter your email", "Check your email for a code", "What is your name?", "What industry are you in?", "Which best describes your role?", "What is your company's name?", `How many people work at ${formData.companyName || 'your company'}?`, `What is ${formData.companyName || 'your company'}'s website?`, "Communities are much more powerful with awesome integrations", "How many users do you expect?", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
+    const titles = ["First, enter your email", "Check your email for a code", "What is your name?", "What industry are you in?", "Which best describes your role?", "What is your company's name?", `How many people work at ${formData.companyName || 'your company'}?`, `What is ${formData.companyName || 'your company'}'s website?`, "Communities are much more powerful with awesome integrations", /* "How many users do you expect?", */ "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
     return titles[currentStep - 1];
   };
 
@@ -305,8 +305,8 @@ export const SignupPage = () => {
       "",
       "",
       "Choose as many as you want. It helps us guide you to the right plan.",
-      "",
       "Configure enterprise security and compliance features.",
+      "",
       ""
     ];
     return descriptions[currentStep - 1];
@@ -515,15 +515,16 @@ export const SignupPage = () => {
   // Step 4: Industry Selection
   const renderStep4 = () => {
     const industries = [
-      { id: "marketing", name: "Marketing and Advertising" },
-      { id: "technology", name: "Technology and Services" },
+      { id: "b2b-saas", name: "B2B SaaS" },
       { id: "software", name: "Computer Software" },
-      { id: "realestate", name: "Real Estate" },
-      { id: "financial", name: "Financial Services" },
-      { id: "health", name: "Health, Wellness and Fitness" },
-      { id: "education", name: "Education" },
-      { id: "consulting", name: "Consulting" },
-      { id: "retail", name: "Retail" }
+      { id: "technology", name: "Technology and Services" },
+      { id: "ai", name: "AI" },
+      { id: "medical-saas", name: "Medical SaaS" },
+      { id: "martech", name: "MarTech" },
+      { id: "adtech", name: "AdTech" },
+      { id: "marketplace", name: "Online Marketplace" },
+      { id: "edtech", name: "EdTech" },
+      { id: "dev-tools", name: "Dev Tools" }
     ];
 
     return (
@@ -744,14 +745,12 @@ export const SignupPage = () => {
   // Step 5: Role Selection
   const renderStep5 = () => {
     const roles = [
-      { id: "marketing-manager", name: "Marketing Manager" },
       { id: "community-manager", name: "Community Manager" },
-      { id: "sales-support-manager", name: "Sales and Support Manager" },
-      { id: "product-manager", name: "Product Manager" },
-      { id: "executive", name: "Executive Team" },
-      { id: "owner", name: "Owner" },
-      { id: "manager", name: "Manager" },
-      { id: "employee", name: "Employee" }
+      { id: "customer-success", name: "Customer Success" },
+      { id: "product-marketing", name: "Product Marketing" },
+      { id: "customer-marketing", name: "Customer Marketing" },
+      { id: "growth-marketing", name: "Growth Marketing" },
+      { id: "revops", name: "RevOps" }
     ];
 
     return (
@@ -998,7 +997,8 @@ export const SignupPage = () => {
     </div>
   );
 
-  // Step 10: Expected Users
+  // Step 10: Expected Users - COMMENTED OUT
+  /*
   const renderStep10 = () => {
     const userCounts = [
       { id: "under-10000", name: "Under 10,000" },
@@ -1038,6 +1038,7 @@ export const SignupPage = () => {
       </div>
     );
   };
+  */
 
   // Step 11: Enterprise Features - Compact Design
   const renderStep11 = () => (
@@ -1174,12 +1175,12 @@ export const SignupPage = () => {
       {
         id: "enterprise",
         name: "Enterprise",
-        price: billingPeriod === 'annual' ? "$45,000" : "Contact Us",
-        period: billingPeriod === 'annual' ? "/year" : "",
+        price: "Contact Us",
+        period: "",
         annualPrice: null,
         annualPeriod: null,
         annualTotal: "",
-        monthlyTotal: "Not Available",
+        monthlyTotal: "Contact Us",
         members: "50,000",
         collaborators: "20",
         spaces: "500",
@@ -1256,8 +1257,8 @@ export const SignupPage = () => {
                   <div className="flex flex-col justify-center h-full">
                     <div className="flex items-baseline">
                 <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                 <span className="text-gray-600 ml-1">/m</span>
-                 {billingPeriod === 'monthly' && plan.monthlyTotal && plan.monthlyTotal !== "Not Available" && (
+                 {plan.price !== "Contact Us" && <span className="text-gray-600 ml-1">/m</span>}
+                 {billingPeriod === 'monthly' && plan.monthlyTotal && plan.monthlyTotal !== "Not Available" && plan.monthlyTotal !== "Contact Us" && (
                    <span className="text-sm text-gray-500 ml-2">{plan.monthlyTotal}</span>
                  )}
                     </div>
@@ -1389,425 +1390,21 @@ export const SignupPage = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              <div className="text-left flex flex-col gap-4">
-              <h2 className=" text-2xl font-base text-primary mb-8 leading-relaxed">
-                More than <span className="font-bold">4 million</span> people across <span className="font-bold">2,000 enterprise </span>
-                <span className="font-bold">communities</span> are empowered by{" "}
-                <div className="inline-flex items-end mt-1 ">
-                  <img 
-                    src="/logo-bettermode.svg" 
-                    alt="bettermode" 
-                    className="h-7 w-auto ml-1"
-                  />
-                </div>
-              </h2>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-8 mb-8">
-                <div className="text-left">
-                  <div className="text-3xl font-bold text-primary mb-2">4,000,000<span className="text-2xl">+</span></div>
-                  <div className="text-sm text-tertiary font-medium">People</div>
-                </div>
-                <div className="text-left">
-                  <div className="text-3xl font-bold text-primary mb-2">2,000<span className="text-2xl">+</span></div>
-                  <div className="text-sm text-tertiary font-medium">Enterprise communities</div>
-                </div>
-              </div>
-
-              <div className="flex justify-left items-center">
-                <div className="flex -space-x-3">
-                  {TESTIMONIALS.slice(0, 4).map((t, i) => (
-                    <img key={i} className="w-10 h-10 rounded-full border-3 border-white shadow-sm" src={t.avatar} alt="" />
-                  ))}
-                  <div className="w-10 h-10 rounded-full border-3 border-white bg-black flex items-center justify-center shadow-sm">
-                    <span className="text-white text-sm font-bold">•••</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 2:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* HubSpot Logo at the top */}
-              <div className="mb-8">
-                <img 
-                  src="/logos/hubspot.svg" 
-                  alt="HubSpot" 
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              {/* Testimonial Quote */}
-              <div className="text-left flex flex-col gap-4">
-                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
-                  Using Bettermode has been a game-changer for us. Its powerful capabilities and features have revolutionized the way we engage with our community, leading to more effective connections and experiences.
-                </h2>
-              </div>
-              
-              {/* Author Info */}
-              <div className="flex items-start gap-3">
-                <img 
-                  src={TESTIMONIALS[0].avatar}
-                  alt="Kyle Foster"
-                  className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Kyle Foster")}&background=6366f1&color=fff`;
-                  }}
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-primary text-sm">Kyle Foster</p>
-                  <cite className="text-sm text-tertiary not-italic">Marketing Manager</cite>
-                </div>
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div className="flex flex-col gap-6 text-center ">
-            <div>
-              {/* Title */}
-              <div className="text-left flex flex-col gap-2 max-w-md mx-auto">
-                <h2 className="text-3xl font-base text-primary">
-                  Why Leading Brands Choose{" "}
-                  <span className="font-bold">Bettermode</span>
-                </h2>
-                <p className="text-xl text-tertiary mb-6">
-                  Empower your enterprise with an all-in-one hub for communities, knowledge sharing, events, and more.
-                </p>
-              </div>
-              
-              {/* Animated Image Slider - Single Row */}
-              <div className="relative overflow-hidden">
-                <div className="flex animate-infinite-scroll space-x-3">
-                  {/* First set of images */}
-                  <img src="/pic/95hMxryJzJLwIzpyQvtnfZqoog.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/Ci88GhZcPHBGHwo56ttsBK32A8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/cM4QAxyw8qFYPzk1xc0MZXgtKHc.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/qIhdSSEYqJe7mwsNooYK73vvUy8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/z4CBLhwG80urLcB09PG3eSA84E.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/bSro1RJlbMgQy3VFBrz4U5o8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  
-                  {/* Duplicate set for seamless infinite loop */}
-                  <img src="/pic/95hMxryJzJLwIzpyQvtnfZqoog.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/Ci88GhZcPHBGHwo56ttsBK32A8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/cM4QAxyw8qFYPzk1xc0MZXgtKHc.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/qIhdSSEYqJe7mwsNooYK73vvUy8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/z4CBLhwG80urLcB09PG3eSA84E.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                  <img src="/pic/bSro1RJlbMgQy3VFBrz4U5o8.avif" alt="Brand showcase" className="h-90 w-auto object-contain rounded-lg opacity-90 hover:opacity-100 transition-opacity flex-shrink-0 shadow-sm" />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* Xano Logo at the top */}
-              <div className="mb-8">
-                <img 
-                  src="/logos/l_backup/xano.svg" 
-                  alt="Xano" 
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              {/* Testimonial Quote */}
-              <div className="text-left flex flex-col gap-4">
-                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
-                  Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users, and we're excited to see it evolve further with our community.
-                </h2>
-              </div>
-              
-              {/* Author Info */}
-              <div className="flex items-start gap-3">
-                <img 
-                  src={TESTIMONIALS[1].avatar}
-                  alt="Lizbeth Ramos"
-                  className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Lizbeth Ramos")}&background=6366f1&color=fff`;
-                  }}
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-primary text-sm">Lizbeth Ramos</p>
-                  <cite className="text-sm text-tertiary not-italic">Developer Community Manager</cite>
-                </div>
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 5:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* Title */}
-              <div className="text-left flex flex-col gap-2">
-                <h2 className="text-3xl font-base text-primary">
-                  Works with the tools you already{" "}
-                  <span className="font-bold">trust</span>
-                </h2>
-                <p className="text-base text-tertiary mb-8">
-                  Use Bettermode as your standalone platform or embed it into your existing eco-system, website/application
-                </p>
-              </div>
-              
-              {/* Integration Logos Grid */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/hubspot-1.svg" alt="HubSpot" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/zapier.svg" alt="Zapier" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/stripe-4.svg" alt="Stripe" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/intercom-2.svg" alt="Intercom" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/mailchimp logo.svg" alt="MailChimp" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/make.svg" alt="Make" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="h-8 w-auto opacity-100 transition-opacity" />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 6:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* IBM Logo at the top */}
-              <div className="mb-8">
-                <img 
-                  src="/logos/l_backup/ibm.svg" 
-                  alt="IBM" 
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              {/* Testimonial Quote */}
-              <div className="text-left flex flex-col gap-4">
-                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
-                  Bettermode's automated reputation system, robust content organization features, and balanced communication capabilities helped us drive engagement with a personalized approach.
-                </h2>
-              </div>
-              
-              {/* Author Info */}
-              <div className="flex items-start gap-3">
-                <img 
-                  src={TESTIMONIALS[2].avatar}
-                  alt="Marlee Margolin"
-                  className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Marlee Margolin")}&background=6366f1&color=fff`;
-                  }}
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-primary text-sm">Marlee Margolin</p>
-                  <cite className="text-sm text-tertiary not-italic">CSR Activation Manager</cite>
-                </div>
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 7:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* Title */}
-              <div className="text-left flex flex-col gap-2">
-                <h2 className="text-3xl font-base text-primary mb-8">
-                  Built for businesses. Rated by{" "}
-                  <span className="font-bold">experts</span>
-                </h2>
-              </div>
-              
-              {/* G2 Awards Carousel */}
-              <div className="relative mt-20">
-                <div className="flex items-center justify-center">
-                  {/* Left Arrow */}
-                  <button
-                    onClick={() => setG2CarouselIndex(prev => prev === 0 ? 5 : prev - 1)}
-                    className="absolute left-0 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-                  >
-                    <ChevronLeft className="w-6 h-6 text-gray-600" />
-                  </button>
-
-                  {/* G2 Award Display */}
-                  <div className="flex justify-center items-center h-80 w-full">
-                    {(() => {
-                      const g2Awards = [
-                        { src: "/logos/G2/G2 - high performer.svg", alt: "G2 High Performer" },
-                        { src: "/logos/G2/G2 -leaders.svg", alt: "G2 Leaders" },
-                        { src: "/logos/G2/G2 momentom leader.svg", alt: "G2 Momentum Leader" },
-                        { src: "/logos/G2/Ease of use -.svg", alt: "G2 Ease of Use" },
-                        { src: "/logos/G2/G2 - ease of use bussines.svg", alt: "G2 Ease of Use Business" },
-                        { src: "/logos/G2/G2 -support.svg", alt: "G2 Support" }
-                      ];
-                      const currentAward = g2Awards[g2CarouselIndex];
-                      return (
-                        <img 
-                          src={currentAward.src} 
-                          alt={currentAward.alt} 
-                          className="h-72 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" 
-                        />
-                      );
-                    })()}
-                  </div>
-
-                  {/* Right Arrow */}
-                  <button
-                    onClick={() => setG2CarouselIndex(prev => prev === 5 ? 0 : prev + 1)}
-                    className="absolute right-0 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-                  >
-                    <ChevronRight className="w-6 h-6 text-gray-600" />
-                  </button>
-                </div>
-
-                {/* Carousel Dots */}
-                <div className="flex justify-center mt-6 space-x-2">
-                  {[0, 1, 2, 3, 4, 5].map((index) => (
-                    <button
-                      key={index}
-                      onClick={() => setG2CarouselIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        g2CarouselIndex === index ? 'bg-purple-600' : 'bg-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 8:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* CoachHub Logo at the top */}
-              <div className="mb-8">
-                <img 
-                  src="/logos/l_backup/CoachHub.svg" 
-                  alt="CoachHub" 
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              {/* Testimonial Quote */}
-              <div className="text-left flex flex-col gap-4">
-                <h2 className="text-2xl font-base text-primary mb-8 leading-relaxed">
-                  Bettermode was selected for its ease of use and for filling in almost all of our coaches' wishlist.
-                </h2>
-              </div>
-              
-              {/* Author Info */}
-              <div className="flex items-start gap-3">
-                <img 
-                  src={TESTIMONIALS[3].avatar}
-                  alt="Jennifer Serrat"
-                  className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Jennifer Serrat")}&background=6366f1&color=fff`;
-                  }}
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-primary text-sm">Jennifer Serrat</p>
-                  <cite className="text-sm text-tertiary not-italic">Community Manager</cite>
-                </div>
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 9:
-        return (
-          <div className="flex flex-col gap-8 px-8">
-            <div className="text-left">
-              {/* Title */}
-              <div className="text-left flex flex-col gap-4">
-                {/* Professional services badge */}
-                <div className="inline-flex w-fit">
-                  <span className="bg-gray-200 text-gray-700 text-sm font-medium px-3 py-1.5 rounded-full">
-                    Professional services
-                  </span>
-                </div>
-                
-                <h2 className="text-4xl text-primary">
-                  Let our experts take care of{" "}
-                  <span className="font-bold">everything</span>
-                </h2>
-                <p className="text-2xl text-tertiary mb-8">
-                  From strategy to grow, our dedicated team supports every step, ensuring your community thrives.
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 10:
-        return (
           <div className="flex flex-col gap-6  text-center max-w-md mx-auto">
             <div>
               {/* Title */}
               <div className="text-left flex flex-col gap-2 mb-6">
-                <h2 className="text-3xl font-base text-primary">
-                  The Community Platform Behind{" "}
-                  <span className="font-bold">Top Brands</span>
+                <h2 className="text-4xl font-base text-primary ">
+                  Why Leading Brands Choose{" "}
+                  <span className="font-bold">Bettermode</span>
+                </h2>
+                <p className="text-[1.1rem]  text-tertiary">
+                  Empower your enterprise with an all-in-one hub for communities, knowledge sharing, events, and more powered by Bettermode's scalable platform. designed to streamline collaboration, enhance customer engagement, and drive business growth across every touchpoint.
+                </p>
+                <h2 className="text-xl font-base mt-10 text-primary">
+                The Community Platform Behind{" "}
+                <span className="font-bold">Top Brands</span> <br />
+                 
                 </h2>
               </div>
               
@@ -1931,7 +1528,424 @@ export const SignupPage = () => {
           </div>
         );
 
-      case 11:
+      case 2:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* HubSpot Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/hubspot.svg" 
+                  alt="HubSpot" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Using Bettermode has been a game-changer for us. Its powerful capabilities and features have revolutionized the way we engage with our community, leading to more effective connections and experiences.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[0].avatar}
+                  alt="Kyle Foster"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Kyle Foster")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Kyle Foster</p>
+                  <cite className="text-sm text-tertiary not-italic">Marketing Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* HubSpot Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/hubspot.svg" 
+                  alt="HubSpot" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Using Bettermode has been a game-changer for us. Its powerful capabilities and features have revolutionized the way we engage with our community, leading to more effective connections and experiences.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[0].avatar}
+                  alt="Kyle Foster"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Kyle Foster")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Kyle Foster</p>
+                  <cite className="text-sm text-tertiary not-italic">Marketing Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* HubSpot Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/hubspot.svg" 
+                  alt="HubSpot" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Using Bettermode has been a game-changer for us. Its powerful capabilities and features have revolutionized the way we engage with our community, leading to more effective connections and experiences.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[0].avatar}
+                  alt="Kyle Foster"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Kyle Foster")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Kyle Foster</p>
+                  <cite className="text-sm text-tertiary not-italic">Marketing Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Xano Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/l_backup/xano.svg" 
+                  alt="Xano" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users, and we're excited to see it evolve further with our community.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[1].avatar}
+                  alt="Lizbeth Ramos"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Lizbeth Ramos")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Lizbeth Ramos</p>
+                  <cite className="text-sm text-tertiary not-italic">Developer Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Xano Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/l_backup/xano.svg" 
+                  alt="Xano" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users, and we're excited to see it evolve further with our community.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[1].avatar}
+                  alt="Lizbeth Ramos"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Lizbeth Ramos")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Lizbeth Ramos</p>
+                  <cite className="text-sm text-tertiary not-italic">Developer Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* Xano Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/l_backup/xano.svg" 
+                  alt="Xano" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Our experience with Bettermode has been fantastic—it's become an essential part of how we support and engage our users, and we're excited to see it evolve further with our community.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[1].avatar}
+                  alt="Lizbeth Ramos"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Lizbeth Ramos")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Lizbeth Ramos</p>
+                  <cite className="text-sm text-tertiary not-italic">Developer Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 8:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* CoachHub Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/l_backup/CoachHub.svg" 
+                  alt="CoachHub" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Bettermode was selected for its ease of use and for filling in almost all of our coaches' wishlist.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[3].avatar}
+                  alt="Jennifer Serrat"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Jennifer Serrat")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Jennifer Serrat</p>
+                  <cite className="text-sm text-tertiary not-italic">Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="flex flex-col gap-8 px-8">
+            <div className="text-left">
+              {/* CoachHub Logo at the top */}
+              <div className="mb-6">
+                <img 
+                  src="/logos/l_backup/CoachHub.svg" 
+                  alt="CoachHub" 
+                  className="h-8 w-auto"
+                />
+              </div>
+              
+              {/* Testimonial Quote */}
+              <div className="text-left flex flex-col gap-4">
+                <h2 className="text-2xl font-base text-primary mb-8 ">
+                  Bettermode was selected for its ease of use and for filling in almost all of our coaches' wishlist.
+                </h2>
+              </div>
+              
+              {/* Author Info */}
+              <div className="flex items-start gap-3 mb-6">
+                <img 
+                  src={TESTIMONIALS[3].avatar}
+                  alt="Jennifer Serrat"
+                  className="w-10 h-10 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent("Jennifer Serrat")}&background=6366f1&color=fff`;
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">Jennifer Serrat</p>
+                  <cite className="text-sm text-tertiary not-italic">Community Manager</cite>
+                </div>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star01 key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        );
+
+      // case 10: COMMENTED OUT - Integration tools sidebar content
+      // case 10:
+      //   return (
+      //     <div className="flex flex-col gap-8 px-8">
+      //       <div className="text-left">
+      //         <div className="text-left flex flex-col gap-2">
+      //           <h2 className="text-3xl font-base text-primary">
+      //             Works with the tools you already{" "}
+      //             <span className="font-bold">trust</span>
+      //           </h2>
+      //           <p className="text-base text-tertiary mb-8">
+      //             Use Bettermode as your standalone platform or embed it into your existing eco-system, website/application
+      //           </p>
+      //         </div>
+      //         
+      //         <div className="grid grid-cols-4 gap-6 mb-8">
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/hubspot-1.svg" alt="HubSpot" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/microsoft-teams-1.svg" alt="Microsoft Teams" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/zapier.svg" alt="Zapier" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/stripe-4.svg" alt="Stripe" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/zendesk-3.svg" alt="Zendesk" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/intercom-2.svg" alt="Intercom" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/mailchimp logo.svg" alt="MailChimp" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/make.svg" alt="Make" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      //             <img src="/logos/s/amplitude-icon logo.svg" alt="Amplitude" className="h-8 w-auto opacity-100 transition-opacity" />
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+
+      case 10:
         return (
             <div className="flex flex-col gap-8 px-8">
             <div className="text-left">
@@ -1953,11 +1967,45 @@ export const SignupPage = () => {
                   Built from day one with a privacy-focused design and compliant approach to securing your data.
                 </p>
               </div>
+              
+              {/* G2 Awards Logos - 3x2 Grid */}
+              <div className="grid grid-cols-3 gap-x-0 gap-y-4 mt-4">
+                <img 
+                  src="/logos/G2/Ease of use -.svg" 
+                  alt="G2 Ease of Use" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+                <img 
+                  src="/logos/G2/G2 - ease of use bussines.svg" 
+                  alt="G2 Ease of Use Business" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+                <img 
+                  src="/logos/G2/G2 - high performer.svg" 
+                  alt="G2 High Performer" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+                <img 
+                  src="/logos/G2/G2 -leaders.svg" 
+                  alt="G2 Leaders" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+                <img 
+                  src="/logos/G2/G2 -support.svg" 
+                  alt="G2 Support" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+                <img 
+                  src="/logos/G2/G2 momentom leader.svg" 
+                  alt="G2 Momentum Leader" 
+                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                />
+              </div>
             </div>
           </div>
         );
 
-      case 12:
+      case 11:
         return (
           <div className="flex flex-col gap-8 px-8">
             <div className="text-left">
@@ -2172,7 +2220,7 @@ export const SignupPage = () => {
                   <div className="w-full bg-purple-100 rounded-full h-0.5">
                     <div 
                       className="h-full bg-purple-600 rounded-full transition-all duration-500"
-                style={{ width: `${((currentStep - 1) / 11) * 100}%` }}
+                style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
                     />
                   </div>
           </header>
@@ -2181,7 +2229,7 @@ export const SignupPage = () => {
             <div className="flex justify-center items-start min-h-full px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-8">
                 <div className={cx(
                   "flex w-full flex-col gap-6 sm:gap-8 pb-8",
-                  currentStep === 12 
+                  currentStep === 11 
                     ? "max-w-5xl" 
                     : currentStep >= 1 && currentStep <= 2
                     ? "max-w-md"
@@ -2258,6 +2306,19 @@ export const SignupPage = () => {
                         </button>
                       </div>
                     )}
+                    {/* Step 10 back button - COMMENTED OUT 
+                    {currentStep === 10 && (
+                      <div className="mb-1">
+                        <button 
+                          onClick={handleBack}
+                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back
+                        </button>
+                      </div>
+                    )}
+                    */}
                     {currentStep === 10 && (
                       <div className="mb-1">
                         <button 
@@ -2270,17 +2331,6 @@ export const SignupPage = () => {
                       </div>
                     )}
                     {currentStep === 11 && (
-                      <div className="mb-1">
-                        <button 
-                          onClick={handleBack}
-                          className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-3"
-                        >
-                          <ArrowLeft className="w-4 h-4" />
-                          Back
-                        </button>
-                      </div>
-                    )}
-                    {currentStep === 12 && (
                       <div className="">
                         <button 
                           onClick={handleBack}
@@ -2293,7 +2343,7 @@ export const SignupPage = () => {
                     )}
                     <div className="flex items-center justify-between">
                       <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
-                      {currentStep === 12 && (
+                      {currentStep === 11 && (
                         <div className="flex bg-gray-100 rounded-lg p-1">
                           <button
                             onClick={() => setBillingPeriod('annual')}
@@ -2356,9 +2406,9 @@ export const SignupPage = () => {
                   {currentStep === 7 && renderStep7()}
                   {currentStep === 8 && renderStep8()}
                   {currentStep === 9 && renderStep9()}
-                  {currentStep === 10 && renderStep10()}
-                  {currentStep === 11 && renderStep11()}
-                  {currentStep === 12 && renderStep12()}
+                  {/* {currentStep === 10 && renderStep10()} */}
+                  {currentStep === 10 && renderStep11()}
+                  {currentStep === 11 && renderStep12()}
 
                   {/* Mobile testimonial - shows on small screens */}
                   {(currentStep === 7 || currentStep === 9) && (
@@ -2419,7 +2469,7 @@ export const SignupPage = () => {
           {/* Mobile Navigation */}
           <div className="xl:hidden p-4 border-t border-gray-200">
             <div className="flex gap-3">
-              {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && currentStep !== 12 && (
+              {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && (
                 <Button 
                   className="flex-1"
                   color="secondary" 
@@ -2450,9 +2500,29 @@ export const SignupPage = () => {
 
         {/* Right Column - Dynamic Marketing Content (1/3) - Fixed */}
         <div className="relative hidden w-full bg-tertiary xl:flex xl:flex-col xl:h-screen xl:overflow-hidden">
-          <div className="flex flex-col justify-center items-center h-full p-6 xl:p-8">
+          <div className="flex flex-col justify-start mt-24 items-center h-full p-6 xl:p-8">
             {renderRightSideContent()}
           </div>
+          
+          {/* Fixed Company Logos at Bottom - Only show for testimonial steps */}
+          {(currentStep >= 2 && currentStep <= 9) && (
+            <div className="absolute bottom-8 left-6 right-6">
+              <div className="grid grid-cols-4 gap-1 px-2">
+                <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/intercom-1.svg" alt="Intercom" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/Property 1=SuperOps, color=color.svg" alt="SuperOps" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/Property 1=Variant10, color=color.svg" alt="Variant10" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
