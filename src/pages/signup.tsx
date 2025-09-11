@@ -94,7 +94,7 @@ const SAAS_TOOLS = [
   { id: "mailchimp", name: "Mailchimp", logo: "/logos/s/mailchimp logo.svg" },
   { id: "google-tag-manager", name: "Google Tag Manager", logo: "/logos/s/google-tag-manager logo.svg" },
   { id: "custom-code", name: "Custom Code Snippet", logo: "/logos/s/Custom-Code-Snippet.svg" },
-  { id: "usercentric", name: "Usercentric", logo: "/logos/s/Usercentrics_idibjbvDVZ_0.svg" },
+  { id: "usercentric", name: "Usercentrics", logo: "/logos/s/Usercentrics_idibjbvDVZ_0.svg" },
   { id: "onetrust", name: "OneTrust", logo: "/logos/s/OneTrust.svg" },
   { id: "fullstory", name: "Fullstory", logo: "/logos/s/fullstory-logo.svg" },
   { id: "hotjar", name: "Hotjar", logo: "/logos/s/hotjar-icon logo.svg" },
@@ -290,7 +290,7 @@ export const SignupPage = () => {
   };
 
   const getStepTitle = () => {
-    const titles = ["First, enter your email", "Check your email for a code", "What is your name?", "What industry are you in?", "Which best describes your role?", "What is your company's name?", `How many people work at ${formData.companyName || 'your company'}?`, `What is ${formData.companyName || 'your company'}'s website?`, "Communities are much more powerful with awesome integrations.", "How many users do you expect?", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
+    const titles = ["First, enter your email", "Check your email for a code", "What is your name?", "What industry are you in?", "Which best describes your role?", "What is your company's name?", `How many people work at ${formData.companyName || 'your company'}?`, `What is ${formData.companyName || 'your company'}'s website?`, "Communities are much more powerful with awesome integrations", "How many users do you expect?", "Enterprise features", showAllPlans ? "Choose your plan" : "Recommended plan for you"];
     return titles[currentStep - 1];
   };
 
@@ -304,7 +304,7 @@ export const SignupPage = () => {
       "",
       "",
       "",
-      "Choose as many as you want, it helps us guide you to the right plan.",
+      "Choose as many as you want. It helps us guide you to the right plan.",
       "",
       "Configure enterprise security and compliance features.",
       ""
@@ -744,12 +744,14 @@ export const SignupPage = () => {
   // Step 5: Role Selection
   const renderStep5 = () => {
     const roles = [
-      { id: "owner", name: "Owner" },
+      { id: "marketing-manager", name: "Marketing Manager" },
+      { id: "community-manager", name: "Community Manager" },
+      { id: "sales-support-manager", name: "Sales and Support Manager" },
+      { id: "product-manager", name: "Product Manager" },
       { id: "executive", name: "Executive Team" },
+      { id: "owner", name: "Owner" },
       { id: "manager", name: "Manager" },
-      { id: "employee", name: "Employee" },
-      { id: "student", name: "Student/Intern" },
-      { id: "freelancer", name: "Freelancer" }
+      { id: "employee", name: "Employee" }
     ];
 
     return (
@@ -766,7 +768,7 @@ export const SignupPage = () => {
                 }, 300);
               }}
               className={cx(
-                "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
+                "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.role === role.id
                   ? "border-brand-solid bg-brand-50 shadow-sm"
                   : "border-gray-300 hover:border-gray-400"
@@ -849,20 +851,15 @@ export const SignupPage = () => {
   // Step 7: Company Size Selection
   const renderStep7 = () => {
     const companySizes = [
-      { id: "just-me", name: "Just me" },
-      { id: "2-5", name: "2 to 5" },
-      { id: "6-10", name: "6 to 10" },
-      { id: "11-25", name: "11 to 25" },
-      { id: "26-50", name: "26 to 50" },
-      { id: "51-200", name: "51 to 200" },
-      { id: "201-1000", name: "201 to 1,000" },
-      { id: "1001-10000", name: "1,001 to 10,000" },
-      { id: "10000+", name: "10,001 or more" }
+      { id: "under-50", name: "Under 50" },
+      { id: "50-200", name: "50 to 200" },
+      { id: "200-500", name: "200 to 500" },
+      { id: "over-500", name: "Over 500" }
     ];
 
     return (
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {companySizes.map(size => (
             <button
               key={size.id}
@@ -874,7 +871,7 @@ export const SignupPage = () => {
                 }, 300);
               }}
               className={cx(
-                "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
+                "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.companySize === size.id
                   ? "border-brand-solid bg-brand-50 shadow-sm"
                   : "border-gray-300 hover:border-gray-400"
@@ -900,7 +897,7 @@ export const SignupPage = () => {
         leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
       >
         <Input 
-          placeholder="www.companywebsite.com" 
+          placeholder="www.company-website.com" 
           value={formData.website}
           onChange={handleInputChange('website')}
         />
@@ -1161,7 +1158,7 @@ export const SignupPage = () => {
           { icon: Database01, text: "200 spaces and 3TB storage" },
           { icon: CheckCircle, text: "Everything in Starter" },
           { icon: Zap, text: "Ask AI and Federated search" },
-          { icon: Shield01, text: "Remove Powered by Bettermode" },
+          { icon: Shield01, text: "Remove 'Powered by Bettermode'" },
           { icon: Mail01, text: "Sender email customization" },
           { icon: Code01, text: "API, Webhooks, and Sandbox Environment" },
           { icon: Settings01, text: "Activity Log" },
@@ -1302,7 +1299,7 @@ export const SignupPage = () => {
                     <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
                     <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
                     <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentric" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentrics" className="w-5 h-5 rounded" />
                     <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
                     <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
                     <img src="/logos/s/hotjar-icon logo.svg" alt="Hotjar" className="w-5 h-5 rounded" />
@@ -1325,7 +1322,7 @@ export const SignupPage = () => {
                     <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
                     <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
                     <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentric" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentrics" className="w-5 h-5 rounded" />
                     <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
                     <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
                     <img src="/logos/s/hotjar-icon logo.svg" alt="Hotjar" className="w-5 h-5 rounded" />
@@ -2178,13 +2175,15 @@ export const SignupPage = () => {
           </header>
 
           <div className="flex-1 xl:overflow-y-auto xl:scrollbar-thin">
-            <div className="flex justify-center items-center min-h-full px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-8">
-              <div className={cx(
-                "flex w-full flex-col gap-6 sm:gap-8 pb-8",
-                currentStep === 12 
-                  ? "max-w-7xl lg:max-w-7xl xl:max-w-6xl" 
-                  : "max-w-3xl lg:max-w-3xl xl:max-w-2xl"
-              )}>
+            <div className="flex justify-center items-start min-h-full px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-8">
+                <div className={cx(
+                  "flex w-full flex-col gap-6 sm:gap-8 pb-8",
+                  currentStep === 12 
+                    ? "max-w-5xl" 
+                    : currentStep >= 1 && currentStep <= 3
+                    ? "max-w-lg"
+                    : "max-w-2xl"
+                )}>
                 {/* Form Content */}
                 <div className="flex flex-col gap-6">
                   {/* Step Content */}
