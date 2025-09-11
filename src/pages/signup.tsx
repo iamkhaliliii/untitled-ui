@@ -983,13 +983,14 @@ export const SignupPage = () => {
           onClick={() => handleNext()}
           className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
         >
-          Skip for now
+          No integrations needed for now
         </button>
         
         <Button
           iconTrailing={ArrowRight}
           onClick={() => handleNext()}
           size="sm"
+          isDisabled={formData.currentTools.length === 0}
         >
           Continue
         </Button>
@@ -1087,13 +1088,14 @@ export const SignupPage = () => {
           onClick={() => handleNext()}
           className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
         >
-          Skip
+          Continue without enterprise features
         </button>
         
         <Button
           iconTrailing={ArrowRight}
           onClick={() => handleNext()}
           size="sm"
+          isDisabled={formData.enterpriseFeatures.length === 0}
         >
           Continue
         </Button>
@@ -1207,7 +1209,7 @@ export const SignupPage = () => {
         
         <div className={cx(
           "gap-4 w-full px-8",
-          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "grid grid-cols-1 lg:grid-cols-3 max-w-7xl mx-auto"
+          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "flex justify-center"
         )}>
           {displayPlans.map(plan => (
           <div key={plan.id} className={cx(
@@ -1218,6 +1220,7 @@ export const SignupPage = () => {
               ? "border-purple-300 bg-purple-50/30 hover:border-purple-400"
               : "border-gray-200 hover:border-gray-300",
             "min-h-[400px]",
+            !showAllPlans && "max-w-sm w-full",
             plan.id === "enterprise" && billingPeriod === 'monthly' && "opacity-20"
           )}
           onClick={() => setFormData(prev => ({ ...prev, selectedPlan: plan.id }))}
@@ -2180,8 +2183,8 @@ export const SignupPage = () => {
                   "flex w-full flex-col gap-6 sm:gap-8 pb-8",
                   currentStep === 12 
                     ? "max-w-5xl" 
-                    : currentStep >= 1 && currentStep <= 3
-                    ? "max-w-lg"
+                    : currentStep >= 1 && currentStep <= 2
+                    ? "max-w-md"
                     : "max-w-2xl"
                 )}>
                 {/* Form Content */}
