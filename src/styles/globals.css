@@ -237,3 +237,12 @@ input[type="number"] {
 input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
 }
+
+/* Logo filter for dark mode */
+.logo-filter {
+    filter: brightness(0) saturate(100%) invert(0);
+}
+
+.dark-mode .logo-filter {
+    filter: brightness(0) saturate(100%) invert(1);
+}

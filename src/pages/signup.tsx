@@ -337,7 +337,7 @@ export const SignupPage = () => {
       
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300" />
+          <div className="w-full border-t border-primary" />
         </div>
         <div className="relative flex justify-center text-sm">
           <span className="px-2 bg-primary text-tertiary">or</span>
@@ -410,7 +410,7 @@ export const SignupPage = () => {
               className={cx(
                 "w-14 h-14 text-center text-lg font-semibold border rounded-lg",
                 "focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-brand-solid",
-                errors.verificationCode ? "border-error-primary" : "border-gray-300"
+                errors.verificationCode ? "border-error-primary" : "border-primary"
               )}
             />
           </div>
@@ -426,7 +426,7 @@ export const SignupPage = () => {
           <div className="flex gap-3">
             {renderCodeInputs().slice(0, 3)}
           </div>
-          <span className="text-gray-400 text-lg mx-2">-</span>
+          <span className="text-quaternary text-lg mx-2">-</span>
           <div className="flex gap-3">
             {renderCodeInputs().slice(3, 6)}
           </div>
@@ -450,7 +450,7 @@ export const SignupPage = () => {
           <div className="text-sm text-tertiary">
             Didn't get the email?{" "}
             {resendCooldown > 0 ? (
-              <span className="text-gray-400">Resend in {resendCooldown}s</span>
+              <span className="text-quaternary">Resend in {resendCooldown}s</span>
             ) : (
               <button 
                 onClick={handleResendCode}
@@ -543,8 +543,8 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 h-16 rounded-lg border text-center transition-all hover:shadow-sm flex items-center justify-center",
                 formData.industry === industry.id
-                  ? "border-brand-solid bg-brand-50 shadow-sm"
-                  : "border-gray-300 hover:border-gray-400"
+                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  : "border-secondary hover:border-primary"
               )}
             >
               <span className="text-sm font-medium text-primary">{industry.name}</span>
@@ -555,7 +555,7 @@ export const SignupPage = () => {
         {!showIndustrySearch ? (
           <button
             onClick={() => setShowIndustrySearch(true)}
-            className="mx-auto text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+            className="mx-auto text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
           >
             Doesn't fit? Search all industries
           </button>
@@ -769,8 +769,8 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.role === role.id
-                  ? "border-brand-solid bg-brand-50 shadow-sm"
-                  : "border-gray-300 hover:border-gray-400"
+                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  : "border-secondary hover:border-primary"
               )}
             >
               <span className="text-sm font-medium text-primary">{role.name}</span>
@@ -781,7 +781,7 @@ export const SignupPage = () => {
         {!showRoleSearch ? (
           <button
             onClick={() => setShowRoleSearch(true)}
-            className="mx-auto text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+            className="mx-auto text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
           >
             None of these describe my role
           </button>
@@ -872,8 +872,8 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.companySize === size.id
-                  ? "border-brand-solid bg-brand-50 shadow-sm"
-                  : "border-gray-300 hover:border-gray-400"
+                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  : "border-secondary hover:border-primary"
               )}
             >
               <span className="text-sm font-medium text-primary">{size.name}</span>
@@ -905,7 +905,7 @@ export const SignupPage = () => {
       <div className="flex justify-end items-center gap-6">
         <button
           onClick={() => handleNext()}
-          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+          className="text-sm text-tertiary hover:text-tertiary_hover underline decoration-transparent hover:decoration-tertiary underline-offset-2 transition-all"
         >
           Skip
         </button>
@@ -940,7 +940,7 @@ export const SignupPage = () => {
                 setFormData(prev => ({ ...prev, currentTools: allToolIds }));
               }
             }}
-            className="text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+            className="text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
           >
             {SAAS_TOOLS.every(tool => formData.currentTools.includes(tool.id)) ? 'Unselect all' : 'Select all'}
           </button>
@@ -951,8 +951,8 @@ export const SignupPage = () => {
             <div key={tool.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.currentTools.includes(tool.id)
-                ? "border-brand-solid bg-brand-50 shadow-sm"
-                : "border-secondary hover:border-gray-300"
+                ? "border-brand-solid bg-brand-primary shadow-sm"
+                : "border-secondary hover:border-primary"
             )}
             onClick={() => handleArrayToggle('currentTools')(tool.id)}
             >
@@ -962,7 +962,10 @@ export const SignupPage = () => {
                 <img 
                   src={tool.logo} 
                   alt={tool.name}
-                  className="max-w-full max-h-full object-contain"
+                  className={cx(
+                    "max-w-full max-h-full object-contain",
+                    (tool.id === "cookie-consent" || tool.id === "custom-code") && "logo-filter"
+                  )}
                 />
               </div>
               )}
@@ -980,7 +983,7 @@ export const SignupPage = () => {
       <div className="flex justify-end items-center gap-6">
         <button
           onClick={() => handleNext()}
-          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+          className="text-sm text-tertiary hover:text-tertiary_hover underline decoration-transparent hover:decoration-tertiary underline-offset-2 transition-all"
         >
           No integrations needed for now
         </button>
@@ -1023,8 +1026,8 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
                 formData.expectedUserCount === count.id
-                  ? "border-brand-solid bg-brand-50 shadow-sm"
-                  : "border-gray-300 hover:border-gray-400"
+                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  : "border-secondary hover:border-primary"
               )}
             >
               <span className="text-sm font-medium text-primary">{count.name}</span>
@@ -1058,7 +1061,7 @@ export const SignupPage = () => {
                 setFormData(prev => ({ ...prev, enterpriseFeatures: allFeatureIds }));
               }
             }}
-            className="text-sm font-medium text-purple-600 hover:text-purple-700 underline decoration-transparent hover:decoration-purple-600 underline-offset-2 transition-all"
+            className="text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
           >
             {ENTERPRISE_FEATURES.every(feature => formData.enterpriseFeatures.includes(feature.id)) ? 'Unselect all' : 'Select all'}
           </button>
@@ -1069,15 +1072,20 @@ export const SignupPage = () => {
             <div key={feature.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.enterpriseFeatures.includes(feature.id)
-                ? "border-brand-solid bg-brand-50 shadow-sm"
-                : "border-secondary hover:border-gray-300"
+                ? "border-brand-solid bg-brand-primary shadow-sm"
+                : "border-secondary hover:border-primary"
             )}
             onClick={() => handleArrayToggle('enterpriseFeatures')(feature.id)}
             >
-              <feature.icon className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0" />
+              <feature.icon className="w-5 h-5 text-brand-secondary mr-3 flex-shrink-0" />
               <div className="flex-1">
                 <div className="font-medium text-primary text-sm mb-1">{feature.name}</div>
-                <div className="text-xs text-tertiary">{feature.description}</div>
+                <div className={cx(
+                  "text-xs",
+                  formData.enterpriseFeatures.includes(feature.id)
+                    ? "text-secondary"
+                    : "text-tertiary"
+                )}>{feature.description}</div>
               </div>
             </div>
           ))}
@@ -1087,7 +1095,7 @@ export const SignupPage = () => {
       <div className="flex justify-end items-center gap-6">
         <button
           onClick={() => handleNext()}
-          className="text-sm text-gray-600 hover:text-gray-800 underline decoration-transparent hover:decoration-gray-600 underline-offset-2 transition-all"
+          className="text-sm text-tertiary hover:text-tertiary_hover underline decoration-transparent hover:decoration-tertiary underline-offset-2 transition-all"
         >
           Continue without enterprise features
         </button>
@@ -1216,10 +1224,10 @@ export const SignupPage = () => {
           <div key={plan.id} className={cx(
             "relative p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md flex flex-col",
             formData.selectedPlan === plan.id
-              ? "border-brand-solid bg-brand-50 shadow-sm"
+              ? "border-brand-solid bg-brand-primary/50 shadow-sm"
               : plan.recommended
-              ? "border-purple-300 bg-purple-50/30 hover:border-purple-400"
-              : "border-gray-200 hover:border-gray-300",
+              ? "border-brand-secondary bg-brand-primary/30 hover:border-brand-secondary"
+              : "border-secondary hover:border-primary",
             "min-h-[400px]",
             !showAllPlans && "max-w-sm w-full",
             plan.id === "enterprise" && billingPeriod === 'monthly' && "opacity-20"
@@ -1228,7 +1236,7 @@ export const SignupPage = () => {
           >
             {plan.recommended && (
               <div className="absolute -top-4 left-3 ">
-                <span className="bg-black text-white text-[0.8rem] font-medium px-3 py-1 rounded-md ">
+                <span className="bg-brand-solid text-white text-[0.8rem] font-medium px-3 py-1 rounded-md ">
                   Recommended based on your needs
                 </span>
               </div>
@@ -1236,34 +1244,79 @@ export const SignupPage = () => {
             
             <div className="mb-3">
               <div className="mb-2">
-                <h3 className="text-base font-semibold text-gray-900">{plan.name}</h3>
+                <h3 className={cx(
+                  "text-base font-semibold",
+                  formData.selectedPlan === plan.id
+                    ? "text-white"
+                    : "text-primary"
+                )}>{plan.name}</h3>
               </div>
               <div className=" min-h-[60px] flex flex-col justify-center">
                 {billingPeriod === 'annual' && plan.annualPrice && plan.price !== plan.annualPrice ? (
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[0.9rem] font-bold text-gray-400 line-through">{plan.price}</span>
-                      <span className="bg-green-100 text-green-700 text-xs font-medium px-1 py-0.5 rounded-md">
+                      <span className={cx(
+                        "text-[0.9rem] font-bold line-through",
+                        formData.selectedPlan === plan.id
+                          ? "text-gray-300"
+                          : "text-quaternary"
+                      )}>{plan.price}</span>
+                      <span className="bg-green-100 text-green-800 text-xs font-medium px-1 py-0.5 rounded-md">
                         Save {Math.round(((parseFloat(plan.price.replace('$', '').replace(',', '')) - parseFloat(plan.annualPrice.replace('$', '').replace(',', ''))) / parseFloat(plan.price.replace('$', '').replace(',', ''))) * 100)}%
                       </span>
                     </div>
                       <div className="flex items-baseline">
-                        <span className="text-3xl font-bold text-gray-900">{plan.annualPrice}</span>
-                        <span className="text-gray-600 ml-1">/m</span>
-                        <span className="text-sm text-gray-500 ml-2">{plan.annualTotal}</span>
+                        <span className={cx(
+                          "text-3xl font-bold",
+                          formData.selectedPlan === plan.id
+                            ? "text-white"
+                            : "text-primary"
+                        )}>{plan.annualPrice}</span>
+                        <span className={cx(
+                          "ml-1",
+                          formData.selectedPlan === plan.id
+                            ? "text-gray-200"
+                            : "text-tertiary"
+                        )}>/m</span>
+                        <span className={cx(
+                          "text-sm ml-2",
+                          formData.selectedPlan === plan.id
+                            ? "text-gray-300"
+                            : "text-quaternary"
+                        )}>{plan.annualTotal}</span>
                       </div>
                   </div>
                 ) : (
                   <div className="flex flex-col justify-center h-full">
                     <div className="flex items-baseline">
-                <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                 {plan.price !== "Contact Us" && <span className="text-gray-600 ml-1">/m</span>}
+                <span className={cx(
+                  "text-3xl font-bold",
+                  formData.selectedPlan === plan.id
+                    ? "text-white"
+                    : "text-primary"
+                )}>{plan.price}</span>
+                 {plan.price !== "Contact Us" && <span className={cx(
+                   "ml-1",
+                   formData.selectedPlan === plan.id
+                     ? "text-gray-200"
+                     : "text-tertiary"
+                 )}>/m</span>}
                  {billingPeriod === 'monthly' && plan.monthlyTotal && plan.monthlyTotal !== "Not Available" && plan.monthlyTotal !== "Contact Us" && (
-                   <span className="text-sm text-gray-500 ml-2">{plan.monthlyTotal}</span>
+                   <span className={cx(
+                     "text-sm ml-2",
+                     formData.selectedPlan === plan.id
+                       ? "text-gray-300"
+                       : "text-quaternary"
+                   )}>{plan.monthlyTotal}</span>
                  )}
                     </div>
                     {billingPeriod === 'monthly' && plan.monthlyTotal === "Not Available" && (
-                      <div className="text-sm text-black mt-1 font-medium">Only Annually</div>
+                      <div className={cx(
+                        "text-sm mt-1 font-medium",
+                        formData.selectedPlan === plan.id
+                          ? "text-white"
+                          : "text-primary"
+                      )}>Only Annually</div>
                     )}
                   </div>
                 )}
@@ -1272,20 +1325,35 @@ export const SignupPage = () => {
 
             <div className="space-y-1 mb-4 mt-4">
               {plan.features.map((feature, index) => (
-                <div key={index} className="flex items-center text-xs text-gray-600">
-                  <feature.icon className="w-3 h-3 mr-2 text-gray-500" />
+                <div key={index} className={cx(
+                  "flex items-center text-xs",
+                  formData.selectedPlan === plan.id
+                    ? "text-gray-200"
+                    : "text-tertiary"
+                )}>
+                  <feature.icon className={cx(
+                    "w-3 h-3 mr-2",
+                    formData.selectedPlan === plan.id
+                      ? "text-gray-300"
+                      : "text-quaternary"
+                  )} />
                   {feature.text}
                 </div>
               ))}
             </div>
 
             <div className="mb-4 mt-4">
-              <p className="text-xs text-gray-500 mb-1">Integrations</p>
+              <p className={cx(
+                "text-xs mb-1",
+                formData.selectedPlan === plan.id
+                  ? "text-gray-300"
+                  : "text-quaternary"
+              )}>Integrations</p>
               <div className="flex flex-wrap gap-2 justify-start">
                 {plan.id === "starter" ? (
                   <>
                     <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded logo-filter" />
                     <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
                     <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
                     <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
@@ -1295,14 +1363,14 @@ export const SignupPage = () => {
                 ) : plan.id === "growth" ? (
                   <>
                     <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded logo-filter" />
                     <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
                     <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
                     <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
                     <img src="/logos/s/discord.svg" alt="Discord" className="w-5 h-5 rounded" />
                     <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
                     <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded logo-filter" />
                     <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentrics" className="w-5 h-5 rounded" />
                     <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
                     <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
@@ -1318,14 +1386,14 @@ export const SignupPage = () => {
                 ) : (
                   <>
                     <img src="/logos/s/google-analytics-3.svg" alt="Google Analytics" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/cookie-svgrepo-com.svg" alt="Cookie Consent Manager" className="w-5 h-5 rounded logo-filter" />
                     <img src="/logos/s/zapier.svg" alt="Zapier" className="w-5 h-5 rounded" />
                     <img src="/logos/s/make.svg" alt="Make.com" className="w-5 h-5 rounded" />
                     <img src="/logos/s/slack-new-logo.svg" alt="Slack" className="w-5 h-5 rounded" />
                     <img src="/logos/s/discord.svg" alt="Discord" className="w-5 h-5 rounded" />
                     <img src="/logos/s/mailchimp logo.svg" alt="Mailchimp" className="w-5 h-5 rounded" />
                     <img src="/logos/s/google-tag-manager logo.svg" alt="Google Tag Manager" className="w-5 h-5 rounded" />
-                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded" />
+                    <img src="/logos/s/Custom-Code-Snippet.svg" alt="Custom Code Snippet" className="w-5 h-5 rounded logo-filter" />
                     <img src="/logos/s/Usercentrics_idibjbvDVZ_0.svg" alt="Usercentrics" className="w-5 h-5 rounded" />
                     <img src="/logos/s/OneTrust.svg" alt="OneTrust" className="w-5 h-5 rounded" />
                     <img src="/logos/s/fullstory-logo.svg" alt="Fullstory" className="w-5 h-5 rounded" />
@@ -1343,7 +1411,7 @@ export const SignupPage = () => {
             </div>
 
             {/* Card Footer - Action Button */}
-            <div className="mt-auto pt-4 border-t border-gray-100">
+            <div className="mt-auto pt-4 border-t border-tertiary">
               <Button
                 className="w-full"
                 color={plan.buttonStyle === "primary" ? "primary" : plan.buttonStyle === "secondary" ? "secondary" : "tertiary"}
@@ -1361,7 +1429,12 @@ export const SignupPage = () => {
                 href="https://bettermode.com/pricing" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="block text-center text-xs text-gray-400 hover:text-gray-600 transition-colors mt-1.5"
+                className={cx(
+                  "block text-center text-xs transition-colors mt-1.5",
+                  formData.selectedPlan === plan.id
+                    ? "text-gray-300 hover:text-gray-200"
+                    : "text-quaternary hover:text-tertiary"
+                )}
               >
                 See details →
               </a>
@@ -1413,37 +1486,37 @@ export const SignupPage = () => {
                 {/* First Row - Moving Left */}
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll space-x-3">
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                   </div>
                 </div>
@@ -1451,37 +1524,37 @@ export const SignupPage = () => {
                 {/* Second Row - Moving Right */}
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll-reverse space-x-3">
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                   </div>
                 </div>
@@ -1489,37 +1562,37 @@ export const SignupPage = () => {
                 {/* Third Row - Moving Left */}
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll space-x-3">
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter" />
                     </div>
-                    <div className="w-24 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center px-3 flex-shrink-0 hover:shadow-md transition-shadow">
-                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain" />
+                     <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter" />
                     </div>
                   </div>
                 </div>
@@ -1973,32 +2046,32 @@ export const SignupPage = () => {
                 <img 
                   src="/logos/G2/Ease of use -.svg" 
                   alt="G2 Ease of Use" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
                 <img 
                   src="/logos/G2/G2 - ease of use bussines.svg" 
                   alt="G2 Ease of Use Business" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
                 <img 
                   src="/logos/G2/G2 - high performer.svg" 
                   alt="G2 High Performer" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
                 <img 
                   src="/logos/G2/G2 -leaders.svg" 
                   alt="G2 Leaders" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
                 <img 
                   src="/logos/G2/G2 -support.svg" 
                   alt="G2 Support" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
                 <img 
                   src="/logos/G2/G2 momentom leader.svg" 
                   alt="G2 Momentum Leader" 
-                  className="h-32 w-32 border-2 border-gray-200 p-5 rounded-2xl bg-white object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto" 
+                   className="h-32 w-32 border-2 border-secondary p-5 rounded-2xl bg-primary object-contain opacity-90 hover:opacity-100 transition-opacity mx-auto"
                 />
               </div>
             </div>
@@ -2048,18 +2121,21 @@ export const SignupPage = () => {
                                {formData.currentTools.slice(0, 5).map(toolId => {
                                  const tool = SAAS_TOOLS.find(t => t.id === toolId);
                                  return tool && tool.logo ? (
-                                   <div key={toolId} className="w-7 h-7 bg-white rounded-full border border-gray-200 shadow-sm flex items-center justify-center">
+                                    <div key={toolId} className="w-7 h-7 bg-primary rounded-full border border-secondary flex items-center justify-center">
                                      <img 
                                        src={tool.logo} 
                                        alt={tool.name}
-                                       className="w-5 h-5 object-contain"
+                                       className={cx(
+                                         "w-5 h-5 object-contain",
+                                         (tool.id === "cookie-consent" || tool.id === "custom-code") && "logo-filter"
+                                       )}
                                      />
                                    </div>
                                  ) : null;
                                })}
                                {formData.currentTools.length > 5 && (
-                                 <div className="w-7 h-7 bg-gray-100 rounded-full border border-gray-200 shadow-sm flex items-center justify-center">
-                                   <span className="text-[10px] font-medium text-gray-600">
+                                  <div className="w-7 h-7 bg-secondary rounded-full border border-secondary flex items-center justify-center">
+                                    <span className="text-[10px] font-medium text-tertiary">
                                      +{formData.currentTools.length - 5}
                                    </span>
                                  </div>
@@ -2089,7 +2165,7 @@ export const SignupPage = () => {
                        <span className="inline">.</span>
                      </div>
                      <p className="text-lg mt-12 font-semibold text-primary">
-                       Our recommendation: <span className="text-purple-600 capitalize">{getRecommendedPlan()}</span> Plan
+                       Our recommendation: <span className="text-brand-secondary capitalize">{getRecommendedPlan()}</span> Plan
                      </p>
                   </div>
                 </div>
@@ -2203,7 +2279,7 @@ export const SignupPage = () => {
                     <img 
                       src="/logo-bettermode.svg" 
                       alt="bettermode" 
-                      className="h-6 w-auto"
+                      className="h-6 w-auto logo-filter"
                     />
                   </div>
                   
@@ -2212,15 +2288,15 @@ export const SignupPage = () => {
                     <img 
                       src="/logo-bettermode.svg" 
                       alt="bettermode" 
-                      className="h-8 w-auto"
+                      className="h-8 w-auto logo-filter"
                     />
                   </div>
 
-                  {/* Purple Minimal Progress */}
-                  <div className="w-full bg-purple-100 rounded-full h-0.5">
+                  {/* Brand Progress */}
+                  <div className="w-full bg-secondary rounded-full h-1">
                     <div 
-                      className="h-full bg-purple-600 rounded-full transition-all duration-500"
-                style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
+                      className="h-full bg-brand-secondary rounded-full transition-all duration-500"
+                      style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
                     />
                   </div>
           </header>
@@ -2344,14 +2420,14 @@ export const SignupPage = () => {
                     <div className="flex items-center justify-between">
                       <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
                       {currentStep === 11 && (
-                        <div className="flex bg-gray-100 rounded-lg p-1">
+                        <div className="flex bg-secondary rounded-lg p-1">
                           <button
                             onClick={() => setBillingPeriod('annual')}
                             className={cx(
                               "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                               billingPeriod === 'annual'
-                                ? "bg-white text-gray-900 shadow-sm"
-                                : "text-gray-600 hover:text-gray-900"
+                                ? "bg-primary text-primary shadow-sm"
+                                : "text-tertiary hover:text-primary"
                             )}
                           >
                             Annually
@@ -2361,8 +2437,8 @@ export const SignupPage = () => {
                             className={cx(
                               "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                               billingPeriod === 'monthly'
-                                ? "bg-white text-gray-900 shadow-sm"
-                                : "text-gray-600 hover:text-gray-900"
+                                ? "bg-primary text-primary shadow-sm"
+                                : "text-tertiary hover:text-primary"
                             )}
                           >
                             Monthly
@@ -2467,7 +2543,7 @@ export const SignupPage = () => {
           </div>
           
           {/* Mobile Navigation */}
-          <div className="xl:hidden p-4 border-t border-gray-200">
+          <div className="xl:hidden p-4 border-t border-secondary">
             <div className="flex gap-3">
               {currentStep > 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && currentStep !== 11 && (
                 <Button 
@@ -2508,18 +2584,18 @@ export const SignupPage = () => {
           {(currentStep >= 2 && currentStep <= 9) && (
             <div className="absolute bottom-8 left-6 right-6">
               <div className="grid grid-cols-4 gap-1 px-2">
-                <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/intercom-1.svg" alt="Intercom" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/Property 1=SuperOps, color=color.svg" alt="SuperOps" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/Property 1=Variant10, color=color.svg" alt="Variant10" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
-                <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-12 w-16 object-contain opacity-60 mx-auto filter grayscale" />
+                <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/intercom-1.svg" alt="Intercom" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/Property 1=SuperOps, color=color.svg" alt="SuperOps" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/Property 1=Variant10, color=color.svg" alt="Variant10" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
+                <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" />
               </div>
             </div>
           )}
