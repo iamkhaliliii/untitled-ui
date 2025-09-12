@@ -543,7 +543,7 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 h-16 rounded-lg border text-center transition-all hover:shadow-sm flex items-center justify-center",
                 formData.industry === industry.id
-                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
@@ -769,7 +769,7 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.role === role.id
-                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
@@ -872,7 +872,7 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
                 formData.companySize === size.id
-                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
@@ -951,7 +951,7 @@ export const SignupPage = () => {
             <div key={tool.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.currentTools.includes(tool.id)
-                ? "border-brand-solid bg-brand-primary shadow-sm"
+                ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                 : "border-secondary hover:border-primary"
             )}
             onClick={() => handleArrayToggle('currentTools')(tool.id)}
@@ -1026,7 +1026,7 @@ export const SignupPage = () => {
               className={cx(
                 "p-4 rounded-lg border text-center transition-all hover:shadow-sm",
                 formData.expectedUserCount === count.id
-                  ? "border-brand-solid bg-brand-primary shadow-sm"
+                  ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
@@ -1072,7 +1072,7 @@ export const SignupPage = () => {
             <div key={feature.id} className={cx(
               "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.enterpriseFeatures.includes(feature.id)
-                ? "border-brand-solid bg-brand-primary shadow-sm"
+                ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                 : "border-secondary hover:border-primary"
             )}
             onClick={() => handleArrayToggle('enterpriseFeatures')(feature.id)}
