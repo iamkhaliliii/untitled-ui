@@ -246,3 +246,12 @@ input[type="search"]::-webkit-search-cancel-button {
 .dark-mode .logo-filter {
     filter: brightness(0) saturate(100%) invert(1);
 }
+
+/* Logo filter only for dark mode - keeps original colors in light mode */
+.logo-filter-dark-only {
+    filter: none;
+}
+
+.dark-mode .logo-filter-dark-only {
+    filter: brightness(0) saturate(100%) invert(1);
+}

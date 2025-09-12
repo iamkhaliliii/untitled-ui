@@ -408,8 +408,9 @@ export const SignupPage = () => {
                 }
               }}
               className={cx(
-                "w-14 h-14 text-center text-lg font-semibold border rounded-lg",
+                "w-12 h-12 sm:w-14 sm:h-14 text-center text-base sm:text-lg font-semibold border rounded-lg bg-primary text-primary",
                 "focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-brand-solid",
+                "placeholder:text-placeholder",
                 errors.verificationCode ? "border-error-primary" : "border-primary"
               )}
             />
@@ -422,12 +423,12 @@ export const SignupPage = () => {
 
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-center gap-3 w-full">
-          <div className="flex gap-3">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 w-full">
+          <div className="flex gap-2 sm:gap-3">
             {renderCodeInputs().slice(0, 3)}
           </div>
-          <span className="text-quaternary text-lg mx-2">-</span>
-          <div className="flex gap-3">
+          <span className="text-quaternary text-base sm:text-lg mx-1 sm:mx-2">-</span>
+          <div className="flex gap-2 sm:gap-3">
             {renderCodeInputs().slice(3, 6)}
           </div>
         </div>
@@ -529,7 +530,7 @@ export const SignupPage = () => {
 
     return (
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {industries.map(industry => (
             <button
               key={industry.id}
@@ -541,13 +542,13 @@ export const SignupPage = () => {
                 }, 300);
               }}
               className={cx(
-                "p-4 h-16 rounded-lg border text-center transition-all hover:shadow-sm flex items-center justify-center",
+                "p-3 sm:p-4 h-14 sm:h-16 rounded-lg border text-center transition-all hover:shadow-sm flex items-center justify-center",
                 formData.industry === industry.id
                   ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
-              <span className="text-sm font-medium text-primary">{industry.name}</span>
+              <span className="text-xs sm:text-sm font-medium text-primary">{industry.name}</span>
             </button>
           ))}
         </div>
@@ -755,7 +756,7 @@ export const SignupPage = () => {
 
     return (
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {roles.map(role => (
             <button
               key={role.id}
@@ -767,13 +768,13 @@ export const SignupPage = () => {
                 }, 300);
               }}
               className={cx(
-                "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
+                "p-3 sm:p-4 rounded-lg border text-center transition-all hover:shadow-sm h-14 sm:h-16 flex items-center justify-center",
                 formData.role === role.id
                   ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
-              <span className="text-sm font-medium text-primary">{role.name}</span>
+              <span className="text-xs sm:text-sm font-medium text-primary">{role.name}</span>
             </button>
           ))}
         </div>
@@ -870,13 +871,13 @@ export const SignupPage = () => {
                 }, 300);
               }}
               className={cx(
-                "p-4 rounded-lg border text-center transition-all hover:shadow-sm h-16 flex items-center justify-center",
+                "p-3 sm:p-4 rounded-lg border text-center transition-all hover:shadow-sm h-14 sm:h-16 flex items-center justify-center",
                 formData.companySize === size.id
                   ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                   : "border-secondary hover:border-primary"
               )}
             >
-              <span className="text-sm font-medium text-primary">{size.name}</span>
+              <span className="text-xs sm:text-sm font-medium text-primary">{size.name}</span>
             </button>
           ))}
       </div>
@@ -946,10 +947,10 @@ export const SignupPage = () => {
           </button>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {SAAS_TOOLS.map(tool => (
             <div key={tool.id} className={cx(
-              "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
+              "flex items-center p-2 sm:p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.currentTools.includes(tool.id)
                 ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                 : "border-secondary hover:border-primary"
@@ -972,7 +973,7 @@ export const SignupPage = () => {
               
               {/* Text content */}
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-primary text-sm truncate">{tool.name}</div>
+                <div className="font-medium text-primary text-xs sm:text-sm truncate">{tool.name}</div>
               </div>
             </div>
           ))}
@@ -1067,10 +1068,10 @@ export const SignupPage = () => {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {ENTERPRISE_FEATURES.map(feature => (
             <div key={feature.id} className={cx(
-              "flex items-center p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
+              "flex items-center p-2 sm:p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm hover:-translate-y-0.5",
               formData.enterpriseFeatures.includes(feature.id)
                 ? "border-brand-solid bg-brand-primary/50 shadow-sm"
                 : "border-secondary hover:border-primary"
@@ -1079,7 +1080,7 @@ export const SignupPage = () => {
             >
               <feature.icon className="w-5 h-5 text-brand-secondary mr-3 flex-shrink-0" />
               <div className="flex-1">
-                <div className="font-medium text-primary text-sm mb-1">{feature.name}</div>
+                <div className="font-medium text-primary text-xs sm:text-sm mb-1">{feature.name}</div>
                 <div className={cx(
                   "text-xs",
                   formData.enterpriseFeatures.includes(feature.id)
@@ -1217,18 +1218,25 @@ export const SignupPage = () => {
       <div className="">
         
         <div className={cx(
-          "gap-4 w-full px-8",
-          showAllPlans ? "grid grid-cols-1 lg:grid-cols-3" : "flex justify-center"
+          "gap-4 w-full px-4 sm:px-6 md:px-8",
+          showAllPlans 
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" 
+            : "flex flex-col lg:flex-row lg:items-start lg:justify-center lg:gap-8"
         )}>
-          {displayPlans.map(plan => (
+          <div className={cx(
+            showAllPlans 
+              ? "contents" 
+              : "flex justify-center"
+          )}>
+            {displayPlans.map(plan => (
           <div key={plan.id} className={cx(
-            "relative p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md flex flex-col",
+            "relative p-3 sm:p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md flex flex-col",
             formData.selectedPlan === plan.id
               ? "border-brand-solid bg-brand-primary/50 shadow-sm"
               : plan.recommended
-              ? "border-brand-secondary bg-brand-primary/30 hover:border-brand-secondary"
+              ? "border-brand-300 bg-brand-primary_alt hover:border-brand-400"
               : "border-secondary hover:border-primary",
-            "min-h-[400px]",
+            "min-h-[350px] sm:min-h-[400px]",
             !showAllPlans && "max-w-sm w-full",
             plan.id === "enterprise" && billingPeriod === 'monthly' && "opacity-20"
           )}
@@ -1244,79 +1252,34 @@ export const SignupPage = () => {
             
             <div className="mb-3">
               <div className="mb-2">
-                <h3 className={cx(
-                  "text-base font-semibold",
-                  formData.selectedPlan === plan.id
-                    ? "text-white"
-                    : "text-primary"
-                )}>{plan.name}</h3>
+                <h3 className="text-base font-semibold text-primary">{plan.name}</h3>
               </div>
               <div className=" min-h-[60px] flex flex-col justify-center">
                 {billingPeriod === 'annual' && plan.annualPrice && plan.price !== plan.annualPrice ? (
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className={cx(
-                        "text-[0.9rem] font-bold line-through",
-                        formData.selectedPlan === plan.id
-                          ? "text-gray-300"
-                          : "text-quaternary"
-                      )}>{plan.price}</span>
+                      <span className="text-[0.9rem] font-bold line-through text-quaternary">{plan.price}</span>
                       <span className="bg-green-100 text-green-800 text-xs font-medium px-1 py-0.5 rounded-md">
                         Save {Math.round(((parseFloat(plan.price.replace('$', '').replace(',', '')) - parseFloat(plan.annualPrice.replace('$', '').replace(',', ''))) / parseFloat(plan.price.replace('$', '').replace(',', ''))) * 100)}%
                       </span>
                     </div>
                       <div className="flex items-baseline">
-                        <span className={cx(
-                          "text-3xl font-bold",
-                          formData.selectedPlan === plan.id
-                            ? "text-white"
-                            : "text-primary"
-                        )}>{plan.annualPrice}</span>
-                        <span className={cx(
-                          "ml-1",
-                          formData.selectedPlan === plan.id
-                            ? "text-gray-200"
-                            : "text-tertiary"
-                        )}>/m</span>
-                        <span className={cx(
-                          "text-sm ml-2",
-                          formData.selectedPlan === plan.id
-                            ? "text-gray-300"
-                            : "text-quaternary"
-                        )}>{plan.annualTotal}</span>
+                        <span className="text-3xl font-bold text-primary">{plan.annualPrice}</span>
+                        <span className="ml-1 text-tertiary">/m</span>
+                        <span className="text-sm ml-2 text-quaternary">{plan.annualTotal}</span>
                       </div>
                   </div>
                 ) : (
                   <div className="flex flex-col justify-center h-full">
                     <div className="flex items-baseline">
-                <span className={cx(
-                  "text-3xl font-bold",
-                  formData.selectedPlan === plan.id
-                    ? "text-white"
-                    : "text-primary"
-                )}>{plan.price}</span>
-                 {plan.price !== "Contact Us" && <span className={cx(
-                   "ml-1",
-                   formData.selectedPlan === plan.id
-                     ? "text-gray-200"
-                     : "text-tertiary"
-                 )}>/m</span>}
+                <span className="text-3xl font-bold text-primary">{plan.price}</span>
+                 {plan.price !== "Contact Us" && <span className="ml-1 text-tertiary">/m</span>}
                  {billingPeriod === 'monthly' && plan.monthlyTotal && plan.monthlyTotal !== "Not Available" && plan.monthlyTotal !== "Contact Us" && (
-                   <span className={cx(
-                     "text-sm ml-2",
-                     formData.selectedPlan === plan.id
-                       ? "text-gray-300"
-                       : "text-quaternary"
-                   )}>{plan.monthlyTotal}</span>
+                   <span className="text-sm ml-2 text-quaternary">{plan.monthlyTotal}</span>
                  )}
                     </div>
                     {billingPeriod === 'monthly' && plan.monthlyTotal === "Not Available" && (
-                      <div className={cx(
-                        "text-sm mt-1 font-medium",
-                        formData.selectedPlan === plan.id
-                          ? "text-white"
-                          : "text-primary"
-                      )}>Only Annually</div>
+                      <div className="text-sm mt-1 font-medium text-primary">Only Annually</div>
                     )}
                   </div>
                 )}
@@ -1325,30 +1288,15 @@ export const SignupPage = () => {
 
             <div className="space-y-1 mb-4 mt-4">
               {plan.features.map((feature, index) => (
-                <div key={index} className={cx(
-                  "flex items-center text-xs",
-                  formData.selectedPlan === plan.id
-                    ? "text-gray-200"
-                    : "text-tertiary"
-                )}>
-                  <feature.icon className={cx(
-                    "w-3 h-3 mr-2",
-                    formData.selectedPlan === plan.id
-                      ? "text-gray-300"
-                      : "text-quaternary"
-                  )} />
+                <div key={index} className="flex items-center text-xs text-tertiary">
+                  <feature.icon className="w-3 h-3 mr-2 text-quaternary" />
                   {feature.text}
                 </div>
               ))}
             </div>
 
             <div className="mb-4 mt-4">
-              <p className={cx(
-                "text-xs mb-1",
-                formData.selectedPlan === plan.id
-                  ? "text-gray-300"
-                  : "text-quaternary"
-              )}>Integrations</p>
+              <p className="text-xs mb-1 text-quaternary">Integrations</p>
               <div className="flex flex-wrap gap-2 justify-start">
                 {plan.id === "starter" ? (
                   <>
@@ -1429,27 +1377,25 @@ export const SignupPage = () => {
                 href="https://bettermode.com/pricing" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className={cx(
-                  "block text-center text-xs transition-colors mt-1.5",
-                  formData.selectedPlan === plan.id
-                    ? "text-gray-300 hover:text-gray-200"
-                    : "text-quaternary hover:text-tertiary"
-                )}
+                className="block text-center text-xs transition-colors mt-1.5 text-quaternary hover:text-tertiary"
               >
                 See details →
               </a>
             </div>
             </div>
           ))}
+          </div>
           
           {!showAllPlans && (
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => setShowAllPlans(true)}
-                className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors"
-              >
-                Other plans →
-              </button>
+            <div className="flex lg:flex-col lg:justify-center lg:items-start lg:self-center">
+              <div className="flex justify-center mt-6 lg:mt-0">
+                <button
+                  onClick={() => setShowAllPlans(true)}
+                  className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors lg:whitespace-nowrap"
+                >
+                  Other plans →
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -1487,36 +1433,36 @@ export const SignupPage = () => {
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll space-x-3">
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/hubspot.svg" alt="HubSpot" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/ibm.svg" alt="IBM" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/xano.svg" alt="Xano" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/CoachHub.svg" alt="CoachHub" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/lenovo.svg" alt="Lenovo" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                   </div>
                 </div>
@@ -1525,36 +1471,36 @@ export const SignupPage = () => {
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll-reverse space-x-3">
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/intercom-1.svg" alt="Intercom" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/slack-2.svg" alt="Slack" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/zendesk-1.svg" alt="Zendesk" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/logitech.svg" alt="Logitech" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/viewsonic.svg" alt="ViewSonic" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                   </div>
                 </div>
@@ -1563,36 +1509,36 @@ export const SignupPage = () => {
                 <div className="relative overflow-hidden">
                   <div className="flex animate-infinite-scroll space-x-3">
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                     
                     {/* Duplicate for seamless loop */}
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/yoto.svg" alt="Yoto" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/Ceros.svg" alt="Ceros" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/Flutterflow.svg" alt="FlutterFlow" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/l_backup/preply.svg" alt="Preply" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                      <div className="w-24 h-16 bg-primary rounded-lg border border-secondary flex items-center justify-center px-3 flex-shrink-0 hover:border-primary transition-all">
-                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter" />
+                      <img src="/logos/s/salesforce.svg" alt="Salesforce" className="h-8 w-auto object-contain logo-filter-dark-only" />
                     </div>
                   </div>
                 </div>
@@ -2273,7 +2219,7 @@ export const SignupPage = () => {
         {/* Left Column - Form (2/3) - Scrollable */}
         <div className="flex w-full flex-col bg-primary xl:h-screen xl:overflow-hidden">
           {/* Header */}
-          <header className="flex flex-col gap-6 px-4 py-6 sm:px-6 md:px-8 lg:px-8 xl:px-8">
+          <header className="flex flex-col gap-4 px-4 py-4 sm:gap-6 sm:py-6 sm:px-6 md:px-8 lg:px-8 xl:px-8">
             {/* Logo */}
                   <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
                     <img 
@@ -2302,14 +2248,14 @@ export const SignupPage = () => {
           </header>
 
           <div className="flex-1 xl:overflow-y-auto xl:scrollbar-thin">
-            <div className="flex justify-center items-start min-h-full px-4 py-8 sm:py-12 md:px-6 lg:px-8 xl:py-8">
+            <div className="flex justify-center items-start min-h-full px-4 py-6 sm:py-8 md:px-6 lg:px-8 xl:py-8">
                 <div className={cx(
-                  "flex w-full flex-col gap-6 sm:gap-8 pb-8",
+                  "flex w-full flex-col gap-4 sm:gap-6 md:gap-8 pb-6 sm:pb-8",
                   currentStep === 11 
-                    ? "max-w-5xl" 
+                    ? "max-w-6xl" 
                     : currentStep >= 1 && currentStep <= 2
-                    ? "max-w-md"
-                    : "max-w-2xl"
+                    ? "max-w-sm sm:max-w-md"
+                    : "max-w-lg sm:max-w-xl md:max-w-2xl"
                 )}>
                 {/* Form Content */}
                 <div className="flex flex-col gap-6">
@@ -2417,10 +2363,13 @@ export const SignupPage = () => {
                         </button>
                       </div>
                     )}
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div>
+                        <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{getStepTitle()}</h1>
+                        <p className="text-md text-tertiary mt-2">{getStepDescription()}</p>
+                      </div>
                       {currentStep === 11 && (
-                        <div className="flex bg-secondary rounded-lg p-1">
+                        <div className="flex bg-secondary rounded-lg p-1 mx-auto sm:mx-0">
                           <button
                             onClick={() => setBillingPeriod('annual')}
                             className={cx(
@@ -2446,30 +2395,10 @@ export const SignupPage = () => {
                         </div>
                       )}
                     </div>
-                    <p className="text-md text-tertiary">{getStepDescription()}</p>
                   </div>
                 </div>
 
                 {/* Mobile Stats - Show impressive numbers on mobile */}
-                {currentStep === 1 && (
-                  <div className="xl:hidden bg-gradient-to-r from-brand-50 to-purple-50 rounded-lg p-6 border border-brand-200">
-                    <div className="text-center">
-                      <h3 className="text-sm font-bold text-primary mb-4 leading-relaxed">
-                        More than <span className="text-lg font-extrabold text-brand-solid">4 million</span> people across <span className="text-lg font-extrabold text-brand-solid">2,000</span> enterprise communities
-                      </h3>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-extrabold text-primary">4,000,000+</div>
-                          <div className="text-xs text-tertiary font-medium">People</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-extrabold text-primary">2,000+</div>
-                          <div className="text-xs text-tertiary font-medium">Communities</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {/* Form Content */}
                 <div className="flex flex-col gap-6">
@@ -2486,33 +2415,6 @@ export const SignupPage = () => {
                   {currentStep === 10 && renderStep11()}
                   {currentStep === 11 && renderStep12()}
 
-                  {/* Mobile testimonial - shows on small screens */}
-                  {(currentStep === 7 || currentStep === 9) && (
-                    <div className="xl:hidden bg-gray-50 rounded-lg p-4 border">
-                      <div className="flex items-start gap-3">
-                        <img 
-                          src={TESTIMONIALS[1].avatar}
-                          alt=""
-                          className="w-8 h-8 rounded-full"
-                        />
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-700 italic mb-2">
-                            "{TESTIMONIALS[1].quote.substring(0, 120)}..."
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <cite className="text-xs text-gray-600 not-italic">
-                              — {TESTIMONIALS[1].author}
-                            </cite>
-                            <div className="flex gap-0.5">
-                              {[...Array(5)].map((_, i) => (
-                                <Star01 key={i} className="w-3 h-3 text-yellow-400 fill-current" />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
 
                   {/* Sign in link */}
