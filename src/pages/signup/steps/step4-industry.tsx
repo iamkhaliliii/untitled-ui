@@ -195,9 +195,9 @@ export const Step4Industry = ({
             key={industry.id}
             onClick={() => {
               onInputChange('industry')(industry.id);
-              // If "Other" is selected, reset search state and just show the button
+              // If "Other" is selected, immediately show search input
               if (industry.id === 'other') {
-                onShowIndustrySearch(false);
+                onShowIndustrySearch(true);
               } else {
                 // For all other selections, auto-advance to next step
                 setTimeout(() => {
@@ -217,17 +217,9 @@ export const Step4Industry = ({
         ))}
       </div>
 
-      {(!showIndustrySearch && formData.industry === 'other') ? (
-        <button
-          onClick={() => onShowIndustrySearch(true)}
-          className="mx-auto text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
-        >
-          Can't find your industry? Search all industries here
-        </button>
-      ) : null}
 
       {showIndustrySearch ? (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <Select.ComboBox 
             label="Search industries" 
             placeholder="Type to search..." 
@@ -247,6 +239,16 @@ export const Step4Industry = ({
               </Select.Item>
             )}
           </Select.ComboBox>
+          
+          {/* Skip button for "Other" selection */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => onNext(true)}
+              className="text-sm text-tertiary hover:text-tertiary_hover underline decoration-transparent hover:decoration-tertiary underline-offset-2 transition-all"
+            >
+              Skip, and Continue →
+            </button>
+          </div>
         </div>
       ) : null}
 

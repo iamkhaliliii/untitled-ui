@@ -31,7 +31,8 @@ export const Step5Role = ({
     { id: "product-marketing", name: "Product Marketing" },
     { id: "customer-marketing", name: "Customer Marketing" },
     { id: "growth-marketing", name: "Growth Marketing" },
-    { id: "revops", name: "RevOps" }
+    { id: "revops", name: "RevOps" },
+    { id: "other", name: "Other" }
   ];
 
   return (
@@ -42,10 +43,15 @@ export const Step5Role = ({
             key={role.id}
             onClick={() => {
               onInputChange('role')(role.id);
-              // Auto-advance to next step after selection
-              setTimeout(() => {
-                onNext(true);
-              }, 300);
+              // If "Other" is selected, immediately show search input
+              if (role.id === 'other') {
+                onShowRoleSearch(true);
+              } else {
+                // Auto-advance to next step after selection
+                setTimeout(() => {
+                  onNext(true);
+                }, 300);
+              }
             }}
             className={cx(
               "p-3 sm:p-4 rounded-lg border text-center transition-all hover:shadow-sm h-14 sm:h-16 flex items-center justify-center",
@@ -59,15 +65,8 @@ export const Step5Role = ({
         ))}
       </div>
 
-      {!showRoleSearch ? (
-        <button
-          onClick={() => onShowRoleSearch(true)}
-          className="mx-auto text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover underline decoration-transparent hover:decoration-brand-secondary underline-offset-2 transition-all"
-        >
-          None of these describe my role
-        </button>
-      ) : (
-        <div className="flex flex-col gap-3">
+      {showRoleSearch ? (
+        <div className="flex flex-col gap-4">
           <Input
             label="Describe your role"
             placeholder="Type your role..."
@@ -76,8 +75,15 @@ export const Step5Role = ({
             autoFocus
           />
           
-          {customRole.trim() && (
-            <div className="flex justify-end">
+          <div className="flex justify-end items-center gap-6">
+            <button
+              onClick={() => onNext(true)}
+              className="text-sm text-tertiary hover:text-tertiary_hover underline decoration-transparent hover:decoration-tertiary underline-offset-2 transition-all"
+            >
+              Skip, and Continue →
+            </button>
+            
+            {customRole.trim() && (
               <Button
                 iconTrailing={ArrowRight}
                 onClick={() => {
@@ -90,10 +96,10 @@ export const Step5Role = ({
               >
                 Continue
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      )}
+      ) : null}
 
       {errors.role && (
         <p className="text-sm text-error-primary text-center">{errors.role}</p>

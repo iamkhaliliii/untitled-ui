@@ -75,7 +75,7 @@ export const getStepTitle = (currentStep: number, formData: SignupFormData): str
     `How many people work at ${formData.companyName || 'your company'}?`, 
     `What is ${formData.companyName || 'your company'}'s website?`, 
     "Communities are much more powerful with awesome integrations", 
-    "Enterprise controls & compliance", 
+    "Looking for enterprise‑grade control and support?", 
     ""
   ];
   return titles[currentStep - 1] || "";
@@ -92,7 +92,7 @@ export const getStepDescription = (currentStep: number, formData: SignupFormData
     "",
     "",
     "Choose as many as you want. It helps us guide you to the right plan.",
-    "If any of these are required by your organization, select them. We'll tailor your plan and setup accordingly.",
+    "Get advanced security, enterprise controls, and a dedicated CSM. We'll tailor your plan in a quick call with our sales team.",
     "",
     ""
   ];

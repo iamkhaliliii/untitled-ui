@@ -1,4 +1,5 @@
 import { cx } from "@/utils/cx";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 import { SignupFormData } from "../types";
 import { getRecommendedPlan, generatePlanRecommendationText, joinWithAnd } from "../utils";
 import { SAAS_TOOLS } from "../constants";
@@ -73,62 +74,63 @@ export const PlanRecommendation = ({ formData }: PlanRecommendationProps) => {
     
     return (
       <div className="space-y-4">
-        <div className="text-xl text-primary leading-relaxed">
-          <p>
-            <span className="font-semibold">{name}</span>{roleClause} at{" "}
-            <span className="font-semibold">{company}</span>.
-          </p>
-          <p className="mt-4">
-            Based on what you shared about <span className="font-semibold">{company}</span> — a{" "}
-            <span className="font-semibold">{companySize} {industry}</span> company
-            {formData.currentTools.length > 0 && (
-              <span className="inline-flex items-center">
-                {" "}using{" "}
-                <span className="inline-flex -space-x-1 mx-2">
-                  {formData.currentTools.slice(0, 5).map((toolId) => {
-                    const tool = SAAS_TOOLS.find(t => t.id === toolId);
-                    return tool && tool.logo ? (
-                      <div key={toolId} className="w-8 h-8 bg-primary rounded-full border border-secondary flex items-center justify-center">
-                        <img 
-                          src={tool.logo} 
-                          alt={tool.name}
-                          className={cx(
-                            "w-5 h-5 object-contain",
-                            (tool.id === "cookie-consent" || tool.id === "custom-code") && "logo-filter"
-                          )}
-                        />
-                      </div>
-                    ) : null;
-                  })}
-                  {formData.currentTools.length > 5 && (
-                    <div className="w-8 h-8 bg-secondary rounded-full border border-secondary flex items-center justify-center">
-                      <span className="text-xs font-medium text-tertiary">
-                        +{formData.currentTools.length - 5}
-                      </span>
-                    </div>
-                  )}
-                </span>
-              </span>
-            )} — the{" "}
-            <span className="font-bold text-brand-secondary capitalize">{recommendedPlan}</span> plan is the best fit.
-          </p>
-          <p className="mt-4">
-            It provides <span className="font-semibold">{joinWithAnd(benefits)}</span> so the organization can grow confidently.
-          </p>
-        </div>
-        
-        <div className="mt-8 pt-4 border-t border-secondary/30">
-          <p className="text-sm text-tertiary italic">
-            — Mo, CEO at Bettermode
-          </p>
-        </div>
+        <TypingAnimation 
+          startOnView={true}
+          duration={45}
+          className="text-xl text-primary leading-relaxed font-normal text-left"
+        >
+          {(() => {
+            // Generate tool avatars (max 5 + "and more")
+            const toolAvatars = formData.currentTools.slice(0, 5).map(toolId => {
+              const tool = SAAS_TOOLS.find(t => t.id === toolId);
+              return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
+            }).filter(Boolean).join('');
+            
+            const moreText = formData.currentTools.length > 5 ? ' and more' : '';
+            const toolsText = formData.currentTools.length > 0 ? `, using ${toolAvatars}${moreText}` : "";
+            
+            const sizeMap: Record<string, string> = {
+              "under-50": "under-50-person",
+              "50-200": "50–200-person", 
+              "200-500": "200–500-person",
+              "over-500": "500+-person"
+            };
+            const companySize = sizeMap[formData.companySize] || formData.companySize;
+            
+            const industryMap: Record<string, string> = {
+              "b2b-saas": "B2B SaaS",
+              "software": "software",
+              "technology": "technology",
+              "ai": "AI",
+              "medical-saas": "medical SaaS",
+              "martech": "MarTech",
+              "adtech": "AdTech",
+              "marketplace": "marketplace",
+              "edtech": "EdTech",
+              "dev-tools": "dev tools",
+              "other": "technology"
+            };
+            const industry = industryMap[formData.industry] || formData.industry?.replace('-', ' ') || 'technology';
+            
+            const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
+            
+            return `**${name}**${roleClause} at **${company}**.\n\nBased on what you shared about **${company}** — a **${companySize} ${industry}** company${toolsText} — the {{${planName}}} plan is the best fit.\n\nIt provides **${joinWithAnd(benefits)}** so the organization can grow confidently.\n\n[[Mo Malayery]]\n((CEO at Bettermode))`;
+          })()}
+        </TypingAnimation>
 
-        {/* Compact warning if selected plan doesn't match recommendation */}
+        {/* Simple recommendation note */}
         {formData.selectedPlan !== recommendedPlan && (
-          <div className="mt-6 p-4 bg-orange-50/50 border-l-2 border-orange-300 rounded">
-            <div className="text-sm text-orange-700">
-              <p className="font-medium">
+          <div className="mt-8">
+            <div className="text-xs text-tertiary">
+              <p className="leading-relaxed">
                 {(() => {
+                  const recommendedPlan = getRecommendedPlan(formData);
+                  const selectedPlan = formData.selectedPlan;
+                  
+                  // Show "Why not [recommended plan]?" when user selects different plan
+                  const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
+                  return `Why not ${planName}?`;
+                })()}{" "}{(() => {
                   const recommendedPlan = getRecommendedPlan(formData);
                   const selectedPlan = formData.selectedPlan;
                   
@@ -156,9 +158,9 @@ export const PlanRecommendation = ({ formData }: PlanRecommendationProps) => {
                     if (selectedEnterpriseFeatures.includes("data-residency")) features.push("data residency");
                     
                     if (features.length > 0) {
-                      return `💡 Why not Enterprise? It doesn't include ${features.join("/")}, CSM, and security/legal reviews.`;
+                      return `Why not Enterprise? It doesn't include ${features.join("/")}, CSM, and security/legal reviews.`;
                     }
-                    return "💡 Why not Enterprise? Enterprise-grade controls like SAML/JWT/SLA/CSM aren't available on Growth.";
+                    return "Why not Enterprise? Enterprise-grade controls like SAML/JWT/SLA/CSM aren't available on Growth.";
                   }
                   
                   if (recommendedPlan === "enterprise" && selectedPlan === "starter") {
@@ -184,7 +186,7 @@ export const PlanRecommendation = ({ formData }: PlanRecommendationProps) => {
                       missing.push(`${toolNames.join("/")} integrations`);
                     }
                     missing.push("Enterprise security", "CSM", "SLA", "security/legal reviews");
-                    return `💡 Why not Enterprise? It doesn't include ${missing.join(", ")}.`;
+                    return `Why not Starter? It doesn't include ${missing.join(", ")}.`;
                   }
                   
                   if (recommendedPlan === "growth" && selectedPlan === "starter") {

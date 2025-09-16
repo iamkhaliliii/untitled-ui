@@ -142,13 +142,11 @@ export const SignupPage = () => {
       setSelectedSecurityLevel(level);
       
       if (level === 'basic') {
-        // Clear enterprise features and set basic security
-                setFormData(prev => ({ ...prev, enterpriseFeatures: [] }));
-              } else {
-        // Select all enterprise features
-        const allFeatureIds = ENTERPRISE_FEATURES.map(feature => feature.id);
-                setFormData(prev => ({ ...prev, enterpriseFeatures: allFeatureIds }));
-              }
+        // Clear enterprise features when choosing basic
+        setFormData(prev => ({ ...prev, enterpriseFeatures: [] }));
+      }
+      // Don't auto-select all enterprise features when choosing enterprise
+      // Let user select individually
   };
 
   const renderCurrentStep = () => {
@@ -250,6 +248,7 @@ export const SignupPage = () => {
             selectedSecurityLevel={selectedSecurityLevel}
             onSecuritySelection={handleSecuritySelection}
             onNext={handleNext}
+            onArrayToggle={handleArrayToggle}
           />
         );
       case 11:
@@ -342,6 +341,12 @@ export const SignupPage = () => {
                     {currentStep === 4 && (
                       <div className="">
                         <p className="text-lg text-tertiary">Nice to meet you <span className="font-bold">{formData.firstName}</span>!</p>
+                      </div>
+                    )}
+                    
+                    {currentStep === 5 && (
+                      <div className="">
+                        <p className="text-lg text-tertiary">Dear <span className="font-bold">{formData.firstName}</span>,</p>
                       </div>
                     )}
                     
