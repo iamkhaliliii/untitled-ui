@@ -6,7 +6,7 @@ import { cx } from "@/utils/cx";
 
 // Import types and utilities
 import { SignupFormData } from "./signup/types";
-import { validateStep, getStepTitle, getStepDescription, getRecommendedPlan } from "./signup/utils";
+import { validateStep, getStepTitle, getStepDescription } from "./signup/utils";
 import { SAAS_TOOLS, ENTERPRISE_FEATURES } from "./signup/constants";
 
 // Import step components
@@ -95,14 +95,7 @@ export const SignupPage = () => {
 
   const handleNext = (skipValidation = false) => {
     if (skipValidation || handleValidateStep(currentStep)) {
-      const nextStep = Math.min(currentStep + 1, 11);
-      setCurrentStep(nextStep);
-      
-      // Auto-select recommended plan when reaching step 11
-      if (nextStep === 11) {
-        const recommendedPlan = getRecommendedPlan(formData);
-        setFormData(prev => ({ ...prev, selectedPlan: recommendedPlan }));
-      }
+      setCurrentStep(prev => Math.min(prev + 1, 11));
     }
   };
 
@@ -126,29 +119,29 @@ export const SignupPage = () => {
   };
 
   const handleSelectAllTools = () => {
-              const allToolIds = SAAS_TOOLS.map(tool => tool.id);
-              const allSelected = allToolIds.every(id => formData.currentTools.includes(id));
-              
-              if (allSelected) {
-                // Unselect all tools
-                setFormData(prev => ({ ...prev, currentTools: [] }));
-              } else {
-                // Select all tools
-                setFormData(prev => ({ ...prev, currentTools: allToolIds }));
-              }
+    const allToolIds = SAAS_TOOLS.map(tool => tool.id);
+    const allSelected = allToolIds.every(id => formData.currentTools.includes(id));
+    
+    if (allSelected) {
+      // Unselect all tools
+      setFormData(prev => ({ ...prev, currentTools: [] }));
+    } else {
+      // Select all tools
+      setFormData(prev => ({ ...prev, currentTools: allToolIds }));
+    }
   };
 
-    const handleSecuritySelection = (level: 'basic' | 'enterprise') => {
-      setSelectedSecurityLevel(level);
-      
-      if (level === 'basic') {
-        // Clear enterprise features and set basic security
-                setFormData(prev => ({ ...prev, enterpriseFeatures: [] }));
-              } else {
-        // Select all enterprise features
-        const allFeatureIds = ENTERPRISE_FEATURES.map(feature => feature.id);
-                setFormData(prev => ({ ...prev, enterpriseFeatures: allFeatureIds }));
-              }
+  const handleSecuritySelection = (level: 'basic' | 'enterprise') => {
+    setSelectedSecurityLevel(level);
+    
+    if (level === 'basic') {
+      // Clear enterprise features and set basic security
+      setFormData(prev => ({ ...prev, enterpriseFeatures: [] }));
+    } else {
+      // Select all enterprise features
+      const allFeatureIds = ENTERPRISE_FEATURES.map(feature => feature.id);
+      setFormData(prev => ({ ...prev, enterpriseFeatures: allFeatureIds }));
+    }
   };
 
   const renderCurrentStep = () => {
@@ -276,53 +269,53 @@ export const SignupPage = () => {
   return (
     <div className="bg-primary antialiased">
       <section className={cx(
-        "flex min-h-screen bg-primary",
-        currentStep === 11 ? "lg:grid lg:grid-cols-1" : "lg:grid lg:grid-cols-[2fr_1fr]"
+        "flex min-h-screen bg-primary lg:grid lg:grid-cols-1",
+        currentStep === 11 ? "xl:grid-cols-1" : "xl:grid xl:grid-cols-[2fr_1fr]"
       )}>
         {/* Left Column - Form (2/3) - Scrollable */}
-        <div className="flex w-full flex-col bg-primary lg:h-screen lg:overflow-hidden">
+        <div className="flex w-full flex-col bg-primary xl:h-screen xl:overflow-hidden">
           {/* Header */}
           <header className="flex flex-col gap-4 px-4 py-4 sm:gap-6 sm:py-6 sm:px-6 md:px-8 lg:px-8 xl:px-8">
             {/* Logo */}
-                  <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
-                    <img 
-                      src="/logo-bettermode.svg" 
-                      alt="bettermode" 
-                      className="h-6 w-auto logo-filter"
-                    />
-                  </div>
-                  
-                  {/* Mobile Logo */}
-                  <div className="flex items-center justify-center md:hidden">
-                    <img 
-                      src="/logo-bettermode.svg" 
-                      alt="bettermode" 
-                      className="h-8 w-auto logo-filter"
-                    />
-                  </div>
+            <div className="flex h-8 w-max items-center justify-start overflow-visible max-md:hidden">
+              <img 
+                src="/logo-bettermode.svg" 
+                alt="bettermode" 
+                className="h-6 w-auto logo-filter"
+              />
+            </div>
+            
+            {/* Mobile Logo */}
+            <div className="flex items-center justify-center md:hidden">
+              <img 
+                src="/logo-bettermode.svg" 
+                alt="bettermode" 
+                className="h-8 w-auto logo-filter"
+              />
+            </div>
 
             {/* Progress Bar */}
-                  <div className="w-full bg-secondary rounded-full h-1">
-                    <div 
-                      className="h-full bg-brand-secondary rounded-full transition-all duration-500"
-                      style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
-                    />
-                  </div>
+            <div className="w-full bg-secondary rounded-full h-1">
+              <div 
+                className="h-full bg-brand-secondary rounded-full transition-all duration-500"
+                style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
+              />
+            </div>
           </header>
 
-          <div className="flex-1 lg:overflow-y-auto lg:scrollbar-thin">
-                <div className={cx(
+          <div className="flex-1 xl:overflow-y-auto xl:scrollbar-thin">
+            <div className={cx(
               "flex justify-center items-start min-h-full py-6 sm:py-8 xl:py-8",
               currentStep === 11 ? "px-24" : "px-4 md:px-6 lg:px-8"
             )}>
-                <div className={cx(
-                  "flex w-full flex-col pb-6 sm:pb-8",
-                  currentStep === 11 
-                    ? "w-full" 
-                    : currentStep >= 1 && currentStep <= 2
-                  ? "max-w-sm sm:max-w-md gap-4 sm:gap-6 md:gap-8"
-                    : "max-w-lg sm:max-w-xl md:max-w-2xl gap-4 sm:gap-6 md:gap-8"
-                )}>
+              <div className={cx(
+                "flex w-full flex-col pb-6 sm:pb-8",
+                currentStep === 11 
+                  ? "w-full" 
+                  : currentStep >= 1 && currentStep <= 2
+                  ? "max-w-sm sm:max-w-md"
+                  : "max-w-lg sm:max-w-xl md:max-w-2xl gap-4 sm:gap-6 md:gap-8"
+              )}>
                 {/* Form Content */}
                 <div className="flex flex-col gap-6">
                   {/* Step Content */}
@@ -346,17 +339,17 @@ export const SignupPage = () => {
                     )}
                     
                     {currentStep !== 11 && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
                           <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">
                             {getStepTitle(currentStep, formData)}
                           </h1>
                           <p className="text-md text-tertiary mt-2">
                             {getStepDescription(currentStep, formData)}
                           </p>
-                      </div>
                         </div>
-                      )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -364,39 +357,39 @@ export const SignupPage = () => {
                 {currentStep === 11 ? (
                   renderCurrentStep()
                 ) : (
-                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-6">
                     {renderCurrentStep()}
                   </div>
                 )}
 
-                  {/* Sign in link */}
-                  {currentStep === 1 && (
-                    <div className="flex justify-center gap-1 text-center">
-                      <span className="text-sm text-tertiary">Already have an account?</span>
-                      <button 
-                        onClick={() => navigate('/login')}
-                        className="text-sm font-semibold text-brand-secondary hover:text-brand-secondary_hover"
-                      >
-                        Sign in
-                      </button>
-                    </div>
-                  )}
+                {/* Sign in link */}
+                {currentStep === 1 && (
+                  <div className="flex justify-center gap-1 text-center">
+                    <span className="text-sm text-tertiary">Already have an account?</span>
+                    <button 
+                      onClick={() => navigate('/login')}
+                      className="text-sm font-semibold text-brand-secondary hover:text-brand-secondary_hover"
+                    >
+                      Sign in
+                    </button>
+                  </div>
+                )}
 
-                  {/* Terms and Privacy */}
-                  {currentStep === 1 && (
-                    <p className="text-xs text-tertiary text-center">
-                      By creating an account, you agree to our{" "}
-                      <a href="/terms" className="text-brand-secondary hover:text-brand-secondary_hover">Terms</a>
-                      {" "}and{" "}
-                      <a href="/privacy" className="text-brand-secondary hover:text-brand-secondary_hover">Privacy Policy</a>
-                    </p>
-                  )}
+                {/* Terms and Privacy */}
+                {currentStep === 1 && (
+                  <p className="text-xs text-tertiary text-center">
+                    By creating an account, you agree to our{" "}
+                    <a href="/terms" className="text-brand-secondary hover:text-brand-secondary_hover">Terms</a>
+                    {" "}and{" "}
+                    <a href="/privacy" className="text-brand-secondary hover:text-brand-secondary_hover">Privacy Policy</a>
+                  </p>
+                )}
               </div>
             </div>
           </div>
           
           {/* Mobile Navigation */}
-          <div className="lg:hidden p-4 border-t border-secondary">
+          <div className="xl:hidden p-4 border-t border-secondary">
             <div className="flex gap-3">
               {currentStep > 1 && !shouldShowBackButton(currentStep) && currentStep !== 11 && (
                 <Button 
@@ -412,45 +405,44 @@ export const SignupPage = () => {
             </div>
           </div>
 
-        </div>
-
-        {/* Right Side - Sidebar */}
-        {currentStep !== 11 && (
-          <div className="relative hidden w-full bg-tertiary lg:flex lg:flex-col lg:h-screen lg:overflow-hidden">
-            <div className="flex flex-col justify-start mt-24 items-center h-full p-6 lg:p-8">
-              <SidebarContent currentStep={currentStep} formData={formData} />
-          </div>
-          
-          {/* Fixed Company Logos at Bottom - Only show for testimonial steps */}
-          {(currentStep >= 2 && currentStep <= 9) && (
-            <div className="absolute bottom-8 left-6 right-6">
-              <div className="grid grid-cols-4 gap-1 px-2">
-                  {[
-                    { src: "/logos/l_backup/CoachHub.svg", alt: "CoachHub" },
-                    { src: "/logos/l_backup/Ceros.svg", alt: "Ceros" },
-                    { src: "/logos/l_backup/Flutterflow.svg", alt: "FlutterFlow" },
-                    { src: "/logos/l_backup/ibm.svg", alt: "IBM" },
-                    { src: "/logos/intercom-1.svg", alt: "Intercom" },
-                    { src: "/logos/l_backup/lenovo.svg", alt: "Lenovo" },
-                    { src: "/logos/l_backup/logitech.svg", alt: "Logitech" },
-                    { src: "/logos/l_backup/preply.svg", alt: "Preply" },
-                    { src: "/logos/l_backup/Property 1=SuperOps, color=color.svg", alt: "SuperOps" },
-                    { src: "/logos/l_backup/Property 1=Variant10, color=color.svg", alt: "Variant10" },
-                    { src: "/logos/l_backup/xano.svg", alt: "Xano" },
-                    { src: "/logos/l_backup/yoto.svg", alt: "Yoto" }
-                  ].map((logo, index) => (
-                    <img 
-                      key={index}
-                      src={logo.src} 
-                      alt={logo.alt} 
-                      className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" 
-                    />
-                  ))}
+          {/* Right Side - Sidebar */}
+          {currentStep !== 11 && (
+            <div className="relative hidden w-full bg-tertiary xl:flex xl:flex-col xl:h-screen xl:overflow-hidden">
+              <div className="flex flex-col justify-start mt-24 items-center h-full p-6 xl:p-8">
+                <SidebarContent currentStep={currentStep} formData={formData} />
               </div>
+              
+              {/* Fixed Company Logos at Bottom - Only show for testimonial steps */}
+              {(currentStep >= 2 && currentStep <= 9) && (
+                <div className="absolute bottom-8 left-6 right-6">
+                  <div className="grid grid-cols-4 gap-1 px-2">
+                    {[
+                      { src: "/logos/l_backup/CoachHub.svg", alt: "CoachHub" },
+                      { src: "/logos/l_backup/Ceros.svg", alt: "Ceros" },
+                      { src: "/logos/l_backup/Flutterflow.svg", alt: "FlutterFlow" },
+                      { src: "/logos/l_backup/ibm.svg", alt: "IBM" },
+                      { src: "/logos/intercom-1.svg", alt: "Intercom" },
+                      { src: "/logos/l_backup/lenovo.svg", alt: "Lenovo" },
+                      { src: "/logos/l_backup/logitech.svg", alt: "Logitech" },
+                      { src: "/logos/l_backup/preply.svg", alt: "Preply" },
+                      { src: "/logos/l_backup/Property 1=SuperOps, color=color.svg", alt: "SuperOps" },
+                      { src: "/logos/l_backup/Property 1=Variant10, color=color.svg", alt: "Variant10" },
+                      { src: "/logos/l_backup/xano.svg", alt: "Xano" },
+                      { src: "/logos/l_backup/yoto.svg", alt: "Yoto" }
+                    ].map((logo, index) => (
+                      <img 
+                        key={index}
+                        src={logo.src} 
+                        alt={logo.alt} 
+                        className="h-12 w-16 object-contain opacity-60 mx-auto logo-filter" 
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
-        )}
       </section>
     </div>
   );
