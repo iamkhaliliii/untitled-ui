@@ -262,7 +262,7 @@ export const AdminLayout = ({
                 },
                 {
                     label: "Onboarding",
-                    href: "/onboarding",
+                    href: `/${adminVersion}/onboarding`,
                     icon: GraduationHat02,
                 },
             ]}
