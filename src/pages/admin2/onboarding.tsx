@@ -209,95 +209,101 @@ export const AdminOnboardingPage = () => {
                     {/* Main Content */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
                         <div className="px-4 py-6 lg:px-6">
-                            <div className="mx-auto max-w-4xl">
-                    
-                    {/* Welcome Header */}
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center mb-6">
-                            <div className="w-16 h-16 bg-brand-solid rounded-2xl flex items-center justify-center">
-                                <Rocket01 className="w-8 h-8 text-white" />
-                            </div>
-                        </div>
-                        <h1 className="text-3xl font-bold text-primary mb-4">
-                            Welcome to Your Community! 🎉
-                        </h1>
-                        <p className="text-lg text-tertiary max-w-2xl mx-auto">
-                            Complete these setup steps to create an amazing experience for your members.
-                        </p>
-                    </div>
-
-                    {/* Progress Overview */}
-                    <div className="bg-brand-primary_alt border border-brand-300 rounded-xl p-6 mb-8">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold text-primary">Setup Progress</h2>
-                            <Badge color="brand" size="sm">0 of 10 completed</Badge>
-                        </div>
-                        <div className="w-full bg-secondary rounded-full h-2">
-                            <div className="w-0 h-full bg-brand-solid rounded-full transition-all duration-500"></div>
-                        </div>
-                    </div>
-
-                    {/* Onboarding Categories */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {onboardingCategories.map((category) => (
-                            <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
+                            <div className="mx-auto max-w-7xl">
                                 
-                                {/* Category Header */}
-                                <div className="text-left pb-2 border-b border-secondary/50">
-                                    <h2 className="text-lg font-semibold text-primary mb-1">
-                                        {category.title}
-                                    </h2>
-                                    <p className="text-xs text-tertiary">
-                                        {category.description}
-                                    </p>
-                                </div>
-
-                                {/* Category Steps */}
-                                <div className="space-y-3">
-                                    {category.steps.map((step, index) => (
-                                        <div 
-                                            key={step.id}
-                                            className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
-                                            onClick={() => window.location.href = step.href}
-                                        >
-                                            {/* Cover Image */}
-                                            <div className="h-28 bg-gray-100 overflow-hidden relative">
-                                                <img 
-                                                    src={step.image} 
-                                                    alt={step.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
-                                            </div>
-
-                                            {/* Card Content */}
-                                            <div className="px-3 pb-4 pt-2 relative">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                                                    <h3 className="text-sm font-semibold text-primary">
-                                                        {step.title}
-                                                    </h3>
-                                                </div>
-                                                <p className="text-xs text-tertiary mt-1 mb-6">
-                                                    {step.description}
-                                                </p>
-                                                
-                                                {/* CTA Link */}
-                                                <div className="absolute bottom-3 right-3">
-                                                    <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
-                                                        Setup →
-                                                    </span>
-                                                </div>
+                                {/* Two Column Layout */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 min-h-screen">
+                                    
+                                    {/* Left Column - Welcome Message */}
+                                    <div className="flex flex-col justify-center">
+                                        <div className="flex items-center justify-start mb-8">
+                                            <div className="w-20 h-20 bg-brand-solid rounded-2xl flex items-center justify-center">
+                                                <Rocket01 className="w-10 h-10 text-white" />
                                             </div>
                                         </div>
-                                    ))}
+                                        <h1 className="text-4xl font-bold text-primary mb-6">
+                                            Welcome to Your Community! 🎉
+                                        </h1>
+                                        <p className="text-xl text-tertiary leading-relaxed">
+                                            Complete these setup steps to create an amazing experience for your members.
+                                        </p>
+                                    </div>
+
+                                    {/* Right Column - Progress and Cards */}
+                                    <div className="space-y-8">
+                                        
+                                        {/* Progress Overview */}
+                                        <div className="bg-brand-primary_alt border border-brand-300 rounded-xl p-6">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h2 className="text-lg font-semibold text-primary">Setup Progress</h2>
+                                                <Badge color="brand" size="sm">0 of 10 completed</Badge>
+                                            </div>
+                                            <div className="w-full bg-secondary rounded-full h-2">
+                                                <div className="w-0 h-full bg-brand-solid rounded-full transition-all duration-500"></div>
+                                            </div>
+                                        </div>
+
+                                        {/* Onboarding Categories */}
+                                        <div className="space-y-8">
+                                            {onboardingCategories.map((category) => (
+                                                <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
+                                                    
+                                                    {/* Category Header */}
+                                                    <div className="text-left pb-2 border-b border-secondary/50">
+                                                        <h2 className="text-lg font-semibold text-primary mb-1">
+                                                            {category.title}
+                                                        </h2>
+                                                        <p className="text-xs text-tertiary">
+                                                            {category.description}
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Category Steps */}
+                                                    <div className="space-y-3">
+                                                        {category.steps.map((step, index) => (
+                                                            <div 
+                                                                key={step.id}
+                                                                className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
+                                                                onClick={() => window.location.href = step.href}
+                                                            >
+                                                                {/* Cover Image */}
+                                                                <div className="h-28 bg-gray-100 overflow-hidden relative">
+                                                                    <img 
+                                                                        src={step.image} 
+                                                                        alt={step.title}
+                                                                        className="w-full h-full object-cover"
+                                                                    />
+                                                                    {/* Gradient Overlay */}
+                                                                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
+                                                                </div>
+
+                                                                {/* Card Content */}
+                                                                <div className="px-3 pb-4 pt-2 relative">
+                                                                    <div className="flex items-center gap-2 mb-1">
+                                                                        <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
+                                                                        <h3 className="text-sm font-semibold text-primary">
+                                                                            {step.title}
+                                                                        </h3>
+                                                                    </div>
+                                                                    <p className="text-xs text-tertiary mt-1 mb-6">
+                                                                        {step.description}
+                                                                    </p>
+                                                                    
+                                                                    {/* CTA Link */}
+                                                                    <div className="absolute bottom-3 right-3">
+                                                                        <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                                            Setup →
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-
-
                             </div>
                         </div>
                     </main>

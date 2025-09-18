@@ -243,6 +243,7 @@ export const SignupPage = () => {
             selectedSecurityLevel={selectedSecurityLevel}
             onSecuritySelection={handleSecuritySelection}
             onNext={handleNext}
+            onArrayToggle={handleArrayToggle}
           />
         );
       case 11:

@@ -21,7 +21,7 @@ const initialFormData: WizardFormData = {
 export const WizardPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<WizardFormData>(initialFormData);
-  const [errors, setErrors] = useState<Partial<WizardFormData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedLogoUrl, setSelectedLogoUrl] = useState<string | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -34,7 +34,7 @@ export const WizardPage = () => {
   };
 
   const validateCurrentStep = (): boolean => {
-    const newErrors: Partial<WizardFormData> = {};
+    const newErrors: Record<string, string> = {};
 
     switch (currentStep) {
       case 1:
