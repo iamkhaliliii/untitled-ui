@@ -23,6 +23,33 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
+/* Tour Guide Styles */
+.tour-guide-highlight {
+  position: relative !important;
+  z-index: 9999 !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 8px rgba(99, 102, 241, 0.2) !important;
+  border-radius: 8px !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  animation: tour-pulse 2s infinite;
+}
+
+@keyframes tour-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 8px rgba(99, 102, 241, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.7), 0 0 0 12px rgba(99, 102, 241, 0.3);
+  }
+}
+
+.tour-guide-overlay {
+  pointer-events: none;
+}
+
+.tour-guide-highlight {
+  pointer-events: auto !important;
+}
+
 /* Infinite scroll animation */
 @keyframes infinite-scroll {
   0% {

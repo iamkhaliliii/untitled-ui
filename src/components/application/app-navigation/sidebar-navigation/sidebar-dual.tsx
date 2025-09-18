@@ -41,6 +41,7 @@ import { EventsCustomizeSettings } from "./tertiary-sidebar/events-customize-set
 import { CmsEventsSettings } from "./tertiary-sidebar/cms-events-settings";
 import { WidgetSelection } from "./tertiary-sidebar/widget-selection";
 import WidgetConfig from "./tertiary-sidebar/widget-config";
+import { TourGuide, useTourGuide, type TourStep } from "../../tour-guide";
 
 // Space types for create page
 const spaceTypes = [
@@ -165,6 +166,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // Check if user came from CMS page
     const urlParams = new URLSearchParams(window.location.search);
     const fromCms = urlParams.get('from') === 'cms';
+    const startTour = urlParams.get('startTour') === 'true';
+    
+    // Tour guide functionality
+    const tourGuide = useTourGuide();
 
     // Determine current admin version from activeUrl
     const getCurrentAdminVersion = () => {
@@ -174,6 +179,62 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     };
 
     const currentAdminVersion = getCurrentAdminVersion();
+
+    // Tour steps for spaces creation
+    const spacesTourSteps: TourStep[] = [
+        {
+            id: "main-sidebar",
+            title: "Welcome to the Admin Panel",
+            description: "This is the main navigation sidebar where you can access different sections of your community management.",
+            targetSelector: "[data-tour-main-sidebar]",
+            position: "right"
+        },
+        {
+            id: "site-section",
+            title: "Site Management",
+            description: "Click here to access site management features including spaces, navigation, and content organization.",
+            targetSelector: "[data-tour-site-section]",
+            position: "right"
+        },
+        {
+            id: "secondary-sidebar",
+            title: "Site File Structure",
+            description: "Here you can see your site's file structure including collections, spaces, and utility pages.",
+            targetSelector: "[data-tour-secondary-sidebar]",
+            position: "right"
+        },
+        {
+            id: "spaces-section",
+            title: "Collections & Spaces",
+            description: "This section shows all your collections and spaces. You can organize your content here.",
+            targetSelector: "[data-tour-spaces-section]",
+            position: "right"
+        },
+        {
+            id: "add-space-button",
+            title: "Add New Space",
+            description: "Click this button to create a new space for organizing your content. Let's try it now!",
+            targetSelector: "[data-tour-add-space]",
+            position: "right",
+            action: () => {
+                // Simulate clicking the add space button
+                const addSpaceButton = document.querySelector("[data-tour-add-space]") as HTMLElement;
+                if (addSpaceButton) {
+                    addSpaceButton.click();
+                }
+            }
+        }
+    ];
+
+    // Start tour when URL parameter is present
+    useEffect(() => {
+        if (startTour && activeUrl?.includes('/site/spaces/create')) {
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                tourGuide.startTour(spacesTourSteps);
+            }, 500);
+        }
+    }, [startTour, activeUrl]);
 
     // State for tree expansion
     const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
@@ -459,7 +520,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 hasMore: false, // No load more at this level since children handle it
                 isLoading: false,
                 totalCount: allBaseItems.length + folders.length,
-                loadedCount: simpleLoadedCount + foldersLoadedCount
+                loadedCount: simpleLoadedCount + foldersLoadedCount,
+                data: { "data-tour-spaces-section": true }
             },
         {
             id: "utilityPages",
@@ -1146,6 +1208,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     const mainSidebar = (
         <aside
+            data-tour-main-sidebar
             style={{
                 width: MAIN_SIDEBAR_WIDTH,
             }}
@@ -1163,18 +1226,19 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 </div>
 
                 <ul className="mt-4 flex flex-col gap-0.5 px-3">
-                    {items.map((item) => (
-                        <li key={item.label}>
-                            <NavItemButton
-                                size="md"
-                                current={currentItem?.href === item.href}
-                                href={item.href}
-                                label={item.label || ""}
-                                icon={item.icon}
-                                onClick={(e) => setCurrentItem(item)}
-                            />
-                        </li>
-                    ))}
+                        {items.map((item) => (
+                            <li key={item.label}>
+                                <NavItemButton
+                                    size="md"
+                                    current={currentItem?.href === item.href}
+                                    href={item.href}
+                                    label={item.label || ""}
+                                    icon={item.icon}
+                                    onClick={(e) => setCurrentItem(item)}
+                                    {...(item.label === "Site" ? { "data-tour-site-section": true } : {})}
+                                />
+                            </li>
+                        ))}
                 </ul>
                 <div className="mt-auto flex flex-col gap-4 px-3 py-5">
                     <ul className="flex flex-col gap-0.5">
@@ -1233,6 +1297,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     const secondarySidebar = (
         <div
+            data-tour-secondary-sidebar
             style={{ width: SECONDARY_SIDEBAR_WIDTH }}
             className={cx("relative h-full overflow-hidden bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
         >
@@ -1411,6 +1476,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         <div className="flex-shrink-0 bg-primary">
                             <div className="h-px bg-secondary/40 my-2"></div>
                             <button 
+                                data-tour-add-space
                                 onClick={handleAddSpaceClick}
                                 className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
                             >
@@ -1962,7 +2028,18 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     return (
         <>
-                            {/* Desktop triple sidebar navigation */}
+            {/* Tour Guide */}
+            <TourGuide
+                isActive={tourGuide.isActive}
+                steps={tourGuide.steps}
+                currentStep={tourGuide.currentStep}
+                onNext={tourGuide.nextStep}
+                onPrevious={tourGuide.previousStep}
+                onSkip={tourGuide.skipTour}
+                onComplete={tourGuide.completeTour}
+            />
+            
+            {/* Desktop triple sidebar navigation */}
                 <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
                     isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
                         ? adminHeaderCollapsed

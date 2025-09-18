@@ -1,5 +1,6 @@
 import {
     CheckDone01,
+    CheckCircle,
     Users01,
     Settings01,
     Palette,
@@ -87,7 +88,7 @@ const onboardingCategories = [
                 description: "Organize your content",
                 icon: Database01,
                 status: "pending",
-                href: "/admin2/content2/spaces",
+                href: "/admin2/site/spaces/create?startTour=true",
                 image: "/pic/onboarding/customize-spaces.jpg"
             },
             {
@@ -132,6 +133,49 @@ const onboardingCategories = [
                 status: "pending",
                 href: "/admin2/setting",
                 image: "/pic/onboarding/manage-staff-seats.jpg"
+            }
+        ]
+    },
+    {
+        id: "growth",
+        title: "Growth",
+        description: "Scale your community",
+        steps: [
+            {
+                id: "content-strategy",
+                title: "Content Strategy",
+                description: "Plan engaging content for your members",
+                icon: MessageChatCircle,
+                status: "pending",
+                href: "/admin2/content2",
+                image: "/pic/onboarding/customize-theme.jpg"
+            },
+            {
+                id: "member-engagement",
+                title: "Member Engagement",
+                description: "Build active community participation",
+                icon: Users01,
+                status: "pending",
+                href: "/admin2/people",
+                image: "/pic/onboarding/invite-members.jpg"
+            },
+            {
+                id: "monetization",
+                title: "Monetization",
+                description: "Explore revenue opportunities",
+                icon: Plus,
+                status: "pending",
+                href: "/admin2/setting",
+                image: "/pic/onboarding/build-app.jpg"
+            },
+            {
+                id: "community-insights",
+                title: "Community Insights",
+                description: "Track growth and member behavior",
+                icon: BarChartSquare02,
+                status: "pending",
+                href: "/admin2/report",
+                image: "/pic/onboarding/explore-apps.jpg"
             }
         ]
     }
@@ -211,98 +255,346 @@ export const AdminOnboardingPage = () => {
                         <div className="px-4 py-6 lg:px-6">
                             <div className="mx-auto max-w-7xl">
                                 
-                                {/* Two Column Layout - 1/3 and 2/3 */}
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 min-h-screen">
+                                {/* Hero Section with Enhanced Design */}
+                                <div className="space-y-12 pt-6">
                                     
-                                    {/* Left Column - Welcome Message (1/3) */}
-                                    <div className="lg:col-span-4 flex flex-col justify-center">
-                                        <div className="flex items-center justify-start mb-8">
-                                            <div className="w-20 h-20 bg-brand-solid rounded-2xl flex items-center justify-center">
-                                                <Rocket01 className="w-10 h-10 text-white" />
-                                            </div>
-                                        </div>
-                                        <h1 className="text-4xl font-bold text-primary mb-6">
-                                            Welcome to Your Community! 🎉
-                                        </h1>
-                                        <p className="text-xl text-tertiary leading-relaxed">
-                                            Complete these setup steps to create an amazing experience for your members.
-                                        </p>
-                                    </div>
-
-                                    {/* Right Column - Progress and Cards (2/3) */}
-                                    <div className="lg:col-span-8 space-y-8">
+                                    {/* Top Hero Section - Welcome Message and Suggested Steps */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                                         
-                                        {/* Progress Overview */}
-                                        <div className="bg-brand-primary_alt border border-brand-300 rounded-xl p-6">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <h2 className="text-lg font-semibold text-primary">Setup Progress</h2>
-                                                <Badge color="brand" size="sm">0 of 10 completed</Badge>
+                                        {/* Left - Enhanced Welcome Message */}
+                                        <div className="flex flex-col justify-start space-y-6">
+                                            {/* Hero Badge */}
+                                            <div className="inline-flex items-center gap-2 bg-brand-primary_alt border border-brand-300 rounded-full px-3 py-1.5 w-fit">
+                                                <Rocket01 className="w-3.5 h-3.5 text-brand-secondary" />
+                                                <span className="text-xs font-medium text-brand-secondary">Getting Started</span>
                                             </div>
-                                            <div className="w-full bg-secondary rounded-full h-2">
-                                                <div className="w-0 h-full bg-brand-solid rounded-full transition-all duration-500"></div>
+                                            
+                                            <div className="space-y-4">
+                                                <h1 className="text-3xl font-bold text-primary leading-tight">
+                                                    Welcome to Your<br />
+                                                    <span className="bg-gradient-to-r from-brand-solid to-brand-secondary bg-clip-text text-transparent">
+                                                        Community! 🎉
+                                                    </span>
+                                                </h1>
+                                                <p className="text-sm text-tertiary leading-relaxed max-w-lg">
+                                                    Complete these essential setup steps to create an amazing experience for your members and unlock your community's full potential.
+                                                </p>
                                             </div>
+
+
                                         </div>
 
-                                        {/* Onboarding Categories - Side by Side */}
-                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                            {onboardingCategories.map((category) => (
-                                                <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
-                                                    
-                                                    {/* Category Header */}
-                                                    <div className="text-left pb-2 border-b border-secondary/50">
-                                                        <h2 className="text-lg font-semibold text-primary mb-1">
-                                                            {category.title}
-                                                        </h2>
-                                                        <p className="text-xs text-tertiary">
-                                                            {category.description}
-                                                        </p>
+                                        {/* Right - Enhanced Suggested Steps Card */}
+                                        <div className="bg-gradient-to-br from-secondary to-primary border border-secondary rounded-xl p-4 shadow-md">
+                                            
+                                            {/* Progress */}
+                                            <div className="mb-4 p-3">
+                                                <div className="flex items-center justify-between mb-6">
+                                                    <h4 className="text-sm font-medium text-primary">Your Journey</h4>
+                                                    <span className="text-xs text-tertiary">3 more steps to complete setup</span>
+                                                </div>
+                                                
+                                                <div className="relative mb-6">
+                                                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div className="bg-purple-600 h-1.5 rounded-full" style={{width: '30%'}}></div>
                                                     </div>
-
-                                                    {/* Category Steps */}
-                                                    <div className="space-y-3">
-                                                        {category.steps.map((step, index) => (
-                                                            <div 
-                                                                key={step.id}
-                                                                className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
-                                                                onClick={() => window.location.href = step.href}
-                                                            >
-                                                                {/* Cover Image */}
-                                                                <div className="h-28 bg-gray-100 overflow-hidden relative">
-                                                                    <img 
-                                                                        src={step.image} 
-                                                                        alt={step.title}
-                                                                        className="w-full h-full object-cover"
-                                                                    />
-                                                                    {/* Gradient Overlay */}
-                                                                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
-                                                                </div>
-
-                                                                {/* Card Content */}
-                                                                <div className="px-3 pb-4 pt-2 relative">
-                                                                    <div className="flex items-center gap-2 mb-1">
-                                                                        <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                                                                        <h3 className="text-sm font-semibold text-primary">
-                                                                            {step.title}
-                                                                        </h3>
-                                                                    </div>
-                                                                    <p className="text-xs text-tertiary mt-1 mb-6">
-                                                                        {step.description}
-                                                                    </p>
-                                                                    
-                                                                    {/* CTA Link */}
-                                                                    <div className="absolute bottom-3 right-3">
-                                                                        <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
-                                                                            Setup →
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
+                                                    
+                                                    <div className="absolute -top-1.5 left-0 right-0 flex justify-between">
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-4 h-4 bg-brand-solid rounded-full"></div>
+                                                            <span className="text-xs text-brand-solid font-medium mt-2">Initial</span>
+                                                        </div>
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-4 h-4 bg-brand-solid rounded-full"></div>
+                                                            <span className="text-xs text-brand-solid font-medium mt-2">Onboarded</span>
+                                                        </div>
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-4 h-4 bg-brand-secondary rounded-full"></div>
+                                                            <span className="text-xs text-brand-secondary font-medium mt-2">Setup</span>
+                                                        </div>
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                                                            <span className="text-xs text-tertiary mt-2">Launch</span>
+                                                        </div>
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                                                            <span className="text-xs text-tertiary mt-2">Growth</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            ))}
+                                            </div>
+
+                                            {/* Deep Enhanced Step List */}
+                                            <div className="bg-gradient-to-br from-secondary via-primary to-secondary/50 rounded-2xl p-4 border border-secondary shadow-lg">
+                                                
+                                                <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-2 pr-2">
+                                                {/* Step 3 - Recommended Next Step */}
+                                                <div 
+                                                    className="flex items-center gap-4 p-3 bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                                                    onClick={() => window.location.href = "/admin2/site/spaces/create?startTour=true"}
+                                                >
+                                                    <Database01 className="w-5 h-5 text-brand-secondary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <h4 className="text-sm font-semibold text-primary">Create Spaces</h4>
+                                                            <Badge color="brand" size="sm">Recommended Next Step</Badge>
+                                                        </div>
+                                                        <p className="text-xs text-tertiary">Organize your content structure</p>
+                                                    </div>
+                                                    <div className="text-brand-secondary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+                                                
+                                                {/* Step 4 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <Users01 className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Invite teammates</h4>
+                                                        <p className="text-xs text-tertiary">Add your team members</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 5 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <CodeBrowser className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Community Domain</h4>
+                                                        <p className="text-xs text-tertiary">Configure your community URL</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 6 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <MessageChatCircle className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Setup Communication</h4>
+                                                        <p className="text-xs text-tertiary">Configure messaging and notifications</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 7 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <BarChartSquare02 className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Analytics Setup</h4>
+                                                        <p className="text-xs text-tertiary">Track community engagement</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 8 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <Data className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Integrations</h4>
+                                                        <p className="text-xs text-tertiary">Connect external tools</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 9 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <Plus className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Content Creation</h4>
+                                                        <p className="text-xs text-tertiary">Add initial posts and content</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 10 - Pending */}
+                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
+                                                    <Rocket01 className="w-5 h-5 text-tertiary flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-primary">Launch Community</h4>
+                                                        <p className="text-xs text-tertiary">Go live with your community</p>
+                                                    </div>
+                                                    <div className="text-tertiary">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Enhanced Completed Steps Section */}
+                                                <div className="pt-4 mt-4 border-t border-secondary/50">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-5 h-5 bg-brand-solid/20 rounded-lg flex items-center justify-center">
+                                                                <CheckCircle className="w-3 h-3 text-brand-solid" />
+                                                            </div>
+                                                            <h5 className="text-xs font-semibold text-brand-solid">Completed Tasks</h5>
+                                                        </div>
+                                                        <div className="text-xs text-brand-solid/70 font-medium">2 done</div>
+                                                    </div>
+                                                    
+                                                    {/* Step 1 - Completed */}
+                                                    <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
+                                                        <Settings01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Site permissions & privacy</h4>
+                                                        </div>
+                                                        <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Step 2 - Completed */}
+                                                    <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 hover:opacity-80">
+                                                        <Palette className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Branding & Theme</h4>
+                                                        </div>
+                                                        <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                            </div>
+                        </div>
+
+                                    {/* Section Introduction */}
+                                    <div className="text-center space-y-4 mb-8">
+                                        <h2 className="text-3xl font-bold text-primary">Start Guide 🔥</h2>
+                        <p className="text-lg text-tertiary max-w-2xl mx-auto">
+                                            Follow these steps to get your community up and running
+                        </p>
+                    </div>
+
+                                    {/* Customer Education Section */}
+                                    <div className="bg-primary border border-secondary rounded-xl p-3 space-y-3 mb-12">
+                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                                            {/* Left side - Jacob's info */}
+                                            <div className="lg:col-span-2 p-3">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-brand-300">
+                                                        <img 
+                                                            src="/Jacob Harris.png" 
+                                                            alt="Jacob Harris"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                    <span className="text-sm text-tertiary">Jacob from the customer education team</span>
+                                                </div>
+                                                
+                                                <h3 className="text-2xl font-bold text-primary mb-3">
+                                                    Get to know Bettermode
+                                                </h3>
+                                                
+                                                <p className="text-xs text-tertiary leading-relaxed mb-4">
+                                                    Take a tour around administration and learn how to create collections and spaces to organize your community.
+                                                </p>
+                                                
+                                                <div className="flex items-center gap-4">
+                                                    <a href="#" className="flex items-center gap-1 text-xs font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                        <span>Academy</span>
+                                                        <ArrowRight className="w-3 h-3" />
+                                                    </a>
+                                                    <a href="#" className="flex items-center gap-1 text-xs font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                        <span>Help Center</span>
+                                                        <ArrowRight className="w-3 h-3" />
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            {/* Right side - Video thumbnail */}
+                                            <div className="relative group cursor-pointer p-3">
+                                                <div className="rounded-lg overflow-hidden shadow-sm aspect-video">
+                                                    <img 
+                                                        src="/maxresdefault.jpg" 
+                                                        alt="Getting Started with Bettermode"
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                </div>
+                                                {/* Play button overlay */}
+                                                <div className="absolute inset-3 flex items-center justify-center">
+                                                    <div className="w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-all duration-300 border-2 border-white/50">
+                                                        <div className="w-0 h-0 border-l-[12px] border-l-brand-solid border-t-[8px] border-b-[8px] border-t-transparent border-b-transparent ml-1"></div>
+                                                    </div>
+                                                </div>
+                                                {/* Video title overlay */}
+                                                <div className="absolute bottom-3 left-3 right-3 bg-gradient-to-t from-black/80 to-transparent p-2 rounded-b-lg">
+                                                    <p className="text-white font-medium text-xs">Getting Started with Bettermode</p>
+                                                </div>
+                        </div>
+                        </div>
+                    </div>
+
+                                    {/* Bottom Section - Onboarding Categories Side by Side */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        {onboardingCategories.map((category) => (
+                            <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
+                                
+                                {/* Category Header */}
+                                <div className="text-left pb-2 border-b border-secondary/50">
+                                    <h2 className="text-lg font-semibold text-primary mb-1">
+                                        {category.title}
+                                    </h2>
+                                    <p className="text-xs text-tertiary">
+                                        {category.description}
+                                    </p>
+                                </div>
+
+                                {/* Category Steps */}
+                                <div className="space-y-3">
+                                    {category.steps.map((step, index) => (
+                                        <div 
+                                            key={step.id}
+                                            className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
+                                            onClick={() => window.location.href = step.href}
+                                        >
+                                            {/* Cover Image */}
+                                            <div className="h-28 bg-gray-100 overflow-hidden relative">
+                                                <img 
+                                                    src={step.image} 
+                                                    alt={step.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
+                                            </div>
+
+                                            {/* Card Content */}
+                                            <div className="px-3 pb-4 pt-2 relative">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
+                                                    <h3 className="text-sm font-semibold text-primary">
+                                                        {step.title}
+                                                    </h3>
+                                                </div>
+                                                <p className="text-xs text-tertiary mt-1 mb-6">
+                                                    {step.description}
+                                                </p>
+                                                
+                                                {/* CTA Link */}
+                                                <div className="absolute bottom-3 right-3">
+                                                    <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                        Setup →
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                                 </div>
                             </div>
                         </div>
@@ -312,3 +604,4 @@ export const AdminOnboardingPage = () => {
         </div>
     );
 };
+

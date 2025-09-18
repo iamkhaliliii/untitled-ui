@@ -165,6 +165,7 @@ export function TreeView({
             (node.data?.loadMoreId || node.data?.showLessId) ? "px-2 py-1" : "px-2 py-2",
           )}
           style={{ paddingLeft: level * indent + 12 }}
+          {...(node.data?.["data-tour-spaces-section"] && { "data-tour-spaces-section": true })}
           onClick={(e) => {
             // Don't handle clicks on skeleton items
             if (node.data?.isSkeleton) {

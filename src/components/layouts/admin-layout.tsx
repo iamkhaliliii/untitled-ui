@@ -52,6 +52,7 @@ import { SidebarNavigationDual } from "@/components/application/app-navigation/s
 import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
 import { useAdmin } from "@/hooks/use-admin";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { FloatingProgressButton } from "@/components/application/floating-progress-button";
 
 
 
@@ -318,6 +319,9 @@ export const AdminLayout = ({
                 </main>
                 </div>
             </div>
+            
+            {/* Floating Progress Button - Only show for admin2 */}
+            {adminVersion === 'admin2' && <FloatingProgressButton />}
         </div>
     );
 }; 
