@@ -99,7 +99,7 @@ export const Step11PlanSelection = ({
         { icon: Headphones01, text: "Onboarding and Migration Support" },
         { icon: Lock01, text: "OAuth2" }
       ],
-      buttonText: "Request a demo",
+      buttonText: "14-day trial",
       buttonStyle: "primary",
       recommended: recommendedPlanType === "growth"
     },
@@ -172,7 +172,7 @@ export const Step11PlanSelection = ({
             src={logo} 
             alt="" 
             className={cx(
-              "w-5 h-5 rounded",
+              "w-4.5 h-4.5 rounded",
               (logo.includes("cookie-svgrepo-com") || logo.includes("Custom-Code-Snippet")) && "logo-filter"
             )}
           />
@@ -207,7 +207,7 @@ export const Step11PlanSelection = ({
               {(() => {
                 // Generate the complete text with formatting
                 const name = formData.firstName;
-                const role = formData.role ? `, in ${formData.role.replace(/-/g, ' ').split(' ').map(word => 
+                const role = formData.role && formData.role !== "other" ? `, in ${formData.role.replace(/-/g, ' ').split(' ').map(word => 
                   word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                 ).join(' ')}` : "";
                 const company = formData.companyName.split(' ').map(word => 
@@ -215,10 +215,10 @@ export const Step11PlanSelection = ({
                 ).join(' ');
                 
                 const sizeMap: Record<string, string> = {
-                  "under-50": "under-50-person",
-                  "50-200": "50–200-person", 
-                  "200-500": "200–500-person",
-                  "over-500": "500+-person"
+                  "under-50": "under 50 person",
+                  "50-200": "50 to 200 person", 
+                  "200-500": "200 to 500 person",
+                  "over-500": "over 500 person"
                 };
                 const companySize = sizeMap[formData.companySize] || formData.companySize;
                 
@@ -237,14 +237,31 @@ export const Step11PlanSelection = ({
                 };
                 const industry = industryMap[formData.industry] || formData.industry?.replace('-', ' ') || 'technology';
                 
-                // Generate tool avatars (max 5 + "and more")
-                const toolAvatars = formData.currentTools.slice(0, 5).map(toolId => {
-                  const tool = SAAS_TOOLS.find(t => t.id === toolId);
-                  return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
-                }).filter(Boolean).join('');
-                
-                const moreText = formData.currentTools.length > 5 ? ' and more' : '';
-                const toolsText = formData.currentTools.length > 0 ? `, using ${toolAvatars}${moreText}` : "";
+                // Generate tool avatars with different logic based on count
+                let toolsText = "";
+                if (formData.currentTools.length > 0) {
+                  if (formData.currentTools.length === 1) {
+                    // 1 app: show icon + name
+                    const tool = SAAS_TOOLS.find(t => t.id === formData.currentTools[0]);
+                    if (tool) {
+                      toolsText = `, using [avatar:${tool.logo}:${tool.name}] ${tool.name}`;
+                    }
+                  } else if (formData.currentTools.length <= 5) {
+                    // 2-5 apps: show only icons
+                    const toolAvatars = formData.currentTools.map(toolId => {
+                      const tool = SAAS_TOOLS.find(t => t.id === toolId);
+                      return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
+                    }).filter(Boolean).join('');
+                    toolsText = `, using ${toolAvatars}`;
+                  } else {
+                    // More than 5 apps: show 5 icons + "and more"
+                    const toolAvatars = formData.currentTools.slice(0, 5).map(toolId => {
+                      const tool = SAAS_TOOLS.find(t => t.id === toolId);
+                      return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
+                    }).filter(Boolean).join('');
+                    toolsText = `, using ${toolAvatars} and more`;
+                  }
+                }
                 
                 const recommendedPlan = getRecommendedPlan(formData);
                 const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
@@ -257,7 +274,7 @@ export const Step11PlanSelection = ({
                 const planBenefits = benefits[recommendedPlan.toLowerCase() as keyof typeof benefits] || benefits.starter;
                 const benefitsText = joinWithAnd(planBenefits);
                 
-                return `**${name}**${role} at **${company}**.\n\nBased on what you shared about **${company}** — a **${companySize} ${industry}** company${toolsText} — the {{${planName}}} plan is the best fit.\n\nIt provides **${benefitsText}** so the organization can grow confidently.\n\n[[Mo Malayery]]\n((CEO at Bettermode))`;
+                return `**${name}**${role} at **${company}**.\n\nBased on what you shared about **${company}** — a **${companySize} ${industry}** company${toolsText} — the {{${planName}}} plan is the best fit.\n\nIt provides **${benefitsText}** so the organization can grow confidently.\n\n[[Mo Malayeri]]\n((CEO at Bettermode))`;
               })()}
             </TypingAnimation>
             
@@ -495,27 +512,58 @@ export const Step11PlanSelection = ({
 
                 {/* Card Footer - Action Button */}
                 <div className="mt-auto pt-4 border-t border-tertiary">
-                  <Button
-                    className="w-full"
-                    color={plan.buttonStyle === "primary" ? "primary" : plan.buttonStyle === "secondary" ? "secondary" : "tertiary"}
-                    size="sm"
-                    onClick={() => {
-                      onSetSelectedPlan(plan.id);
-                      onSubmit();
-                    }}
-                    isLoading={isLoading && formData.selectedPlan === plan.id}
-                  >
-                    {plan.buttonText}
-                  </Button>
-                  
-                  <a 
-                    href="https://bettermode.com/pricing" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block text-center text-xs transition-colors mt-1.5 text-quaternary hover:text-tertiary"
-                  >
-                    See details →
-                  </a>
+                  <div className="flex flex-col h-28">
+                    <Button
+                      className="w-full flex-shrink-0"
+                      color={plan.buttonStyle === "primary" ? "primary" : plan.buttonStyle === "secondary" ? "secondary" : "tertiary"}
+                      size="sm"
+                      onClick={() => {
+                        onSetSelectedPlan(plan.id);
+                        onSubmit();
+                      }}
+                      isLoading={isLoading && formData.selectedPlan === plan.id}
+                    >
+                      {plan.buttonText}
+                    </Button>
+                    
+                    {plan.id === "growth" ? (
+                      <div className="flex flex-col flex-1 min-h-0">
+                        <a 
+                          href="https://bettermode.com/contact-sales" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block text-center text-sm font-medium transition-colors mt-3 text-brand-secondary hover:text-brand-secondary_hover flex-shrink-0"
+                        >
+                          Request a demo
+                        </a>
+                        <div className="mt-auto flex-shrink-0 space-y-3">
+                          <div className="border-t border-tertiary/30"></div>
+                          <a 
+                            href="https://bettermode.com/pricing" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block text-center text-xs transition-colors text-quaternary hover:text-tertiary"
+                          >
+                            See details →
+                          </a>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col flex-1 min-h-0">
+                        <div className="mt-auto flex-shrink-0 space-y-3">
+                          <div className="border-t border-tertiary/30 mt-3"></div>
+                          <a 
+                            href="https://bettermode.com/pricing" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block text-center text-xs transition-colors text-quaternary hover:text-tertiary"
+                          >
+                            See details →
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ));

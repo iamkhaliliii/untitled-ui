@@ -213,7 +213,7 @@ export function TypingAnimation({
               key={segmentIndex}
               src={segment.avatarSrc}
               alt={segment.avatarAlt}
-              className="inline w-6 h-6 rounded-full mx-1 align-middle"
+              className="inline w-6 h-6 rounded-full mx-1 align-middle border border-gray-200"
             />
           );
           

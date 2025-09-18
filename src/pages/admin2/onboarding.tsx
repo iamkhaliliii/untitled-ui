@@ -25,8 +25,8 @@ import type { NavItemType } from "@/components/application/app-navigation/config
 
 const onboardingCategories = [
     {
-        id: "essentials",
-        title: "Essentials",
+        id: "onboarding",
+        title: "Onboarding",
         description: "Core setup for your community",
         steps: [
             {
@@ -35,7 +35,8 @@ const onboardingCategories = [
                 description: "Configure who can access your community",
                 icon: Settings01,
                 status: "pending",
-                href: "/admin2/setting/site-settings"
+                href: "/admin2/setting/site-settings",
+                image: "/pic/onboarding/moderation-rules.jpg"
             },
             {
                 id: "auth",
@@ -43,7 +44,8 @@ const onboardingCategories = [
                 description: "Set up authentication methods",
                 icon: Users01,
                 status: "pending",
-                href: "/admin2/setting/authentication"
+                href: "/admin2/setting/authentication",
+                image: "/pic/onboarding/social-login.jpg"
             },
             {
                 id: "domain",
@@ -51,7 +53,8 @@ const onboardingCategories = [
                 description: "Configure your community URL",
                 icon: CodeBrowser,
                 status: "pending",
-                href: "/admin2/site"
+                href: "/admin2/site",
+                image: "/pic/onboarding/update-community-name.jpg"
             },
             {
                 id: "invite",
@@ -59,13 +62,14 @@ const onboardingCategories = [
                 description: "Add your team members",
                 icon: Users01,
                 status: "pending",
-                href: "/admin2/people"
+                href: "/admin2/people",
+                image: "/pic/onboarding/invite-members.jpg"
             }
         ]
     },
     {
-        id: "customization",
-        title: "Customization",
+        id: "setup",
+        title: "Setup",
         description: "Make it yours",
         steps: [
             {
@@ -74,7 +78,8 @@ const onboardingCategories = [
                 description: "Upload logo and set colors",
                 icon: Palette,
                 status: "pending",
-                href: "/admin2/site-settings"
+                href: "/admin2/site-settings",
+                image: "/pic/onboarding/customize-theme.jpg"
             },
             {
                 id: "spaces",
@@ -82,7 +87,8 @@ const onboardingCategories = [
                 description: "Organize your content",
                 icon: Database01,
                 status: "pending",
-                href: "/admin2/content2/spaces"
+                href: "/admin2/content2/spaces",
+                image: "/pic/onboarding/customize-spaces.jpg"
             },
             {
                 id: "navigation",
@@ -90,13 +96,14 @@ const onboardingCategories = [
                 description: "Configure menus and structure",
                 icon: BarChartSquare02,
                 status: "pending",
-                href: "/admin2/site"
+                href: "/admin2/site",
+                image: "/pic/onboarding/customize-navigation.jpg"
             }
         ]
     },
     {
-        id: "extensibility",
-        title: "Extensibility",
+        id: "launch",
+        title: "Launch",
         description: "Advanced features",
         steps: [
             {
@@ -105,7 +112,8 @@ const onboardingCategories = [
                 description: "Connect external tools",
                 icon: Data,
                 status: "pending",
-                href: "/admin2/appstore"
+                href: "/admin2/appstore",
+                image: "/pic/onboarding/explore-apps.jpg"
             },
             {
                 id: "analytics",
@@ -113,7 +121,8 @@ const onboardingCategories = [
                 description: "Track community engagement",
                 icon: BarChartSquare02,
                 status: "pending",
-                href: "/admin2/report"
+                href: "/admin2/report",
+                image: "/pic/onboarding/build-app.jpg"
             },
             {
                 id: "automation",
@@ -121,7 +130,8 @@ const onboardingCategories = [
                 description: "Set up workflows and rules",
                 icon: Settings01,
                 status: "pending",
-                href: "/admin2/setting"
+                href: "/admin2/setting",
+                image: "/pic/onboarding/manage-staff-seats.jpg"
             }
         ]
     }
@@ -230,14 +240,14 @@ export const AdminOnboardingPage = () => {
                     {/* Onboarding Categories */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {onboardingCategories.map((category) => (
-                            <div key={category.id} className="space-y-4">
+                            <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
                                 
                                 {/* Category Header */}
-                                <div className="text-center">
-                                    <h2 className="text-xl font-semibold text-primary mb-2">
+                                <div className="text-left pb-2 border-b border-secondary/50">
+                                    <h2 className="text-lg font-semibold text-primary mb-1">
                                         {category.title}
                                     </h2>
-                                    <p className="text-sm text-tertiary">
+                                    <p className="text-xs text-tertiary">
                                         {category.description}
                                     </p>
                                 </div>
@@ -247,44 +257,37 @@ export const AdminOnboardingPage = () => {
                                     {category.steps.map((step, index) => (
                                         <div 
                                             key={step.id}
-                                            className="bg-primary border border-secondary rounded-lg p-4 hover:border-primary transition-colors"
+                                            className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
+                                            onClick={() => window.location.href = step.href}
                                         >
-                                            <div className="flex items-start gap-3">
-                                                
-                                                {/* Step Icon */}
-                                                <div className="flex-shrink-0">
-                                                    <div className="w-8 h-8 bg-secondary rounded-md flex items-center justify-center">
-                                                        <step.icon className="w-4 h-4 text-brand-secondary" />
-                                                    </div>
-                                                </div>
+                                            {/* Cover Image */}
+                                            <div className="h-28 bg-gray-100 overflow-hidden relative">
+                                                <img 
+                                                    src={step.image} 
+                                                    alt={step.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
+                                            </div>
 
-                                                {/* Step Content */}
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-start justify-between mb-2">
-                                                        <h3 className="text-sm font-semibold text-primary">
-                                                            {step.title}
-                                                        </h3>
-                                                        <Badge 
-                                                            color={step.status === 'completed' ? 'success' : 'gray'} 
-                                                            size="xs"
-                                                        >
-                                                            {step.status === 'completed' ? '✓' : '○'}
-                                                        </Badge>
-                                                    </div>
-                                                    <p className="text-xs text-tertiary mb-3">
-                                                        {step.description}
-                                                    </p>
-                                                    
-                                                    {/* Step Action */}
-                                                    <Button
-                                                        color="secondary"
-                                                        size="sm"
-                                                        iconTrailing={ArrowRight}
-                                                        onClick={() => window.location.href = step.href}
-                                                        className="w-full"
-                                                    >
-                                                        Setup
-                                                    </Button>
+                                            {/* Card Content */}
+                                            <div className="px-3 pb-4 pt-2 relative">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
+                                                    <h3 className="text-sm font-semibold text-primary">
+                                                        {step.title}
+                                                    </h3>
+                                                </div>
+                                                <p className="text-xs text-tertiary mt-1 mb-6">
+                                                    {step.description}
+                                                </p>
+                                                
+                                                {/* CTA Link */}
+                                                <div className="absolute bottom-3 right-3">
+                                                    <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                        Setup →
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -294,15 +297,6 @@ export const AdminOnboardingPage = () => {
                         ))}
                     </div>
 
-                    {/* Skip for Now */}
-                    <div className="text-center mt-12">
-                        <button 
-                            onClick={() => window.location.href = "/admin2"}
-                            className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline underline-offset-2"
-                        >
-                            Skip onboarding and go to dashboard
-                        </button>
-                    </div>
 
                             </div>
                         </div>
