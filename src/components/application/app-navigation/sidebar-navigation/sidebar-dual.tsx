@@ -180,40 +180,40 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     const currentAdminVersion = getCurrentAdminVersion();
 
-    // Tour steps for spaces creation
+    // Tour steps for spaces creation with enhanced descriptions
     const spacesTourSteps: TourStep[] = [
         {
             id: "main-sidebar",
-            title: "Welcome to the Admin Panel",
-            description: "This is the main navigation sidebar where you can access different sections of your community management.",
+            title: "🎯 Welcome to Your Admin Hub",
+            description: "This sleek navigation sidebar is your command center! From here, you can access all the powerful tools to manage and grow your community.",
             targetSelector: "[data-tour-main-sidebar]",
             position: "right"
         },
         {
             id: "site-section",
-            title: "Site Management",
-            description: "Click here to access site management features including spaces, navigation, and content organization.",
+            title: "🏗️ Site Management Center",
+            description: "The Site section is where the magic happens! This is your gateway to managing spaces, organizing content, and customizing your community's structure.",
             targetSelector: "[data-tour-site-section]",
             position: "right"
         },
         {
             id: "secondary-sidebar",
-            title: "Site File Structure",
-            description: "Here you can see your site's file structure including collections, spaces, and utility pages.",
+            title: "📁 Your Content Architecture",
+            description: "Think of this as your digital filing cabinet! Here you'll see all your collections, spaces, and pages organized in a clean, hierarchical structure.",
             targetSelector: "[data-tour-secondary-sidebar]",
             position: "right"
         },
         {
             id: "spaces-section",
-            title: "Collections & Spaces",
-            description: "This section shows all your collections and spaces. You can organize your content here.",
+            title: "🗂️ Collections & Spaces Hub",
+            description: "This is where your content comes to life! Collections and spaces help you organize discussions, articles, events, and more into meaningful categories.",
             targetSelector: "[data-tour-spaces-section]",
             position: "right"
         },
         {
             id: "add-space-button",
-            title: "Add New Space",
-            description: "Click this button to create a new space for organizing your content. Let's try it now!",
+            title: "✨ Create Your First Space",
+            description: "Ready to build something amazing? Click this button to create a new space and start organizing your community content. Let's make it happen!",
             targetSelector: "[data-tour-add-space]",
             position: "right",
             action: () => {

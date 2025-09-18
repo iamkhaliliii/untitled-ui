@@ -23,31 +23,63 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
-/* Tour Guide Styles */
+/* Enhanced Tour Guide Styles */
 .tour-guide-highlight {
   position: relative !important;
-  z-index: 9999 !important;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 8px rgba(99, 102, 241, 0.2) !important;
-  border-radius: 8px !important;
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  animation: tour-pulse 2s infinite;
+  z-index: 10000 !important;
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.9),
+    0 0 0 6px rgba(99, 102, 241, 0.5),
+    0 0 0 12px rgba(99, 102, 241, 0.25),
+    0 0 30px rgba(99, 102, 241, 0.4) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.04)) !important;
+  animation: tour-glow 2.5s ease-in-out infinite;
+  /* Remove backdrop-filter to keep content clear */
 }
 
-@keyframes tour-pulse {
+@keyframes tour-glow {
   0%, 100% {
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 8px rgba(99, 102, 241, 0.2);
+    box-shadow: 
+      0 0 0 3px rgba(99, 102, 241, 0.8),
+      0 0 0 6px rgba(99, 102, 241, 0.4),
+      0 0 0 12px rgba(99, 102, 241, 0.2),
+      0 0 30px rgba(99, 102, 241, 0.3);
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.7), 0 0 0 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 
+      0 0 0 4px rgba(99, 102, 241, 1),
+      0 0 0 8px rgba(99, 102, 241, 0.6),
+      0 0 0 16px rgba(99, 102, 241, 0.3),
+      0 0 40px rgba(99, 102, 241, 0.5);
+    transform: scale(1.02);
   }
 }
 
 .tour-guide-overlay {
   pointer-events: none;
+  /* Remove backdrop-filter to prevent blurring highlighted elements */
 }
 
 .tour-guide-highlight {
   pointer-events: auto !important;
+}
+
+/* Smooth fade-in animation for tour guide */
+@keyframes tour-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tour-guide-tooltip {
+  animation: tour-fade-in 0.3s ease-out;
 }
 
 /* Infinite scroll animation */

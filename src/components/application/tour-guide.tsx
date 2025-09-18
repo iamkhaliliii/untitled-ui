@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { X, ArrowLeft, ArrowRight, Target } from "@untitledui/icons";
+import { X, ArrowLeft, ArrowRight, NavigationPointer01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 
+// Tour guide component for step-by-step UI guidance
 export interface TourStep {
     id: string;
     title: string;
@@ -46,6 +47,13 @@ export const TourGuide: React.FC<TourGuideProps> = ({
                 
                 // Add highlight class
                 element.classList.add('tour-guide-highlight');
+                
+                // Add a subtle blur effect to non-sidebar content
+                const mainContent = document.querySelector('main');
+                if (mainContent && !mainContent.contains(element)) {
+                    mainContent.style.filter = 'blur(0.5px)';
+                    mainContent.style.transition = 'filter 0.3s ease';
+                }
                 
                 // Calculate tooltip position
                 const rect = element.getBoundingClientRect();
@@ -99,6 +107,12 @@ export const TourGuide: React.FC<TourGuideProps> = ({
             if (targetElement) {
                 targetElement.classList.remove('tour-guide-highlight');
             }
+            // Remove blur from main content
+            const mainContent = document.querySelector('main');
+            if (mainContent) {
+                mainContent.style.filter = '';
+                mainContent.style.transition = '';
+            }
         };
     }, [currentStep, currentStepData, isActive, targetElement]);
 
@@ -108,6 +122,14 @@ export const TourGuide: React.FC<TourGuideProps> = ({
             // Remove all tour highlights
             const highlightedElements = document.querySelectorAll('.tour-guide-highlight');
             highlightedElements.forEach(el => el.classList.remove('tour-guide-highlight'));
+            
+            // Remove blur from main content
+            const mainContent = document.querySelector('main');
+            if (mainContent) {
+                mainContent.style.filter = '';
+                mainContent.style.transition = '';
+            }
+            
         };
     }, [isActive]);
 
@@ -127,88 +149,160 @@ export const TourGuide: React.FC<TourGuideProps> = ({
 
     return (
         <>
-            {/* Overlay */}
-            <div className="fixed inset-0 bg-black/50 z-[9998] tour-guide-overlay" />
+            {/* Smart Overlay with rectangular spotlight */}
+            {targetElement && (
+                <>
+                    {/* Top overlay */}
+                    <div 
+                        className="fixed z-[9998] bg-black/60 animate-in fade-in duration-300 transition-all duration-500"
+                        style={{
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: Math.max(0, targetElement.getBoundingClientRect().top - 12)
+                        }}
+                    />
+                    {/* Bottom overlay */}
+                    <div 
+                        className="fixed z-[9998] bg-black/60 animate-in fade-in duration-300 transition-all duration-500"
+                        style={{
+                            top: targetElement.getBoundingClientRect().bottom + 12,
+                            left: 0,
+                            right: 0,
+                            bottom: 0
+                        }}
+                    />
+                    {/* Left overlay */}
+                    <div 
+                        className="fixed z-[9998] bg-black/60 animate-in fade-in duration-300 transition-all duration-500"
+                        style={{
+                            top: Math.max(0, targetElement.getBoundingClientRect().top - 12),
+                            left: 0,
+                            width: Math.max(0, targetElement.getBoundingClientRect().left - 12),
+                            height: targetElement.getBoundingClientRect().height + 24
+                        }}
+                    />
+                    {/* Right overlay */}
+                    <div 
+                        className="fixed z-[9998] bg-black/60 animate-in fade-in duration-300 transition-all duration-500"
+                        style={{
+                            top: Math.max(0, targetElement.getBoundingClientRect().top - 12),
+                            left: targetElement.getBoundingClientRect().right + 12,
+                            right: 0,
+                            height: targetElement.getBoundingClientRect().height + 24
+                        }}
+                    />
+                </>
+            )}
             
-            {/* Tour Tooltip */}
+            {!targetElement && (
+                <div className="fixed inset-0 z-[9998] bg-black/60 animate-in fade-in duration-300" />
+            )}
+            
+            {/* Enhanced Tour Tooltip */}
             <div
-                className="fixed z-[9999] w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4"
+                className="fixed z-[9999] w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden tour-guide-tooltip"
                 style={{
                     top: tooltipPosition.top,
                     left: tooltipPosition.left,
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
                 }}
             >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                        <Target className="w-4 h-4 text-brand-secondary" />
-                        <span className="text-xs font-medium text-brand-secondary">
-                            Step {currentStep + 1} of {steps.length}
-                        </span>
-                    </div>
-                    <button
-                        onClick={onSkip}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    >
-                        <X className="w-4 h-4" />
-                    </button>
-                </div>
-
-                {/* Content */}
-                <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                        {currentStepData.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {currentStepData.description}
-                    </p>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
-                        <span>Progress</span>
-                        <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                        <div 
-                            className="bg-brand-solid h-1.5 rounded-full transition-all duration-300"
-                            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-                        />
+                {/* Enhanced Header with gradient background */}
+                <div className="bg-gradient-to-r from-brand-50 to-brand-100 dark:from-brand-950 dark:to-brand-900 px-6 py-4 border-b border-brand-200/50 dark:border-brand-800/50">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-brand-500 rounded-full flex items-center justify-center shadow-lg">
+                                <NavigationPointer01 className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <span className="text-xs font-medium text-brand-600 dark:text-brand-400 uppercase tracking-wider">
+                                    Tour Guide
+                                </span>
+                                <div className="text-sm font-semibold text-brand-900 dark:text-brand-100">
+                                    Step {currentStep + 1} of {steps.length}
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onSkip}
+                            className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors group"
+                        >
+                            <X className="w-4 h-4 text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
+                        </button>
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center justify-between">
-                    <div className="flex gap-2">
-                        {currentStep > 0 && (
+                {/* Enhanced Content */}
+                <div className="px-6 py-5">
+                    <div className="mb-6">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 leading-tight">
+                            {currentStepData.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {currentStepData.description}
+                        </p>
+                    </div>
+
+                    {/* Minimal Progress Bar */}
+                    <div className="mb-4">
+                        <div className="flex items-center gap-3 mb-2">
+                            {/* Simple progress dots */}
+                            <div className="flex items-center gap-1.5">
+                                {Array.from({ length: steps.length }, (_, index) => (
+                                    <div
+                                        key={index}
+                                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                            index <= currentStep
+                                                ? 'bg-brand-500'
+                                                : 'bg-gray-300 dark:bg-gray-600'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                                {currentStep + 1}/{steps.length}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Enhanced Actions */}
+                <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 border-t border-gray-100 dark:border-gray-800">
+                    <div className="flex items-center justify-between">
+                        <div className="flex gap-3">
+                            {currentStep > 0 && (
+                                <Button
+                                    size="sm"
+                                    color="tertiary"
+                                    iconLeading={ArrowLeft}
+                                    onClick={onPrevious}
+                                    className="shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                    Previous
+                                </Button>
+                            )}
+                        </div>
+                        
+                        <div className="flex gap-3">
                             <Button
                                 size="sm"
                                 color="tertiary"
-                                iconLeading={ArrowLeft}
-                                onClick={onPrevious}
+                                onClick={onSkip}
+                                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
                             >
-                                Previous
+                                Skip Tour
                             </Button>
-                        )}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                        <Button
-                            size="sm"
-                            color="tertiary"
-                            onClick={onSkip}
-                        >
-                            Skip Tour
-                        </Button>
-                        <Button
-                            size="sm"
-                            color="primary"
-                            iconTrailing={currentStep < steps.length - 1 ? ArrowRight : undefined}
-                            onClick={handleNext}
-                        >
-                            {currentStep < steps.length - 1 ? 'Next' : 'Complete'}
-                        </Button>
+                            <Button
+                                size="sm"
+                                color="primary"
+                                iconTrailing={currentStep < steps.length - 1 ? ArrowRight : undefined}
+                                onClick={handleNext}
+                                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+                            >
+                                {currentStep < steps.length - 1 ? 'Next Step' : 'Complete Tour'}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
