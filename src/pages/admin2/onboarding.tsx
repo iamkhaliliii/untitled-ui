@@ -211,11 +211,11 @@ export const AdminOnboardingPage = () => {
                         <div className="px-4 py-6 lg:px-6">
                             <div className="mx-auto max-w-7xl">
                                 
-                                {/* Two Column Layout */}
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 min-h-screen">
+                                {/* Two Column Layout - 1/3 and 2/3 */}
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 min-h-screen">
                                     
-                                    {/* Left Column - Welcome Message */}
-                                    <div className="flex flex-col justify-center">
+                                    {/* Left Column - Welcome Message (1/3) */}
+                                    <div className="lg:col-span-4 flex flex-col justify-center">
                                         <div className="flex items-center justify-start mb-8">
                                             <div className="w-20 h-20 bg-brand-solid rounded-2xl flex items-center justify-center">
                                                 <Rocket01 className="w-10 h-10 text-white" />
@@ -229,8 +229,8 @@ export const AdminOnboardingPage = () => {
                                         </p>
                                     </div>
 
-                                    {/* Right Column - Progress and Cards */}
-                                    <div className="space-y-8">
+                                    {/* Right Column - Progress and Cards (2/3) */}
+                                    <div className="lg:col-span-8 space-y-8">
                                         
                                         {/* Progress Overview */}
                                         <div className="bg-brand-primary_alt border border-brand-300 rounded-xl p-6">
@@ -243,8 +243,8 @@ export const AdminOnboardingPage = () => {
                                             </div>
                                         </div>
 
-                                        {/* Onboarding Categories */}
-                                        <div className="space-y-8">
+                                        {/* Onboarding Categories - Side by Side */}
+                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                             {onboardingCategories.map((category) => (
                                                 <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
                                                     
