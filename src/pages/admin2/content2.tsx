@@ -829,7 +829,7 @@ export const AdminContent2Page = () => {
                                                                         <Dropdown.Item 
                                                                             key="view-space" 
                                                                             icon={Eye}
-                                                                            onAction={() => window.open('http://localhost:5174/site/event', '_blank')}
+                                                                            onAction={() => window.open('/site/event', '_blank')}
                                                                         >
                                                                             <div className="flex items-center justify-between w-full">
                                                                                 <span>View Space</span>

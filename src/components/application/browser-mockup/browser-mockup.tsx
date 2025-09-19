@@ -38,7 +38,7 @@ interface BrowserMockupProps {
 
 export const BrowserMockup = ({ 
   className, 
-  url = "http://localhost:5173/site/event", 
+  url = "/site/event", 
   title = "Events",
   theme: propTheme
 }: BrowserMockupProps) => {

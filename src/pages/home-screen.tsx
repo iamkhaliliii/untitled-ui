@@ -1,6 +1,7 @@
-import { Settings01, Globe01, ArrowRight, UsersPlus, Building01 } from "@untitledui/icons";
+import { Settings01, Globe01, ArrowRight, UsersPlus, Zap, CheckCircle, Calendar, MessageSquare01 } from "@untitledui/icons";
+import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
-import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
+import { BettermodeLogo } from "@/components/foundations/logo/bettermode-logo";
 import { BackgroundPattern } from "@/components/shared-assets/background-patterns";
 import { Link } from "react-router";
 
@@ -14,18 +15,20 @@ export const HomeScreen = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-transparent to-transparent" />
             </div>
 
+            {/* Logo in top left corner */}
+            <div className="absolute top-6 left-6 z-20">
+                <BettermodeLogo className="h-8 w-auto" />
+            </div>
+
             {/* Main content */}
             <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4">
-                <div className="relative mb-6 flex size-28 items-center justify-center rounded-2xl border border-secondary/60 bg-primary/70 backdrop-blur-sm">
-                    <UntitledLogoMinimal className="size-10 text-brand-solid" />
-                </div>
 
                 <div className="max-w-3xl text-center">
                     <h1 className="text-display-sm font-semibold tracking-tight text-primary">
-                        Untitled UI — Admin & Site
+                        Bettermode Prototype
                     </h1>
                     <p className="mt-3 text-lg text-tertiary">
-                        Pick your destination to continue. Fast, clear, and delightful.
+                        Select your path and continue.
                     </p>
                 </div>
 
@@ -36,28 +39,66 @@ export const HomeScreen = () => {
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Admin</div>
                         <div className="space-y-3">
                             <Link to="/admin3" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-2">
-                                                <Settings01 className="size-5 text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Settings01 className="size-4 text-brand-solid" />
                                             </span>
                                             <span className="text-sm font-medium text-primary">Admin 3.0</span>
                                         </div>
-                                        <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="gray" size="sm">On Hold</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>
                             <Link to="/admin2" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-2">
-                                                <Settings01 className="size-5 text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Settings01 className="size-4 text-brand-solid" />
                                             </span>
                                             <span className="text-sm font-medium text-primary">Admin 2.0</span>
                                         </div>
-                                        <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="blue" size="sm">Under Design</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/admin2/site" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Globe01 className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Site Section</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="success" size="sm">Ready for Dev</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/admin2/site/spaces/growth/events/customize" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Settings01 className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Simple Customize Space</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="blue" size="sm">Under Design</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>
@@ -69,51 +110,121 @@ export const HomeScreen = () => {
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Site</div>
                         <div className="space-y-3">
                             <Link to="/site" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-secondary/30 p-2">
-                                                <Globe01 className="size-5 text-secondary" />
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-secondary/30 p-1.5">
+                                                <Globe01 className="size-4 text-secondary" />
                                             </span>
                                             <span className="text-sm font-medium text-primary">Website</span>
                                         </div>
-                                        <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="blue" size="sm">Under Design</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/site/event" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Calendar className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Events Page</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="success" size="sm">Ready for Dev</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/site/event/1" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Calendar className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Event Detail Page</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="success" size="sm">Ready for Dev</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/site/post-view" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <MessageSquare01 className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Embed Event</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="success" size="sm">Ready for Dev</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>
                         </div>
                     </div>
 
-                    {/* Signup column */}
+                    {/* Get Started column */}
                     <div>
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Get Started</div>
                         <div className="space-y-3">
                             <Link to="/signup" className="group">
-                                <div className="rounded-lg border border-secondary bg-gradient-to-br from-green-50 to-emerald-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-400 hover:shadow-lg">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-3">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-green-500/10 p-2">
-                                                <UsersPlus className="size-5 text-green-600" />
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <UsersPlus className="size-4 text-brand-solid" />
                                             </span>
                                             <span className="text-sm font-medium text-primary">Sign Up</span>
                                         </div>
-                                        <ArrowRight className="size-4 text-tertiary group-hover:text-green-600" />
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="orange" size="sm">Under Review</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-tertiary leading-relaxed">
-                                        Create your B2B SaaS community in minutes. Multi-step onboarding with smart plan recommendations.
-                                    </p>
                                 </div>
                             </Link>
-                            <Link to="/login" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                            <Link to="/wizard" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-2">
-                                                <Building01 className="size-5 text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <Zap className="size-4 text-brand-solid" />
                                             </span>
-                                            <span className="text-sm font-medium text-primary">Login</span>
+                                            <span className="text-sm font-medium text-primary">Setup Wizard</span>
                                         </div>
-                                        <ArrowRight className="size-4 text-tertiary group-hover:text-brand-solid" />
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="orange" size="sm">Under Review</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                            <Link to="/admin2/onboarding" className="group">
+                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                                <CheckCircle className="size-4 text-brand-solid" />
+                                            </span>
+                                            <span className="text-sm font-medium text-primary">Onboarding</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge color="orange" size="sm">Under Review</Badge>
+                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>

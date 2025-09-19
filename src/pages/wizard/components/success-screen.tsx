@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { WizardFormData } from "../types";
 
 interface SuccessScreenProps {
@@ -6,14 +7,16 @@ interface SuccessScreenProps {
 }
 
 export const SuccessScreen = ({ formData }: SuccessScreenProps) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Redirect after 3 seconds
     const timer = setTimeout(() => {
-      window.location.href = "http://localhost:5173/admin2/onboarding";
+      navigate("/admin2/onboarding");
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [navigate]);
 
   const brandColor = formData.primaryColor || '#6366f1';
 

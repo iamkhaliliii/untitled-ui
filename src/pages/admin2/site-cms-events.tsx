@@ -232,7 +232,7 @@ export const SiteCmsEventsPage = () => {
     const renderCustomizeContent = () => (
         <div className="h-full">
             <BrowserMockup 
-                url="http://localhost:5173/site/cms/events" 
+                url="/site/cms/events" 
                 title="CMS Events"
             />
         </div>

@@ -23,7 +23,7 @@ import { Badge, BadgeWithIcon } from "@/components/base/badges/badges";
 import { SidebarNavigationSlim } from "@/components/application/app-navigation/sidebar-navigation/sidebar-slim";
 import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
 import { useAdmin } from "@/hooks/use-admin";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import type { NavItemType } from "@/components/application/app-navigation/config";
 import { useState, useEffect } from "react";
 
@@ -186,6 +186,7 @@ const onboardingCategories = [
 
 export const AdminOnboardingPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const [showOnboardingHub, setShowOnboardingHub] = useState(false);
 
@@ -368,7 +369,7 @@ export const AdminOnboardingPage = () => {
                                                 {/* Step 3 - Recommended Next Step */}
                                                 <div 
                                                     className="flex items-center gap-4 p-3 bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-                                                    onClick={() => window.location.href = "/admin2/site/spaces/create?startTour=true"}
+                                                    onClick={() => navigate("/admin2/site/spaces/create?startTour=true")}
                                                 >
                                                     <Database01 className="w-5 h-5 text-brand-secondary flex-shrink-0" />
                                                     <div className="flex-1">
@@ -605,7 +606,7 @@ export const AdminOnboardingPage = () => {
                                                 ? 'opacity-50' 
                                                 : ''
                                             }`}
-                                            onClick={() => window.location.href = step.href}
+                                            onClick={() => navigate(step.href)}
                                         >
                                             {/* Card Content */}
                                             <div className="p-6">

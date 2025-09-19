@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { Rocket01, X, MessageChatCircle, Database01, Users01, CodeBrowser, Settings01, Palette, BarChartSquare02, Data, Plus, ArrowRight } from "@untitledui/icons";
 import { ProgressWidget } from "./progress-widget";
 
 export const FloatingProgressButton = () => {
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [showSimplePopover, setShowSimplePopover] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
@@ -18,7 +20,7 @@ export const FloatingProgressButton = () => {
 
     const handleSimplePopoverClick = () => {
         setShowSimplePopover(false);
-        window.location.href = '/admin2/site/spaces/create?startTour=true';
+        navigate('/admin2/site/spaces/create?startTour=true');
     };
 
     const closeSimplePopover = () => {
@@ -137,7 +139,7 @@ export const FloatingProgressButton = () => {
                                 <h3 className="text-sm font-semibold text-white">Setup Progress</h3>
                                 <div className="flex items-center gap-2">
                                     <button
-                                        onClick={() => window.location.href = '/admin2/onboarding'}
+                                        onClick={() => navigate('/admin2/onboarding')}
                                         className="text-xs text-violet-400 hover:text-violet-300 underline transition-colors font-medium"
                                     >
                                         Onboarding Hub
@@ -162,7 +164,7 @@ export const FloatingProgressButton = () => {
                                 <div className="max-h-64 overflow-y-auto scrollbar-thin space-y-2">
                                     {/* Recommended Next Step */}
                                     <button 
-                                        onClick={() => window.location.href = '/admin2/site/spaces/create?startTour=true'}
+                                        onClick={() => navigate('/admin2/site/spaces/create?startTour=true')}
                                         className="w-full text-left p-3 bg-violet-500/20 border border-violet-500/30 hover:bg-violet-500/30 rounded-lg transition-colors"
                                     >
                                         <div className="flex items-center gap-3">
