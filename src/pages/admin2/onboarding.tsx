@@ -14,15 +14,18 @@ import {
     BarChartSquare02,
     Data,
     LifeBuoy01,
-    GraduationHat02
+    GraduationHat02,
+    Lock01,
+    LinkExternal01,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
-import { Badge } from "@/components/base/badges/badges";
+import { Badge, BadgeWithIcon } from "@/components/base/badges/badges";
 import { SidebarNavigationSlim } from "@/components/application/app-navigation/sidebar-navigation/sidebar-slim";
 import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
 import { useAdmin } from "@/hooks/use-admin";
 import { useLocation } from "react-router";
 import type { NavItemType } from "@/components/application/app-navigation/config";
+import { useState, useEffect } from "react";
 
 const onboardingCategories = [
     {
@@ -35,7 +38,7 @@ const onboardingCategories = [
                 title: "Site permissions & privacy",
                 description: "Configure who can access your community",
                 icon: Settings01,
-                status: "pending",
+                status: "completed",
                 href: "/admin2/setting/site-settings",
                 image: "/pic/onboarding/moderation-rules.jpg"
             },
@@ -44,7 +47,7 @@ const onboardingCategories = [
                 title: "Login/Auth",
                 description: "Set up authentication methods",
                 icon: Users01,
-                status: "pending",
+                status: "completed",
                 href: "/admin2/setting/authentication",
                 image: "/pic/onboarding/social-login.jpg"
             },
@@ -184,6 +187,21 @@ const onboardingCategories = [
 export const AdminOnboardingPage = () => {
     const location = useLocation();
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
+    const [showOnboardingHub, setShowOnboardingHub] = useState(false);
+
+    // Keyboard event handler for 'O' key
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key.toLowerCase() === 'o') {
+                setShowOnboardingHub(prev => !prev);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
     
     // Admin2 navigation items
     const navItems: NavItemType[] = [
@@ -252,14 +270,11 @@ export const AdminOnboardingPage = () => {
                 <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
                     {/* Main Content */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
-                        <div className="px-4 py-6 lg:px-6">
-                            <div className="mx-auto max-w-7xl">
-                                
-                                {/* Hero Section with Enhanced Design */}
-                                <div className="space-y-12 pt-6">
-                                    
-                                    {/* Top Hero Section - Welcome Message and Suggested Steps */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                        {/* Full Height Welcome Section */}
+                        <div className="min-h-screen flex items-center justify-center px-4 py-6 lg:px-6">
+                            <div className="mx-auto max-w-7xl w-full">
+                                {/* Top Hero Section - Welcome Message and Suggested Steps */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                                         
                                         {/* Left - Enhanced Welcome Message */}
                                         <div className="flex flex-col justify-start space-y-6">
@@ -277,8 +292,27 @@ export const AdminOnboardingPage = () => {
                                                     </span>
                                                 </h1>
                                                 <p className="text-sm text-tertiary leading-relaxed max-w-lg">
-                                                    Complete these essential setup steps to create an amazing experience for your members and unlock your community's full potential.
+                                                    Set up your foundation, complete these core steps to ensure security, branding, and team access before launch.
                                                 </p>
+                                                
+                                                {/* Help Links */}
+                                                <div className="pt-4">
+                                                    <p className="text-sm text-tertiary mb-3">Know more:</p>
+                                                    <div className="flex flex-col space-y-2">
+                                                        <a href="#" className="flex items-center gap-1 text-sm text-tertiary/60 hover:text-tertiary transition-colors w-fit">
+                                                            <span>Academy</span>
+                                                            <ArrowRight className="w-3 h-3" />
+                                                        </a>
+                                                        <a href="#" className="flex items-center gap-1 text-sm text-tertiary/60 hover:text-tertiary transition-colors w-fit">
+                                                            <span>Support Hub</span>
+                                                            <ArrowRight className="w-3 h-3" />
+                                                        </a>
+                                                        <a href="#" className="flex items-center gap-1 text-sm text-tertiary/60 hover:text-tertiary transition-colors w-fit">
+                                                            <span>Knowledge Base</span>
+                                                            <ArrowRight className="w-3 h-3" />
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
 
 
@@ -289,9 +323,12 @@ export const AdminOnboardingPage = () => {
                                             
                                             {/* Progress */}
                                             <div className="mb-4 p-3">
-                                                <div className="flex items-center justify-between mb-6">
-                                                    <h4 className="text-sm font-medium text-primary">Your Journey</h4>
-                                                    <span className="text-xs text-tertiary">3 more steps to complete setup</span>
+                                                <div className="mb-6">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <h4 className="text-sm font-medium text-primary">Community Journey</h4>
+                                                        <span className="text-xs text-tertiary">3 more steps to complete setup</span>
+                                                    </div>
+                                                    <p className="text-xs text-tertiary">Track and complete every stage from setup to growth</p>
                                                 </div>
                                                 
                                                 <div className="relative mb-6">
@@ -466,14 +503,21 @@ export const AdminOnboardingPage = () => {
                                                 </div>
                                                 </div>
                                             </div>
-                            </div>
                         </div>
+                    </div>
+                        </div>
+                        </div>
+
+                        {/* Onboarding Hub Section - Separate scrollable section - Hidden by default, toggle with 'O' key */}
+                        {showOnboardingHub && (
+                            <div className="px-4 py-12 lg:px-6 bg-gray-50">
+                                <div className="mx-auto max-w-7xl">
 
                                     {/* Section Introduction */}
                                     <div className="text-center space-y-4 mb-8">
-                                        <h2 className="text-3xl font-bold text-primary">Start Guide 🔥</h2>
+                                        <h2 className="text-3xl font-bold text-primary">Your Onboarding Hub</h2>
                         <p className="text-lg text-tertiary max-w-2xl mx-auto">
-                                            Follow these steps to get your community up and running
+                                            All setup steps organized by stage
                         </p>
                     </div>
 
@@ -536,57 +580,106 @@ export const AdminOnboardingPage = () => {
                         </div>
                     </div>
 
-                                    {/* Bottom Section - Onboarding Categories Side by Side */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                        {onboardingCategories.map((category) => (
-                            <div key={category.id} className="bg-primary border border-secondary rounded-xl p-3 space-y-3">
+                                    {/* Bottom Section - Onboarding Categories as Horizontal Sections */}
+                                    <div className="space-y-12">
+                        {onboardingCategories.map((category, categoryIndex) => (
+                            <div key={category.id} className="bg-primary">
                                 
                                 {/* Category Header */}
-                                <div className="text-left pb-2 border-b border-secondary/50">
-                                    <h2 className="text-lg font-semibold text-primary mb-1">
+                                <div className="text-left mb-6">
+                                    <h2 className="text-2xl font-bold text-primary mb-2">
                                         {category.title}
                                     </h2>
-                                    <p className="text-xs text-tertiary">
+                                    <p className="text-base text-tertiary">
                                         {category.description}
                                     </p>
                                 </div>
 
-                                {/* Category Steps */}
-                                <div className="space-y-3">
-                                    {category.steps.map((step, index) => (
+                                {/* Category Steps in 4-Column Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {category.steps.map((step, stepIndex) => (
                                         <div 
                                             key={step.id}
-                                            className="bg-secondary border-1 border-secondary rounded-lg overflow-hidden hover:border-primary transition-colors cursor-pointer "
+                                            className={`bg-white border border-secondary rounded-lg hover:border-primary transition-colors cursor-pointer flex flex-col ${
+                                                step.status === 'pending' && (step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') 
+                                                ? 'opacity-50' 
+                                                : ''
+                                            }`}
                                             onClick={() => window.location.href = step.href}
                                         >
-                                            {/* Cover Image */}
-                                            <div className="h-28 bg-gray-100 overflow-hidden relative">
-                                                <img 
-                                                    src={step.image} 
-                                                    alt={step.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/40 to-secondary"></div>
-                                            </div>
-
                                             {/* Card Content */}
-                                            <div className="px-3 pb-4 pt-2 relative">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <step.icon className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                                                    <h3 className="text-sm font-semibold text-primary">
-                                                        {step.title}
-                                                    </h3>
-                                                </div>
-                                                <p className="text-xs text-tertiary mt-1 mb-6">
-                                                    {step.description}
-                                                </p>
-                                                
-                                                {/* CTA Link */}
-                                                <div className="absolute bottom-3 right-3">
-                                                    <span className="text-xs text-brand-secondary hover:text-brand-secondary_hover transition-colors">
-                                                        Setup →
-                                                    </span>
+                                            <div className="p-6">
+                                                <div className="flex flex-col h-full">
+                                                    {/* Header with Icon and Badge */}
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div className="relative shrink-0 rounded-lg h-10 w-10" title={step.title}>
+                                                            <div className="shrink-0 rounded-lg h-10 w-10 bg-gradient-to-br from-brand-primary_alt to-brand-secondary/20 flex items-center justify-center">
+                                                                <step.icon className="w-5 h-5 text-brand-secondary" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-wrap justify-end gap-2">
+                                                            {/* Locked Badge for specific steps */}
+                                                            {step.status === 'pending' && (step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') && (
+                                                                <BadgeWithIcon 
+                                                                    type="pill-color" 
+                                                                    size="sm" 
+                                                                    color="gray" 
+                                                                    iconLeading={Lock01}
+                                                                >
+                                                                    Locked
+                                                                </BadgeWithIcon>
+                                                            )}
+                                                            
+                                                            {/* Done Badge for completed steps */}
+                                                            {step.status === 'completed' && (
+                                                                <BadgeWithIcon 
+                                                                    type="pill-color" 
+                                                                    size="sm" 
+                                                                    color="success" 
+                                                                    iconLeading={CheckCircle}
+                                                                >
+                                                                    Done
+                                                                </BadgeWithIcon>
+                                                            )}
+                                                            
+                                                            {/* Ready Badge for available pending steps */}
+                                                            {step.status === 'pending' && !(step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') && (
+                                                                <Badge 
+                                                                    type="pill-color" 
+                                                                    size="sm" 
+                                                                    color="brand"
+                                                                >
+                                                                    Ready
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Title and Description */}
+                                                    <div className="flex-1 mb-6">
+                                                        <h4 className="text-lg font-semibold text-primary mb-2">{step.title}</h4>
+                                                        <p className="text-sm text-tertiary leading-relaxed">{step.description}</p>
+                                                    </div>
+                                                    
+                                                    {/* CTA Footer */}
+                                                    <div className="flex items-center justify-end gap-4 pt-4 mt-auto border-t border-secondary/10">
+                                                        <a 
+                                                            href="#" 
+                                                            className="flex items-center gap-1 text-sm text-tertiary hover:text-secondary transition-colors"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <span>Learn more</span>
+                                                            <LinkExternal01 className="w-4 h-4" />
+                                                        </a>
+                                                        <a 
+                                                            href={step.href} 
+                                                            className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <span>Setup</span>
+                                                            <ArrowRight className="w-4 h-4" />
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -595,9 +688,9 @@ export const AdminOnboardingPage = () => {
                             </div>
                         ))}
                     </div>
-                                </div>
                             </div>
                         </div>
+                        )}
                     </main>
                 </div>
             </div>
