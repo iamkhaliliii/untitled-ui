@@ -150,6 +150,42 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin2/site/spaces/myfolder/posts/audit-logs" element={<Admin2SiteSpacesPostsPage />} />
                         <Route path="/admin2/site/spaces/myfolder/posts/seo" element={<Admin2SiteSpacesPostsPage />} />
                         <Route path="/admin2/site/spaces/myfolder/posts/danger" element={<Admin2SiteSpacesPostsPage />} />
+                        
+                        {/* Growth folder routes */}
+                        <Route path="/admin2/site/spaces/growth/events" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/create" element={<Admin2SiteSpacesEventsCreatePage />} />
+                        <Route path="/admin2/site/spaces/growth/events/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/growth/events/permissions" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/members" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/analytics" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/audit-logs" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/seo" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/events/danger" element={<Admin2SiteSpacesEventsPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/permissions" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/members" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/analytics" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/audit-logs" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/seo" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/blog/danger" element={<Admin2SiteSpacesBlogPage />} />
+                        <Route path="/admin2/site/spaces/growth/help" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/growth/help/permissions" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/members" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/analytics" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/audit-logs" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/seo" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/help/danger" element={<Admin2SiteSpacesHelpPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/customize" element={<Admin2EventsCustomizePage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/permissions" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/members" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/analytics" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/audit-logs" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/seo" element={<Admin2SiteSpacesPostsPage />} />
+                        <Route path="/admin2/site/spaces/growth/posts/danger" element={<Admin2SiteSpacesPostsPage />} />
+                        
                         <Route path="/admin2/site/spaces/private-space" element={<Admin2SiteSpacesEventsPage />} />
                         <Route path="/admin2/site/spaces/private-space/customize" element={<Admin2EventsCustomizePage />} />
                         <Route path="/admin2/site/spaces/private-space/permissions" element={<Admin2SiteSpacesEventsPage />} />

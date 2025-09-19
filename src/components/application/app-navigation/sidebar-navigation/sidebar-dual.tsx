@@ -282,6 +282,35 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/site/spaces/myfolder/posts/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/posts/danger")) return "danger";
+        // Growth folder routes
+        if (activeUrl?.includes("/site/spaces/growth/events/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/events/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/events/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/events/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/events/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/events/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/events/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/blog/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/blog/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/blog/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/blog/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/blog/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/blog/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/blog/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/help/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/help/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/help/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/help/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/help/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/help/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/help/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/posts/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/posts/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/posts/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/posts/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/posts/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/posts/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/posts/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/private-space/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/settings")) return "general";
@@ -335,25 +364,29 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 id: `${folderId}-events`, 
                 label: "Events",
                 icon: <File05 className="size-5 text-fg-quaternary" />,
-                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/events` } : undefined
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/events` } : 
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/events` } : undefined
             },
             { 
                 id: `${folderId}-blog`, 
                 label: "Blog", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
-                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : undefined
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : 
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/blog` } : undefined
             },
             { 
                 id: `${folderId}-help`, 
                 label: "Help", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
-                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : undefined
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : 
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/help` } : undefined
             },
             { 
                 id: `${folderId}-posts`, 
                 label: "Posts", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
-                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : undefined
+                data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : 
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/posts` } : undefined
             },
             { id: `${folderId}-wishlist`, label: "Wishlist", icon: <File05 className="size-5 text-fg-quaternary" /> },
             ...Array.from({ length: childrenCount }, (_, index) => ({
@@ -416,7 +449,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         // Create multiple folders with independent pagination
         const folders = [
             createFolderWithChildren("myFolder", "MyFolder", 15),
-            createFolderWithChildren("myFolder2", "MyFolder2", 15),
+            createFolderWithChildren("myFolder2", "Growth", 15),
             createFolderWithChildren("myFolder3", "MyFolder3", 15),
             createFolderWithChildren("myFolder4", "MyFolder4", 15),
             createFolderWithChildren("myFolder5", "MyFolder5", 15),
@@ -903,14 +936,15 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     };
 
     // Check if we're on any events page, blog page, help page, posts page, private space page, spaces create page, or CMS events page
-    const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events");
-    const isBlogPage = activeUrl?.includes("/site/spaces/myfolder/blog");
-    const isHelpPage = activeUrl?.includes("/site/spaces/myfolder/help");
-    const isPostsPage = activeUrl?.includes("/site/spaces/myfolder/posts");
+    const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events") || activeUrl?.includes("/site/spaces/growth/events");
+    const isBlogPage = activeUrl?.includes("/site/spaces/myfolder/blog") || activeUrl?.includes("/site/spaces/growth/blog");
+    const isHelpPage = activeUrl?.includes("/site/spaces/myfolder/help") || activeUrl?.includes("/site/spaces/growth/help");
+    const isPostsPage = activeUrl?.includes("/site/spaces/myfolder/posts") || activeUrl?.includes("/site/spaces/growth/posts");
     const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
-    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage;
+    const isGrowthPage = activeUrl?.includes("/site/spaces/growth/");
+    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage || isGrowthPage;
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -1303,7 +1337,17 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
                 <h3 className="text-sm font-semibold text-brand-secondary">
-                    {isEventsPage ? "Events" : isBlogPage ? "Blog" : isHelpPage ? "Help" : isPostsPage ? "Posts" : isPrivateSpacePage ? "Private Space" : isCmsEventsPage ? "CMS Events" : currentItem?.label}
+                    {isEventsPage ? 
+                        (activeUrl?.includes("/site/spaces/growth/events") ? "Growth Events" : "Events") : 
+                     isBlogPage ? 
+                        (activeUrl?.includes("/site/spaces/growth/blog") ? "Growth Blog" : "Blog") : 
+                     isHelpPage ? 
+                        (activeUrl?.includes("/site/spaces/growth/help") ? "Growth Help" : "Help") : 
+                     isPostsPage ? 
+                        (activeUrl?.includes("/site/spaces/growth/posts") ? "Growth Posts" : "Posts") : 
+                     isPrivateSpacePage ? "Private Space" : 
+                     isCmsEventsPage ? "CMS Events" : 
+                     currentItem?.label}
                 </h3>
                 
                 {/* Show Navigation Settings when navigation is selected */}
@@ -1660,6 +1704,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <button
                                         onClick={() => handleSecondaryItemClick("general", 
                                             isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
+                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
+                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
+                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
+                                            activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
                                             isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
                                             isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
                                             isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts` :
@@ -1682,6 +1730,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     onClick={() => handleSecondaryItemClick("customize", 
                                         isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
                                         isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
+                                        activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
+                                        activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
+                                        activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
+                                        activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
                                         isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
                                         isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
                                         isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
@@ -1703,6 +1755,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <button
                                         onClick={() => handleSecondaryItemClick("permissions", 
                                             isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
+                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/permissions` :
+                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/permissions` :
+                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/permissions` :
+                                            activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/permissions` :
                                             isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/permissions` :
                                             isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/permissions` :
                                             isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/permissions` :
@@ -1741,6 +1797,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("members", 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/members` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/members` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/members` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/members` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/members` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/members` :
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/members` :
@@ -1759,6 +1819,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("analytics", 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/analytics` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/analytics` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/analytics` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/analytics` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/analytics` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/analytics` :
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/analytics` :
@@ -1777,6 +1841,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("audit-logs", 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/audit-logs` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/audit-logs` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/audit-logs` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/audit-logs` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/audit-logs` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/audit-logs` :
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/audit-logs` :
@@ -1795,6 +1863,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("seo", 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/seo` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/seo` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/seo` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/seo` :
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/seo` :
@@ -1813,6 +1885,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("danger", 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/danger` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/danger` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/danger` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/danger` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/danger` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/danger` :
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/danger` :

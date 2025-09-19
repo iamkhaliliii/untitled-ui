@@ -8,6 +8,15 @@ interface ToggleStates {
   footer: boolean;
 }
 
+interface SpaceWidgetStates {
+  spaceHeader: boolean;
+  eventsList: boolean;
+  customEventsList: boolean;
+  upcomingEvents: boolean;
+  heroBanner: boolean;
+  menu: boolean;
+}
+
 interface WidgetConfigContextType {
   eventsListConfig: EventsListConfig;
   updateEventsListConfig: (config: Partial<EventsListConfig>) => void;
@@ -15,6 +24,8 @@ interface WidgetConfigContextType {
   updateSpaceHeaderConfig: (config: Partial<SpaceHeaderConfig>) => void;
   toggleStates: ToggleStates;
   updateToggleStates: (states: Partial<ToggleStates>) => void;
+  spaceWidgetStates: SpaceWidgetStates;
+  updateSpaceWidgetStates: (states: Partial<SpaceWidgetStates>) => void;
 }
 
 const WidgetConfigContext = createContext<WidgetConfigContextType | undefined>(undefined);
@@ -40,6 +51,14 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     rightSidebar: false,
     footer: false,
   });
+  const [spaceWidgetStates, setSpaceWidgetStates] = useState<SpaceWidgetStates>({
+    spaceHeader: true,
+    eventsList: true,
+    customEventsList: false,
+    upcomingEvents: true,
+    heroBanner: false,
+    menu: true,
+  });
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
     setEventsListConfig(prevConfig => ({ ...prevConfig, ...config }));
@@ -53,6 +72,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     setToggleStates(prevStates => ({ ...prevStates, ...states }));
   };
 
+  const updateSpaceWidgetStates = (states: Partial<SpaceWidgetStates>) => {
+    setSpaceWidgetStates(prevStates => ({ ...prevStates, ...states }));
+  };
+
   return (
     <WidgetConfigContext.Provider value={{ 
       eventsListConfig, 
@@ -60,7 +83,9 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       spaceHeaderConfig,
       updateSpaceHeaderConfig,
       toggleStates,
-      updateToggleStates
+      updateToggleStates,
+      spaceWidgetStates,
+      updateSpaceWidgetStates
     }}>
       {children}
     </WidgetConfigContext.Provider>

@@ -1,4 +1,5 @@
-import { DotsHorizontal, ArrowLeft, ArrowRight, RefreshCw02, Globe01, Star01, Shield01, Calendar, SearchLg, Home01, Rss01, Lock01, UserPlus01, HelpCircle } from "@untitledui/icons";
+import React from "react";
+import { DotsHorizontal, ArrowLeft, ArrowRight, RefreshCw02,Menu01, Globe01, Star01, Shield01, Calendar, SearchLg, Home01, Rss01, Lock01, UserPlus01, HelpCircle } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
@@ -7,52 +8,41 @@ import { EventsListWidget } from "./events-list-widget";
 
 
 
-// Add custom animations
+// Clean and minimal animations
 const customStyles = `
-  @keyframes fadeInUp {
-    0% {
+  @keyframes fadeIn {
+    from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(8px);
     }
-    100% {
+    to {
       opacity: 1;
       transform: translateY(0);
     }
   }
   
-  @keyframes slideInLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    100% {
+  @keyframes fadeOut {
+    from {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
     }
   }
   
-  @keyframes fadeInRight {
-    0% {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  .widget-container {
+    transition: all 0.2s ease-out;
   }
   
-  @keyframes scaleIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+  .widget-enter {
+    animation: fadeIn 0.2s ease-out;
   }
   
+  .widget-exit {
+    animation: fadeOut 0.15s ease-in;
+  }
 
 `;
 
@@ -63,6 +53,46 @@ interface BrowserMockupProps {
   theme?: 'light' | 'dark';
 }
 
+// Clean and minimal widget animation wrapper
+const AnimatedWidget = ({ 
+  isVisible, 
+  children
+}: { 
+  isVisible: boolean; 
+  children: React.ReactNode; 
+}) => {
+  const [shouldRender, setShouldRender] = React.useState(isVisible);
+  const [isAnimating, setIsAnimating] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isVisible && !shouldRender) {
+      // Show: render immediately and animate in
+      setShouldRender(true);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 200);
+    } else if (!isVisible && shouldRender) {
+      // Hide: animate out then remove from DOM
+      setIsAnimating(true);
+      setTimeout(() => {
+        setShouldRender(false);
+        setIsAnimating(false);
+      }, 150);
+    }
+  }, [isVisible, shouldRender]);
+
+  if (!shouldRender) return null;
+
+  return (
+    <div 
+      className={`widget-container ${
+        isAnimating ? (isVisible ? 'widget-enter' : 'widget-exit') : ''
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const BrowserMockup = ({ 
   className, 
   url = "http://localhost:5173/site/event", 
@@ -70,7 +100,7 @@ export const BrowserMockup = ({
   theme: propTheme
 }: BrowserMockupProps) => {
   const theme = useResolvedTheme(propTheme);
-  const { toggleStates } = useWidgetConfig();
+  const { toggleStates, spaceWidgetStates } = useWidgetConfig();
   
   // Detect if we're on a private space page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -396,13 +426,115 @@ export const BrowserMockup = ({
                     </>
                   ) : (
                     /* Events Content */
-                    <>
-                      {/* Space Header Widget */}
-                      <SpaceHeaderWidget />
+                    <div className="space-y-6 transition-all duration-200 ease-out">
+                      {/* Space Header Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.spaceHeader || false}>
+                        <SpaceHeaderWidget />
+                      </AnimatedWidget>
                       
-                      {/* Events List Widget */}
-                      <EventsListWidget />
-                    </>
+                      {/* Events List Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.eventsList || false}>
+                        <EventsListWidget />
+                      </AnimatedWidget>
+                      
+                      {/* Custom Events List Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.customEventsList || false}>
+                        <div className={cx(
+                          "rounded-lg border p-6",
+                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                        )}>
+                          <div className="flex items-center gap-3 mb-3">
+                            <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            <h3 className={cx(
+                              "text-lg font-semibold",
+                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                            )}>
+                              Custom Events List
+                            </h3>
+                          </div>
+                          <p className={cx(
+                            "text-sm",
+                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                          )}>
+                            Customizable events display widget.
+                          </p>
+                        </div>
+                      </AnimatedWidget>
+                      
+                      {/* Upcoming Events Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.upcomingEvents || false}>
+                        <div className={cx(
+                          "rounded-lg border p-6",
+                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                        )}>
+                          <div className="flex items-center gap-3 mb-3">
+                            <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
+                            <h3 className={cx(
+                              "text-lg font-semibold",
+                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                            )}>
+                              Upcoming Events
+                            </h3>
+                          </div>
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-2 rounded-md bg-blue-50 dark:bg-blue-900/20">
+                              <Calendar className="h-4 w-4 text-blue-500" />
+                              <span className={cx("text-sm", theme === 'dark' ? "text-gray-300" : "text-gray-700")}>
+                                React Conference 2024 - March 15
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3 p-2 rounded-md bg-green-50 dark:bg-green-900/20">
+                              <Calendar className="h-4 w-4 text-green-500" />
+                              <span className={cx("text-sm", theme === 'dark' ? "text-gray-300" : "text-gray-700")}>
+                                Design Workshop - March 18
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </AnimatedWidget>
+                      
+                      {/* Hero Banner Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.heroBanner || false}>
+                        <div className="rounded-lg border p-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                          <h2 className="text-2xl font-bold mb-2">Welcome to Our Events</h2>
+                          <p className="text-blue-100 mb-4">
+                            Discover amazing events and connect with your community.
+                          </p>
+                          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                            Explore Events
+                          </button>
+                        </div>
+                      </AnimatedWidget>
+                      
+                      {/* Menu Widget - Animated */}
+                      <AnimatedWidget isVisible={spaceWidgetStates?.menu || false}>
+                        <div className={cx(
+                          "rounded-lg border p-4",
+                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                        )}>
+                          <div className="flex items-center gap-3 mb-3">
+                            <Menu01 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                            <h3 className={cx(
+                              "text-sm font-semibold",
+                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                            )}>
+                              Quick Navigation
+                            </h3>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <button className="px-3 py-1.5 text-xs rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors">
+                              All Events
+                            </button>
+                            <button className="px-3 py-1.5 text-xs rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                              My Events
+                            </button>
+                            <button className="px-3 py-1.5 text-xs rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                              Categories
+                            </button>
+                          </div>
+                        </div>
+                      </AnimatedWidget>
+                    </div>
                   )}
                 </div>
               </div>
