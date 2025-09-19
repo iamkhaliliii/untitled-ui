@@ -39,7 +39,7 @@ export const EventsCustomizeSettings = ({
   onEditGlobalWidgets
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
-  const { spaceWidgetStates, updateSpaceWidgetStates } = useWidgetConfig();
+  const { spaceWidgetStates, updateSpaceWidgetStates, layoutStates, updateLayoutStates } = useWidgetConfig();
   
   // Enhanced PropertyToggle component with colored icons and settings action
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id, iconColor, onSettingsClick }: {
@@ -117,8 +117,8 @@ export const EventsCustomizeSettings = ({
       : ["container", "mainColumn", "secondary", "column1", "column2", "column3"]
   );
   
-  // State for selected layout style (for Growth folder pages)
-  const [selectedLayoutStyle, setSelectedLayoutStyle] = useState<string>("simple");
+  // Use global layout state
+  const selectedLayoutStyle = layoutStates.layoutStyle;
 
   return (
     <div className="space-y-2 p-2">
@@ -193,7 +193,7 @@ export const EventsCustomizeSettings = ({
             <div className="grid grid-cols-3 gap-3">
               {/* Simple Layout */}
               <div 
-                onClick={() => setSelectedLayoutStyle("simple")}
+                onClick={() => updateLayoutStates({ layoutStyle: "simple" })}
                 className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
                   selectedLayoutStyle === "simple" 
                     ? "border-brand-secondary bg-brand-50/30" 
@@ -208,7 +208,7 @@ export const EventsCustomizeSettings = ({
               
               {/* With Sidebar Layout */}
               <div 
-                onClick={() => setSelectedLayoutStyle("with-sidebar")}
+                onClick={() => updateLayoutStates({ layoutStyle: "with-sidebar" })}
                 className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
                   selectedLayoutStyle === "with-sidebar" 
                     ? "border-brand-secondary bg-brand-50/30" 
@@ -226,7 +226,7 @@ export const EventsCustomizeSettings = ({
               
               {/* Full Width Layout */}
               <div 
-                onClick={() => setSelectedLayoutStyle("full-width")}
+                onClick={() => updateLayoutStates({ layoutStyle: "full-width" })}
                 className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
                   selectedLayoutStyle === "full-width" 
                     ? "border-brand-secondary bg-brand-50/30" 

@@ -17,6 +17,10 @@ interface SpaceWidgetStates {
   menu: boolean;
 }
 
+interface LayoutStates {
+  layoutStyle: 'simple' | 'with-sidebar' | 'full-width';
+}
+
 interface WidgetConfigContextType {
   eventsListConfig: EventsListConfig;
   updateEventsListConfig: (config: Partial<EventsListConfig>) => void;
@@ -26,6 +30,8 @@ interface WidgetConfigContextType {
   updateToggleStates: (states: Partial<ToggleStates>) => void;
   spaceWidgetStates: SpaceWidgetStates;
   updateSpaceWidgetStates: (states: Partial<SpaceWidgetStates>) => void;
+  layoutStates: LayoutStates;
+  updateLayoutStates: (states: Partial<LayoutStates>) => void;
 }
 
 const WidgetConfigContext = createContext<WidgetConfigContextType | undefined>(undefined);
@@ -59,6 +65,9 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     heroBanner: false,
     menu: true,
   });
+  const [layoutStates, setLayoutStates] = useState<LayoutStates>({
+    layoutStyle: 'simple',
+  });
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
     setEventsListConfig(prevConfig => ({ ...prevConfig, ...config }));
@@ -76,6 +85,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     setSpaceWidgetStates(prevStates => ({ ...prevStates, ...states }));
   };
 
+  const updateLayoutStates = (states: Partial<LayoutStates>) => {
+    setLayoutStates(prevStates => ({ ...prevStates, ...states }));
+  };
+
   return (
     <WidgetConfigContext.Provider value={{ 
       eventsListConfig, 
@@ -85,7 +98,9 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       toggleStates,
       updateToggleStates,
       spaceWidgetStates,
-      updateSpaceWidgetStates
+      updateSpaceWidgetStates,
+      layoutStates,
+      updateLayoutStates
     }}>
       {children}
     </WidgetConfigContext.Provider>

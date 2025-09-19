@@ -8,42 +8,24 @@ import { EventsListWidget } from "./events-list-widget";
 
 
 
-// Clean and minimal animations
+// Minimal styles for smooth transitions
 const customStyles = `
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
   }
   
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
   }
   
-  .widget-container {
-    transition: all 0.2s ease-out;
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.3);
+    border-radius: 2px;
   }
   
-  .widget-enter {
-    animation: fadeIn 0.2s ease-out;
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.5);
   }
-  
-  .widget-exit {
-    animation: fadeOut 0.15s ease-in;
-  }
-
 `;
 
 interface BrowserMockupProps {
@@ -53,45 +35,6 @@ interface BrowserMockupProps {
   theme?: 'light' | 'dark';
 }
 
-// Clean and minimal widget animation wrapper
-const AnimatedWidget = ({ 
-  isVisible, 
-  children
-}: { 
-  isVisible: boolean; 
-  children: React.ReactNode; 
-}) => {
-  const [shouldRender, setShouldRender] = React.useState(isVisible);
-  const [isAnimating, setIsAnimating] = React.useState(false);
-
-  React.useEffect(() => {
-    if (isVisible && !shouldRender) {
-      // Show: render immediately and animate in
-      setShouldRender(true);
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 200);
-    } else if (!isVisible && shouldRender) {
-      // Hide: animate out then remove from DOM
-      setIsAnimating(true);
-      setTimeout(() => {
-        setShouldRender(false);
-        setIsAnimating(false);
-      }, 150);
-    }
-  }, [isVisible, shouldRender]);
-
-  if (!shouldRender) return null;
-
-  return (
-    <div 
-      className={`widget-container ${
-        isAnimating ? (isVisible ? 'widget-enter' : 'widget-exit') : ''
-      }`}
-    >
-      {children}
-    </div>
-  );
-};
 
 export const BrowserMockup = ({ 
   className, 
@@ -100,7 +43,7 @@ export const BrowserMockup = ({
   theme: propTheme
 }: BrowserMockupProps) => {
   const theme = useResolvedTheme(propTheme);
-  const { toggleStates, spaceWidgetStates } = useWidgetConfig();
+  const { toggleStates, spaceWidgetStates, layoutStates } = useWidgetConfig();
   
   // Detect if we're on a private space page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -253,7 +196,7 @@ export const BrowserMockup = ({
           <div className="flex flex-1 overflow-hidden">
             {/* Left Sidebar */}
             <div className={cx(
-              "transition-all duration-300 ease-in-out",
+              "transition-all duration-200 ease-out",
               toggleStates?.leftSidebar !== false 
                 ? "w-48 opacity-100" 
                 : "w-0 opacity-0 overflow-hidden",
@@ -292,11 +235,14 @@ export const BrowserMockup = ({
 
             {/* Main Content */}
             <div className={cx(
-              "flex-1 overflow-hidden",
+              "flex-1 overflow-hidden transition-all duration-200 ease-out",
               theme === 'dark' ? "bg-gray-800" : "bg-gray-50"
             )}>
               <div className="h-full overflow-y-auto scrollbar-thin">
-                <div className="max-w-4xl mx-auto p-6">
+                <div className={cx(
+                  "mx-auto p-6 transition-all duration-200 ease-out",
+                  layoutStates?.layoutStyle === 'with-sidebar' ? "max-w-3xl" : "max-w-4xl"
+                )}>
                                     {isPrivateSpacePage ? (
                     /* Private Space Empty State */
                     <>
@@ -426,19 +372,34 @@ export const BrowserMockup = ({
                     </>
                   ) : (
                     /* Events Content */
-                    <div className="space-y-6 transition-all duration-200 ease-out">
-                      {/* Space Header Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.spaceHeader || false}>
+                    <div className="space-y-6">
+                      {/* Space Header Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.spaceHeader 
+                          ? "opacity-100 max-h-96 overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <SpaceHeaderWidget />
-                      </AnimatedWidget>
+                      </div>
                       
-                      {/* Events List Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.eventsList || false}>
+                      {/* Events List Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.eventsList 
+                          ? "opacity-100 max-h-screen overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <EventsListWidget />
-                      </AnimatedWidget>
+                      </div>
                       
-                      {/* Custom Events List Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.customEventsList || false}>
+                      {/* Custom Events List Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.customEventsList 
+                          ? "opacity-100 max-h-96 overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <div className={cx(
                           "rounded-lg border p-6",
                           theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
@@ -459,10 +420,15 @@ export const BrowserMockup = ({
                             Customizable events display widget.
                           </p>
                         </div>
-                      </AnimatedWidget>
+                      </div>
                       
-                      {/* Upcoming Events Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.upcomingEvents || false}>
+                      {/* Upcoming Events Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.upcomingEvents 
+                          ? "opacity-100 max-h-96 overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <div className={cx(
                           "rounded-lg border p-6",
                           theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
@@ -491,10 +457,15 @@ export const BrowserMockup = ({
                             </div>
                           </div>
                         </div>
-                      </AnimatedWidget>
+                      </div>
                       
-                      {/* Hero Banner Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.heroBanner || false}>
+                      {/* Hero Banner Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.heroBanner 
+                          ? "opacity-100 max-h-96 overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <div className="rounded-lg border p-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                           <h2 className="text-2xl font-bold mb-2">Welcome to Our Events</h2>
                           <p className="text-blue-100 mb-4">
@@ -504,10 +475,15 @@ export const BrowserMockup = ({
                             Explore Events
                           </button>
                         </div>
-                      </AnimatedWidget>
+                      </div>
                       
-                      {/* Menu Widget - Animated */}
-                      <AnimatedWidget isVisible={spaceWidgetStates?.menu || false}>
+                      {/* Menu Widget */}
+                      <div className={cx(
+                        "transition-all duration-200 ease-out",
+                        spaceWidgetStates?.menu 
+                          ? "opacity-100 max-h-96 overflow-visible" 
+                          : "opacity-0 max-h-0 overflow-hidden"
+                      )}>
                         <div className={cx(
                           "rounded-lg border p-4",
                           theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
@@ -533,9 +509,115 @@ export const BrowserMockup = ({
                             </button>
                           </div>
                         </div>
-                      </AnimatedWidget>
+                      </div>
                     </div>
                   )}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Sidebar */}
+            <div className={cx(
+              "transition-all duration-200 ease-out border-l",
+              layoutStates?.layoutStyle === 'with-sidebar'
+                ? "w-64 opacity-100" 
+                : "w-0 opacity-0 overflow-hidden",
+              theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
+            )}>
+              <div className="p-4">
+                <h3 className={cx(
+                  "text-sm font-semibold mb-4",
+                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                )}>
+                  Event Tools
+                </h3>
+                
+                {/* Calendar Widget */}
+                <div className={cx(
+                  "rounded-lg border p-4 mb-4",
+                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                )}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <span className={cx("text-sm font-medium", theme === 'dark' ? "text-gray-200" : "text-gray-800")}>
+                      Event Calendar
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 text-xs">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                      <div key={i} className={cx(
+                        "text-center p-1",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                      )}>
+                        {day}
+                      </div>
+                    ))}
+                    {Array.from({ length: 35 }, (_, i) => (
+                      <div key={i} className={cx(
+                        "text-center p-1 rounded hover:bg-blue-100 cursor-pointer",
+                        i === 14 ? "bg-blue-500 text-white" : "",
+                        theme === 'dark' ? "text-gray-300 hover:bg-gray-700" : "text-gray-700"
+                      )}>
+                        {i < 31 ? i + 1 : ''}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className={cx(
+                  "rounded-lg border p-4 mb-4",
+                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                )}>
+                  <h4 className={cx(
+                    "text-sm font-medium mb-3",
+                    theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                  )}>
+                    Quick Actions
+                  </h4>
+                  <div className="space-y-2">
+                    <button className="w-full flex items-center gap-2 p-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors text-sm">
+                      <Calendar className="h-4 w-4" />
+                      Create Event
+                    </button>
+                    <button className="w-full flex items-center gap-2 p-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm">
+                      <SearchLg className="h-4 w-4" />
+                      Find Events
+                    </button>
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className={cx(
+                  "rounded-lg border p-4",
+                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                )}>
+                  <h4 className={cx(
+                    "text-sm font-medium mb-3",
+                    theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                  )}>
+                    Recent Activity
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                        New event created
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                        5 new registrations
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                        Event updated
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
