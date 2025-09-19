@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
+import { Label } from "@/components/base/input/label";
+import { AddWidgetList } from "./add-widget-list";
 
 interface EventsCustomizeSettingsProps {
   toggleStates: {
@@ -39,9 +41,9 @@ export const EventsCustomizeSettings = ({
   onEditGlobalWidgets
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
-  const { spaceWidgetStates, updateSpaceWidgetStates, layoutStates, updateLayoutStates } = useWidgetConfig();
+  const { spaceWidgetStates, updateSpaceWidgetStates, layoutStates, updateLayoutStates, sidebarWidgetStates, updateSidebarWidgetStates } = useWidgetConfig();
   
-  // Enhanced PropertyToggle component with colored icons and settings action
+  // Enhanced PropertyToggle component with colored icons, settings action, and dropdown menu
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id, iconColor, onSettingsClick }: {
     icon: React.ComponentType<any>;
     label: string;
@@ -50,59 +52,183 @@ export const EventsCustomizeSettings = ({
     id: string;
     iconColor?: string;
     onSettingsClick?: () => void;
-  }) => (
-    <div className={cx(
-      "flex items-center py-2 px-2 border rounded-md transition-all duration-300 ease-in-out",
-      theme === 'dark' 
-        ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
-        : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
-    )}>
-      <div className="flex items-center space-x-3">
-        <div className={cx(
-          "p-1.5 rounded-md",
-          iconColor || "bg-green-100/20"
-        )}>
-          <Icon className={cx(
-            "h-4 w-4",
-            iconColor ? iconColor.includes('green') ? "text-green-400" : 
-                       iconColor.includes('blue') ? "text-blue-400" : 
-                       iconColor.includes('purple') ? "text-purple-400" :
-                       iconColor.includes('orange') ? "text-orange-400" : 
-                       iconColor.includes('violet') ? "text-violet-400" :
-                       iconColor.includes('indigo') ? "text-indigo-400" : "text-green-400"
-            : "text-green-400"
-          )} />
-        </div>
-        <span className={cx(
-          "text-sm font-medium",
-          theme === 'dark' ? "text-gray-100" : "text-gray-900"
-        )}>{label}</span>
-      </div>
-      <div className="ml-auto flex items-center space-x-2">
-        {onSettingsClick && (
-          <button
-            onClick={onSettingsClick}
-            className={cx(
-              "p-1 rounded-md hover:bg-secondary/60 transition-colors",
-              theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
-            )}
-          >
-            <Settings01 className={cx(
+  }) => {
+    const isDropdownOpen = openDropdownId === id;
+    const isDeleteDisabled = id === 'space-header' || id === 'events-list';
+    
+    return (
+      <div className={cx(
+        "flex items-center py-2 px-2 border rounded-md transition-all duration-300 ease-in-out relative",
+        theme === 'dark' 
+          ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+          : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+      )}>
+        <div className="flex items-center space-x-3">
+          {/* Reorder handle */}
+          <div className="cursor-move p-1">
+            <DotsGrid className={cx(
               "h-4 w-4",
-              theme === 'dark' ? "text-gray-400" : "text-gray-500"
+              theme === 'dark' ? "text-gray-500" : "text-gray-400"
             )} />
-          </button>
-        )}
-        <Toggle
-          id={id}
-          isSelected={isSelected}
-          onChange={onChange}
-          size="sm"
-          slim
-        />
+          </div>
+          
+          <div className={cx(
+            "p-1.5 rounded-md",
+            iconColor || "bg-green-100/20"
+          )}>
+            <Icon className={cx(
+              "h-4 w-4",
+              iconColor ? iconColor.includes('green') ? "text-green-400" : 
+                         iconColor.includes('blue') ? "text-blue-400" : 
+                         iconColor.includes('purple') ? "text-purple-400" :
+                         iconColor.includes('orange') ? "text-orange-400" : 
+                         iconColor.includes('violet') ? "text-violet-400" :
+                         iconColor.includes('indigo') ? "text-indigo-400" : "text-green-400"
+              : "text-green-400"
+            )} />
+          </div>
+          <span className={cx(
+            "text-sm font-medium",
+            theme === 'dark' ? "text-gray-100" : "text-gray-900"
+          )}>{label}</span>
+        </div>
+        <div className="ml-auto flex items-center space-x-1">
+          {/* Dropdown Menu Button */}
+          <div className="relative">
+            <button
+              onClick={() => setOpenDropdownId(isDropdownOpen ? null : id)}
+              className={cx(
+                "p-1 rounded-md hover:bg-secondary/60 transition-colors",
+                theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
+              )}
+            >
+              <DotsHorizontal className={cx(
+                "h-4 w-4",
+                theme === 'dark' ? "text-gray-400" : "text-gray-500"
+              )} />
+            </button>
+            
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className={cx(
+                "absolute right-0 top-8 w-40 rounded-lg border shadow-lg z-50 py-1",
+                theme === 'dark' 
+                  ? "bg-gray-800 border-gray-700" 
+                  : "bg-white border-gray-200"
+              )}>
+                <button
+                  onClick={() => {
+                    console.log('Rename', label);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <Edit03 className="h-4 w-4" />
+                  Rename
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onChange(false);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <EyeOff className="h-4 w-4" />
+                  Hide
+                </button>
+                
+                <button
+                  onClick={() => {
+                    console.log('Duplicate', label);
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <Copy01 className="h-4 w-4" />
+                  Duplicate
+                </button>
+                
+                <button
+                  onClick={() => {
+                    onSettingsClick?.();
+                    setOpenDropdownId(null);
+                  }}
+                  className={cx(
+                    "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <Settings01 className="h-4 w-4" />
+                  Configure
+                </button>
+                
+                <div className="h-px bg-secondary my-1"></div>
+                
+                <button
+                  onClick={() => {
+                    if (!isDeleteDisabled) {
+                      console.log('Delete', label);
+                      setOpenDropdownId(null);
+                    }
+                  }}
+                  disabled={isDeleteDisabled}
+                  className={cx(
+                    "w-full flex items-center justify-between px-3 py-2 text-sm transition-colors text-red-600",
+                    isDeleteDisabled
+                      ? "opacity-20 cursor-not-allowed"
+                      : "opacity-100 hover:bg-red-50",
+                    !isDeleteDisabled && theme === 'dark' ? "hover:bg-red-900/20" : "",
+                    !isDeleteDisabled && theme === 'light' ? "hover:bg-red-50" : ""
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <Trash01 className="h-4 w-4" />
+                    Delete
+                  </div>
+                  {isDeleteDisabled && (
+                    <Lock01 className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {onSettingsClick && (
+            <button
+              onClick={onSettingsClick}
+              className={cx(
+                "p-1 rounded-md hover:bg-secondary/60 transition-colors",
+                theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
+              )}
+            >
+              <Settings01 className={cx(
+                "h-4 w-4",
+                theme === 'dark' ? "text-gray-400" : "text-gray-500"
+              )} />
+            </button>
+          )}
+          
+          <Toggle
+            id={id}
+            isSelected={isSelected}
+            onChange={onChange}
+            size="sm"
+            slim
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
   
   // Detect if we're on a private space page, CMS events page, or Growth folder page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -119,6 +245,113 @@ export const EventsCustomizeSettings = ({
   
   // Use global layout state
   const selectedLayoutStyle = layoutStates.layoutStyle;
+  
+  // State for layout section expansion
+  const [layoutExpanded, setLayoutExpanded] = useState(true);
+  
+  // State for dropdown management
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  
+  // State for Add Widget view
+  const [showAddWidget, setShowAddWidget] = useState(false);
+  const [addWidgetType, setAddWidgetType] = useState<'space' | 'sidebar'>('space');
+  
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openDropdownId) {
+        setOpenDropdownId(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdownId]);
+
+  // Handle Add Widget clicks
+  const handleAddSpaceWidget = () => {
+    setAddWidgetType('space');
+    setShowAddWidget(true);
+  };
+
+  const handleAddSidebarWidget = () => {
+    setAddWidgetType('sidebar');
+    setShowAddWidget(true);
+  };
+
+  const handleAddWidgetBack = () => {
+    setShowAddWidget(false);
+  };
+
+  const handleWidgetSelect = (widget: any) => {
+    console.log('Selected widget:', widget);
+    setShowAddWidget(false);
+    // TODO: Add widget to the appropriate section
+  };
+
+  // If showing Add Widget view, render that instead
+  if (showAddWidget) {
+    return (
+      <AddWidgetList
+        onBack={handleAddWidgetBack}
+        onSelectWidget={handleWidgetSelect}
+        widgetType={addWidgetType}
+      />
+    );
+  }
+  
+  // StyleTile component - exact replica from widget-config.tsx
+  const StyleTile = ({ option, isSelected, onClick }: {
+    option: { id: string; label: string; icon: React.ComponentType<any> };
+    isSelected: boolean;
+    onClick: () => void;
+  }) => {
+    const IconComponent = option.icon;
+    return (
+      <div
+        className={cx(
+          "flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105",
+          isSelected 
+            ? theme === 'dark'
+              ? 'border-brand-solid bg-brand-solid/20 text-brand-primary shadow-md'
+              : 'border-brand-solid bg-brand-50 text-brand-primary shadow-md'
+            : theme === 'dark'
+              ? 'border-gray-700 bg-gray-800 text-gray-200 hover:border-gray-600 hover:bg-gray-700 hover:shadow-sm'
+              : 'border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+        )}
+        onClick={onClick}
+      >
+        <IconComponent className="h-6 w-6 mb-2" />
+        <span className="text-xs font-medium">{option.label}</span>
+      </div>
+    );
+  };
+  
+  // SectionHeader component - exact replica from widget-config.tsx
+  const SectionHeader = ({ icon: Icon, title, isExpanded, onToggle }: {
+    icon: React.ComponentType<any>;
+    title: string;
+    isExpanded: boolean;
+    onToggle: () => void;
+  }) => (
+    <button
+      onClick={onToggle}
+      className="flex items-center justify-between w-full p-2 hover:bg-secondary/20 rounded-md transition-colors"
+    >
+      <div className="flex items-center gap-2">
+        <Icon className="size-4 text-brand-secondary" />
+        <h5 className="text-xs font-semibold text-primary">{title}</h5>
+      </div>
+      <div className={cx(
+        "transition-transform duration-200",
+        isExpanded ? "rotate-180" : "rotate-0"
+      )}>
+        <InfoCircle className="size-3 text-fg-quaternary" />
+      </div>
+    </button>
+  );
 
   return (
     <div className="space-y-2 p-2">
@@ -169,77 +402,38 @@ export const EventsCustomizeSettings = ({
       {/* Space Layout Section - Only for Growth folder pages */}
       {isGrowthFolderPage && (
         <div className="border border-secondary rounded-lg bg-primary p-2">
-          <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
-            <div className="flex items-center gap-2">
-              <LayoutTop className="size-4 text-brand-secondary" />
-              <h5 className="text-xs font-semibold text-primary">Space Layout</h5>
-            </div>
-            <button
-              className={cx(
-                "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
-                theme === 'dark'
-                  ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
-                  : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
-              )}
-            >
-              <Settings01 className="size-3" />
-              Configure
-            </button>
-          </div>
-          
-          {/* Layout options */}
-          <div className="p-2">
-            <label className="text-xs font-medium text-secondary mb-3 block">Layout Style</label>
-            <div className="grid grid-cols-3 gap-3">
-              {/* Simple Layout */}
-              <div 
-                onClick={() => updateLayoutStates({ layoutStyle: "simple" })}
-                className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
-                  selectedLayoutStyle === "simple" 
-                    ? "border-brand-secondary bg-brand-50/30" 
-                    : "border-secondary"
-                }`}
-              >
-                <div className="w-8 h-8 mb-3 flex items-center justify-center">
-                  <div className="w-6 h-6 border-2 border-fg-tertiary rounded-sm"></div>
-                </div>
-                <span className="text-xs font-medium text-secondary">Simple</span>
-              </div>
-              
-              {/* With Sidebar Layout */}
-              <div 
-                onClick={() => updateLayoutStates({ layoutStyle: "with-sidebar" })}
-                className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
-                  selectedLayoutStyle === "with-sidebar" 
-                    ? "border-brand-secondary bg-brand-50/30" 
-                    : "border-secondary"
-                }`}
-              >
-                <div className="w-8 h-8 mb-3 flex items-center justify-center">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-6 bg-fg-tertiary rounded-sm"></div>
-                    <div className="w-4 h-6 border-2 border-fg-tertiary rounded-sm"></div>
+          <SectionHeader
+            icon={LayoutTop}
+            title="Space Layout"
+            isExpanded={layoutExpanded}
+            onToggle={() => setLayoutExpanded(!layoutExpanded)}
+          />
+          {layoutExpanded && (
+            <div className="bg-secondary/20 rounded-lg p-3">
+              <div className="space-y-6">
+                <div>
+                  <Label htmlFor="layout-style">Layout Style</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <StyleTile
+                      option={{ id: 'simple', label: 'Simple', icon: Square }}
+                      isSelected={selectedLayoutStyle === 'simple'}
+                      onClick={() => updateLayoutStates({ layoutStyle: 'simple' })}
+                    />
+                    <StyleTile
+                      option={{ id: 'with-sidebar', label: 'Sidebar', icon: FlexAlignRight }}
+                      isSelected={selectedLayoutStyle === 'with-sidebar'}
+                      onClick={() => updateLayoutStates({ layoutStyle: 'with-sidebar' })}
+                    />
+                    <StyleTile
+                      option={{ id: 'full-width', label: 'Full Width', icon: Maximize01 }}
+                      isSelected={selectedLayoutStyle === 'full-width'}
+                      onClick={() => updateLayoutStates({ layoutStyle: 'full-width' })}
+                    />
                   </div>
                 </div>
-                <span className="text-xs font-medium text-secondary">With Sidebar</span>
-              </div>
-              
-              {/* Full Width Layout */}
-              <div 
-                onClick={() => updateLayoutStates({ layoutStyle: "full-width" })}
-                className={`flex flex-col items-center p-4 border-2 rounded-lg hover:bg-secondary/10 cursor-pointer ${
-                  selectedLayoutStyle === "full-width" 
-                    ? "border-brand-secondary bg-brand-50/30" 
-                    : "border-secondary"
-                }`}
-              >
-                <div className="w-8 h-8 mb-3 flex items-center justify-center">
-                  <div className="w-7 h-5 border-2 border-fg-tertiary rounded-sm"></div>
-                </div>
-                <span className="text-xs font-medium text-secondary">Full Width</span>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )}
       
@@ -257,7 +451,7 @@ export const EventsCustomizeSettings = ({
                   ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
                   : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
               )}
-              onClick={onAddWidgetClick}
+              onClick={handleAddSpaceWidget}
             >
               <Plus className="size-3" />
               Add Widget
@@ -289,26 +483,6 @@ export const EventsCustomizeSettings = ({
                 />
                 
                 <PropertyToggle
-                  icon={Calendar}
-                  label="Custom Events List"
-                  isSelected={spaceWidgetStates.customEventsList}
-                  onChange={(value) => updateSpaceWidgetStates({ customEventsList: value })}
-                  id="custom-events-list"
-                  iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'singleEvent', label: 'Custom Events List' })}
-                />
-                
-                <PropertyToggle
-                  icon={Calendar}
-                  label="Upcoming Events"
-                  isSelected={spaceWidgetStates.upcomingEvents}
-                  onChange={(value) => updateSpaceWidgetStates({ upcomingEvents: value })}
-                  id="upcoming-events"
-                  iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'upcomingEvents', label: 'upcoming events' })}
-                />
-                
-                <PropertyToggle
                   icon={File01}
                   label="Hero Banner"
                   isSelected={spaceWidgetStates.heroBanner}
@@ -317,132 +491,122 @@ export const EventsCustomizeSettings = ({
                   iconColor="bg-blue-100/20"
                   onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
                 />
-                
-                <PropertyToggle
-                  icon={Menu01}
-                  label="Menu"
-                  isSelected={spaceWidgetStates.menu}
-                  onChange={(value) => updateSpaceWidgetStates({ menu: value })}
-                  id="menu"
-                  iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'menu', label: 'Menu' })}
-                />
               </div>
             </div>
           ) : (
-            <div className="bg-secondary/20 rounded-lg p-1">
-              <TreeView
-                data={isPrivateSpacePage ? [
-                  {
-                    id: "container",
-                    label: "Container",
-                    icon: <Grid01 className="size-5 text-fg-quaternary" />,
-                    children: [
-                      {
-                        id: "privateSpaceWidget",
-                        label: "Private space widget",
-                        icon: <Lock01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
-                      }
-                    ]
-                  }
-                ] : [
-                  {
-                    id: "container",
-                    label: "Container",
-                    icon: <Grid01 className="size-5 text-fg-quaternary" />,
-                    children: [
-                      {
-                        id: "spaceheader",
-                        label: "Space Header",
-                        icon: <FlexAlignTop className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
-                      },
+          <div className="bg-secondary/20 rounded-lg p-1">
+            <TreeView
+              data={isPrivateSpacePage ? [
+                {
+                  id: "container",
+                  label: "Container",
+                  icon: <Grid01 className="size-5 text-fg-quaternary" />,
+                  children: [
+                    {
+                      id: "privateSpaceWidget",
+                      label: "Private space widget",
+                      icon: <Lock01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
+                    }
+                  ]
+                }
+              ] : [
+                {
+                  id: "container",
+                  label: "Container",
+                  icon: <Grid01 className="size-5 text-fg-quaternary" />,
+                  children: [
+                    {
+                      id: "spaceheader",
+                      label: "Space Header",
+                      icon: <FlexAlignTop className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
+                    },
 
-                      {
-                        id: "mainColumn",
-                        label: "Main Column",
-                        icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                        children: [
-                          { 
-                            id: "eventsList", 
-                            label: "Events List", 
-                            icon: <Calendar className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
-                          },
-                          { 
-                            id: "singleEvent", 
-                            label: "Custom Events List", 
-                            icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                          }
-                        ]
-                      },
-                      {
-                        id: "secondary",
-                        label: "Secondary",
-                        icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                        children: [
-                          {
-                            id: "column1",
-                            label: "Column 1",
-                            icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                            children: [
-                              { 
-                                id: "upcomingEvents", 
-                                label: "upcoming events", 
-                                icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                              }
-                            ]
-                          },
-                          {
-                            id: "column2",
-                            label: "Column 2",
-                            icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                            children: [
-                              { 
-                                id: "heroBanner", 
-                                label: "hero banner", 
-                                icon: <File01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                              }
-                            ]
-                          },
-                          {
-                            id: "column3",
-                            label: "Column 3",
-                            icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                            children: [
-                              { 
-                                id: "menu", 
-                                label: "Menu", 
-                                icon: <Menu01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]}
-                expandedIds={spaceWidgetsExpandedIds}
-                selectedIds={[]}
-                onNodeClick={(node) => {
-                  // Check if this is a leaf node (widget) by checking if it has no children
-                  if (!node.children || node.children.length === 0) {
-                    console.log("Widget clicked:", node.label);
-                    onWidgetConfig(node);
-                  } else {
-                    console.log("Container clicked:", node.label);
-                  }
-                }}
-                onNodeExpand={(nodeId, expanded) => {
-                  if (expanded) {
-                    setSpaceWidgetsExpandedIds(prev => [...prev, nodeId]);
-                  } else {
-                    setSpaceWidgetsExpandedIds(prev => prev.filter(id => id !== nodeId));
-                  }
-                }}
-                className="border-none bg-transparent"
-                showLines={false}
-                showIcons={true}
-              />
-            </div>
+                    {
+                      id: "mainColumn",
+                      label: "Main Column",
+                      icon: <Grid03 className="size-5 text-fg-quaternary" />,
+                      children: [
+                        { 
+                          id: "eventsList", 
+                          label: "Events List", 
+                          icon: <Calendar className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
+                        },
+                        { 
+                          id: "singleEvent", 
+                          label: "Custom Events List", 
+                          icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                        }
+                      ]
+                    },
+                    {
+                      id: "secondary",
+                      label: "Secondary",
+                      icon: <Grid03 className="size-5 text-fg-quaternary" />,
+                      children: [
+                        {
+                          id: "column1",
+                          label: "Column 1",
+                          icon: <Grid03 className="size-5 text-fg-quaternary" />,
+                          children: [
+                            { 
+                              id: "upcomingEvents", 
+                              label: "upcoming events", 
+                              icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                            }
+                          ]
+                        },
+                        {
+                          id: "column2",
+                          label: "Column 2",
+                          icon: <Grid03 className="size-5 text-fg-quaternary" />,
+                          children: [
+                            { 
+                              id: "heroBanner", 
+                              label: "hero banner", 
+                              icon: <File01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                            }
+                          ]
+                        },
+                        {
+                          id: "column3",
+                          label: "Column 3",
+                          icon: <Grid03 className="size-5 text-fg-quaternary" />,
+                          children: [
+                            { 
+                              id: "menu", 
+                              label: "Menu", 
+                              icon: <Menu01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]}
+              expandedIds={spaceWidgetsExpandedIds}
+              selectedIds={[]}
+              onNodeClick={(node) => {
+                // Check if this is a leaf node (widget) by checking if it has no children
+                if (!node.children || node.children.length === 0) {
+                  console.log("Widget clicked:", node.label);
+                  onWidgetConfig(node);
+                } else {
+                  console.log("Container clicked:", node.label);
+                }
+              }}
+              onNodeExpand={(nodeId, expanded) => {
+                if (expanded) {
+                  setSpaceWidgetsExpandedIds(prev => [...prev, nodeId]);
+                } else {
+                  setSpaceWidgetsExpandedIds(prev => prev.filter(id => id !== nodeId));
+                }
+              }}
+              className="border-none bg-transparent"
+              showLines={false}
+              showIcons={true}
+            />
+          </div>
           )}
         </div>
         
@@ -451,7 +615,7 @@ export const EventsCustomizeSettings = ({
           <div className="border border-secondary rounded-lg bg-primary p-2">
             <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
               <div className="flex items-center gap-2">
-                <LayoutLeft className="size-4 text-brand-secondary" />
+                <FlexAlignRight className="size-4 text-brand-secondary" />
                 <h5 className="text-xs font-semibold text-primary">Sidebar Widget</h5>
               </div>
               <button
@@ -461,7 +625,7 @@ export const EventsCustomizeSettings = ({
                     ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
                     : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
                 )}
-                onClick={onAddWidgetClick}
+                onClick={handleAddSidebarWidget}
               >
                 <Plus className="size-3" />
                 Add Widget
@@ -471,50 +635,20 @@ export const EventsCustomizeSettings = ({
             <div className="bg-secondary/20 rounded-lg p-1">
               <div className="space-y-2">
                 <PropertyToggle
-                  icon={Menu01}
-                  label="Sidebar Menu"
-                  isSelected={true}
-                  onChange={(value) => console.log('Sidebar Menu:', value)}
-                  id="sidebar-menu"
-                  iconColor="bg-purple-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'sidebarMenu', label: 'Sidebar Menu' })}
-                />
-                
-                <PropertyToggle
                   icon={Calendar}
-                  label="Event Calendar"
-                  isSelected={true}
-                  onChange={(value) => console.log('Event Calendar:', value)}
-                  id="event-calendar"
-                  iconColor="bg-orange-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'eventCalendar', label: 'Event Calendar' })}
-                />
-                
-                <PropertyToggle
-                  icon={User02}
-                  label="Member List"
-                  isSelected={false}
-                  onChange={(value) => console.log('Member List:', value)}
-                  id="member-list"
+                  label="Quick Actions"
+                  isSelected={sidebarWidgetStates.quickActions}
+                  onChange={(value) => updateSidebarWidgetStates({ quickActions: value })}
+                  id="quick-actions"
                   iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'memberList', label: 'Member List' })}
-                />
-                
-                <PropertyToggle
-                  icon={SearchLg}
-                  label="Quick Search"
-                  isSelected={true}
-                  onChange={(value) => console.log('Quick Search:', value)}
-                  id="quick-search"
-                  iconColor="bg-green-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'quickSearch', label: 'Quick Search' })}
+                  onSettingsClick={() => onWidgetConfig({ id: 'quickActions', label: 'Quick Actions' })}
                 />
                 
                 <PropertyToggle
                   icon={File01}
                   label="Recent Activity"
-                  isSelected={false}
-                  onChange={(value) => console.log('Recent Activity:', value)}
+                  isSelected={sidebarWidgetStates.recentActivity}
+                  onChange={(value) => updateSidebarWidgetStates({ recentActivity: value })}
                   id="recent-activity"
                   iconColor="bg-blue-100/20"
                   onSettingsClick={() => onWidgetConfig({ id: 'recentActivity', label: 'Recent Activity' })}

@@ -43,7 +43,7 @@ export const BrowserMockup = ({
   theme: propTheme
 }: BrowserMockupProps) => {
   const theme = useResolvedTheme(propTheme);
-  const { toggleStates, spaceWidgetStates, layoutStates } = useWidgetConfig();
+  const { toggleStates, spaceWidgetStates, layoutStates, sidebarWidgetStates } = useWidgetConfig();
   
   // Detect if we're on a private space page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -393,72 +393,6 @@ export const BrowserMockup = ({
                         <EventsListWidget />
                       </div>
                       
-                      {/* Custom Events List Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.customEventsList 
-                          ? "opacity-100 max-h-96 overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <div className={cx(
-                          "rounded-lg border p-6",
-                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                        )}>
-                          <div className="flex items-center gap-3 mb-3">
-                            <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                            <h3 className={cx(
-                              "text-lg font-semibold",
-                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
-                            )}>
-                              Custom Events List
-                            </h3>
-                          </div>
-                          <p className={cx(
-                            "text-sm",
-                            theme === 'dark' ? "text-gray-400" : "text-gray-600"
-                          )}>
-                            Customizable events display widget.
-                          </p>
-                        </div>
-                      </div>
-                      
-                      {/* Upcoming Events Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.upcomingEvents 
-                          ? "opacity-100 max-h-96 overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <div className={cx(
-                          "rounded-lg border p-6",
-                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                        )}>
-                          <div className="flex items-center gap-3 mb-3">
-                            <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
-                            <h3 className={cx(
-                              "text-lg font-semibold",
-                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
-                            )}>
-                              Upcoming Events
-                            </h3>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-3 p-2 rounded-md bg-blue-50 dark:bg-blue-900/20">
-                              <Calendar className="h-4 w-4 text-blue-500" />
-                              <span className={cx("text-sm", theme === 'dark' ? "text-gray-300" : "text-gray-700")}>
-                                React Conference 2024 - March 15
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-3 p-2 rounded-md bg-green-50 dark:bg-green-900/20">
-                              <Calendar className="h-4 w-4 text-green-500" />
-                              <span className={cx("text-sm", theme === 'dark' ? "text-gray-300" : "text-gray-700")}>
-                                Design Workshop - March 18
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
                       {/* Hero Banner Widget */}
                       <div className={cx(
                         "transition-all duration-200 ease-out",
@@ -476,40 +410,6 @@ export const BrowserMockup = ({
                           </button>
                         </div>
                       </div>
-                      
-                      {/* Menu Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.menu 
-                          ? "opacity-100 max-h-96 overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <div className={cx(
-                          "rounded-lg border p-4",
-                          theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                        )}>
-                          <div className="flex items-center gap-3 mb-3">
-                            <Menu01 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                            <h3 className={cx(
-                              "text-sm font-semibold",
-                              theme === 'dark' ? "text-gray-100" : "text-gray-900"
-                            )}>
-                              Quick Navigation
-                            </h3>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            <button className="px-3 py-1.5 text-xs rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors">
-                              All Events
-                            </button>
-                            <button className="px-3 py-1.5 text-xs rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                              My Events
-                            </button>
-                            <button className="px-3 py-1.5 text-xs rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                              Categories
-                            </button>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
@@ -525,100 +425,75 @@ export const BrowserMockup = ({
               theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
             )}>
               <div className="p-4">
-                <h3 className={cx(
-                  "text-sm font-semibold mb-4",
-                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
-                )}>
-                  Event Tools
-                </h3>
-                
-                {/* Calendar Widget */}
-                <div className={cx(
-                  "rounded-lg border p-4 mb-4",
-                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                )}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Calendar className="h-4 w-4 text-blue-500" />
-                    <span className={cx("text-sm font-medium", theme === 'dark' ? "text-gray-200" : "text-gray-800")}>
-                      Event Calendar
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-7 gap-1 text-xs">
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                      <div key={i} className={cx(
-                        "text-center p-1",
-                        theme === 'dark' ? "text-gray-400" : "text-gray-500"
-                      )}>
-                        {day}
-                      </div>
-                    ))}
-                    {Array.from({ length: 35 }, (_, i) => (
-                      <div key={i} className={cx(
-                        "text-center p-1 rounded hover:bg-blue-100 cursor-pointer",
-                        i === 14 ? "bg-blue-500 text-white" : "",
-                        theme === 'dark' ? "text-gray-300 hover:bg-gray-700" : "text-gray-700"
-                      )}>
-                        {i < 31 ? i + 1 : ''}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className={cx(
-                  "rounded-lg border p-4 mb-4",
-                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                )}>
-                  <h4 className={cx(
-                    "text-sm font-medium mb-3",
-                    theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                  {/* Quick Actions - Conditional */}
+                  <div className={cx(
+                    "transition-all duration-200 ease-out",
+                    sidebarWidgetStates?.quickActions 
+                      ? "opacity-100 max-h-96 overflow-visible mb-4" 
+                      : "opacity-0 max-h-0 overflow-hidden"
                   )}>
-                    Quick Actions
-                  </h4>
-                  <div className="space-y-2">
-                    <button className="w-full flex items-center gap-2 p-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors text-sm">
-                      <Calendar className="h-4 w-4" />
-                      Create Event
-                    </button>
-                    <button className="w-full flex items-center gap-2 p-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm">
-                      <SearchLg className="h-4 w-4" />
-                      Find Events
-                    </button>
+                    <div className={cx(
+                      "rounded-lg border p-4",
+                      theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                    )}>
+                      <h4 className={cx(
+                        "text-sm font-medium mb-3",
+                        theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                      )}>
+                        Quick Actions
+                      </h4>
+                      <div className="space-y-2">
+                        <button className="w-full flex items-center gap-2 p-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors text-sm">
+                          <Calendar className="h-4 w-4" />
+                          Create Event
+                        </button>
+                        <button className="w-full flex items-center gap-2 p-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm">
+                          <SearchLg className="h-4 w-4" />
+                          Find Events
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* Recent Activity */}
-                <div className={cx(
-                  "rounded-lg border p-4",
-                  theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                )}>
-                  <h4 className={cx(
-                    "text-sm font-medium mb-3",
-                    theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                  {/* Recent Activity - Conditional */}
+                  <div className={cx(
+                    "transition-all duration-200 ease-out",
+                    sidebarWidgetStates?.recentActivity 
+                      ? "opacity-100 max-h-96 overflow-visible" 
+                      : "opacity-0 max-h-0 overflow-hidden"
                   )}>
-                    Recent Activity
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
-                        New event created
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
-                        5 new registrations
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
-                        Event updated
-                      </span>
+                    <div className={cx(
+                      "rounded-lg border p-4",
+                      theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                    )}>
+                      <h4 className={cx(
+                        "text-sm font-medium mb-3",
+                        theme === 'dark' ? "text-gray-200" : "text-gray-800"
+                      )}>
+                        Recent Activity
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                            New event created
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                            5 new registrations
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className={cx("text-xs", theme === 'dark' ? "text-gray-400" : "text-gray-600")}>
+                            Event updated
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
               </div>
             </div>
           </div>

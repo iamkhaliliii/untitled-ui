@@ -17,6 +17,11 @@ interface SpaceWidgetStates {
   menu: boolean;
 }
 
+interface SidebarWidgetStates {
+  quickActions: boolean;
+  recentActivity: boolean;
+}
+
 interface LayoutStates {
   layoutStyle: 'simple' | 'with-sidebar' | 'full-width';
 }
@@ -30,6 +35,8 @@ interface WidgetConfigContextType {
   updateToggleStates: (states: Partial<ToggleStates>) => void;
   spaceWidgetStates: SpaceWidgetStates;
   updateSpaceWidgetStates: (states: Partial<SpaceWidgetStates>) => void;
+  sidebarWidgetStates: SidebarWidgetStates;
+  updateSidebarWidgetStates: (states: Partial<SidebarWidgetStates>) => void;
   layoutStates: LayoutStates;
   updateLayoutStates: (states: Partial<LayoutStates>) => void;
 }
@@ -68,6 +75,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
     layoutStyle: 'simple',
   });
+  const [sidebarWidgetStates, setSidebarWidgetStates] = useState<SidebarWidgetStates>({
+    quickActions: true,
+    recentActivity: false,
+  });
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
     setEventsListConfig(prevConfig => ({ ...prevConfig, ...config }));
@@ -85,6 +96,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     setSpaceWidgetStates(prevStates => ({ ...prevStates, ...states }));
   };
 
+  const updateSidebarWidgetStates = (states: Partial<SidebarWidgetStates>) => {
+    setSidebarWidgetStates(prevStates => ({ ...prevStates, ...states }));
+  };
+
   const updateLayoutStates = (states: Partial<LayoutStates>) => {
     setLayoutStates(prevStates => ({ ...prevStates, ...states }));
   };
@@ -99,6 +114,8 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateToggleStates,
       spaceWidgetStates,
       updateSpaceWidgetStates,
+      sidebarWidgetStates,
+      updateSidebarWidgetStates,
       layoutStates,
       updateLayoutStates
     }}>
