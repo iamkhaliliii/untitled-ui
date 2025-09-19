@@ -1,18 +1,38 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Rocket01, X, MessageChatCircle, Database01, Users01, CodeBrowser, Settings01, Palette, BarChartSquare02, Data, Plus, ArrowRight } from "@untitledui/icons";
 import { ProgressWidget } from "./progress-widget";
 
 export const FloatingProgressButton = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showSimplePopover, setShowSimplePopover] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const togglePopover = () => {
         setIsOpen(!isOpen);
+        setShowSimplePopover(false); // Hide simple popover when main one opens
     };
 
     const closePopover = () => {
         setIsOpen(false);
     };
+
+    const handleSimplePopoverClick = () => {
+        setShowSimplePopover(false);
+        window.location.href = '/admin2/site/spaces/create?startTour=true';
+    };
+
+    const closeSimplePopover = () => {
+        setShowSimplePopover(false);
+    };
+
+    // Show simple popover after 1 second
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSimplePopover(true);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <>
@@ -21,9 +41,15 @@ export const FloatingProgressButton = () => {
                 {/* Progress Button - Left */}
                 <button
                     ref={buttonRef}
-                    onClick={togglePopover}
-                    className="bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 p-3 group min-w-[160px]"
+                    onClick={() => {
+                        togglePopover();
+                        closeSimplePopover();
+                    }}
+                    className="bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-2xl hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 p-3 group min-w-[160px] ring-1 ring-white/10"
                     aria-label="View Progress"
+                    style={{
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                    }}
                 >
                     <div className="flex items-center gap-3">
                         <div className="relative">
@@ -40,8 +66,12 @@ export const FloatingProgressButton = () => {
 
                 {/* Chat Button - Right */}
                 <button
-                    className="w-14 h-14 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
+                    onClick={closeSimplePopover}
+                    className="w-14 h-14 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-2xl hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 flex items-center justify-center group ring-1 ring-white/10"
                     aria-label="Chat Support"
+                    style={{
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                    }}
                 >
                     <MessageChatCircle className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
                 </button>
@@ -58,7 +88,12 @@ export const FloatingProgressButton = () => {
                     
                     {/* Popover Content */}
                     <div className="fixed bottom-24 right-6 z-50 animate-in slide-in-from-bottom-2 duration-200 max-w-sm">
-                        <div className="bg-gray-900 border border-gray-700 rounded-xl shadow-2xl w-full">
+                        <div 
+                            className="bg-gray-900 border border-gray-700 rounded-xl w-full"
+                            style={{
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                            }}
+                        >
                             {/* Header */}
                             <div className="flex items-center justify-between p-4 border-b border-gray-700">
                                 <h3 className="text-sm font-semibold text-white">Setup Progress</h3>
@@ -88,7 +123,10 @@ export const FloatingProgressButton = () => {
                                 <div className="text-xs text-gray-400 mb-3">Setup tasks:</div>
                                 <div className="max-h-64 overflow-y-auto scrollbar-thin space-y-2">
                                     {/* Recommended Next Step */}
-                                    <button className="w-full text-left p-3 bg-violet-500/20 border border-violet-500/30 hover:bg-violet-500/30 rounded-lg transition-colors">
+                                    <button 
+                                        onClick={() => window.location.href = '/admin2/site/spaces/create?startTour=true'}
+                                        className="w-full text-left p-3 bg-violet-500/20 border border-violet-500/30 hover:bg-violet-500/30 rounded-lg transition-colors"
+                                    >
                                         <div className="flex items-center gap-3">
                                             <Database01 className="w-4 h-4 text-violet-400 flex-shrink-0" />
                                             <div className="flex-1">
