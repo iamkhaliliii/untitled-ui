@@ -1,0 +1,96 @@
+{
+  "admin": [
+    {
+      "id": "admin-3",
+      "title": "Admin 3.0",
+      "icon": "Settings01",
+      "path": "/admin3",
+      "status": "On Hold",
+      "statusColor": "gray"
+    },
+    {
+      "id": "admin-2",
+      "title": "Admin 2.0",
+      "icon": "Settings01",
+      "path": "/admin2",
+      "status": "Under Design",
+      "statusColor": "blue"
+    },
+    {
+      "id": "site-section",
+      "title": "Site Section",
+      "icon": "Globe01",
+      "path": "/admin2/site",
+      "status": "Ready for Dev",
+      "statusColor": "success"
+    },
+    {
+      "id": "customize-space",
+      "title": "Simple Customize Space",
+      "icon": "Settings01",
+      "path": "/admin2/site/spaces/growth/events/customize",
+      "status": "Under Design",
+      "statusColor": "blue"
+    }
+  ],
+  "site": [
+    {
+      "id": "website",
+      "title": "Website",
+      "icon": "Globe01",
+      "path": "/site",
+      "status": "Under Design",
+      "statusColor": "blue"
+    },
+    {
+      "id": "events-page",
+      "title": "Events Page",
+      "icon": "Calendar",
+      "path": "/site/event",
+      "status": "Ready for Dev",
+      "statusColor": "success"
+    },
+    {
+      "id": "event-detail",
+      "title": "Event Detail Page",
+      "icon": "Calendar",
+      "path": "/site/event/1",
+      "status": "Ready for Dev",
+      "statusColor": "success"
+    },
+    {
+      "id": "embed-event",
+      "title": "Embed Event",
+      "icon": "MessageSquare01",
+      "path": "/site/post-view",
+      "status": "Ready for Dev",
+      "statusColor": "success"
+    }
+  ],
+  "getStarted": [
+    {
+      "id": "signup",
+      "title": "Sign Up",
+      "icon": "UsersPlus",
+      "path": "/signup",
+      "status": "Under Review",
+      "statusColor": "orange"
+    },
+    {
+      "id": "setup-wizard",
+      "title": "Setup Wizard",
+      "icon": "Zap",
+      "path": "/wizard",
+      "status": "Under Review",
+      "statusColor": "orange"
+    },
+    {
+      "id": "onboarding",
+      "title": "Onboarding",
+      "icon": "CheckCircle",
+      "path": "/admin2/onboarding",
+      "status": "Under Review",
+      "statusColor": "orange"
+    }
+  ]
+}

@@ -1,11 +1,100 @@
+import { useState, useEffect } from "react";
 import { Settings01, Globe01, ArrowRight, UsersPlus, Zap, CheckCircle, Calendar, MessageSquare01 } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
-import { Button } from "@/components/base/buttons/button";
 import { NexusLogo } from "@/components/foundations/logo/nexus-logo";
 import { BackgroundPattern } from "@/components/shared-assets/background-patterns";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import navigationData from "@/data/navigation-data.json";
+import { loadNavigationData } from "@/api/navigation";
+
+interface NavigationItem {
+    id: string;
+    title: string;
+    icon: string;
+    path: string;
+    status: string;
+    statusColor: "gray" | "blue" | "success" | "orange";
+}
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    Settings01: Settings01,
+    Globe01: Globe01,
+    Calendar: Calendar,
+    MessageSquare01: MessageSquare01,
+    UsersPlus: UsersPlus,
+    Zap: Zap,
+    CheckCircle: CheckCircle
+};
 
 export const HomeScreen = () => {
+    const navigate = useNavigate();
+    const [data, setData] = useState<{ admin: NavigationItem[], site: NavigationItem[], getStarted: NavigationItem[] }>(
+        navigationData as { admin: NavigationItem[], site: NavigationItem[], getStarted: NavigationItem[] }
+    );
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Load data from localStorage on component mount
+    useEffect(() => {
+        const loadData = async () => {
+            setIsLoading(true);
+            try {
+                const storedData = await loadNavigationData();
+                if (storedData) {
+                    setData(storedData);
+                    console.log('Home: Loaded data from localStorage');
+                } else {
+                    console.log('Home: No stored data found, using default data');
+                    // Keep using the imported JSON data as fallback
+                }
+            } catch (error) {
+                console.error('Failed to load data from storage, using fallback:', error);
+                // Keep using the imported JSON data as fallback
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    // Keyboard shortcut listener
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key.toLowerCase() === 'e') {
+                navigate('/edit');
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [navigate]);
+    
+    const renderNavigationItem = (item: NavigationItem) => {
+        const IconComponent = iconMap[item.icon] || Settings01;
+        
+        return (
+            <Link key={item.id} to={item.path} className="group">
+                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
+                                <IconComponent className="size-4 text-brand-solid" />
+                            </span>
+                            <span className="text-sm font-medium text-primary">{item.title}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Badge color={item.statusColor} size="sm">{item.status}</Badge>
+                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        );
+    };
+
     return (
         <div className="relative flex h-dvh flex-col overflow-hidden">
             {/* Background visuals */}
@@ -20,6 +109,7 @@ export const HomeScreen = () => {
                 <NexusLogo className="h-12 w-auto" />
             </div>
 
+
             {/* Main content */}
             <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4">
 
@@ -32,76 +122,13 @@ export const HomeScreen = () => {
                     </p>
                 </div>
 
-                {/* Three-column navigation: Admin / Site / Signup */}
+                {/* Three-column navigation: Admin / Site / Get Started */}
                 <div className="mt-10 grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
                     {/* Admin column */}
                     <div>
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Admin</div>
                         <div className="space-y-3">
-                            <Link to="/admin3" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Settings01 className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Admin 3.0</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="gray" size="sm">On Hold</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/admin2" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Settings01 className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Admin 2.0</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="blue" size="sm">Under Design</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/admin2/site" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Globe01 className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Site Section</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="success" size="sm">Ready for Dev</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/admin2/site/spaces/growth/events/customize" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Settings01 className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Simple Customize Space</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="blue" size="sm">Under Design</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                            {data.admin.map(item => renderNavigationItem(item))}
                         </div>
                     </div>
 
@@ -109,70 +136,7 @@ export const HomeScreen = () => {
                     <div>
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Site</div>
                         <div className="space-y-3">
-                            <Link to="/site" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-secondary/30 p-1.5">
-                                                <Globe01 className="size-4 text-secondary" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Website</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="blue" size="sm">Under Design</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/site/event" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Calendar className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Events Page</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="success" size="sm">Ready for Dev</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/site/event/1" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Calendar className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Event Detail Page</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="success" size="sm">Ready for Dev</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/site/post-view" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/60">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <MessageSquare01 className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Embed Event</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="success" size="sm">Ready for Dev</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                            {data.site.map(item => renderNavigationItem(item))}
                         </div>
                     </div>
 
@@ -180,54 +144,7 @@ export const HomeScreen = () => {
                     <div>
                         <div className="mb-3 text-xs font-medium uppercase tracking-wide text-tertiary">Get Started</div>
                         <div className="space-y-3">
-                            <Link to="/signup" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <UsersPlus className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Sign Up</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="orange" size="sm">Under Review</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/wizard" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <Zap className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Setup Wizard</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="orange" size="sm">Under Review</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/admin2/onboarding" className="group">
-                                <div className="rounded-lg border border-secondary bg-primary p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                                <CheckCircle className="size-4 text-brand-solid" />
-                                            </span>
-                                            <span className="text-sm font-medium text-primary">Onboarding</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge color="orange" size="sm">Under Review</Badge>
-                                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                            {data.getStarted.map(item => renderNavigationItem(item))}
                         </div>
                     </div>
                 </div>

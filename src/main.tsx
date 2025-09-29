@@ -47,6 +47,7 @@ import { NotFound } from "@/pages/not-found";
 import { SignupPage } from "@/pages/signup";
 import { LoginPage } from "@/pages/login";
 import { WizardPage } from "@/pages/wizard";
+import { EditDashboard } from "@/pages/edit-dashboard";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme";
 import { AdminDemo } from "@/components/application/admin-demo";
@@ -66,6 +67,7 @@ createRoot(document.getElementById("root")!).render(
                             <RouteProvider>
                     <Routes>
                         <Route path="/" element={<HomeScreen />} />
+                        <Route path="/edit" element={<EditDashboard />} />
                         <Route path="/signup" element={<SignupPage />} />
                         <Route path="/wizard" element={<WizardPage />} />
                         <Route path="/login" element={<LoginPage />} />
