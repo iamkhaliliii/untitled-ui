@@ -1,7 +1,7 @@
 import { Settings01, Globe01, ArrowRight, UsersPlus, Zap, CheckCircle, Calendar, MessageSquare01 } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
-import { BettermodeLogo } from "@/components/foundations/logo/bettermode-logo";
+import { NexusLogo } from "@/components/foundations/logo/nexus-logo";
 import { BackgroundPattern } from "@/components/shared-assets/background-patterns";
 import { Link } from "react-router";
 
@@ -17,7 +17,7 @@ export const HomeScreen = () => {
 
             {/* Logo in top left corner */}
             <div className="absolute top-6 left-6 z-20">
-                <BettermodeLogo className="h-8 w-auto" />
+                <NexusLogo className="h-12 w-auto" />
             </div>
 
             {/* Main content */}

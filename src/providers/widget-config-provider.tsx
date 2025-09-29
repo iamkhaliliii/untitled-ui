@@ -8,6 +8,14 @@ interface ToggleStates {
   footer: boolean;
 }
 
+interface SpaceWidget {
+  id: string;
+  label: string;
+  icon: any;
+  enabled: boolean;
+  containerId: string; // Which container/column this widget belongs to
+}
+
 interface SpaceWidgetStates {
   spaceHeader: boolean;
   eventsList: boolean;
@@ -15,11 +23,22 @@ interface SpaceWidgetStates {
   upcomingEvents: boolean;
   heroBanner: boolean;
   menu: boolean;
+  // Dynamic widgets
+  dynamicWidgets: SpaceWidget[];
+}
+
+interface SidebarWidget {
+  id: string;
+  label: string;
+  icon: any;
+  enabled: boolean;
 }
 
 interface SidebarWidgetStates {
   quickActions: boolean;
   recentActivity: boolean;
+  // Dynamic widgets
+  dynamicWidgets: SidebarWidget[];
 }
 
 interface LayoutStates {
@@ -35,8 +54,14 @@ interface WidgetConfigContextType {
   updateToggleStates: (states: Partial<ToggleStates>) => void;
   spaceWidgetStates: SpaceWidgetStates;
   updateSpaceWidgetStates: (states: Partial<SpaceWidgetStates>) => void;
+  addSpaceWidget: (widget: Omit<SpaceWidget, 'enabled'>, containerId?: string) => void;
+  removeSpaceWidget: (widgetId: string) => void;
+  duplicateSpaceWidget: (widgetId: string) => void;
   sidebarWidgetStates: SidebarWidgetStates;
   updateSidebarWidgetStates: (states: Partial<SidebarWidgetStates>) => void;
+  addSidebarWidget: (widget: Omit<SidebarWidget, 'enabled'>) => void;
+  removeSidebarWidget: (widgetId: string) => void;
+  duplicateSidebarWidget: (widgetId: string) => void;
   layoutStates: LayoutStates;
   updateLayoutStates: (states: Partial<LayoutStates>) => void;
 }
@@ -71,6 +96,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     upcomingEvents: true,
     heroBanner: false,
     menu: true,
+    dynamicWidgets: [],
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
     layoutStyle: 'simple',
@@ -78,6 +104,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
   const [sidebarWidgetStates, setSidebarWidgetStates] = useState<SidebarWidgetStates>({
     quickActions: true,
     recentActivity: false,
+    dynamicWidgets: [],
   });
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
@@ -104,6 +131,95 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     setLayoutStates(prevStates => ({ ...prevStates, ...states }));
   };
 
+  const addSpaceWidget = (widget: Omit<SpaceWidget, 'enabled'>, containerId?: string) => {
+    const newWidget: SpaceWidget = {
+      ...widget,
+      enabled: true,
+      containerId: containerId || 'mainColumn', // Default to mainColumn if not specified
+    };
+    
+    console.log('Adding widget to provider:', newWidget);
+    
+    setSpaceWidgetStates(prevStates => {
+      const newStates = {
+        ...prevStates,
+        dynamicWidgets: [...prevStates.dynamicWidgets, newWidget],
+      };
+      console.log('New space widget states:', newStates);
+      return newStates;
+    });
+  };
+
+  const removeSpaceWidget = (widgetId: string) => {
+    setSpaceWidgetStates(prevStates => ({
+      ...prevStates,
+      dynamicWidgets: prevStates.dynamicWidgets.filter(widget => widget.id !== widgetId),
+    }));
+  };
+
+  const addSidebarWidget = (widget: Omit<SidebarWidget, 'enabled'>) => {
+    const newWidget: SidebarWidget = {
+      ...widget,
+      enabled: true,
+    };
+    
+    console.log('Adding sidebar widget to provider:', newWidget);
+    
+    setSidebarWidgetStates(prevStates => {
+      const newStates = {
+        ...prevStates,
+        dynamicWidgets: [...prevStates.dynamicWidgets, newWidget],
+      };
+      console.log('New sidebar widget states:', newStates);
+      return newStates;
+    });
+  };
+
+  const removeSidebarWidget = (widgetId: string) => {
+    setSidebarWidgetStates(prevStates => ({
+      ...prevStates,
+      dynamicWidgets: prevStates.dynamicWidgets.filter(widget => widget.id !== widgetId),
+    }));
+  };
+
+  const duplicateSpaceWidget = (widgetId: string) => {
+    const widgetToDuplicate = spaceWidgetStates.dynamicWidgets.find(widget => widget.id === widgetId);
+    if (widgetToDuplicate) {
+      const newWidget: SpaceWidget = {
+        ...widgetToDuplicate,
+        id: `${widgetToDuplicate.id}_copy_${Date.now()}`,
+        label: `${widgetToDuplicate.label} Copy`,
+        enabled: false, // Start disabled
+      };
+      
+      console.log('Duplicating space widget:', newWidget);
+      
+      setSpaceWidgetStates(prevStates => ({
+        ...prevStates,
+        dynamicWidgets: [...prevStates.dynamicWidgets, newWidget],
+      }));
+    }
+  };
+
+  const duplicateSidebarWidget = (widgetId: string) => {
+    const widgetToDuplicate = sidebarWidgetStates.dynamicWidgets.find(widget => widget.id === widgetId);
+    if (widgetToDuplicate) {
+      const newWidget: SidebarWidget = {
+        ...widgetToDuplicate,
+        id: `${widgetToDuplicate.id}_copy_${Date.now()}`,
+        label: `${widgetToDuplicate.label} Copy`,
+        enabled: false, // Start disabled
+      };
+      
+      console.log('Duplicating sidebar widget:', newWidget);
+      
+      setSidebarWidgetStates(prevStates => ({
+        ...prevStates,
+        dynamicWidgets: [...prevStates.dynamicWidgets, newWidget],
+      }));
+    }
+  };
+
   return (
     <WidgetConfigContext.Provider value={{ 
       eventsListConfig, 
@@ -114,8 +230,14 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateToggleStates,
       spaceWidgetStates,
       updateSpaceWidgetStates,
+      addSpaceWidget,
+      removeSpaceWidget,
+      duplicateSpaceWidget,
       sidebarWidgetStates,
       updateSidebarWidgetStates,
+      addSidebarWidget,
+      removeSidebarWidget,
+      duplicateSidebarWidget,
       layoutStates,
       updateLayoutStates
     }}>

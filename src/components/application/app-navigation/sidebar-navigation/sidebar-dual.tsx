@@ -160,7 +160,7 @@ interface SidebarNavigationDualProps {
 
 export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationDualProps) => {
     const navigate = useNavigate();
-    const { toggleStates, updateToggleStates } = useWidgetConfig();
+    const { toggleStates, updateToggleStates, addSpaceWidget, addSidebarWidget } = useWidgetConfig();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
     
     // Check if user came from CMS page
@@ -681,6 +681,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // State for widget selection
     const [showWidgetSelection, setShowWidgetSelection] = useState(false);
+    const [widgetSelectionType, setWidgetSelectionType] = useState<'space' | 'sidebar'>('space');
 
     // State for widget configuration
     const [showWidgetConfig, setShowWidgetConfig] = useState(false);
@@ -723,8 +724,27 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     // Handle widget selection
     const handleWidgetSelect = (widget: any) => {
         console.log("Selected widget:", widget);
+        
+        if (widgetSelectionType === 'space') {
+            // Add widget to space widgets section
+            addSpaceWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+                containerId: 'mainColumn', // Default to main column
+            });
+            console.log(`Added widget "${widget.label}" to Space Widgets section`);
+        } else if (widgetSelectionType === 'sidebar') {
+            // Add widget to sidebar widgets section
+            addSidebarWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+            });
+            console.log(`Added widget "${widget.label}" to Sidebar Widgets section`);
+        }
+        
         setShowWidgetSelection(false);
-        // TODO: Add widget to the customize settings
     };
 
     // Handle widget configuration
@@ -1163,6 +1183,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         onAddWidgetClick={handleAddWidgetClick}
                         onWidgetConfig={handleWidgetConfig}
                         onEditGlobalWidgets={() => setShowNavigationInTertiary(true)}
+                        onWidgetSelect={handleWidgetSelect}
+                        onSetWidgetSelectionType={setWidgetSelectionType}
                     />
                 );
             case "permissions":
