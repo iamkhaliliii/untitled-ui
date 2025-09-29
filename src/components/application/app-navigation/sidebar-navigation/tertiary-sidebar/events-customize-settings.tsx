@@ -147,7 +147,6 @@ export const EventsCustomizeSettings = ({
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {console.log('Rendering dropdown for:', id, 'isDynamic:', isDynamic, 'widgetType:', widgetType)}
                 <button
                   onClick={(e) => {
                     e.preventDefault();
