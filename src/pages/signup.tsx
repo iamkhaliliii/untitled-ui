@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { ArrowLeft, ArrowRight } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
@@ -8,6 +8,7 @@ import { cx } from "@/utils/cx";
 import { SignupFormData } from "./signup/types";
 import { validateStep, getStepTitle, getStepDescription, getRecommendedPlan } from "./signup/utils";
 import { SAAS_TOOLS, ENTERPRISE_FEATURES } from "./signup/constants";
+import { BrandData, fetchBrandData, extractDomainFromEmail, shouldFetchBrandData } from "@/utils/brandfetch";
 
 // Import step components
 import { Step1Email } from "./signup/steps/step1-email";
@@ -24,6 +25,7 @@ import { Step11PlanSelection } from "./signup/steps/step11-plan-selection";
 
 // Import sidebar components
 import { SidebarContent } from "./signup/sidebar/sidebar-content";
+import { BrandDataModal } from "@/components/shared-assets/brand-data-modal";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -36,6 +38,11 @@ export const SignupPage = () => {
   const [customRole, setCustomRole] = useState("");
   const [billingPeriod, setBillingPeriod] = useState<'annual' | 'monthly'>('annual');
   const [selectedSecurityLevel, setSelectedSecurityLevel] = useState<'basic' | 'enterprise' | null>(null);
+  
+  // Brand data states
+  const [brandData, setBrandData] = useState<BrandData | null>(null);
+  const [showBrandModal, setShowBrandModal] = useState(false);
+  const [isFetchingBrand, setIsFetchingBrand] = useState(false);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
@@ -56,6 +63,33 @@ export const SignupPage = () => {
     expectedUserCount: "",
     selectedPlan: "pro"
   });
+
+  // Effect to fetch brand data when email changes
+  useEffect(() => {
+    const fetchBrand = async () => {
+      if (formData.email && shouldFetchBrandData(formData.email)) {
+        const domain = extractDomainFromEmail(formData.email);
+        if (domain) {
+          setIsFetchingBrand(true);
+          try {
+            const data = await fetchBrandData(domain);
+            setBrandData(data);
+          } catch (error) {
+            console.error('Error fetching brand data:', error);
+            setBrandData(null);
+          } finally {
+            setIsFetchingBrand(false);
+          }
+        }
+      } else {
+        setBrandData(null);
+      }
+    };
+
+    // Debounce the API call
+    const timeoutId = setTimeout(fetchBrand, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData.email]);
 
   const handleInputChange = (field: keyof SignupFormData) => (value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -171,6 +205,9 @@ export const SignupPage = () => {
             onNext={handleNext}
             onResendCode={handleResendCode}
             onEditEmail={() => setCurrentStep(1)}
+            brandData={brandData}
+            isFetchingBrand={isFetchingBrand}
+            onShowBrandModal={() => setShowBrandModal(true)}
           />
         );
       case 3:
@@ -457,6 +494,14 @@ export const SignupPage = () => {
         </div>
         )}
       </section>
+      
+      {/* Brand Data Modal */}
+      <BrandDataModal
+        isOpen={showBrandModal}
+        onClose={() => setShowBrandModal(false)}
+        brandData={brandData}
+        isLoading={isFetchingBrand}
+      />
     </div>
   );
 };
