@@ -1,20 +1,18 @@
 export const BrandShowcase = () => {
   return (
-    <div className="flex flex-col gap-6 text-center max-w-md mx-auto">
+    <div className="flex flex-col gap-4 text-center max-w-md mx-auto px-8">
       <div>
         {/* Title */}
-        <div className="text-left flex flex-col gap-2 mb-6">
-          <h2 className="text-4xl font-base text-primary">
-            Why Leading Brands Choose{" "}
-            <span className="font-bold">Bettermode</span>
+        <div className="text-left flex flex-col gap-3 mb-4">
+          <h2 className="text-2xl font-base text-primary">
+            <span className="font-bold">Transform Customer Connections Into Revenue Growth</span>
           </h2>
-          <p className="text-[1.1rem] text-tertiary">
-            Empower your enterprise with an all-in-one hub for communities, knowledge sharing, events, and more powered by Bettermode's scalable platform. designed to streamline collaboration, enhance customer engagement, and drive business growth across every touchpoint.
+          <p className="text-sm text-tertiary">
+            Join 500+ growing SaaS companies using Bettermode for advanced community capabilities. Seamless integrations, powerful analytics, and proven frameworks that scale efficiently as you grow.
           </p>
-          <h2 className="text-xl font-base mt-10 text-primary">
-            The Community Platform Behind{" "}
-            <span className="font-bold">Top Brands</span> <br />
-          </h2>
+          <p className="text-sm text-tertiary mt-2">
+            Built for scaling software & tech companies driving measurable community ROI through smart implementation.
+          </p>
         </div>
         
         {/* Brand Logos Slider - 3 Horizontal Rows */}

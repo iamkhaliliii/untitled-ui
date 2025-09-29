@@ -2,6 +2,7 @@ import { X, Building02 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { BrandData } from "@/utils/brandfetch";
 import { cx } from "@/utils/cx";
+import { getAllIndustries } from "@/utils/industry-mapping";
 
 interface BrandDataModalProps {
   isOpen: boolean;
@@ -123,15 +124,24 @@ export const BrandDataModal = ({ isOpen, onClose, brandData, isLoading }: BrandD
                         <div className="p-3 bg-secondary rounded-lg">
                           <span className="text-tertiary font-medium block mb-2">Industries</span>
                           <div className="flex flex-wrap gap-2">
-                            {brandData.company.industries.slice(0, 3).map((industry, index) => (
-                              <span
-                                key={index}
-                                className="inline-flex items-center gap-1 px-2 py-1 bg-brand-secondary/10 text-brand-secondary rounded-md text-sm font-medium"
-                              >
-                                {industry.emoji && <span>{industry.emoji}</span>}
-                                {industry.name}
-                              </span>
-                            ))}
+                            {brandData.company.industries.slice(0, 3).map((industry, index) => {
+                              // Find the emoji from our industries data
+                              const allIndustries = getAllIndustries();
+                              const industryData = allIndustries.find(ind => 
+                                ind.name.toLowerCase() === industry.name.toLowerCase() ||
+                                ind.id.toString() === industry.id
+                              );
+                              
+                              return (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-brand-secondary/10 text-brand-secondary rounded-md text-sm font-medium"
+                                >
+                                  {industryData?.emoji && <span>{industryData.emoji}</span>}
+                                  {industry.name}
+                                </span>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
@@ -153,9 +163,17 @@ export const BrandDataModal = ({ isOpen, onClose, brandData, isLoading }: BrandD
                         key={index}
                         className="flex items-center gap-3 p-3 bg-secondary rounded-lg hover:bg-brand-secondary/5 transition-colors"
                       >
-                        {industry.emoji && (
-                          <span className="text-xl">{industry.emoji}</span>
-                        )}
+                        {(() => {
+                          // Find the emoji from our industries data
+                          const allIndustries = getAllIndustries();
+                          const industryData = allIndustries.find(ind => 
+                            ind.name.toLowerCase() === industry.name.toLowerCase() ||
+                            ind.id.toString() === industry.id
+                          );
+                          return industryData?.emoji && (
+                            <span className="text-xl">{industryData.emoji}</span>
+                          );
+                        })()}
                         <div className="flex-1">
                           <span className="font-medium text-primary">{industry.name}</span>
                           {industry.score && (

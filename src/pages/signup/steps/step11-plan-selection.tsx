@@ -20,13 +20,15 @@ import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { SignupFormData } from "../types";
-import { getRecommendedPlan, joinWithAnd } from "../utils";
+import { getRecommendedPlan, joinWithAnd, generatePlanRecommendationText } from "../utils";
 import { SAAS_TOOLS } from "../constants";
+import { BrandData } from "@/utils/brandfetch";
 
 interface Step11PlanSelectionProps {
   formData: SignupFormData;
   billingPeriod: 'annual' | 'monthly';
   isLoading: boolean;
+  brandData?: BrandData | null;
   onBack: () => void;
   onSetBillingPeriod: (period: 'annual' | 'monthly') => void;
   onSetSelectedPlan: (plan: string) => void;
@@ -37,12 +39,13 @@ export const Step11PlanSelection = ({
   formData, 
   billingPeriod,
   isLoading,
+  brandData,
   onBack,
   onSetBillingPeriod,
   onSetSelectedPlan,
   onSubmit
 }: Step11PlanSelectionProps) => {
-  const recommendedPlanType = getRecommendedPlan(formData);
+  const recommendedPlanType = getRecommendedPlan(formData, brandData);
   
   const plans = [
     {
@@ -204,94 +207,23 @@ export const Step11PlanSelection = ({
               duration={45}
               className="text-xl text-primary leading-relaxed font-normal text-left"
             >
-              {(() => {
-                // Generate the complete text with formatting
-                const name = formData.firstName;
-                const role = formData.role && formData.role !== "other" ? `, in ${formData.role.replace(/-/g, ' ').split(' ').map(word => 
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                ).join(' ')}` : "";
-                const company = formData.companyName.split(' ').map(word => 
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                ).join(' ');
-                
-                const sizeMap: Record<string, string> = {
-                  "under-50": "under 50 person",
-                  "50-200": "50 to 200 person", 
-                  "200-500": "200 to 500 person",
-                  "over-500": "over 500 person"
-                };
-                const companySize = sizeMap[formData.companySize] || formData.companySize;
-                
-                const industryMap: Record<string, string> = {
-                  "b2b-saas": "B2B SaaS",
-                  "software": "software",
-                  "technology": "technology",
-                  "ai": "AI",
-                  "medical-saas": "medical SaaS",
-                  "martech": "MarTech",
-                  "adtech": "AdTech",
-                  "marketplace": "marketplace",
-                  "edtech": "EdTech",
-                  "dev-tools": "dev tools",
-                  "other": "technology"
-                };
-                const industry = industryMap[formData.industry] || formData.industry?.replace('-', ' ') || 'technology';
-                
-                // Generate tool avatars with different logic based on count
-                let toolsText = "";
-                if (formData.currentTools.length > 0) {
-                  if (formData.currentTools.length === 1) {
-                    // 1 app: show icon + name
-                    const tool = SAAS_TOOLS.find(t => t.id === formData.currentTools[0]);
-                    if (tool) {
-                      toolsText = `, using [avatar:${tool.logo}:${tool.name}] ${tool.name}`;
-                    }
-                  } else if (formData.currentTools.length <= 5) {
-                    // 2-5 apps: show only icons
-                    const toolAvatars = formData.currentTools.map(toolId => {
-                      const tool = SAAS_TOOLS.find(t => t.id === toolId);
-                      return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
-                    }).filter(Boolean).join('');
-                    toolsText = `, using ${toolAvatars}`;
-                  } else {
-                    // More than 5 apps: show 5 icons + "and more"
-                    const toolAvatars = formData.currentTools.slice(0, 5).map(toolId => {
-                      const tool = SAAS_TOOLS.find(t => t.id === toolId);
-                      return tool ? `[avatar:${tool.logo}:${tool.name}]` : '';
-                    }).filter(Boolean).join('');
-                    toolsText = `, using ${toolAvatars} and more`;
-                  }
-                }
-                
-                const recommendedPlan = getRecommendedPlan(formData);
-                const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
-                
-                const benefits = {
-                  "enterprise": ["SAML SSO", "data residency", "dedicated support"],
-                  "growth": ["advanced integrations", "analytics at scale", "priority support"], 
-                  "starter": ["essential integrations", "quick setup", "predictable costs"]
-                };
-                const planBenefits = benefits[recommendedPlan.toLowerCase() as keyof typeof benefits] || benefits.starter;
-                const benefitsText = joinWithAnd(planBenefits);
-                
-                return `**${name}**${role} at **${company}**.\n\nBased on what you shared about **${company}** — a **${companySize} ${industry}** company${toolsText} — the {{${planName}}} plan is the best fit.\n\nIt provides **${benefitsText}** so the organization can grow confidently.\n\n[[Mo Malayeri]]\n((CEO at Bettermode))`;
-              })()}
+{generatePlanRecommendationText(formData, recommendedPlanType, brandData)}
             </TypingAnimation>
             
             {/* Compact warning if selected plan doesn't match recommendation */}
-            {formData.selectedPlan !== getRecommendedPlan(formData) && (
+            {formData.selectedPlan !== getRecommendedPlan(formData, brandData) && (
               <div className="mt-8">
                 <div className="text-xs text-tertiary">
                   <p className="leading-relaxed">
                     {(() => {
-                      const recommendedPlan = getRecommendedPlan(formData);
+                      const recommendedPlan = getRecommendedPlan(formData, brandData);
                       const selectedPlan = formData.selectedPlan;
                       
                       // Show "Why not [recommended plan]?" when user selects different plan
                       const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
                       return `Why not ${planName}?`;
                     })()} {(() => {
-                      const recommendedPlan = getRecommendedPlan(formData);
+                      const recommendedPlan = getRecommendedPlan(formData, brandData);
                       const selectedPlan = formData.selectedPlan;
                       
                       // Check specific enterprise features

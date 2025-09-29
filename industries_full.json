@@ -1,0 +1,1675 @@
+[
+  {
+    "emoji": "🍿",
+    "id": 1,
+    "name": "Arts and Entertainment",
+    "slug": "arts-and-entertainment",
+    "urn": "urn:brandfetch:industry:1",
+    "children": [
+      {
+        "emoji": "🍿",
+        "id": 2,
+        "name": "Animation and Comics",
+        "slug": "animation-and-comics",
+        "urn": "turn:brandfetch:industry:1:sub-industry:2"
+      },
+      {
+        "emoji": "🍿",
+        "id": 3,
+        "name": "Arts and Entertainment",
+        "slug": "arts-and-entertainment",
+        "urn": "turn:brandfetch:industry:1:sub-industry:3"
+      },
+      {
+        "emoji": "🍿",
+        "id": 4,
+        "name": "Books and Literature",
+        "slug": "books-and-literature",
+        "urn": "turn:brandfetch:industry:1:sub-industry:4"
+      },
+      {
+        "emoji": "🍿",
+        "id": 5,
+        "name": "Humor",
+        "slug": "humor",
+        "urn": "turn:brandfetch:industry:1:sub-industry:5"
+      },
+      {
+        "emoji": "🍿",
+        "id": 6,
+        "name": "Music",
+        "slug": "music",
+        "urn": "turn:brandfetch:industry:1:sub-industry:6"
+      },
+      {
+        "emoji": "🍿",
+        "id": 7,
+        "name": "Performing Arts",
+        "slug": "performing-arts",
+        "urn": "turn:brandfetch:industry:1:sub-industry:7"
+      },
+      {
+        "emoji": "🍿",
+        "id": 8,
+        "name": "TV Movies and Streaming",
+        "slug": "tv-movies-and-streaming",
+        "urn": "turn:brandfetch:industry:1:sub-industry:8"
+      },
+      {
+        "emoji": "🍿",
+        "id": 9,
+        "name": "Visual Arts and Design",
+        "slug": "visual-arts-and-design",
+        "urn": "turn:brandfetch:industry:1:sub-industry:9"
+      }
+    ]
+  },
+  {
+    "emoji": "📊",
+    "id": 10,
+    "name": "Business and Consumer Services",
+    "slug": "business-and-consumer-services",
+    "urn": "turn:brandfetch:industry:10",
+    "children": [
+      {
+        "emoji": "📊",
+        "id": 11,
+        "name": "Business and Consumer Services",
+        "slug": "business-and-consumer-services",
+        "urn": "turn:brandfetch:industry:10:sub-industry:11"
+      },
+      {
+        "emoji": "📊",
+        "id": 12,
+        "name": "Business Services",
+        "slug": "business-services",
+        "urn": "turn:brandfetch:industry:10:sub-industry:12"
+      },
+      {
+        "emoji": "📊",
+        "id": 13,
+        "name": "Marketing and Advertising",
+        "slug": "marketing-and-advertising",
+        "urn": "turn:brandfetch:industry:10:sub-industry:13"
+      },
+      {
+        "emoji": "📊",
+        "id": 14,
+        "name": "Online Marketing",
+        "slug": "online-marketing",
+        "urn": "turn:brandfetch:industry:10:sub-industry:14"
+      },
+      {
+        "emoji": "📊",
+        "id": 15,
+        "name": "Publishing and Printing",
+        "slug": "publishing-and-printing",
+        "urn": "turn:brandfetch:industry:10:sub-industry:15"
+      },
+      {
+        "emoji": "📊",
+        "id": 16,
+        "name": "Real Estate",
+        "slug": "real-estate",
+        "urn": "turn:brandfetch:industry:10:sub-industry:16"
+      },
+      {
+        "emoji": "📊",
+        "id": 17,
+        "name": "Relocation and Household Moving",
+        "slug": "relocation-and-household-moving",
+        "urn": "turn:brandfetch:industry:10:sub-industry:17"
+      },
+      {
+        "emoji": "📊",
+        "id": 18,
+        "name": "Shipping and Logistics",
+        "slug": "shipping-and-logistics",
+        "urn": "turn:brandfetch:industry:10:sub-industry:18"
+      },
+      {
+        "emoji": "📊",
+        "id": 19,
+        "name": "Textiles",
+        "slug": "textiles",
+        "urn": "turn:brandfetch:industry:10:sub-industry:19"
+      }
+    ]
+  },
+  {
+    "emoji": "🎗",
+    "id": 20,
+    "name": "Community and Society",
+    "slug": "community-and-society",
+    "urn": "turn:brandfetch:industry:20",
+    "children": [
+      {
+        "emoji": "🎗",
+        "id": 21,
+        "name": "Community and Society",
+        "slug": "community-and-society",
+        "urn": "turn:brandfetch:industry:20:sub-industry:21"
+      },
+      {
+        "emoji": "🎗",
+        "id": 22,
+        "name": "Decease",
+        "slug": "decease",
+        "urn": "turn:brandfetch:industry:20:sub-industry:22"
+      },
+      {
+        "emoji": "🎗",
+        "id": 23,
+        "name": "Faith and Beliefs",
+        "slug": "faith-and-beliefs",
+        "urn": "turn:brandfetch:industry:20:sub-industry:23"
+      },
+      {
+        "emoji": "🎗",
+        "id": 24,
+        "name": "Holidays and Seasonal Events",
+        "slug": "holidays-and-seasonal-events",
+        "urn": "turn:brandfetch:industry:20:sub-industry:24"
+      },
+      {
+        "emoji": "🎗",
+        "id": 26,
+        "name": "Philanthropy",
+        "slug": "philanthropy",
+        "urn": "turn:brandfetch:industry:20:sub-industry:26"
+      },
+      {
+        "emoji": "🎗",
+        "id": 27,
+        "name": "Romance and Relationships",
+        "slug": "romance-and-relationships",
+        "urn": "turn:brandfetch:industry:20:sub-industry:27"
+      }
+    ]
+  },
+  {
+    "emoji": "🖥",
+    "id": 28,
+    "name": "Computers Electronics and Technology",
+    "slug": "computers-electronics-and-technology",
+    "urn": "turn:brandfetch:industry:28",
+    "children": [
+      {
+        "emoji": "🖥",
+        "id": 29,
+        "name": "Advertising Networks",
+        "slug": "advertising-networks",
+        "urn": "turn:brandfetch:industry:28:sub-industry:29"
+      },
+      {
+        "emoji": "🖥",
+        "id": 30,
+        "name": "Computer Hardware",
+        "slug": "computer-hardware",
+        "urn": "turn:brandfetch:industry:28:sub-industry:30"
+      },
+      {
+        "emoji": "🖥",
+        "id": 31,
+        "name": "Computer Security",
+        "slug": "computer-security",
+        "urn": "turn:brandfetch:industry:28:sub-industry:31"
+      },
+      {
+        "emoji": "🖥",
+        "id": 32,
+        "name": "Computers Electronics and Technology",
+        "slug": "computers-electronics-and-technology",
+        "urn": "turn:brandfetch:industry:28:sub-industry:32"
+      },
+      {
+        "emoji": "🖥",
+        "id": 33,
+        "name": "Consumer Electronics",
+        "slug": "consumer-electronics",
+        "urn": "turn:brandfetch:industry:28:sub-industry:33"
+      },
+      {
+        "emoji": "🖥",
+        "id": 34,
+        "name": "Email",
+        "slug": "email",
+        "urn": "turn:brandfetch:industry:28:sub-industry:34"
+      },
+      {
+        "emoji": "🖥",
+        "id": 35,
+        "name": "File Sharing and Hosting",
+        "slug": "file-sharing-and-hosting",
+        "urn": "turn:brandfetch:industry:28:sub-industry:35"
+      },
+      {
+        "emoji": "🖥",
+        "id": 36,
+        "name": "Graphics Multimedia and Web Design",
+        "slug": "graphics-multimedia-and-web-design",
+        "urn": "turn:brandfetch:industry:28:sub-industry:36"
+      },
+      {
+        "emoji": "🖥",
+        "id": 37,
+        "name": "Programming and Developer Software",
+        "slug": "programming-and-developer-software",
+        "urn": "turn:brandfetch:industry:28:sub-industry:37"
+      },
+      {
+        "emoji": "🖥",
+        "id": 38,
+        "name": "Search Engines",
+        "slug": "search-engines",
+        "urn": "turn:brandfetch:industry:28:sub-industry:38"
+      },
+      {
+        "emoji": "🖥",
+        "id": 39,
+        "name": "Social Networks and Online Communities",
+        "slug": "social-networks-and-online-communities",
+        "urn": "turn:brandfetch:industry:28:sub-industry:39"
+      },
+      {
+        "emoji": "🖥",
+        "id": 40,
+        "name": "Telecommunications",
+        "slug": "telecommunications",
+        "urn": "turn:brandfetch:industry:28:sub-industry:40"
+      },
+      {
+        "emoji": "🖥",
+        "id": 41,
+        "name": "Web Hosting and Domain Names",
+        "slug": "web-hosting-and-domain-names",
+        "urn": "turn:brandfetch:industry:28:sub-industry:41"
+      },
+      {
+        "emoji": "🖥",
+        "id": 226,
+        "name": "Artificial Intelligence and Machine Learning",
+        "slug": "artificial-intelligence-and-machine-learning",
+        "urn": "turn:brandfetch:industry:28:sub-industry:226"
+      },
+      {
+        "emoji": "🖥",
+        "id": 227,
+        "name": "Augmented Reality and Virtual Reality",
+        "slug": "augmented-reality-and-virtual-reality",
+        "urn": "turn:brandfetch:industry:28:sub-industry:227"
+      },
+      {
+        "emoji": "🖥",
+        "id": 228,
+        "name": "Blockchain and Cryptocurrency",
+        "slug": "blockchain-and-cryptocurrency",
+        "urn": "turn:brandfetch:industry:28:sub-industry:228"
+      },
+      {
+        "emoji": "🖥",
+        "id": 229,
+        "name": "Cloud Services and Computing",
+        "slug": "cloud-services-and-computing",
+        "urn": "turn:brandfetch:industry:28:sub-industry:229"
+      },
+      {
+        "emoji": "🖥",
+        "id": 230,
+        "name": "Smart Homes and Home Automation",
+        "slug": "smart-homes-and-home-automation",
+        "urn": "turn:brandfetch:industry:28:sub-industry:230"
+      },
+      {
+        "emoji": "🖥",
+        "id": 231,
+        "name": "Drone Technology",
+        "slug": "drone-technology",
+        "urn": "turn:brandfetch:industry:28:sub-industry:231"
+      },
+      {
+        "emoji": "🖥",
+        "id": 232,
+        "name": "Video Game Design and Development",
+        "slug": "video-game-design-and-development",
+        "urn": "turn:brandfetch:industry:28:sub-industry:232"
+      },
+      {
+        "emoji": "🖥",
+        "id": 233,
+        "name": "Green and Renewable Technology",
+        "slug": "green-and-renewable-technology",
+        "urn": "turn:brandfetch:industry:28:sub-industry:233"
+      }
+    ]
+  },
+  {
+    "emoji": "🛍",
+    "id": 42,
+    "name": "E-commerce and Shopping",
+    "slug": "e-commerce-and-shopping",
+    "urn": "turn:brandfetch:industry:42",
+    "children": [
+      {
+        "emoji": "🛍",
+        "id": 43,
+        "name": "Auctions",
+        "slug": "auctions",
+        "urn": "turn:brandfetch:industry:42:sub-industry:43"
+      },
+      {
+        "emoji": "🛍",
+        "id": 44,
+        "name": "Classifieds",
+        "slug": "classifieds",
+        "urn": "turn:brandfetch:industry:42:sub-industry:44"
+      },
+      {
+        "emoji": "🛍",
+        "id": 45,
+        "name": "Coupons and Rebates",
+        "slug": "coupons-and-rebates",
+        "urn": "turn:brandfetch:industry:42:sub-industry:45"
+      },
+      {
+        "emoji": "🛍",
+        "id": 46,
+        "name": "E-commerce and Shopping",
+        "slug": "e-commerce-and-shopping",
+        "urn": "turn:brandfetch:industry:42:sub-industry:46"
+      },
+      {
+        "emoji": "🛍",
+        "id": 47,
+        "name": "Marketplace",
+        "slug": "marketplace",
+        "urn": "turn:brandfetch:industry:42:sub-industry:47"
+      },
+      {
+        "emoji": "🛍",
+        "id": 48,
+        "name": "Price Comparison",
+        "slug": "price-comparison",
+        "urn": "turn:brandfetch:industry:42:sub-industry:48"
+      },
+      {
+        "emoji": "🛍",
+        "id": 49,
+        "name": "Tickets",
+        "slug": "tickets",
+        "urn": "turn:brandfetch:industry:42:sub-industry:49"
+      }
+    ]
+  },
+  {
+    "emoji": "💰",
+    "id": 50,
+    "name": "Finance",
+    "slug": "finance",
+    "urn": "turn:brandfetch:industry:50",
+    "children": [
+      {
+        "emoji": "💰",
+        "id": 51,
+        "name": "Accounting and Auditing",
+        "slug": "accounting-and-auditing",
+        "urn": "turn:brandfetch:industry:50:sub-industry:51"
+      },
+      {
+        "emoji": "💰",
+        "id": 52,
+        "name": "Banking Credit and Lending",
+        "slug": "banking-credit-and-lending",
+        "urn": "turn:brandfetch:industry:50:sub-industry:52"
+      },
+      {
+        "emoji": "💰",
+        "id": 53,
+        "name": "Finance",
+        "slug": "finance",
+        "urn": "turn:brandfetch:industry:50:sub-industry:53"
+      },
+      {
+        "emoji": "💰",
+        "id": 54,
+        "name": "Financial Planning and Management",
+        "slug": "financial-planning-and-management",
+        "urn": "turn:brandfetch:industry:50:sub-industry:54"
+      },
+      {
+        "emoji": "💰",
+        "id": 55,
+        "name": "Insurance",
+        "slug": "insurance",
+        "urn": "turn:brandfetch:industry:50:sub-industry:55"
+      },
+      {
+        "emoji": "💰",
+        "id": 56,
+        "name": "Investing",
+        "slug": "investing",
+        "urn": "turn:brandfetch:industry:50:sub-industry:56"
+      }
+    ]
+  },
+  {
+    "emoji": "🍔",
+    "id": 57,
+    "name": "Food and Drink",
+    "slug": "food-and-drink",
+    "urn": "turn:brandfetch:industry:57",
+    "children": [
+      {
+        "emoji": "🍔",
+        "id": 58,
+        "name": "Beverages",
+        "slug": "beverages",
+        "urn": "turn:brandfetch:industry:57:sub-industry:58"
+      },
+      {
+        "emoji": "🍔",
+        "id": 59,
+        "name": "Cooking and Recipes",
+        "slug": "cooking-and-recipes",
+        "urn": "turn:brandfetch:industry:57:sub-industry:59"
+      },
+      {
+        "emoji": "🍔",
+        "id": 60,
+        "name": "Food and Drink",
+        "slug": "food-and-drink",
+        "urn": "turn:brandfetch:industry:57:sub-industry:60"
+      },
+      {
+        "emoji": "🍔",
+        "id": 61,
+        "name": "Groceries",
+        "slug": "groceries",
+        "urn": "turn:brandfetch:industry:57:sub-industry:61"
+      },
+      {
+        "emoji": "🍔",
+        "id": 62,
+        "name": "Restaurants and Delivery",
+        "slug": "restaurants-and-delivery",
+        "urn": "turn:brandfetch:industry:57:sub-industry:62"
+      },
+      {
+        "emoji": "🍔",
+        "id": 63,
+        "name": "Vegetarian and Vegan",
+        "slug": "vegetarian-and-vegan",
+        "urn": "turn:brandfetch:industry:57:sub-industry:63"
+      }
+    ]
+  },
+  {
+    "emoji": "🎰",
+    "id": 64,
+    "name": "Gambling",
+    "slug": "gambling",
+    "urn": "turn:brandfetch:industry:64",
+    "children": [
+      {
+        "emoji": "🎰",
+        "id": 65,
+        "name": "Bingo",
+        "slug": "bingo",
+        "urn": "turn:brandfetch:industry:64:sub-industry:65"
+      },
+      {
+        "emoji": "🎰",
+        "id": 66,
+        "name": "Casinos",
+        "slug": "casinos",
+        "urn": "turn:brandfetch:industry:64:sub-industry:66"
+      },
+      {
+        "emoji": "🎰",
+        "id": 67,
+        "name": "Gambling",
+        "slug": "gambling",
+        "urn": "turn:brandfetch:industry:64:sub-industry:67"
+      },
+      {
+        "emoji": "🎰",
+        "id": 68,
+        "name": "Lottery",
+        "slug": "lottery",
+        "urn": "turn:brandfetch:industry:64:sub-industry:68"
+      },
+      {
+        "emoji": "🎰",
+        "id": 69,
+        "name": "Poker",
+        "slug": "poker",
+        "urn": "turn:brandfetch:industry:64:sub-industry:69"
+      },
+      {
+        "emoji": "🎰",
+        "id": 70,
+        "name": "Sports Betting",
+        "slug": "sports-betting",
+        "urn": "turn:brandfetch:industry:64:sub-industry:70"
+      }
+    ]
+  },
+  {
+    "emoji": "🎮",
+    "id": 71,
+    "name": "Games",
+    "slug": "games",
+    "urn": "turn:brandfetch:industry:71",
+    "children": [
+      {
+        "emoji": "🎮",
+        "id": 72,
+        "name": "Board and Card Games",
+        "slug": "board-and-card-games",
+        "urn": "turn:brandfetch:industry:71:sub-industry:72"
+      },
+      {
+        "emoji": "🎮",
+        "id": 73,
+        "name": "Games",
+        "slug": "games",
+        "urn": "turn:brandfetch:industry:71:sub-industry:73"
+      },
+      {
+        "emoji": "🎮",
+        "id": 74,
+        "name": "Puzzles and Brainteasers",
+        "slug": "puzzles-and-brainteasers",
+        "urn": "turn:brandfetch:industry:71:sub-industry:74"
+      },
+      {
+        "emoji": "🎮",
+        "id": 75,
+        "name": "Roleplaying Games",
+        "slug": "roleplaying-games",
+        "urn": "turn:brandfetch:industry:71:sub-industry:75"
+      },
+      {
+        "emoji": "🎮",
+        "id": 76,
+        "name": "Video Games Consoles and Accessories",
+        "slug": "video-games-consoles-and-accessories",
+        "urn": "turn:brandfetch:industry:71:sub-industry:76"
+      }
+    ]
+  },
+  {
+    "emoji": "⛑",
+    "id": 77,
+    "name": "Health",
+    "slug": "health",
+    "urn": "turn:brandfetch:industry:77",
+    "children": [
+      {
+        "emoji": "⛑",
+        "id": 78,
+        "name": "Addictions",
+        "slug": "addictions",
+        "urn": "turn:brandfetch:industry:77:sub-industry:78"
+      },
+      {
+        "emoji": "⛑",
+        "id": 79,
+        "name": "Alternative and Natural Medicine",
+        "slug": "alternative-and-natural-medicine",
+        "urn": "turn:brandfetch:industry:77:sub-industry:79"
+      },
+      {
+        "emoji": "⛑",
+        "id": 80,
+        "name": "Biotechnology and Pharmaceuticals",
+        "slug": "biotechnology-and-pharmaceuticals",
+        "urn": "turn:brandfetch:industry:77:sub-industry:80"
+      },
+      {
+        "emoji": "⛑",
+        "id": 81,
+        "name": "Childrens Health",
+        "slug": "childrens-health",
+        "urn": "turn:brandfetch:industry:77:sub-industry:81"
+      },
+      {
+        "emoji": "⛑",
+        "id": 82,
+        "name": "Dentist and Dental Services",
+        "slug": "dentist-and-dental-services",
+        "urn": "turn:brandfetch:industry:77:sub-industry:82"
+      },
+      {
+        "emoji": "⛑",
+        "id": 83,
+        "name": "Developmental and Physical Disabilities",
+        "slug": "developmental-and-physical-disabilities",
+        "urn": "turn:brandfetch:industry:77:sub-industry:83"
+      },
+      {
+        "emoji": "⛑",
+        "id": 84,
+        "name": "Geriatric and Aging Care",
+        "slug": "geriatric-and-aging-care",
+        "urn": "turn:brandfetch:industry:77:sub-industry:84"
+      },
+      {
+        "emoji": "⛑",
+        "id": 85,
+        "name": "Health",
+        "slug": "health",
+        "urn": "turn:brandfetch:industry:77:sub-industry:85"
+      },
+      {
+        "emoji": "⛑",
+        "id": 86,
+        "name": "Health Conditions and Concerns",
+        "slug": "health-conditions-and-concerns",
+        "urn": "turn:brandfetch:industry:77:sub-industry:86"
+      },
+      {
+        "emoji": "⛑",
+        "id": 87,
+        "name": "Medicine",
+        "slug": "medicine",
+        "urn": "turn:brandfetch:industry:77:sub-industry:87"
+      },
+      {
+        "emoji": "⛑",
+        "id": 88,
+        "name": "Mens Health",
+        "slug": "mens-health",
+        "urn": "turn:brandfetch:industry:77:sub-industry:88"
+      },
+      {
+        "emoji": "⛑",
+        "id": 89,
+        "name": "Mental Health",
+        "slug": "mental-health",
+        "urn": "turn:brandfetch:industry:77:sub-industry:89"
+      },
+      {
+        "emoji": "⛑",
+        "id": 90,
+        "name": "Nutrition Diets and Fitness",
+        "slug": "nutrition-diets-and-fitness",
+        "urn": "turn:brandfetch:industry:77:sub-industry:90"
+      },
+      {
+        "emoji": "⛑",
+        "id": 91,
+        "name": "Pharmacy",
+        "slug": "pharmacy",
+        "urn": "turn:brandfetch:industry:77:sub-industry:91"
+      },
+      {
+        "emoji": "⛑",
+        "id": 92,
+        "name": "Public Health and Safety",
+        "slug": "public-health-and-safety",
+        "urn": "turn:brandfetch:industry:77:sub-industry:92"
+      },
+      {
+        "emoji": "⛑",
+        "id": 93,
+        "name": "Womens Health",
+        "slug": "womens-health",
+        "urn": "turn:brandfetch:industry:77:sub-industry:93"
+      }
+    ]
+  },
+  {
+    "emoji": "🏭",
+    "id": 94,
+    "name": "Heavy Industry and Engineering",
+    "slug": "heavy-industry-and-engineering",
+    "urn": "turn:brandfetch:industry:94",
+    "children": [
+      {
+        "emoji": "🏭",
+        "id": 95,
+        "name": "Aerospace and Defense",
+        "slug": "aerospace-and-defense",
+        "urn": "turn:brandfetch:industry:94:sub-industry:95"
+      },
+      {
+        "emoji": "🏭",
+        "id": 96,
+        "name": "Agriculture",
+        "slug": "agriculture",
+        "urn": "turn:brandfetch:industry:94:sub-industry:96"
+      },
+      {
+        "emoji": "🏭",
+        "id": 97,
+        "name": "Architecture",
+        "slug": "architecture",
+        "urn": "turn:brandfetch:industry:94:sub-industry:97"
+      },
+      {
+        "emoji": "🏭",
+        "id": 98,
+        "name": "Chemical Industry",
+        "slug": "chemical-industry",
+        "urn": "turn:brandfetch:industry:94:sub-industry:98"
+      },
+      {
+        "emoji": "🏭",
+        "id": 99,
+        "name": "Construction and Maintenance",
+        "slug": "construction-and-maintenance",
+        "urn": "turn:brandfetch:industry:94:sub-industry:99"
+      },
+      {
+        "emoji": "🏭",
+        "id": 100,
+        "name": "Energy Industry",
+        "slug": "energy-industry",
+        "urn": "turn:brandfetch:industry:94:sub-industry:100"
+      },
+      {
+        "emoji": "🏭",
+        "id": 101,
+        "name": "Heavy Industry and Engineering",
+        "slug": "heavy-industry-and-engineering",
+        "urn": "turn:brandfetch:industry:94:sub-industry:101"
+      },
+      {
+        "emoji": "🏭",
+        "id": 102,
+        "name": "Metals and Mining",
+        "slug": "metals-and-mining",
+        "urn": "turn:brandfetch:industry:94:sub-industry:102"
+      },
+      {
+        "emoji": "🏭",
+        "id": 103,
+        "name": "Waste Water and Environmental",
+        "slug": "waste-water-and-environmental",
+        "urn": "turn:brandfetch:industry:94:sub-industry:103"
+      }
+    ]
+  },
+  {
+    "emoji": "🎸",
+    "id": 104,
+    "name": "Hobbies and Leisure",
+    "slug": "hobbies-and-leisure",
+    "urn": "turn:brandfetch:industry:104",
+    "children": [
+      {
+        "emoji": "🎸",
+        "id": 105,
+        "name": "Ancestry and Genealogy",
+        "slug": "ancestry-and-genealogy",
+        "urn": "turn:brandfetch:industry:104:sub-industry:105"
+      },
+      {
+        "emoji": "🎸",
+        "id": 106,
+        "name": "Antiques and Collectibles",
+        "slug": "antiques-and-collectibles",
+        "urn": "turn:brandfetch:industry:104:sub-industry:106"
+      },
+      {
+        "emoji": "🎸",
+        "id": 107,
+        "name": "Camping Scouting and Outdoors",
+        "slug": "camping-scouting-and-outdoors",
+        "urn": "turn:brandfetch:industry:104:sub-industry:107"
+      },
+      {
+        "emoji": "🎸",
+        "id": 108,
+        "name": "Crafts",
+        "slug": "crafts",
+        "urn": "turn:brandfetch:industry:104:sub-industry:108"
+      },
+      {
+        "emoji": "🎸",
+        "id": 109,
+        "name": "Hobbies and Leisure",
+        "slug": "hobbies-and-leisure",
+        "urn": "turn:brandfetch:industry:104:sub-industry:109"
+      },
+      {
+        "emoji": "🎸",
+        "id": 110,
+        "name": "Models",
+        "slug": "models",
+        "urn": "turn:brandfetch:industry:104:sub-industry:110"
+      },
+      {
+        "emoji": "🎸",
+        "id": 111,
+        "name": "Photography",
+        "slug": "photography",
+        "urn": "turn:brandfetch:industry:104:sub-industry:111"
+      }
+    ]
+  },
+  {
+    "emoji": "🪴",
+    "id": 112,
+    "name": "Home and Garden",
+    "slug": "home-and-garden",
+    "urn": "turn:brandfetch:industry:112",
+    "children": [
+      {
+        "emoji": "🪴",
+        "id": 113,
+        "name": "Furniture",
+        "slug": "furniture",
+        "urn": "turn:brandfetch:industry:112:sub-industry:113"
+      },
+      {
+        "emoji": "🪴",
+        "id": 114,
+        "name": "Gardening",
+        "slug": "gardening",
+        "urn": "turn:brandfetch:industry:112:sub-industry:114"
+      },
+      {
+        "emoji": "🪴",
+        "id": 115,
+        "name": "Home and Garden",
+        "slug": "home-and-garden",
+        "urn": "turn:brandfetch:industry:112:sub-industry:115"
+      },
+      {
+        "emoji": "🪴",
+        "id": 116,
+        "name": "Home Improvement and Maintenance",
+        "slug": "home-improvement-and-maintenance",
+        "urn": "turn:brandfetch:industry:112:sub-industry:116"
+      },
+      {
+        "emoji": "🪴",
+        "id": 117,
+        "name": "Interior Design",
+        "slug": "interior-design",
+        "urn": "turn:brandfetch:industry:112:sub-industry:117"
+      }
+    ]
+  },
+  {
+    "emoji": "💼",
+    "id": 118,
+    "name": "Jobs and Career",
+    "slug": "jobs-and-career",
+    "urn": "turn:brandfetch:industry:118",
+    "children": [
+      {
+        "emoji": "💼",
+        "id": 119,
+        "name": "Human Resources",
+        "slug": "human-resources",
+        "urn": "turn:brandfetch:industry:118:sub-industry:119"
+      },
+      {
+        "emoji": "💼",
+        "id": 120,
+        "name": "Jobs and Career",
+        "slug": "jobs-and-career",
+        "urn": "turn:brandfetch:industry:118:sub-industry:120"
+      },
+      {
+        "emoji": "💼",
+        "id": 121,
+        "name": "Jobs and Employment",
+        "slug": "jobs-and-employment",
+        "urn": "turn:brandfetch:industry:118:sub-industry:121"
+      }
+    ]
+  },
+  {
+    "emoji": "⚖️",
+    "id": 122,
+    "name": "Law and Government",
+    "slug": "law-and-government",
+    "urn": "turn:brandfetch:industry:122",
+    "children": [
+      {
+        "emoji": "⚖️",
+        "id": 123,
+        "name": "Government",
+        "slug": "government",
+        "urn": "turn:brandfetch:industry:122:sub-industry:123"
+      },
+      {
+        "emoji": "⚖️",
+        "id": 124,
+        "name": "Immigration and Visas",
+        "slug": "immigration-and-visas",
+        "urn": "turn:brandfetch:industry:122:sub-industry:124"
+      },
+      {
+        "emoji": "⚖️",
+        "id": 125,
+        "name": "Law and Government",
+        "slug": "law-and-government",
+        "urn": "turn:brandfetch:industry:122:sub-industry:125"
+      },
+      {
+        "emoji": "⚖️",
+        "id": 126,
+        "name": "Law Enforcement and Protective Services",
+        "slug": "law-enforcement-and-protective-services",
+        "urn": "turn:brandfetch:industry:122:sub-industry:126"
+      },
+      {
+        "emoji": "⚖️",
+        "id": 127,
+        "name": "Legal",
+        "slug": "legal",
+        "urn": "turn:brandfetch:industry:122:sub-industry:127"
+      },
+      {
+        "emoji": "⚖️",
+        "id": 128,
+        "name": "National Security",
+        "slug": "national-security",
+        "urn": "turn:brandfetch:industry:122:sub-industry:128"
+      }
+    ]
+  },
+  {
+    "emoji": "🏝",
+    "id": 129,
+    "name": "Lifestyle",
+    "slug": "lifestyle",
+    "urn": "turn:brandfetch:industry:129",
+    "children": [
+      {
+        "emoji": "🏝",
+        "id": 130,
+        "name": "Beauty and Cosmetics",
+        "slug": "beauty-and-cosmetics",
+        "urn": "turn:brandfetch:industry:129:sub-industry:130"
+      },
+      {
+        "emoji": "🏝",
+        "id": 131,
+        "name": "Childcare",
+        "slug": "childcare",
+        "urn": "turn:brandfetch:industry:129:sub-industry:131"
+      },
+      {
+        "emoji": "🏝",
+        "id": 132,
+        "name": "Fashion and Apparel",
+        "slug": "fashion-and-apparel",
+        "urn": "turn:brandfetch:industry:129:sub-industry:132"
+      },
+      {
+        "emoji": "🏝",
+        "id": 133,
+        "name": "Gifts and Flowers",
+        "slug": "gifts-and-flowers",
+        "urn": "turn:brandfetch:industry:129:sub-industry:133"
+      },
+      {
+        "emoji": "🏝",
+        "id": 134,
+        "name": "Jewelry and Luxury Products",
+        "slug": "jewelry-and-luxury-products",
+        "urn": "turn:brandfetch:industry:129:sub-industry:134"
+      },
+      {
+        "emoji": "🏝",
+        "id": 135,
+        "name": "Lifestyle",
+        "slug": "lifestyle",
+        "urn": "turn:brandfetch:industry:129:sub-industry:135"
+      },
+      {
+        "emoji": "🏝",
+        "id": 136,
+        "name": "Tobacco",
+        "slug": "tobacco",
+        "urn": "turn:brandfetch:industry:129:sub-industry:136"
+      },
+      {
+        "emoji": "🏝",
+        "id": 137,
+        "name": "Weddings",
+        "slug": "weddings",
+        "urn": "turn:brandfetch:industry:129:sub-industry:137"
+      }
+    ]
+  },
+  {
+    "emoji": "💎",
+    "id": 216,
+    "name": "Luxury",
+    "slug": "luxury",
+    "urn": "turn:brandfetch:industry:216",
+    "children": [
+      {
+        "emoji": "💎",
+        "id": 217,
+        "name": "Luxury Goods and Brands",
+        "slug": "luxury-goods-and-brands",
+        "urn": "turn:brandfetch:industry:216:sub-industry:217"
+      },
+      {
+        "emoji": "💎",
+        "id": 218,
+        "name": "Luxury Travel and Experiences",
+        "slug": "luxury-travel-and-experiences",
+        "urn": "turn:brandfetch:industry:216:sub-industry:218"
+      },
+      {
+        "emoji": "💎",
+        "id": 219,
+        "name": "High-End Fashion and Accessories",
+        "slug": "high-end-fashion-and-accessories",
+        "urn": "turn:brandfetch:industry:216:sub-industry:219"
+      },
+      {
+        "emoji": "💎",
+        "id": 220,
+        "name": "Luxury Real Estate",
+        "slug": "luxury-real-estate",
+        "urn": "turn:brandfetch:industry:216:sub-industry:220"
+      },
+      {
+        "emoji": "💎",
+        "id": 221,
+        "name": "Fine Dining and Gourmet Cuisine",
+        "slug": "fine-dining-and-gourmet-cuisine",
+        "urn": "turn:brandfetch:industry:216:sub-industry:221"
+      },
+      {
+        "emoji": "💎",
+        "id": 222,
+        "name": "Luxury Cars and Automobiles",
+        "slug": "luxury-cars-and-automobiles",
+        "urn": "turn:brandfetch:industry:216:sub-industry:222"
+      },
+      {
+        "emoji": "💎",
+        "id": 223,
+        "name": "Fine Art and Collectibles",
+        "slug": "fine-art-and-collectibles",
+        "urn": "turn:brandfetch:industry:216:sub-industry:223"
+      },
+      {
+        "emoji": "💎",
+        "id": 224,
+        "name": "Luxury Lifestyle and Services",
+        "slug": "luxury-lifestyle-and-services",
+        "urn": "turn:brandfetch:industry:216:sub-industry:224"
+      },
+      {
+        "emoji": "💎",
+        "id": 225,
+        "name": "Luxury Watches and Jewelry",
+        "slug": "luxury-watches-and-jewelry",
+        "urn": "turn:brandfetch:industry:216:sub-industry:225"
+      }
+    ]
+  },
+  {
+    "emoji": "📰",
+    "id": 138,
+    "name": "News and Media",
+    "slug": "news-and-media",
+    "urn": "turn:brandfetch:industry:138",
+    "children": []
+  },
+  {
+    "emoji": "🐶",
+    "id": 139,
+    "name": "Pets and Animals",
+    "slug": "pets-and-animals",
+    "urn": "turn:brandfetch:industry:139",
+    "children": [
+      {
+        "emoji": "🐶",
+        "id": 140,
+        "name": "Animals",
+        "slug": "animals",
+        "urn": "turn:brandfetch:industry:139:sub-industry:140"
+      },
+      {
+        "emoji": "🐶",
+        "id": 141,
+        "name": "Birds",
+        "slug": "birds",
+        "urn": "turn:brandfetch:industry:139:sub-industry:141"
+      },
+      {
+        "emoji": "🐶",
+        "id": 142,
+        "name": "Fish and Aquaria",
+        "slug": "fish-and-aquaria",
+        "urn": "turn:brandfetch:industry:139:sub-industry:142"
+      },
+      {
+        "emoji": "🐶",
+        "id": 143,
+        "name": "Horses",
+        "slug": "horses",
+        "urn": "turn:brandfetch:industry:139:sub-industry:143"
+      },
+      {
+        "emoji": "🐶",
+        "id": 144,
+        "name": "Pet Food and Supplies",
+        "slug": "pet-food-and-supplies",
+        "urn": "turn:brandfetch:industry:139:sub-industry:144"
+      },
+      {
+        "emoji": "🐶",
+        "id": 145,
+        "name": "Pets",
+        "slug": "pets",
+        "urn": "turn:brandfetch:industry:139:sub-industry:145"
+      },
+      {
+        "emoji": "🐶",
+        "id": 146,
+        "name": "Pets and Animals",
+        "slug": "pets-and-animals",
+        "urn": "turn:brandfetch:industry:139:sub-industry:146"
+      }
+    ]
+  },
+  {
+    "emoji": "🗺",
+    "id": 147,
+    "name": "Reference Materials",
+    "slug": "reference-materials",
+    "urn": "turn:brandfetch:industry:147",
+    "children": [
+      {
+        "emoji": "🗺",
+        "id": 148,
+        "name": "Dictionaries and Encyclopedias",
+        "slug": "dictionaries-and-encyclopedias",
+        "urn": "turn:brandfetch:industry:147:sub-industry:148"
+      },
+      {
+        "emoji": "🗺",
+        "id": 149,
+        "name": "Maps",
+        "slug": "maps",
+        "urn": "turn:brandfetch:industry:147:sub-industry:149"
+      },
+      {
+        "emoji": "🗺",
+        "id": 150,
+        "name": "Public Records and Directories",
+        "slug": "public-records-and-directories",
+        "urn": "turn:brandfetch:industry:147:sub-industry:150"
+      },
+      {
+        "emoji": "🗺",
+        "id": 151,
+        "name": "Reference Materials",
+        "slug": "reference-materials",
+        "urn": "turn:brandfetch:industry:147:sub-industry:151"
+      }
+    ]
+  },
+  {
+    "emoji": "🧪",
+    "id": 152,
+    "name": "Science and Education",
+    "slug": "science-and-education",
+    "urn": "turn:brandfetch:industry:152",
+    "children": [
+      {
+        "emoji": "🧪",
+        "id": 153,
+        "name": "Astronomy",
+        "slug": "astronomy",
+        "urn": "turn:brandfetch:industry:152:sub-industry:153"
+      },
+      {
+        "emoji": "🧪",
+        "id": 154,
+        "name": "Biology",
+        "slug": "biology",
+        "urn": "turn:brandfetch:industry:152:sub-industry:154"
+      },
+      {
+        "emoji": "🧪",
+        "id": 155,
+        "name": "Business Training",
+        "slug": "business-training",
+        "urn": "turn:brandfetch:industry:152:sub-industry:155"
+      },
+      {
+        "emoji": "🧪",
+        "id": 156,
+        "name": "Chemistry",
+        "slug": "chemistry",
+        "urn": "turn:brandfetch:industry:152:sub-industry:156"
+      },
+      {
+        "emoji": "🧪",
+        "id": 157,
+        "name": "Earth Sciences",
+        "slug": "earth-sciences",
+        "urn": "turn:brandfetch:industry:152:sub-industry:157"
+      },
+      {
+        "emoji": "🧪",
+        "id": 158,
+        "name": "Education",
+        "slug": "education",
+        "urn": "turn:brandfetch:industry:152:sub-industry:158"
+      },
+      {
+        "emoji": "🧪",
+        "id": 159,
+        "name": "Environmental Science",
+        "slug": "environmental-science",
+        "urn": "turn:brandfetch:industry:152:sub-industry:159"
+      },
+      {
+        "emoji": "🧪",
+        "id": 160,
+        "name": "Grants Scholarships and Financial Aid",
+        "slug": "grants-scholarships-and-financial-aid",
+        "urn": "turn:brandfetch:industry:152:sub-industry:160"
+      },
+      {
+        "emoji": "🧪",
+        "id": 161,
+        "name": "History",
+        "slug": "history",
+        "urn": "turn:brandfetch:industry:152:sub-industry:161"
+      },
+      {
+        "emoji": "🧪",
+        "id": 162,
+        "name": "Libraries and Museums",
+        "slug": "libraries-and-museums",
+        "urn": "turn:brandfetch:industry:152:sub-industry:162"
+      },
+      {
+        "emoji": "🧪",
+        "id": 163,
+        "name": "Literature",
+        "slug": "literature",
+        "urn": "turn:brandfetch:industry:152:sub-industry:163"
+      },
+      {
+        "emoji": "🧪",
+        "id": 164,
+        "name": "Math",
+        "slug": "math",
+        "urn": "turn:brandfetch:industry:152:sub-industry:164"
+      },
+      {
+        "emoji": "🧪",
+        "id": 165,
+        "name": "Philosophy",
+        "slug": "philosophy",
+        "urn": "turn:brandfetch:industry:152:sub-industry:165"
+      },
+      {
+        "emoji": "🧪",
+        "id": 166,
+        "name": "Physics",
+        "slug": "physics",
+        "urn": "turn:brandfetch:industry:152:sub-industry:166"
+      },
+      {
+        "emoji": "🧪",
+        "id": 167,
+        "name": "Public Records and Directories",
+        "slug": "public-records-and-directories",
+        "urn": "turn:brandfetch:industry:152:sub-industry:167"
+      },
+      {
+        "emoji": "🧪",
+        "id": 168,
+        "name": "Science and Education",
+        "slug": "science-and-education",
+        "urn": "turn:brandfetch:industry:152:sub-industry:168"
+      },
+      {
+        "emoji": "🧪",
+        "id": 169,
+        "name": "Social Sciences",
+        "slug": "social-sciences",
+        "urn": "turn:brandfetch:industry:152:sub-industry:169"
+      },
+      {
+        "emoji": "🧪",
+        "id": 170,
+        "name": "Universities and Colleges",
+        "slug": "universities-and-colleges",
+        "urn": "turn:brandfetch:industry:152:sub-industry:170"
+      },
+      {
+        "emoji": "🧪",
+        "id": 171,
+        "name": "Weather",
+        "slug": "weather",
+        "urn": "turn:brandfetch:industry:152:sub-industry:171"
+      }
+    ]
+  },
+  {
+    "emoji": "🏈",
+    "id": 172,
+    "name": "Sports",
+    "slug": "sports",
+    "urn": "turn:brandfetch:industry:172",
+    "children": [
+      {
+        "emoji": "🏈",
+        "id": 173,
+        "name": "American Football",
+        "slug": "american-football",
+        "urn": "turn:brandfetch:industry:172:sub-industry:173"
+      },
+      {
+        "emoji": "🏈",
+        "id": 174,
+        "name": "Baseball",
+        "slug": "baseball",
+        "urn": "turn:brandfetch:industry:172:sub-industry:174"
+      },
+      {
+        "emoji": "🏈",
+        "id": 175,
+        "name": "Basketball",
+        "slug": "basketball",
+        "urn": "turn:brandfetch:industry:172:sub-industry:175"
+      },
+      {
+        "emoji": "🏈",
+        "id": 176,
+        "name": "Boxing",
+        "slug": "boxing",
+        "urn": "turn:brandfetch:industry:172:sub-industry:176"
+      },
+      {
+        "emoji": "🏈",
+        "id": 177,
+        "name": "Climbing",
+        "slug": "climbing",
+        "urn": "turn:brandfetch:industry:172:sub-industry:177"
+      },
+      {
+        "emoji": "🏈",
+        "id": 178,
+        "name": "Cycling and Biking",
+        "slug": "cycling-and-biking",
+        "urn": "turn:brandfetch:industry:172:sub-industry:178"
+      },
+      {
+        "emoji": "🏈",
+        "id": 179,
+        "name": "Extreme Sports",
+        "slug": "extreme-sports",
+        "urn": "turn:brandfetch:industry:172:sub-industry:179"
+      },
+      {
+        "emoji": "🏈",
+        "id": 180,
+        "name": "Fantasy Sports",
+        "slug": "fantasy-sports",
+        "urn": "turn:brandfetch:industry:172:sub-industry:180"
+      },
+      {
+        "emoji": "🏈",
+        "id": 181,
+        "name": "Fishing",
+        "slug": "fishing",
+        "urn": "turn:brandfetch:industry:172:sub-industry:181"
+      },
+      {
+        "emoji": "🏈",
+        "id": 182,
+        "name": "Golf",
+        "slug": "golf",
+        "urn": "turn:brandfetch:industry:172:sub-industry:182"
+      },
+      {
+        "emoji": "🏈",
+        "id": 183,
+        "name": "Hunting and Shooting",
+        "slug": "hunting-and-shooting",
+        "urn": "turn:brandfetch:industry:172:sub-industry:183"
+      },
+      {
+        "emoji": "🏈",
+        "id": 184,
+        "name": "Martial Arts",
+        "slug": "martial-arts",
+        "urn": "turn:brandfetch:industry:172:sub-industry:184"
+      },
+      {
+        "emoji": "🏈",
+        "id": 185,
+        "name": "Rugby",
+        "slug": "rugby",
+        "urn": "turn:brandfetch:industry:172:sub-industry:185"
+      },
+      {
+        "emoji": "🏈",
+        "id": 186,
+        "name": "Running",
+        "slug": "running",
+        "urn": "turn:brandfetch:industry:172:sub-industry:186"
+      },
+      {
+        "emoji": "🏈",
+        "id": 187,
+        "name": "Soccer",
+        "slug": "soccer",
+        "urn": "turn:brandfetch:industry:172:sub-industry:187"
+      },
+      {
+        "emoji": "🏈",
+        "id": 188,
+        "name": "Sports",
+        "slug": "sports",
+        "urn": "turn:brandfetch:industry:172:sub-industry:188"
+      },
+      {
+        "emoji": "🏈",
+        "id": 189,
+        "name": "Tennis",
+        "slug": "tennis",
+        "urn": "turn:brandfetch:industry:172:sub-industry:189"
+      },
+      {
+        "emoji": "🏈",
+        "id": 190,
+        "name": "Volleyball",
+        "slug": "volleyball",
+        "urn": "turn:brandfetch:industry:172:sub-industry:190"
+      },
+      {
+        "emoji": "🏈",
+        "id": 191,
+        "name": "Water Sports",
+        "slug": "water-sports",
+        "urn": "turn:brandfetch:industry:172:sub-industry:191"
+      },
+      {
+        "emoji": "🏈",
+        "id": 192,
+        "name": "Winter Sports",
+        "slug": "winter-sports",
+        "urn": "turn:brandfetch:industry:172:sub-industry:192"
+      }
+    ]
+  },
+  {
+    "emoji": "✈️",
+    "id": 193,
+    "name": "Travel and Tourism",
+    "slug": "travel-and-tourism",
+    "urn": "turn:brandfetch:industry:193",
+    "children": [
+      {
+        "emoji": "✈️",
+        "id": 194,
+        "name": "Accommodation and Hotels",
+        "slug": "accommodation-and-hotels",
+        "urn": "turn:brandfetch:industry:193:sub-industry:194"
+      },
+      {
+        "emoji": "✈️",
+        "id": 195,
+        "name": "Air Travel",
+        "slug": "air-travel",
+        "urn": "turn:brandfetch:industry:193:sub-industry:195"
+      },
+      {
+        "emoji": "✈️",
+        "id": 196,
+        "name": "Car Rentals",
+        "slug": "car-rentals",
+        "urn": "turn:brandfetch:industry:193:sub-industry:196"
+      },
+      {
+        "emoji": "✈️",
+        "id": 197,
+        "name": "Ground Transportation",
+        "slug": "ground-transportation",
+        "urn": "turn:brandfetch:industry:193:sub-industry:197"
+      },
+      {
+        "emoji": "✈️",
+        "id": 198,
+        "name": "Tourist Attractions",
+        "slug": "tourist-attractions",
+        "urn": "turn:brandfetch:industry:193:sub-industry:198"
+      },
+      {
+        "emoji": "✈️",
+        "id": 199,
+        "name": "Transportation and Excursions",
+        "slug": "transportation-and-excursions",
+        "urn": "turn:brandfetch:industry:193:sub-industry:199"
+      },
+      {
+        "emoji": "✈️",
+        "id": 200,
+        "name": "Travel and Tourism",
+        "slug": "travel-and-tourism",
+        "urn": "turn:brandfetch:industry:193:sub-industry:200"
+      }
+    ]
+  },
+  {
+    "emoji": "🏎",
+    "id": 201,
+    "name": "Vehicles",
+    "slug": "vehicles",
+    "urn": "turn:brandfetch:industry:201",
+    "children": [
+      {
+        "emoji": "🏎",
+        "id": 202,
+        "name": "Automotive Industry",
+        "slug": "automotive-industry",
+        "urn": "turn:brandfetch:industry:201:sub-industry:202"
+      },
+      {
+        "emoji": "🏎",
+        "id": 203,
+        "name": "Aviation",
+        "slug": "aviation",
+        "urn": "turn:brandfetch:industry:201:sub-industry:203"
+      },
+      {
+        "emoji": "🏎",
+        "id": 204,
+        "name": "Boats",
+        "slug": "boats",
+        "urn": "turn:brandfetch:industry:201:sub-industry:204"
+      },
+      {
+        "emoji": "🏎",
+        "id": 205,
+        "name": "Makes and Models",
+        "slug": "makes-and-models",
+        "urn": "turn:brandfetch:industry:201:sub-industry:205"
+      },
+      {
+        "emoji": "🏎",
+        "id": 206,
+        "name": "Motorcycles",
+        "slug": "motorcycles",
+        "urn": "turn:brandfetch:industry:201:sub-industry:206"
+      },
+      {
+        "emoji": "🏎",
+        "id": 207,
+        "name": "Motorsports",
+        "slug": "motorsports",
+        "urn": "turn:brandfetch:industry:201:sub-industry:207"
+      },
+      {
+        "emoji": "🏎",
+        "id": 208,
+        "name": "Vehicles",
+        "slug": "vehicles",
+        "urn": "turn:brandfetch:industry:201:sub-industry:208"
+      }
+    ]
+  },
+  {
+    "emoji": "🔞",
+    "id": 209,
+    "name": "Adult",
+    "slug": "adult",
+    "urn": "turn:brandfetch:industry:209",
+    "children": [
+      {
+        "emoji": "🔞",
+        "id": 210,
+        "name": "Adult Entertainment",
+        "slug": "adult-entertainment",
+        "urn": "turn:brandfetch:industry:209:sub-industry:210"
+      },
+      {
+        "emoji": "🔞",
+        "id": 211,
+        "name": "Adult Toys and Products",
+        "slug": "adult-toys-and-products",
+        "urn": "turn:brandfetch:industry:209:sub-industry:211"
+      },
+      {
+        "emoji": "🔞",
+        "id": 212,
+        "name": "Adult Dating and Hookup",
+        "slug": "adult-dating-and-hookup",
+        "urn": "turn:brandfetch:industry:209:sub-industry:212"
+      },
+      {
+        "emoji": "🔞",
+        "id": 213,
+        "name": "Adult Content and Media",
+        "slug": "adult-content-and-media",
+        "urn": "turn:brandfetch:industry:209:sub-industry:213"
+      },
+      {
+        "emoji": "🔞",
+        "id": 214,
+        "name": "Adult Forums and Communities",
+        "slug": "adult-forums-and-communities",
+        "urn": "turn:brandfetch:industry:209:sub-industry:214"
+      },
+      {
+        "emoji": "🔞",
+        "id": 215,
+        "name": "Sexual Health and Education",
+        "slug": "sexual-health-and-education",
+        "urn": "turn:brandfetch:industry:209:sub-industry:215"
+      }
+    ]
+  }
+]

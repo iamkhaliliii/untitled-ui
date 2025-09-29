@@ -14,7 +14,7 @@ interface TypingAnimationProps {
 
 interface TextSegment {
   text: string;
-  type: 'normal' | 'bold' | 'brand' | 'break' | 'avatar' | 'signature' | 'small';
+  type: 'normal' | 'bold' | 'brand' | 'break' | 'avatar' | 'signature' | 'small' | 'large' | 'large-bold';
   avatarSrc?: string;
   avatarAlt?: string;
 }
@@ -52,6 +52,42 @@ export function TypingAnimation({
           let remainingLine = line;
           
           while (remainingLine.length > 0) {
+            // Check for large text pattern ##text (must be processed first)
+            if (remainingLine.startsWith('##')) {
+              const lineEnd = remainingLine.indexOf('\n');
+              const lineText = lineEnd === -1 ? remainingLine.slice(2) : remainingLine.slice(2, lineEnd);
+              
+              // Process the large text for bold formatting
+              let largeLine = lineText;
+              while (largeLine.length > 0) {
+                // Check for bold pattern **text** within large text
+                const boldMatch = largeLine.match(/^\*\*([^*]+)\*\*/);
+                if (boldMatch) {
+                  segments.push({ text: boldMatch[1], type: 'large-bold' });
+                  largeLine = largeLine.slice(boldMatch[0].length);
+                  continue;
+                }
+                
+                // Regular text until next bold pattern
+                const nextBold = largeLine.search(/(\*\*)/);
+                if (nextBold === -1) {
+                  if (largeLine.trim()) {
+                    segments.push({ text: largeLine, type: 'large' });
+                  }
+                  break;
+                } else {
+                  const normalText = largeLine.slice(0, nextBold);
+                  if (normalText) {
+                    segments.push({ text: normalText, type: 'large' });
+                  }
+                  largeLine = largeLine.slice(nextBold);
+                }
+              }
+              
+              remainingLine = lineEnd === -1 ? '' : remainingLine.slice(lineEnd);
+              continue;
+            }
+            
             // Check for avatar pattern [avatar:src:alt]
             const avatarMatch = remainingLine.match(/^\[avatar:([^:]+):([^\]]+)\]/);
             if (avatarMatch) {
@@ -98,7 +134,7 @@ export function TypingAnimation({
             }
             
             // Regular text until next special pattern
-            const nextSpecial = remainingLine.search(/(\*\*|\{\{|\[\[|\(\(|\[avatar:)/);
+            const nextSpecial = remainingLine.search(/(\*\*|\{\{|\[\[|\(\(|\[avatar:|##)/);
             if (nextSpecial === -1) {
               if (remainingLine.trim()) {
                 segments.push({ text: remainingLine, type: 'normal' });
@@ -249,6 +285,20 @@ export function TypingAnimation({
         case 'small':
           return (
             <span key={segmentIndex} className="text-sm text-tertiary">
+              {textToShow}
+            </span>
+          );
+          
+        case 'large':
+          return (
+            <span key={segmentIndex} className="text-2xl">
+              {textToShow}
+            </span>
+          );
+          
+        case 'large-bold':
+          return (
+            <span key={segmentIndex} className="text-2xl font-bold">
               {textToShow}
             </span>
           );

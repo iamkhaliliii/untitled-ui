@@ -129,19 +129,35 @@ export const SignupPage = () => {
 
   const handleNext = (skipValidation = false) => {
     if (skipValidation || handleValidateStep(currentStep)) {
-      const nextStep = Math.min(currentStep + 1, 11);
+      let nextStep = currentStep + 1;
+      
+      // Skip steps 5, 6, 7, 8 - go directly from 4 to 9
+      if (currentStep === 4) {
+        nextStep = 9;
+      }
+      
+      nextStep = Math.min(nextStep, 11);
       setCurrentStep(nextStep);
       
       // Auto-select recommended plan when reaching step 11
       if (nextStep === 11) {
-        const recommendedPlan = getRecommendedPlan(formData);
+        const recommendedPlan = getRecommendedPlan(formData, brandData);
         setFormData(prev => ({ ...prev, selectedPlan: recommendedPlan }));
       }
     }
   };
 
   const handleBack = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1));
+    setCurrentStep(prev => {
+      let prevStep = prev - 1;
+      
+      // Skip steps 5, 6, 7, 8 when going back - go directly from 9 to 4
+      if (prev === 9) {
+        prevStep = 4;
+      }
+      
+      return Math.max(prevStep, 1);
+    });
   };
 
   const handleSubmit = async () => {
@@ -225,6 +241,7 @@ export const SignupPage = () => {
             formData={formData}
             errors={errors}
             showIndustrySearch={showIndustrySearch}
+            brandData={brandData}
             onInputChange={handleInputChange}
             onNext={handleNext}
             onShowIndustrySearch={setShowIndustrySearch}
@@ -294,6 +311,7 @@ export const SignupPage = () => {
             formData={formData}
             billingPeriod={billingPeriod}
             isLoading={isLoading}
+            brandData={brandData}
             onBack={handleBack}
             onSetBillingPeriod={setBillingPeriod}
             onSetSelectedPlan={(plan) => setFormData(prev => ({ ...prev, selectedPlan: plan }))}
@@ -306,7 +324,8 @@ export const SignupPage = () => {
   };
 
   const shouldShowBackButton = (step: number) => {
-    return step >= 4 && step <= 10;
+    // Show back button for steps 4, 9, 10 (skipping 5,6,7,8)
+    return step === 4 || (step >= 9 && step <= 10);
   };
 
   return (
@@ -341,7 +360,16 @@ export const SignupPage = () => {
                   <div className="w-full bg-secondary rounded-full h-1">
                     <div 
                       className="h-full bg-brand-secondary rounded-full transition-all duration-500"
-                      style={{ width: `${((currentStep - 1) / 10) * 100}%` }}
+                      style={{ 
+                        width: `${(() => {
+                          // Adjust progress calculation for skipped steps
+                          let adjustedStep = currentStep;
+                          if (currentStep >= 9) {
+                            adjustedStep = currentStep - 4; // Account for skipped steps 5,6,7,8
+                          }
+                          return ((adjustedStep - 1) / 6) * 100; // Now 7 total steps instead of 11
+                        })()}%` 
+                      }}
                     />
                   </div>
           </header>

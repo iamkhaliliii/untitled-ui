@@ -3,6 +3,7 @@ import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { SignupFormData } from "../types";
 import { BrandData } from "@/utils/brandfetch";
+import { useEffect } from "react";
 
 interface Step2VerificationProps {
   formData: SignupFormData;
@@ -29,8 +30,22 @@ export const Step2Verification = ({
   isFetchingBrand,
   onShowBrandModal
 }: Step2VerificationProps) => {
+  // Add keyboard listener for 'B' key
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'b' && brandData && !isFetchingBrand) {
+        onShowBrandModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [brandData, isFetchingBrand, onShowBrandModal]);
+
   const handleCodeChange = (value: string) => {
-    // Only allow alphanumeric characters and limit to 6
+    // Only allow alpranumeric characters and limit to 6
     const cleanValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
     onInputChange('verificationCode')(cleanValue);
   };
@@ -87,48 +102,7 @@ export const Step2Verification = ({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Brand Data Section */}
-      {(brandData || isFetchingBrand) && (
-        <div className="p-4 bg-gradient-to-r from-brand-secondary/5 to-brand-secondary/10 rounded-xl border border-brand-secondary/20">
-          {isFetchingBrand ? (
-            <div className="flex items-center gap-3">
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-brand-secondary border-t-transparent"></div>
-              <span className="text-sm text-tertiary font-medium">Fetching your company information...</span>
-            </div>
-          ) : brandData ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {brandData.logos && brandData.logos[0]?.formats?.[0]?.src && (
-                  <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-2 shadow-sm">
-                    <img
-                      src={brandData.logos[0].formats[0].src}
-                      alt={brandData.name}
-                      className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                )}
-                <div>
-                  <p className="font-semibold text-primary">{brandData.name}</p>
-                  <p className="text-sm text-brand-secondary font-medium">{brandData.domain}</p>
-                </div>
-              </div>
-              <Button
-                size="sm"
-                color="secondary"
-                iconLeading={Building02}
-                onClick={onShowBrandModal}
-                className="hover:bg-brand-secondary/10 hover:border-brand-secondary/30"
-              >
-                View Details
-              </Button>
-            </div>
-          ) : null}
-        </div>
-      )}
+
       
       <div className="flex items-center justify-center gap-2 sm:gap-3 w-full">
         <div className="flex gap-2 sm:gap-3">

@@ -1,22 +1,17 @@
 export const SecurityShowcase = () => {
   return (
-    <div className="flex flex-col gap-8 px-8">
+    <div className="flex flex-col gap-4 px-8">
       <div className="text-left">
         {/* Title */}
-        <div className="text-left flex flex-col gap-4">
-          {/* Grow with confidence badge */}
-          <div className="inline-flex w-fit">
-            <span className="bg-gray-200 text-gray-700 text-sm font-medium px-3 py-1.5 rounded-full">
-              Grow with confidence
-            </span>
-          </div>
-          
-          <h2 className="text-4xl font-base text-primary">
-            Enterprise-grade {" "}
-            <span className="font-bold">security & compliance</span>
+        <div className="text-left flex flex-col gap-3">
+          <h2 className="text-2xl font-base text-primary">
+            <span className="font-bold">Built-In Security & Compliance From Day One</span>
           </h2>
-          <p className="text-xl text-tertiary mb-8 leading-relaxed">
-            Built from day one with a privacy-focused design and compliant approach to securing your data.
+          <p className="text-sm text-tertiary mb-3 leading-relaxed">
+            SOC 2 Type II certified, GDPR compliant, enterprise SSO, data residency controls, 99.9% uptime SLA, comprehensive audit logging, and advanced user permissions. Security architecture designed for regulated industries and Fortune 500 requirements.
+          </p>
+          <p className="text-sm text-tertiary mb-4 leading-relaxed">
+            Industry-leading data protection with privacy-focused design ensures your community meets the highest security standards your customers and stakeholders demand.
           </p>
         </div>
         
