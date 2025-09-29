@@ -25,7 +25,7 @@ export const HomeScreen = () => {
 
                 <div className="max-w-3xl text-center">
                     <h1 className="text-display-sm font-semibold tracking-tight text-primary">
-                        Bettermode Prototype
+                        Bettermode NΞXUS
                     </h1>
                     <p className="mt-3 text-lg text-tertiary">
                         Select your path and continue.
