@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { WizardLayout } from "./components/wizard-layout";
 import { Step1NameCommunity } from "./steps/step1-name-community";
 import { Step2Branding } from "./steps/step2-branding";
@@ -19,6 +20,7 @@ const initialFormData: WizardFormData = {
 };
 
 export const WizardPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<WizardFormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -79,8 +81,8 @@ export const WizardPage = () => {
 
   const handleSubmit = () => {
     console.log("Final form data:", formData);
-    // Here you would typically submit to your API
-    setIsCompleted(true);
+    // Redirect to pricing instead of showing success screen
+    navigate('/signup', { state: { step: 11 } });
   };
 
   const renderCurrentStep = () => {

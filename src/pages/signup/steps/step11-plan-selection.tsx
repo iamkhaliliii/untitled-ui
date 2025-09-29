@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { 
   ArrowLeft, 
   Users01, 
@@ -24,6 +25,128 @@ import { getRecommendedPlan, joinWithAnd, generatePlanRecommendationText } from 
 import { SAAS_TOOLS } from "../constants";
 import { BrandData } from "@/utils/brandfetch";
 
+// Helper function to render formatted text (same logic as TypingAnimation)
+const renderFormattedText = (text: string) => {
+  const segments: Array<{text: string, type: string}> = [];
+  let currentText = text;
+  
+  // Split by line breaks first
+  const lines = currentText.split('\n');
+  
+  lines.forEach((line, lineIndex) => {
+    if (lineIndex > 0) {
+      segments.push({ text: '', type: 'break' });
+    }
+    
+    let remainingText = line;
+    
+    while (remainingText.length > 0) {
+      // Check for ##** (large-bold)
+      if (remainingText.startsWith('##**')) {
+        const endIndex = remainingText.indexOf('**', 4);
+        if (endIndex !== -1) {
+          const content = remainingText.substring(4, endIndex);
+          segments.push({ text: content, type: 'large-bold' });
+          remainingText = remainingText.substring(endIndex + 2);
+          continue;
+        }
+      }
+      
+      // Check for ** (bold)
+      if (remainingText.startsWith('**')) {
+        const endIndex = remainingText.indexOf('**', 2);
+        if (endIndex !== -1) {
+          const content = remainingText.substring(2, endIndex);
+          segments.push({ text: content, type: 'bold' });
+          remainingText = remainingText.substring(endIndex + 2);
+          continue;
+        }
+      }
+      
+      // Check for {{ (brand)
+      if (remainingText.startsWith('{{')) {
+        const endIndex = remainingText.indexOf('}}');
+        if (endIndex !== -1) {
+          const content = remainingText.substring(2, endIndex);
+          segments.push({ text: content, type: 'brand' });
+          remainingText = remainingText.substring(endIndex + 2);
+          continue;
+        }
+      }
+      
+      // Check for [[ (signature)
+      if (remainingText.startsWith('[[')) {
+        const endIndex = remainingText.indexOf(']]');
+        if (endIndex !== -1) {
+          const content = remainingText.substring(2, endIndex);
+          segments.push({ text: content, type: 'signature' });
+          remainingText = remainingText.substring(endIndex + 2);
+          continue;
+        }
+      }
+      
+      // Check for (( (small)
+      if (remainingText.startsWith('((')) {
+        const endIndex = remainingText.indexOf('))');
+        if (endIndex !== -1) {
+          const content = remainingText.substring(2, endIndex);
+          segments.push({ text: content, type: 'small' });
+          remainingText = remainingText.substring(endIndex + 2);
+          continue;
+        }
+      }
+      
+      // Find next special character or take the rest
+      const nextSpecial = Math.min(
+        ...[
+          remainingText.indexOf('##**', 1),
+          remainingText.indexOf('**', 1),
+          remainingText.indexOf('{{', 1),
+          remainingText.indexOf('[[', 1),
+          remainingText.indexOf('((', 1)
+        ].filter(i => i !== -1).concat([remainingText.length])
+      );
+      
+      const plainText = remainingText.substring(0, nextSpecial);
+      if (plainText) {
+        segments.push({ text: plainText, type: 'normal' });
+      }
+      remainingText = remainingText.substring(nextSpecial);
+    }
+  });
+  
+  return segments.map((segment, index) => {
+    switch (segment.type) {
+      case 'break':
+        return <br key={index} />;
+      case 'bold':
+        return <span key={index} className="font-semibold">{segment.text}</span>;
+      case 'brand':
+        return <span key={index} className="font-bold text-brand-secondary">{segment.text}</span>;
+      case 'signature':
+        return (
+          <span 
+            key={index} 
+            className="text-3xl text-primary transform -rotate-1 inline-block" 
+            style={{ 
+              fontFamily: 'Dancing Script, Brush Script MT, cursive',
+              fontWeight: 700,
+              letterSpacing: '-0.075em'
+            }}
+          >
+            {segment.text}
+          </span>
+        );
+      case 'small':
+        return <span key={index} className="text-sm text-tertiary">{segment.text}</span>;
+      case 'large-bold':
+        return <span key={index} className="text-2xl font-bold">{segment.text}</span>;
+      default:
+        return <span key={index}>{segment.text}</span>;
+    }
+  });
+};
+
 interface Step11PlanSelectionProps {
   formData: SignupFormData;
   billingPeriod: 'annual' | 'monthly';
@@ -45,6 +168,7 @@ export const Step11PlanSelection = ({
   onSetSelectedPlan,
   onSubmit
 }: Step11PlanSelectionProps) => {
+
   const recommendedPlanType = getRecommendedPlan(formData, brandData);
   
   const plans = [
@@ -207,126 +331,9 @@ export const Step11PlanSelection = ({
               duration={45}
               className="text-xl text-primary leading-relaxed font-normal text-left"
             >
-{generatePlanRecommendationText(formData, recommendedPlanType, brandData)}
+              {generatePlanRecommendationText(formData, recommendedPlanType, brandData)}
             </TypingAnimation>
             
-            {/* Compact warning if selected plan doesn't match recommendation */}
-            {formData.selectedPlan !== getRecommendedPlan(formData, brandData) && (
-              <div className="mt-8">
-                <div className="text-xs text-tertiary">
-                  <p className="leading-relaxed">
-                    {(() => {
-                      const recommendedPlan = getRecommendedPlan(formData, brandData);
-                      const selectedPlan = formData.selectedPlan;
-                      
-                      // Show "Why not [recommended plan]?" when user selects different plan
-                      const planName = recommendedPlan.charAt(0).toUpperCase() + recommendedPlan.slice(1);
-                      return `Why not ${planName}?`;
-                    })()} {(() => {
-                      const recommendedPlan = getRecommendedPlan(formData, brandData);
-                      const selectedPlan = formData.selectedPlan;
-                      
-                      // Check specific enterprise features
-                      const enterpriseFeatures = ["saml-sso", "jwt", "uptime-sla", "audit-log", "data-residency", "soc2", "gdpr-ccpa"];
-                      const selectedEnterpriseFeatures = formData.enterpriseFeatures.filter(feature => 
-                        enterpriseFeatures.includes(feature)
-                      );
-                      
-                      // Check advanced tools
-                      const advancedTools = [
-                        "amplitude", "fullstory", "salesforce", "intercom", "zendesk", "jira", 
-                        "google-tag-manager", "custom-code", "onetrust", "usercentric", "hotjar", "mixpanel"
-                      ];
-                      const selectedAdvancedTools = formData.currentTools.filter(tool => 
-                        advancedTools.includes(tool)
-                      );
-                      
-                      if (recommendedPlan === "enterprise" && selectedPlan === "growth") {
-                        const features = [];
-                        if (selectedEnterpriseFeatures.includes("saml-sso")) features.push("SAML");
-                        if (selectedEnterpriseFeatures.includes("jwt")) features.push("JWT");
-                        if (selectedEnterpriseFeatures.includes("uptime-sla")) features.push("SLA");
-                        if (selectedEnterpriseFeatures.includes("audit-log")) features.push("audit logs");
-                        if (selectedEnterpriseFeatures.includes("data-residency")) features.push("data residency");
-                        
-                        if (features.length > 0) {
-                          return `It doesn't include ${features.join("/")}, CSM, and security/legal reviews.`;
-                        }
-                        return "Enterprise-grade controls like SAML/JWT/SLA/CSM aren't available on Growth.";
-                      }
-                      
-                      if (recommendedPlan === "enterprise" && selectedPlan === "starter") {
-                        const missing = [];
-                        if (selectedAdvancedTools.length > 0) {
-                          const toolNames = selectedAdvancedTools.slice(0, 3).map(tool => {
-                            const toolMap: Record<string, string> = {
-                              "amplitude": "Amplitude",
-                              "fullstory": "Fullstory", 
-                              "salesforce": "Salesforce",
-                              "intercom": "Intercom",
-                              "zendesk": "Zendesk",
-                              "jira": "Jira",
-                              "google-tag-manager": "GTM",
-                              "custom-code": "Custom Code",
-                              "onetrust": "OneTrust",
-                              "usercentric": "Usercentrics",
-                              "hotjar": "Hotjar",
-                              "mixpanel": "Mixpanel"
-                            };
-                            return toolMap[tool] || tool;
-                          });
-                          missing.push(`${toolNames.join("/")} integrations`);
-                        }
-                        missing.push("Enterprise security", "CSM", "SLA", "security/legal reviews");
-                        return `It doesn't include ${missing.join(", ")}.`;
-                      }
-                      
-                      if (recommendedPlan === "growth" && selectedPlan === "starter") {
-                        const missing = [];
-                        if (selectedAdvancedTools.length > 0) {
-                          const toolNames = selectedAdvancedTools.slice(0, 3).map(tool => {
-                            const toolMap: Record<string, string> = {
-                              "amplitude": "Amplitude",
-                              "fullstory": "Fullstory", 
-                              "salesforce": "Salesforce",
-                              "intercom": "Intercom",
-                              "zendesk": "Zendesk",
-                              "jira": "Jira",
-                              "google-tag-manager": "GTM",
-                              "hotjar": "Hotjar",
-                              "mixpanel": "Mixpanel"
-                            };
-                            return toolMap[tool] || tool;
-                          });
-                          missing.push(`${toolNames.join("/")} integrations`);
-                        }
-                        missing.push("onboarding", "priority support", "advanced analytics");
-                        return `It doesn't include ${missing.join(", ")}.`;
-                      }
-                      
-                      if (recommendedPlan === "starter" && selectedPlan === "growth") {
-                        return "You don't need Growth's Ask AI, unlimited APIs, and advanced features yet.";
-                      }
-                      
-                      if (recommendedPlan === "starter" && selectedPlan === "enterprise") {
-                        return "You don't need Enterprise's security controls, CSM, and $3K+/month premium.";
-                      }
-                      
-                      return "optimal feature alignment for your current requirements.";
-                    })()}
-                  </p>
-                  
-                  <a 
-                    href="https://bettermode.com/contact-sales" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-xs text-brand-secondary hover:text-brand-secondary_hover underline underline-offset-2 transition-colors mt-2 inline-block"
-                  >
-                    Talk to Sales
-                  </a>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -363,11 +370,12 @@ export const Step11PlanSelection = ({
         
         <div className="gap-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {(() => {
-            const sortedPlans = [
-              ...plans.filter(plan => plan.id === recommendedPlanType),
-              ...plans.filter(plan => plan.id !== recommendedPlanType)
-            ];
-            return sortedPlans.map((plan, index) => (
+            // Display plans in natural order: Starter, Growth, Enterprise
+            const orderedPlans = plans.sort((a, b) => {
+              const order = { 'starter': 1, 'growth': 2, 'enterprise': 3 };
+              return order[a.id as keyof typeof order] - order[b.id as keyof typeof order];
+            });
+            return orderedPlans.map((plan, index) => (
               <div 
                 key={plan.id}
                 className={cx(
@@ -379,8 +387,8 @@ export const Step11PlanSelection = ({
                     : "border-secondary hover:border-primary",
                   "min-h-[350px] sm:min-h-[400px]",
                   plan.id === "enterprise" && billingPeriod === 'monthly' && "opacity-20",
-                  // Add divider after recommended card (first card)
-                  index === 0 && sortedPlans.length > 1 && "xl:after:content-[''] xl:after:absolute xl:after:-right-2 xl:after:top-0 xl:after:bottom-0 xl:after:w-px xl:after:bg-secondary/30"
+                  // Add divider after first card
+                  index === 0 && orderedPlans.length > 1 && "xl:after:content-[''] xl:after:absolute xl:after:-right-2 xl:after:top-0 xl:after:bottom-0 xl:after:w-px xl:after:bg-secondary/30"
                 )}
                 onClick={() => onSetSelectedPlan(plan.id)}
               >

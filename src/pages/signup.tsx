@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { ArrowLeft, ArrowRight } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
@@ -29,6 +29,7 @@ import { BrandDataModal } from "@/components/shared-assets/brand-data-modal";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -43,6 +44,12 @@ export const SignupPage = () => {
   const [brandData, setBrandData] = useState<BrandData | null>(null);
   const [showBrandModal, setShowBrandModal] = useState(false);
   const [isFetchingBrand, setIsFetchingBrand] = useState(false);
+  
+  // Trial success state
+  const [showTrialSuccess, setShowTrialSuccess] = useState(false);
+  
+  // Enterprise success state
+  const [showEnterpriseSuccess, setShowEnterpriseSuccess] = useState(false);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
@@ -63,6 +70,45 @@ export const SignupPage = () => {
     expectedUserCount: "",
     selectedPlan: "pro"
   });
+
+  // Effect to handle redirect from wizard to pricing
+  useEffect(() => {
+    if (location.state?.step === 11) {
+      setCurrentStep(11);
+      
+      // Restore saved signup data from sessionStorage
+      const savedFormData = sessionStorage.getItem('signup-form-data');
+      const savedBrandData = sessionStorage.getItem('signup-brand-data');
+      const savedBillingPeriod = sessionStorage.getItem('signup-billing-period');
+      const savedSecurityLevel = sessionStorage.getItem('signup-security-level');
+      
+      if (savedFormData) {
+        try {
+          const parsedFormData = JSON.parse(savedFormData);
+          setFormData(parsedFormData);
+        } catch (error) {
+          console.error('Error parsing saved form data:', error);
+        }
+      }
+      
+      if (savedBrandData) {
+        try {
+          const parsedBrandData = JSON.parse(savedBrandData);
+          setBrandData(parsedBrandData);
+        } catch (error) {
+          console.error('Error parsing saved brand data:', error);
+        }
+      }
+      
+      if (savedBillingPeriod) {
+        setBillingPeriod(savedBillingPeriod as 'annual' | 'monthly');
+      }
+      
+      if (savedSecurityLevel) {
+        setSelectedSecurityLevel(savedSecurityLevel as 'basic' | 'enterprise' | null);
+      }
+    }
+  }, [location.state]);
 
   // Effect to fetch brand data when email changes
   useEffect(() => {
@@ -136,6 +182,24 @@ export const SignupPage = () => {
         nextStep = 9;
       }
       
+      // Redirect to wizard after step 10 (enterprise)
+      if (currentStep === 10) {
+        // Store signup data before going to wizard
+        sessionStorage.setItem('signup-form-data', JSON.stringify(formData));
+        sessionStorage.setItem('signup-brand-data', JSON.stringify(brandData));
+        sessionStorage.setItem('signup-billing-period', billingPeriod);
+        sessionStorage.setItem('signup-security-level', selectedSecurityLevel || '');
+        
+        // Show enterprise success message
+        setShowEnterpriseSuccess(true);
+        
+        // Redirect to wizard after 4 seconds
+        setTimeout(() => {
+          navigate('/wizard');
+        }, 4000);
+        return;
+      }
+      
       nextStep = Math.min(nextStep, 11);
       setCurrentStep(nextStep);
       
@@ -167,7 +231,19 @@ export const SignupPage = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('Signup data:', formData);
-      navigate('/admin3');
+      
+      // Show trial success message
+      setShowTrialSuccess(true);
+      
+      // Redirect to onboarding after 3 seconds
+      setTimeout(() => {
+        // Clean up stored data after successful signup
+        sessionStorage.removeItem('signup-form-data');
+        sessionStorage.removeItem('signup-brand-data');
+        sessionStorage.removeItem('signup-billing-period');
+        sessionStorage.removeItem('signup-security-level');
+        navigate('/admin2/onboarding');
+      }, 3000);
     } catch (error) {
       console.error('Signup error:', error);
     } finally {
@@ -530,6 +606,64 @@ export const SignupPage = () => {
         brandData={brandData}
         isLoading={isFetchingBrand}
       />
+      
+      {/* Trial Success Screen - Full Screen like Wizard */}
+      {showTrialSuccess && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center p-8 z-50 animate-in fade-in slide-in-from-bottom-8 duration-1000"
+          style={{
+            background: `linear-gradient(120deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%)`
+          }}
+        >
+          {/* Success Content */}
+          <div className="text-center max-w-2xl">
+            
+            {/* Success Message */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              {formData.companyName || formData.firstName || 'Your community'} is ready!
+            </h1>
+            
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">
+              We're setting up your community and preparing everything for launch.
+            </p>
+
+            {/* Loading Text */}
+            <div className="text-lg text-gray-500">
+              <span>Redirecting to onboarding...</span>
+            </div>
+            
+          </div>
+        </div>
+      )}
+      
+      {/* Enterprise Success Screen - Full Screen like Wizard */}
+      {showEnterpriseSuccess && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center p-8 z-50 animate-in fade-in slide-in-from-bottom-8 duration-1000"
+          style={{
+            background: `linear-gradient(120deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%)`
+          }}
+        >
+          {/* Success Content */}
+          <div className="text-center max-w-2xl">
+            
+            {/* Success Message */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              Perfect! Let's build your community.
+            </h1>
+            
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">
+              We'll guide you through setting up your community with the enterprise features you selected.
+            </p>
+
+            {/* Loading Text */}
+            <div className="text-lg text-gray-500">
+              <span>Redirecting to community setup...</span>
+            </div>
+            
+          </div>
+        </div>
+      )}
     </div>
   );
 };
