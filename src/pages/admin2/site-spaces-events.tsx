@@ -25,7 +25,7 @@ export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
-    const isEventsPage = currentPath.includes("/admin2/site/spaces/myfolder/events");
+    const isEventsPage = currentPath.includes("/admin2/site/spaces/myfolder/events") || currentPath.includes("/admin2/site/spaces/growth/events");
     const isPrivateSpacePage = currentPath.includes("/admin2/site/spaces/private-space");
     const isSpacePage = isEventsPage || isPrivateSpacePage;
     
@@ -41,12 +41,14 @@ export const SiteSpacesEventsPage = () => {
         if (currentPath.includes("/members")) return "Manage event members and permissions";
         if (currentPath.includes("/seo")) return "Configure SEO settings for your events";
         if (currentPath.includes("/danger")) return "Danger zone - irreversible actions";
+        if (currentPath.includes("/admin2/site/spaces/growth/events")) return "Manage and organize events in your growth workspace";
         return "Manage and organize events in your personal workspace";
     };
 
     // Get main title based on space type
     const getMainTitle = () => {
         if (isPrivateSpacePage) return "Private Space";
+        if (currentPath.includes("/admin2/site/spaces/growth/events")) return "Growth - Events";
         return "MyFolder - Events";
     };
 

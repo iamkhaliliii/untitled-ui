@@ -31,9 +31,9 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
   };
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col h-full relative p-4">
       {/* Search */}
-      <div className="sticky top-[4.5rem] z-30 p-4 border-b border-secondary bg-primary/95 backdrop-blur-sm">
+      <div className="mb-4">
         <Input
           placeholder="Search widgets..."
           value={searchTerm}
@@ -47,22 +47,22 @@ export const WidgetSelection = ({ onBack, onSelectWidget }: WidgetSelectionProps
           {filteredWidgets.map((category) => (
             <div key={category.name} className="mb-6">
               {/* Category Header - Sticky with proper offset from search */}
-              <div className="sticky z-30 bg-primary/95 backdrop-blur-sm border-b border-secondary px-4 py-3 shadow-sm">
+              <div className="sticky top-0 z-30 bg-primary border-b border-secondary py-3 shadow-sm">
                 <h3 className="text-sm font-medium text-primary uppercase tracking-wide">
                   {category.name}
                 </h3>
               </div>
 
               {/* Subcategories or Direct Widgets */}
-              <div className="sticky z-30 top-[4.5rem] px-4">
+              <div>
                 {category.subcategories ? category.subcategories.map((subcategory, index) => {
                   // Get category color for subcategory header
                   const subcategoryColors = getCategoryColor(category.name);
                   
                   return (
                     <div key={subcategory.name}>
-                      {/* Subcategory Header - Sticky with proper offset from search + category */}
-                      <div className="sticky top-[8.25rem] z-20 bg-primary/95 backdrop-blur-sm border-b border-secondary/60 py-2.5 px-3 mb-3 rounded-md">
+                      {/* Subcategory Header */}
+                      <div className="bg-primary border-b border-secondary/60 py-2.5 mb-3 rounded-md">
                         <h4 className={`text-xs font-medium ${subcategoryColors.textColor} flex items-center gap-2`}>
                           <subcategory.icon className={`size-3 ${subcategoryColors.iconColor}`} />
                           {subcategory.name}

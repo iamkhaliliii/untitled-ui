@@ -251,6 +251,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const isAddingFolderRef = useRef(false);
     const folderCounterRef = useRef(2);
 
+    // State for tracking previous tab
+    const [previousSecondaryItem, setPreviousSecondaryItem] = useState<string>("general");
+    
     // State for secondary sidebar selection
     const [selectedSecondaryItem, setSelectedSecondaryItem] = useState<string>(() => {
         // Set initial state based on current URL
@@ -951,6 +954,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Handle secondary sidebar item selection
     const handleSecondaryItemClick = (itemKey: string, href: string) => {
+        // Track previous tab before changing
+        if (selectedSecondaryItem !== "customize" && itemKey === "customize") {
+            setPreviousSecondaryItem(selectedSecondaryItem);
+        }
         setSelectedSecondaryItem(itemKey);
         navigate(href);
     };
@@ -964,7 +971,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
     const isGrowthPage = activeUrl?.includes("/site/spaces/growth/");
-    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage || isGrowthPage;
+    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage;
+    
+    // Debug logs
+    console.log('=== TERTIARY SIDEBAR DEBUG ===');
+    console.log('activeUrl:', activeUrl);
+    console.log('selectedSecondaryItem:', selectedSecondaryItem);
+    console.log('isSpacePage:', isSpacePage);
+    console.log('isEventsPage:', isEventsPage);
+    console.log('isBlogPage:', isBlogPage);
+    console.log('isHelpPage:', isHelpPage);
+    console.log('isPostsPage:', isPostsPage);
+    console.log('Should show overlay:', isSpacePage && (selectedSecondaryItem === "general" || selectedSecondaryItem === "permissions" || selectedSecondaryItem === "members" || selectedSecondaryItem === "analytics" || selectedSecondaryItem === "audit-logs" || selectedSecondaryItem === "seo" || selectedSecondaryItem === "danger"));
+    console.log('Should show inline:', isSpacePage && selectedSecondaryItem === "customize");
+    console.log('===============================');
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -1259,8 +1279,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     const MAIN_SIDEBAR_WIDTH = 68;
     const SECONDARY_SIDEBAR_WIDTH = isSpacePage ? 200 : 268;
+    // Dynamic width calculation
     const TERTIARY_SIDEBAR_WIDTH = 368;
-    const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH + (isSpacePage ? TERTIARY_SIDEBAR_WIDTH : 0);
+    const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + 
+        (selectedSecondaryItem === "customize" ? TERTIARY_SIDEBAR_WIDTH : (isSpacePage ? SECONDARY_SIDEBAR_WIDTH : SECONDARY_SIDEBAR_WIDTH));
 
     const mainSidebar = (
         <aside
@@ -2046,83 +2068,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         </div>
     );
 
-    const tertiarySidebar = (
-        <div
-            style={{ width: TERTIARY_SIDEBAR_WIDTH }}
-            className={cx("relative h-full overflow-y-auto bg-primary scrollbar-minimal", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
-        >
-            <div className="flex h-full flex-col">
-                {/* Header with title and actions */}
-                {!isTabConfigMode && !isFilterViewMode && (
-                    <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
-                    <div className="flex items-center gap-3">
-                        {showWidgetSelection && (
-                            <button
-                                onClick={handleWidgetSelectionBack}
-                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                            >
-                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                            </button>
-                        )}
-                        {showWidgetConfig && !isTabConfigMode && (
-                            <button
-                                onClick={handleWidgetConfigBack}
-                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                            >
-                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                            </button>
-                        )}
-                        {showNavigationInTertiary && (
-                            <button
-                                onClick={() => setShowNavigationInTertiary(false)}
-                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                            >
-                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                            </button>
-                        )}
-                        {!isTabConfigMode && !isFilterViewMode && (
-                            <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
-                        )}
-                    </div>
-                    {showWidgetConfig && !isTabConfigMode ? (
-                        <div className="flex items-center gap-2">
-                            <ButtonUtility
-                                size="sm"
-                                color="secondary"
-                                icon={Check}
-                                tooltip="Save changes"
-                                onClick={() => {
-                                    console.log("Widget config saved");
-                                    handleWidgetConfigBack();
-                                }}
-                            />
-                        </div>
-                    ) : !showWidgetSelection && !isTabConfigMode && !showNavigationInTertiary && (
-                        <div className="flex items-center gap-2">
-                            <ButtonUtility
-                                size="sm"
-                                color="tertiary"
-                                icon={X}
-                                tooltip="Discard changes"
-                            />
-                            <ButtonUtility
-                                size="sm"
-                                color="tertiary"
-                                icon={Check}
-                                tooltip="Save changes"
-                            />
-                        </div>
-                    )}
-                </div>
-                )}
-                
-                {/* Content */}
-                <div className="flex-1">
-                    {getTertiarySidebarContent()}
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <>
@@ -2137,7 +2082,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 onComplete={tourGuide.completeTour}
             />
             
-            {/* Desktop triple sidebar navigation */}
+            {/* Desktop dual sidebar navigation */}
                 <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
                     isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
                         ? adminHeaderCollapsed
@@ -2146,9 +2091,210 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         : 'lg:inset-y-0'
                 }`}>
                 {mainSidebar}
-                {secondarySidebar}
-                {isSpacePage && tertiarySidebar}
+                {selectedSecondaryItem !== "customize" && secondarySidebar}
+                {/* Show tertiary sidebar inline only for customize tab */}
+                {isSpacePage && selectedSecondaryItem === "customize" && (
+                    <div 
+                        style={{ width: TERTIARY_SIDEBAR_WIDTH }}
+                        className="h-full overflow-y-auto bg-primary scrollbar-minimal border-r border-secondary"
+                    >
+                        <div className="flex h-full flex-col">
+                            {/* Header with back button and title */}
+                            {!isTabConfigMode && !isFilterViewMode && !showWidgetSelection && !showWidgetConfig && !showNavigationInTertiary && (
+                            <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                                <div className="flex items-center gap-3">
+                                    {/* Main back button for customize tab */}
+                                    <button
+                                        onClick={() => {
+                                            const backUrl = isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events`;
+                                            handleSecondaryItemClick(previousSecondaryItem, backUrl);
+                                        }}
+                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                    >
+                                        <ArrowLeft className="size-4 text-fg-quaternary" />
+                                    </button>
+                                    <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <ButtonUtility
+                                        size="sm"
+                                        color="tertiary"
+                                        icon={X}
+                                        tooltip="Discard changes"
+                                    />
+                                    <ButtonUtility
+                                        size="sm"
+                                        color="tertiary"
+                                        icon={Check}
+                                        tooltip="Save changes"
+                                    />
+                                </div>
+                            </div>
+                            )}
+                            
+                            {/* Widget mode headers */}
+                            {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) && (
+                                <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                                    <div className="flex items-center gap-3">
+                                        {showWidgetSelection && (
+                                            <button
+                                                onClick={handleWidgetSelectionBack}
+                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                        {showWidgetConfig && (
+                                            <button
+                                                onClick={handleWidgetConfigBack}
+                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                        {showNavigationInTertiary && (
+                                            <button
+                                                onClick={() => setShowNavigationInTertiary(false)}
+                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                        <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
+                                    </div>
+                                    {showWidgetConfig && (
+                                        <div className="flex items-center gap-2">
+                                            <ButtonUtility
+                                                size="sm"
+                                                color="secondary"
+                                                icon={Check}
+                                                tooltip="Save changes"
+                                                onClick={() => {
+                                                    console.log("Widget config saved");
+                                                    handleWidgetConfigBack();
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            
+                            {/* Content */}
+                            <div className="flex-1">
+                                {getTertiarySidebarContent()}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
+            
+            {/* Tertiary sidebar overlay - positioned over main content */}
+            {isSpacePage && (selectedSecondaryItem === "general" || selectedSecondaryItem === "permissions" || selectedSecondaryItem === "members" || selectedSecondaryItem === "analytics" || selectedSecondaryItem === "audit-logs" || selectedSecondaryItem === "seo" || selectedSecondaryItem === "danger") && (
+                <div 
+                    className={`z-50 lg:fixed ${
+                        isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
+                            ? adminHeaderCollapsed
+                                ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                                : 'lg:top-12 lg:bottom-0' // Full header height
+                            : 'lg:inset-y-0'
+                    }`}
+                    style={{ 
+                        display: 'block',
+                        left: MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH, // Position next to secondary sidebar
+                        width: 736,
+                        boxShadow: '20px 0 40px -10px rgba(0, 0, 0, 0.3)', // Simple right shadow on container
+                        backgroundColor: 'rgba(0, 255, 0, 0.2)' // Debug green background for container
+                    }}
+                >
+                    <div
+                        style={{ 
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'var(--color-bg-primary)' // Solid background
+                        }}
+                        className="overflow-y-auto bg-primary scrollbar-minimal border-r border-secondary tertiary-overlay"
+                    >
+                        <div className="flex h-full flex-col">
+                            {/* Header with title and actions */}
+                            {!isTabConfigMode && !isFilterViewMode && (
+                                <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+                                <div className="flex items-center gap-3">
+                                    {showWidgetSelection && (
+                                        <button
+                                            onClick={handleWidgetSelectionBack}
+                                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                        >
+                                            <ArrowLeft className="size-4 text-fg-quaternary" />
+                                        </button>
+                                    )}
+                                    {showWidgetConfig && !isTabConfigMode && (
+                                        <button
+                                            onClick={handleWidgetConfigBack}
+                                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                        >
+                                            <ArrowLeft className="size-4 text-fg-quaternary" />
+                                        </button>
+                                    )}
+                                    {showNavigationInTertiary && (
+                                        <button
+                                            onClick={() => setShowNavigationInTertiary(false)}
+                                            className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                        >
+                                            <ArrowLeft className="size-4 text-fg-quaternary" />
+                                        </button>
+                                    )}
+                                    {!isTabConfigMode && !isFilterViewMode && (
+                                        <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
+                                    )}
+                                </div>
+                                {showWidgetConfig && !isTabConfigMode ? (
+                                    <div className="flex items-center gap-2">
+                                        <ButtonUtility
+                                            size="sm"
+                                            color="secondary"
+                                            icon={Check}
+                                            tooltip="Save changes"
+                                            onClick={() => {
+                                                console.log("Widget config saved");
+                                                handleWidgetConfigBack();
+                                            }}
+                                        />
+                                    </div>
+                                ) : !showWidgetSelection && !isTabConfigMode && !showNavigationInTertiary && (
+                                    <div className="flex items-center gap-2">
+                                        <ButtonUtility
+                                            size="sm"
+                                            color="tertiary"
+                                            icon={X}
+                                            tooltip="Discard changes"
+                                        />
+                                        <ButtonUtility
+                                            size="sm"
+                                            color="tertiary"
+                                            icon={Check}
+                                            tooltip="Save changes"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            )}
+                            
+                            {/* Content */}
+                            <div className="flex-1 px-4">
+                                {getTertiarySidebarContent()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Placeholder to take up physical space because the real sidebar has `fixed` position. */}
             <div

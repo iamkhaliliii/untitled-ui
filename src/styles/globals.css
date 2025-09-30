@@ -4,6 +4,13 @@
 @plugin "tailwindcss-react-aria-components";
 @plugin "tailwindcss-animate";
 
+/* Smooth transition variables */
+:root {
+  --transition-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --transition-duration-smooth: 400ms;
+  --transition-duration-fast: 200ms;
+}
+
 /* Custom shimmer animation for skeleton loading */
 @keyframes shimmer {
   0% {
