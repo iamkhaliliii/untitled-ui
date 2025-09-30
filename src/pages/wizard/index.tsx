@@ -10,6 +10,8 @@ import { WizardFormData } from "./types";
 const TOTAL_STEPS = 3;
 
 const initialFormData: WizardFormData = {
+  hasMigrationPreference: null,
+  existingCommunityName: "",
   communityName: "",
   description: "",
   websiteUrl: "",
@@ -98,6 +100,17 @@ export const WizardPage = () => {
 
   const handleNext = () => {
     if (validateCurrentStep()) {
+      // Special handling for step 1 migration check
+      if (currentStep === 1 && formData.hasMigrationPreference === true) {
+        // If user wants migration, redirect to pricing with migration data
+        sessionStorage.setItem('wizard-form-data', JSON.stringify({
+          ...formData,
+          communityName: formData.existingCommunityName || ""
+        }));
+        navigate('/signup', { state: { step: 11 } });
+        return;
+      }
+      
       if (currentStep < TOTAL_STEPS) {
         setCurrentStep(prev => prev + 1);
       } else {
@@ -112,6 +125,7 @@ export const WizardPage = () => {
       setCurrentStep(prev => prev - 1);
     }
   };
+
 
   const handleSubmit = () => {
     console.log("Final form data:", formData);

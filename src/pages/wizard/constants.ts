@@ -81,7 +81,7 @@ export const SPACE_OPTIONS: SpaceOption[] = [
 ];
 
 export const STEP_TITLES = {
-  1: "Name your community",
-  2: "Branding",
+  1: "Ready to start?",
+  2: "Branding", 
   3: "Activate your starting spaces"
 };

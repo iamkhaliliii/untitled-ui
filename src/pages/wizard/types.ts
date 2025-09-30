@@ -1,15 +1,19 @@
 export interface WizardFormData {
-  // Step 1: Name your community
+  // Step 1: Migration check
+  hasMigrationPreference: boolean | null;
+  existingCommunityName?: string;
+  
+  // Step 2: Name your community
   communityName: string;
   description: string;
   
-  // Step 2: Branding
+  // Step 3: Branding
   websiteUrl: string;
   logo: File | null;
   primaryColor: string;
   isManualBranding: boolean;
   
-  // Step 3: Initial spaces selection
+  // Step 4: Initial spaces selection
   selectedSpaces: string[];
 }
 

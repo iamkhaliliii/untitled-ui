@@ -81,10 +81,20 @@ export const WizardLayout = ({
                         {STEP_TITLES[currentStep as keyof typeof STEP_TITLES]}
                       </h1>
                       <p className="text-md text-tertiary mt-2">
-                        {currentStep === 1 && "Choose a clear name. You can change it later."}
-                        {currentStep === 2 && (formData.isManualBranding 
-                          ? "Upload your logo and choose your primary color." 
-                          : "Upload a logo or pull your brand from your website. See changes live.")}
+                        {currentStep === 1 && "Create a new community, but if you already have one on another platform, we can help you migrate."}
+                        {currentStep === 2 && (() => {
+                          // Check if we have detected brand data
+                          const savedBrandData = sessionStorage.getItem('signup-brand-data');
+                          const hasBrandData = savedBrandData && savedBrandData !== 'null';
+                          
+                          if (formData.isManualBranding) {
+                            return "Upload your logo and choose your primary color.";
+                          } else if (hasBrandData) {
+                            return "We've detected your brand. Customize or continue with these settings.";
+                          } else {
+                            return "Enter your website URL to automatically detect your brand, or set it manually.";
+                          }
+                        })()}
                         {currentStep === 3 && "Pick a few spaces to shape your community. You can add more later."}
                       </p>
                     </div>
