@@ -242,9 +242,10 @@ export const Step2Branding = ({
             onLogoSelect(logoUrls[0]);
           }
         } else {
-          // Fallback to old method
-          if (brandData.logos && Array.isArray(brandData.logos) && brandData.logos.length > 0) {
-            const firstLogoGroup = brandData.logos[0];
+          // Fallback to old method - use type assertion to handle complex nested types
+          const logos = brandData.logos as any[];
+          if (logos && Array.isArray(logos) && logos.length > 0) {
+            const firstLogoGroup = logos[0];
             if (firstLogoGroup && firstLogoGroup.formats && Array.isArray(firstLogoGroup.formats) && firstLogoGroup.formats.length > 0) {
               const logo = firstLogoGroup.formats[0]?.src;
               if (logo) {
