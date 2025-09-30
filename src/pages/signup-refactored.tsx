@@ -151,9 +151,21 @@ export const SignupPage = () => {
           <Step1Email
             formData={formData}
             errors={errors}
+            isLoading={isLoading}
             onInputChange={handleInputChange}
             onNext={handleNext}
             onSetAuthMethod={(method) => setFormData(prev => ({ ...prev, authMethod: method }))}
+            onGoogleAuth={() => {
+              // Simple Google auth for refactored version
+              setFormData(prev => ({
+                ...prev,
+                email: "amir@slack.com",
+                authMethod: 'google',
+                firstName: "Amir",
+                lastName: "Khalilii"
+              }));
+              setCurrentStep(3);
+            }}
           />
         );
       case 2:
@@ -166,6 +178,9 @@ export const SignupPage = () => {
             onNext={handleNext}
             onResendCode={handleResendCode}
             onEditEmail={() => setCurrentStep(1)}
+            brandData={null}
+            isFetchingBrand={false}
+            onShowBrandModal={() => {}}
           />
         );
       case 3:
@@ -183,6 +198,7 @@ export const SignupPage = () => {
             formData={formData}
             errors={errors}
             showIndustrySearch={showIndustrySearch}
+            brandData={null}
             onInputChange={handleInputChange}
             onNext={handleNext}
             onShowIndustrySearch={setShowIndustrySearch}
@@ -252,7 +268,6 @@ export const SignupPage = () => {
             formData={formData}
             billingPeriod={billingPeriod}
             isLoading={isLoading}
-            onBack={handleBack}
             onSetBillingPeriod={setBillingPeriod}
             onSetSelectedPlan={(plan) => setFormData(prev => ({ ...prev, selectedPlan: plan }))}
             onSubmit={handleSubmit}

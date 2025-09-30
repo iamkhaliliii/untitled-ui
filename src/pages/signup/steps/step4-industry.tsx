@@ -107,7 +107,7 @@ export const Step4Industry = ({
 
   // Check if an industry was pre-selected based on brand data
   const isPreselected = (industryId: string): boolean => {
-    return formData.industry === industryId && brandData?.company?.industries && brandData.company.industries.length > 0;
+    return formData.industry === industryId && !!(brandData?.company?.industries && brandData.company.industries.length > 0);
   };
 
   return (

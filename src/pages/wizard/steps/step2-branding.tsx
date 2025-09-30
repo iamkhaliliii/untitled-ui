@@ -189,11 +189,11 @@ export const Step2Branding = ({
       if (brandData) {
         // Create BrandInfo object from fetched data
         const primaryColor = brandData.colors?.[0];
+        const firstLogo = brandData.logos?.[0]?.formats?.[0]?.src || '';
         const brand: BrandInfo = {
           name: brandData.name || domain,
-          logo: brandData.icon || brandData.logo || '',
-          primaryColor: (typeof primaryColor === 'object' && primaryColor.hex) ? primaryColor.hex : (typeof primaryColor === 'string' ? primaryColor : '#6366f1'),
-          domain: domain
+          logo: firstLogo,
+          primaryColor: (typeof primaryColor === 'object' && primaryColor.hex) ? primaryColor.hex : (typeof primaryColor === 'string' ? primaryColor : '#6366f1')
         };
         
         setDetectedBrand(brand);
@@ -242,7 +242,7 @@ export const Step2Branding = ({
           }
         } else {
           // Fallback to old method
-          const logo = brandData.icon || brandData.logo;
+          const logo = brandData.logos?.[0]?.formats?.[0]?.src;
           if (logo) {
             setSuggestedLogos([logo]);
             setSelectedLogoUrl(logo);
