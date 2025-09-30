@@ -972,19 +972,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
     const isGrowthPage = activeUrl?.includes("/site/spaces/growth/");
     const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage;
-    
-    // Debug logs
-    console.log('=== TERTIARY SIDEBAR DEBUG ===');
-    console.log('activeUrl:', activeUrl);
-    console.log('selectedSecondaryItem:', selectedSecondaryItem);
-    console.log('isSpacePage:', isSpacePage);
-    console.log('isEventsPage:', isEventsPage);
-    console.log('isBlogPage:', isBlogPage);
-    console.log('isHelpPage:', isHelpPage);
-    console.log('isPostsPage:', isPostsPage);
-    console.log('Should show overlay:', isSpacePage && (selectedSecondaryItem === "general" || selectedSecondaryItem === "permissions" || selectedSecondaryItem === "members" || selectedSecondaryItem === "analytics" || selectedSecondaryItem === "audit-logs" || selectedSecondaryItem === "seo" || selectedSecondaryItem === "danger"));
-    console.log('Should show inline:', isSpacePage && selectedSecondaryItem === "customize");
-    console.log('===============================');
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -1278,11 +1265,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     };
 
     const MAIN_SIDEBAR_WIDTH = 68;
-    const SECONDARY_SIDEBAR_WIDTH = isSpacePage ? 200 : 268;
+    const SECONDARY_SIDEBAR_WIDTH = 280; // w-80 equivalent
     // Dynamic width calculation
     const TERTIARY_SIDEBAR_WIDTH = 368;
     const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + 
-        (selectedSecondaryItem === "customize" ? TERTIARY_SIDEBAR_WIDTH : (isSpacePage ? SECONDARY_SIDEBAR_WIDTH : SECONDARY_SIDEBAR_WIDTH));
+        (selectedSecondaryItem === "customize" ? TERTIARY_SIDEBAR_WIDTH : SECONDARY_SIDEBAR_WIDTH);
 
     const mainSidebar = (
         <aside
@@ -2100,10 +2087,39 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     >
                         <div className="flex h-full flex-col">
                             {/* Header with back button and title */}
-                            {!isTabConfigMode && !isFilterViewMode && !showWidgetSelection && !showWidgetConfig && !showNavigationInTertiary && (
-                            <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
-                                <div className="flex items-center gap-3">
-                                    {/* Main back button for customize tab */}
+                            {/* Sticky header - Only back button and actions */}
+                            <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 bg-primary">
+                                {/* Back button logic for customize tab */}
+                                {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) ? (
+                                    /* Widget config back buttons */
+                                    <>
+                                        {showWidgetSelection && (
+                                            <button
+                                                onClick={handleWidgetSelectionBack}
+                                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                        {showWidgetConfig && (
+                                            <button
+                                                onClick={handleWidgetConfigBack}
+                                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                        {showNavigationInTertiary && (
+                                            <button
+                                                onClick={() => setShowNavigationInTertiary(false)}
+                                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                                            >
+                                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                                            </button>
+                                        )}
+                                    </>
+                                ) : (
+                                    /* Main back button for customize tab */
                                     <button
                                         onClick={() => {
                                             const backUrl = isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
@@ -2117,12 +2133,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                                 `/${currentAdminVersion}/site/spaces/myfolder/events`;
                                             handleSecondaryItemClick(previousSecondaryItem, backUrl);
                                         }}
-                                        className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+                                        className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
                                     >
                                         <ArrowLeft className="size-4 text-fg-quaternary" />
                                     </button>
-                                    <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
-                                </div>
+                                )}
+                                
+                                {/* Action buttons on the right */}
                                 <div className="flex items-center gap-2">
                                     <ButtonUtility
                                         size="sm"
@@ -2138,54 +2155,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     />
                                 </div>
                             </div>
-                            )}
                             
-                            {/* Widget mode headers */}
-                            {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) && (
-                                <div className="sticky top-0 z-99 flex items-center justify-between px-4 pt-6 pb-4 border-b border-secondary bg-primary">
-                                    <div className="flex items-center gap-3">
-                                        {showWidgetSelection && (
-                                            <button
-                                                onClick={handleWidgetSelectionBack}
-                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                                            >
-                                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                                            </button>
-                                        )}
-                                        {showWidgetConfig && (
-                                            <button
-                                                onClick={handleWidgetConfigBack}
-                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                                            >
-                                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                                            </button>
-                                        )}
-                                        {showNavigationInTertiary && (
-                                            <button
-                                                onClick={() => setShowNavigationInTertiary(false)}
-                                                className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
-                                            >
-                                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                                            </button>
-                                        )}
-                                        <h3 className="text-sm font-semibold text-brand-secondary">{getTertiaryTitle()}</h3>
-                                    </div>
-                                    {showWidgetConfig && (
-                                        <div className="flex items-center gap-2">
-                                            <ButtonUtility
-                                                size="sm"
-                                                color="secondary"
-                                                icon={Check}
-                                                tooltip="Save changes"
-                                                onClick={() => {
-                                                    console.log("Widget config saved");
-                                                    handleWidgetConfigBack();
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {/* Non-sticky title and description */}
+                            <div className="px-4 pb-4">
+                                <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">{getTertiaryTitle()}</h3>
+                                <p className="text-sm text-secondary">Customize the layout and widgets for your space to create the perfect user experience.</p>
+                            </div>
                             
                             {/* Content */}
                             <div className="flex-1">
@@ -2210,8 +2185,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                         display: 'block',
                         left: MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH, // Position next to secondary sidebar
                         width: 736,
-                        boxShadow: '20px 0 40px -10px rgba(0, 0, 0, 0.3)', // Simple right shadow on container
-                        backgroundColor: 'rgba(0, 255, 0, 0.2)' // Debug green background for container
+                        boxShadow: '20px 0 40px -10px rgba(0, 0, 0, 0.3)' // Simple right shadow on container
                     }}
                 >
                     <div

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid, ChevronUp, ChevronDown } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
@@ -8,6 +8,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { Label } from "@/components/base/input/label";
 import { AddWidgetList } from "./add-widget-list";
+import { CustomizerSection } from "./customizer-section";
 
 interface EventsCustomizeSettingsProps {
   toggleStates: {
@@ -28,8 +29,8 @@ interface EventsCustomizeSettingsProps {
   onAddWidgetClick: () => void;
   onWidgetConfig: (widget: any) => void;
   onEditGlobalWidgets: () => void;
-  onWidgetSelect?: (widget: any) => void; // Add this prop
-  onSetWidgetSelectionType?: (type: 'space' | 'sidebar') => void; // Add this prop
+  onWidgetSelect?: (widget: any) => void;
+  onSetWidgetSelectionType?: (type: 'space' | 'sidebar') => void;
 }
 
 export const EventsCustomizeSettings = ({ 
@@ -58,6 +59,49 @@ export const EventsCustomizeSettings = ({
     duplicateSidebarWidget
   } = useWidgetConfig();
   
+  // Detect if we're on a private space page, CMS events page, or Growth folder page
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
+  const isCmsEventsPage = currentPath.includes('/site/cms/events');
+  const isGrowthFolderPage = currentPath.includes('/site/spaces/growth/');
+  
+  // State for space widgets tree expansion
+  const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(
+    ["mainColumn", "rightColumn", "leftColumn", "footerColumn"]
+  );
+  
+  // Use global layout state
+  const selectedLayoutStyle = layoutStates.layoutStyle;
+  
+  // State for layout section expansion
+  const [layoutExpanded, setLayoutExpanded] = useState(true);
+  
+  // State for other sections expansion
+  const [headerSidebarExpanded, setHeaderSidebarExpanded] = useState(true);
+  const [spaceWidgetsExpanded, setSpaceWidgetsExpanded] = useState(true);
+  const [sidebarWidgetExpanded, setSidebarWidgetExpanded] = useState(true);
+  
+  // State for dropdown management
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  
+  // State for Add Widget view
+  const [showAddWidget, setShowAddWidget] = useState(false);
+  const [addWidgetType, setAddWidgetType] = useState<'space' | 'sidebar'>('space');
+  
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openDropdownId) {
+        setOpenDropdownId(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdownId]);
+
   // Enhanced PropertyToggle component with colored icons, settings action, and dropdown menu
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id, iconColor, onSettingsClick, isDynamic = false, widgetType }: {
     icon: React.ComponentType<any>;
@@ -142,8 +186,7 @@ export const EventsCustomizeSettings = ({
                 )}
                 style={{ 
                   zIndex: 9999,
-                  backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
-                  border: '2px solid red' // Visual debug - remove later
+                  backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -194,15 +237,13 @@ export const EventsCustomizeSettings = ({
                     }
                     setOpenDropdownId(null);
                   }}
-                  onMouseEnter={() => console.log('Duplicate button hover')}
                   className={cx(
                     "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
                     theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
                   )}
-                  style={{ backgroundColor: 'yellow', color: 'black' }} // Visual debug
                 >
                   <Copy01 className="h-4 w-4" />
-                  Duplicate TEST
+                  Duplicate
                 </button>
                 
                 <button
@@ -287,46 +328,6 @@ export const EventsCustomizeSettings = ({
       </div>
     );
   };
-  
-  // Detect if we're on a private space page, CMS events page, or Growth folder page
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
-  const isCmsEventsPage = currentPath.includes('/site/cms/events');
-  const isGrowthFolderPage = currentPath.includes('/site/spaces/growth/');
-  
-  // State for space widgets tree expansion
-  const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(
-    isPrivateSpacePage 
-      ? ["container"] 
-      : ["container", "mainColumn", "secondary", "column1", "column2", "column3"]
-  );
-  
-  // Use global layout state
-  const selectedLayoutStyle = layoutStates.layoutStyle;
-  
-  // State for layout section expansion
-  const [layoutExpanded, setLayoutExpanded] = useState(true);
-  
-  // State for dropdown management
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  
-  // State for Add Widget view
-  const [showAddWidget, setShowAddWidget] = useState(false);
-  const [addWidgetType, setAddWidgetType] = useState<'space' | 'sidebar'>('space');
-  
-  // Close dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (openDropdownId) {
-        setOpenDropdownId(null);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdownId]);
 
   // Handle Add Widget clicks
   const handleAddSpaceWidget = () => {
@@ -351,11 +352,9 @@ export const EventsCustomizeSettings = ({
 
   const handleWidgetSelect = (widget: any) => {
     console.log('Selected widget:', widget);
-    // Call the parent's widget select handler if provided
     if (onWidgetSelect) {
       onWidgetSelect(widget);
     }
-    // Close the modal
     setShowAddWidget(false);
   };
 
@@ -369,15 +368,13 @@ export const EventsCustomizeSettings = ({
       />
     );
   }
-  
+
   // Function to build tree structure with dynamic widgets
   const buildTreeStructure = () => {
     const { dynamicWidgets } = spaceWidgetStates;
     
-    // Debug log to see if we have any dynamic widgets
     console.log('Dynamic widgets in buildTreeStructure:', dynamicWidgets);
     
-    // Group dynamic widgets by container
     const widgetsByContainer = dynamicWidgets.reduce((acc, widget) => {
       if (!acc[widget.containerId]) {
         acc[widget.containerId] = [];
@@ -385,114 +382,58 @@ export const EventsCustomizeSettings = ({
       acc[widget.containerId].push({
         id: widget.id,
         label: widget.label,
-        icon: React.createElement(widget.icon, { 
-          className: "bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" 
-        }),
+        icon: <widget.icon className="size-4 text-current" />,
+        data: { widget }
       });
       return acc;
     }, {} as Record<string, any[]>);
-    
-    console.log('Widgets by container:', widgetsByContainer);
-    
-    if (isPrivateSpacePage) {
-      return [
-        {
-          id: "container",
-          label: "Container",
-          icon: <Grid01 className="size-5 text-fg-quaternary" />,
-          children: [
-            {
-              id: "privateSpaceWidget",
-              label: "Private space widget",
-              icon: <Lock01 className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
-            },
-            ...(widgetsByContainer['container'] || [])
-          ]
-        }
-      ];
-    }
-    
+
     return [
       {
-        id: "container",
-        label: "Container",
-        icon: <Grid01 className="size-5 text-fg-quaternary" />,
+        id: "mainColumn",
+        label: "Main Column",
+        icon: <LayoutAlt01 className="size-4 text-fg-quaternary" />,
         children: [
           {
-            id: "spaceheader",
+            id: "space-header-builtin",
             label: "Space Header",
-            icon: <FlexAlignTop className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />,
+            icon: <FlexAlignTop className="size-4 text-green-400" />
           },
           {
-            id: "mainColumn",
-            label: "Main Column",
-            icon: <Grid03 className="size-5 text-fg-quaternary" />,
-            children: [
-              { 
-                id: "eventsList", 
-                label: "Events List", 
-                icon: <Calendar className="bg-green-100/20 p-[1px] rounded-md size-5 text-green-400" />
-              },
-              { 
-                id: "singleEvent", 
-                label: "Custom Events List", 
-                icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-              },
-              ...(widgetsByContainer['mainColumn'] || [])
-            ]
+            id: "events-list-builtin", 
+            label: "Events List",
+            icon: <Calendar className="size-4 text-green-400" />
           },
           {
-            id: "secondary",
-            label: "Secondary",
-            icon: <Grid03 className="size-5 text-fg-quaternary" />,
-            children: [
-              {
-                id: "column1",
-                label: "Column 1",
-                icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                children: [
-                  { 
-                    id: "upcomingEvents", 
-                    label: "upcoming events", 
-                    icon: <Calendar className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                  },
-                  ...(widgetsByContainer['column1'] || [])
-                ]
-              },
-              {
-                id: "column2",
-                label: "Column 2",
-                icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                children: [
-                  { 
-                    id: "heroBanner", 
-                    label: "hero banner", 
-                    icon: <File01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                  },
-                  ...(widgetsByContainer['column2'] || [])
-                ]
-              },
-              {
-                id: "column3",
-                label: "Column 3",
-                icon: <Grid03 className="size-5 text-fg-quaternary" />,
-                children: [
-                  { 
-                    id: "menu", 
-                    label: "Menu", 
-                    icon: <Menu01 className="bg-blue-100/20 p-[1px] rounded-md size-5 text-blue-400" />
-                  },
-                  ...(widgetsByContainer['column3'] || [])
-                ]
-              }
-            ]
-          }
+            id: "hero-banner-builtin",
+            label: "Hero Banner", 
+            icon: <File01 className="size-4 text-blue-400" />
+          },
+          ...(widgetsByContainer.mainColumn || [])
         ]
+      },
+      {
+        id: "rightColumn",
+        label: "Right Column",
+        icon: <LayoutRight className="size-4 text-fg-quaternary" />,
+        children: widgetsByContainer.rightColumn || []
+      },
+      {
+        id: "leftColumn", 
+        label: "Left Column",
+        icon: <LayoutLeft className="size-4 text-fg-quaternary" />,
+        children: widgetsByContainer.leftColumn || []
+      },
+      {
+        id: "footerColumn",
+        label: "Footer",
+        icon: <LayoutBottom className="size-4 text-fg-quaternary" />,
+        children: widgetsByContainer.footerColumn || []
       }
     ];
   };
-  
-  // StyleTile component - exact replica from widget-config.tsx
+
+  // StyleTile component
   const StyleTile = ({ option, isSelected, onClick }: {
     option: { id: string; label: string; icon: React.ComponentType<any> };
     isSelected: boolean;
@@ -500,75 +441,42 @@ export const EventsCustomizeSettings = ({
   }) => {
     const IconComponent = option.icon;
     return (
-      <div
-        className={cx(
-          "flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105",
-          isSelected 
-            ? theme === 'dark'
-              ? 'border-brand-solid bg-brand-solid/20 text-brand-primary shadow-md'
-              : 'border-brand-solid bg-brand-50 text-brand-primary shadow-md'
-            : theme === 'dark'
-              ? 'border-gray-700 bg-gray-800 text-gray-200 hover:border-gray-600 hover:bg-gray-700 hover:shadow-sm'
-              : 'border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-        )}
+      <button
         onClick={onClick}
+        className={cx(
+          "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
+          isSelected
+            ? "border-brand-solid bg-brand-50 text-brand-secondary"
+            : "border-secondary bg-primary text-secondary hover:border-brand-200 hover:bg-brand-25"
+        )}
       >
-        <IconComponent className="h-6 w-6 mb-2" />
+        <div className={cx(
+          "p-2 rounded-md",
+          isSelected ? "bg-brand-100" : "bg-secondary/60"
+        )}>
+          <IconComponent className="size-4" />
+        </div>
         <span className="text-xs font-medium">{option.label}</span>
-      </div>
+      </button>
     );
   };
-  
-  // SectionHeader component - exact replica from widget-config.tsx
-  const SectionHeader = ({ icon: Icon, title, isExpanded, onToggle }: {
-    icon: React.ComponentType<any>;
-    title: string;
-    isExpanded: boolean;
-    onToggle: () => void;
-  }) => (
-    <button
-      onClick={onToggle}
-      className="flex items-center justify-between w-full p-2 hover:bg-secondary/20 rounded-md transition-colors"
-    >
-      <div className="flex items-center gap-2">
-        <Icon className="size-4 text-brand-secondary" />
-        <h5 className="text-xs font-semibold text-primary">{title}</h5>
-      </div>
-      <div className={cx(
-        "transition-transform duration-200",
-        isExpanded ? "rotate-180" : "rotate-0"
-      )}>
-        <InfoCircle className="size-3 text-fg-quaternary" />
-      </div>
-    </button>
-  );
 
   return (
-    <div className="space-y-2 p-2">
+    <div className="space-y-2 p-4">
       
       {/* Global Widgets Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
-          <div className="flex items-center gap-2">
-            <LayoutAlt01 className="size-4 text-brand-secondary" />
-            <h5 className="text-xs font-semibold text-primary">Header and sidebar</h5>
-          </div>
-          <button
-            className={cx(
-              "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
-              theme === 'dark'
-                ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
-                : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
-            )}
-            onClick={onEditGlobalWidgets}
-          >
-            <Settings01 className="size-3" />
-            Edit
-          </button>
-        </div>
-        
+      <CustomizerSection
+        title="Header and sidebar"
+        isExpanded={headerSidebarExpanded}
+        onExpandedChange={setHeaderSidebarExpanded}
+        action={{
+          label: "Edit",
+          icon: Settings01,
+          onClick: onEditGlobalWidgets
+        }}
+      >
         {/* Simple form for both CMS Events and Space Events */}
-        <div className="grid grid-cols-2 gap-2 p-2">
+        <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary border-secondary">
             <Checkbox
               isSelected={toggleStates.header}
@@ -587,135 +495,122 @@ export const EventsCustomizeSettings = ({
             />
           </div>
         </div>
-      </div>
+      </CustomizerSection>
+      
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
       
       {/* Space Layout Section - Only for Growth folder pages */}
       {isGrowthFolderPage && (
-        <div className="border border-secondary rounded-lg bg-primary p-2">
-          <SectionHeader
-            icon={LayoutTop}
+        <>
+          <CustomizerSection
             title="Space Layout"
             isExpanded={layoutExpanded}
-            onToggle={() => setLayoutExpanded(!layoutExpanded)}
-          />
-          {layoutExpanded && (
-            <div className="bg-secondary/20 rounded-lg p-3">
-              <div className="space-y-6">
-                <div>
-                  <Label htmlFor="layout-style">Layout Style</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <StyleTile
-                      option={{ id: 'simple', label: 'Simple', icon: Square }}
-                      isSelected={selectedLayoutStyle === 'simple'}
-                      onClick={() => updateLayoutStates({ layoutStyle: 'simple' })}
-                    />
-                    <StyleTile
-                      option={{ id: 'with-sidebar', label: 'Sidebar', icon: FlexAlignRight }}
-                      isSelected={selectedLayoutStyle === 'with-sidebar'}
-                      onClick={() => updateLayoutStates({ layoutStyle: 'with-sidebar' })}
-                    />
-                    <StyleTile
-                      option={{ id: 'full-width', label: 'Full Width', icon: Maximize01 }}
-                      isSelected={selectedLayoutStyle === 'full-width'}
-                      onClick={() => updateLayoutStates({ layoutStyle: 'full-width' })}
-                    />
-                  </div>
+            onExpandedChange={setLayoutExpanded}
+          >
+            <div className="space-y-6">
+              <div>
+                <div className="grid grid-cols-3 gap-2">
+                  <StyleTile
+                    option={{ id: 'simple', label: 'Simple', icon: Square }}
+                    isSelected={selectedLayoutStyle === 'simple'}
+                    onClick={() => updateLayoutStates({ layoutStyle: 'simple' })}
+                  />
+                  <StyleTile
+                    option={{ id: 'with-sidebar', label: 'Sidebar', icon: FlexAlignRight }}
+                    isSelected={selectedLayoutStyle === 'with-sidebar'}
+                    onClick={() => updateLayoutStates({ layoutStyle: 'with-sidebar' })}
+                  />
+                  <StyleTile
+                    option={{ id: 'full-width', label: 'Full Width', icon: Maximize01 }}
+                    isSelected={selectedLayoutStyle === 'full-width'}
+                    onClick={() => updateLayoutStates({ layoutStyle: 'full-width' })}
+                  />
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </CustomizerSection>
+          
+          {/* Divider */}
+          <div className="border-t border-secondary"></div>
+        </>
       )}
       
-              {/* Space Widgets Section */}
-        <div className="border border-secondary rounded-lg bg-primary p-2">
-          <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
-            <div className="flex items-center gap-2">
-              <Grid03 className="size-4 text-brand-secondary" />
-              <h5 className="text-xs font-semibold text-primary">Space Widgets</h5>
-            </div>
-            <button
-              className={cx(
-                "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
-                theme === 'dark'
-                  ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
-                  : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
-              )}
-              onClick={handleAddSpaceWidget}
-            >
-              <Plus className="size-3" />
-              Add Widget
-            </button>
-          </div>
-          
-          {/* Growth folder gets Properties-style layout, others get TreeView */}
-          {isGrowthFolderPage ? (
-            <div className="bg-secondary/20 rounded-lg p-1">
-              <div className="space-y-2">
+      {/* Space Widgets Section */}
+      <CustomizerSection
+        title="Space Widgets"
+        isExpanded={spaceWidgetsExpanded}
+        onExpandedChange={setSpaceWidgetsExpanded}
+        action={{
+          label: "Add Widget",
+          icon: Plus,
+          onClick: handleAddSpaceWidget
+        }}
+      >
+        {/* Growth folder gets Properties-style layout, others get TreeView */}
+        {isGrowthFolderPage ? (
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={FlexAlignTop}
+              label="Space Header"
+              isSelected={spaceWidgetStates.spaceHeader}
+              onChange={(value) => updateSpaceWidgetStates({ spaceHeader: value })}
+              id="space-header"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
+            />
+            
+            <PropertyToggle
+              icon={Calendar}
+              label="Events List"
+              isSelected={spaceWidgetStates.eventsList}
+              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
+              id="events-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
+            />
+            
+            <PropertyToggle
+              icon={File01}
+              label="Hero Banner"
+              isSelected={spaceWidgetStates.heroBanner}
+              onChange={(value) => updateSpaceWidgetStates({ heroBanner: value })}
+              id="hero-banner"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
+            />
+            
+            {/* Dynamic Widgets */}
+            {spaceWidgetStates.dynamicWidgets.map((widget) => {
+              const IconComponent = widget.icon;
+              return (
                 <PropertyToggle
-                  icon={FlexAlignTop}
-                  label="Space Header"
-                  isSelected={spaceWidgetStates.spaceHeader}
-                  onChange={(value) => updateSpaceWidgetStates({ spaceHeader: value })}
-                  id="space-header"
-                  iconColor="bg-green-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
-                />
-                
-                <PropertyToggle
-                  icon={Calendar}
-                  label="Events List"
-                  isSelected={spaceWidgetStates.eventsList}
-                  onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
-                  id="events-list"
-                  iconColor="bg-green-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
-                />
-                
-                <PropertyToggle
-                  icon={File01}
-                  label="Hero Banner"
-                  isSelected={spaceWidgetStates.heroBanner}
-                  onChange={(value) => updateSpaceWidgetStates({ heroBanner: value })}
-                  id="hero-banner"
+                  key={widget.id}
+                  icon={IconComponent}
+                  label={widget.label}
+                  isSelected={widget.enabled}
+                  onChange={(value) => {
+                    const updatedWidgets = spaceWidgetStates.dynamicWidgets.map(w => 
+                      w.id === widget.id ? { ...w, enabled: value } : w
+                    );
+                    updateSpaceWidgetStates({ dynamicWidgets: updatedWidgets });
+                  }}
+                  id={widget.id}
                   iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
+                  onSettingsClick={() => onWidgetConfig({ id: widget.id, label: widget.label })}
+                  isDynamic={true}
+                  widgetType="space"
                 />
-                
-                {/* Dynamic Widgets */}
-                {spaceWidgetStates.dynamicWidgets.map((widget) => {
-                  const IconComponent = widget.icon;
-                  return (
-                    <PropertyToggle
-                      key={widget.id}
-                      icon={IconComponent}
-                      label={widget.label}
-                      isSelected={widget.enabled}
-                      onChange={(value) => {
-                        // Update the specific dynamic widget's enabled state
-                        const updatedWidgets = spaceWidgetStates.dynamicWidgets.map(w => 
-                          w.id === widget.id ? { ...w, enabled: value } : w
-                        );
-                        updateSpaceWidgetStates({ dynamicWidgets: updatedWidgets });
-                      }}
-                      id={widget.id}
-                      iconColor="bg-blue-100/20" // Blue for dynamic widgets
-                      onSettingsClick={() => onWidgetConfig({ id: widget.id, label: widget.label })}
-                      isDynamic={true}
-                      widgetType="space"
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-          <div className="bg-secondary/20 rounded-lg p-1">
+              );
+            })}
+          </div>
+        ) : (
+          <div>
             <TreeView
               data={buildTreeStructure()}
               expandedIds={spaceWidgetsExpandedIds}
               selectedIds={[]}
               onNodeClick={(node) => {
-                // Check if this is a leaf node (widget) by checking if it has no children
                 if (!node.children || node.children.length === 0) {
                   console.log("Widget clicked:", node.label);
                   onWidgetConfig(node);
@@ -735,81 +630,73 @@ export const EventsCustomizeSettings = ({
               showIcons={true}
             />
           </div>
-          )}
-        </div>
-        
-        {/* Sidebar Widget Section - Only show when "With Sidebar" layout is selected */}
-        {isGrowthFolderPage && selectedLayoutStyle === "with-sidebar" && (
-          <div className="border border-secondary rounded-lg bg-primary p-2">
-            <div className="flex items-center justify-between mb-2 pb-2 border-b border-secondary">
-              <div className="flex items-center gap-2">
-                <FlexAlignRight className="size-4 text-brand-secondary" />
-                <h5 className="text-xs font-semibold text-primary">Sidebar Widget</h5>
-              </div>
-              <button
-                className={cx(
-                  "flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors",
-                  theme === 'dark'
-                    ? "text-brand-primary bg-brand-solid/20 border border-brand-solid/30 hover:bg-brand-solid/30"
-                    : "text-brand-secondary bg-brand-50 border border-brand-200 hover:bg-brand-100"
-                )}
-                onClick={handleAddSidebarWidget}
-              >
-                <Plus className="size-3" />
-                Add Widget
-              </button>
-            </div>
-            
-            <div className="bg-secondary/20 rounded-lg p-1">
-              <div className="space-y-2">
-                <PropertyToggle
-                  icon={Calendar}
-                  label="Quick Actions"
-                  isSelected={sidebarWidgetStates.quickActions}
-                  onChange={(value) => updateSidebarWidgetStates({ quickActions: value })}
-                  id="quick-actions"
-                  iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'quickActions', label: 'Quick Actions' })}
-                />
-                
-                <PropertyToggle
-                  icon={File01}
-                  label="Recent Activity"
-                  isSelected={sidebarWidgetStates.recentActivity}
-                  onChange={(value) => updateSidebarWidgetStates({ recentActivity: value })}
-                  id="recent-activity"
-                  iconColor="bg-blue-100/20"
-                  onSettingsClick={() => onWidgetConfig({ id: 'recentActivity', label: 'Recent Activity' })}
-                />
-                
-                {/* Dynamic Sidebar Widgets */}
-                {sidebarWidgetStates.dynamicWidgets.map((widget) => {
-                  const IconComponent = widget.icon;
-                  return (
-                    <PropertyToggle
-                      key={widget.id}
-                      icon={IconComponent}
-                      label={widget.label}
-                      isSelected={widget.enabled}
-                      onChange={(value) => {
-                        // Update the specific dynamic widget's enabled state
-                        const updatedWidgets = sidebarWidgetStates.dynamicWidgets.map(w => 
-                          w.id === widget.id ? { ...w, enabled: value } : w
-                        );
-                        updateSidebarWidgetStates({ dynamicWidgets: updatedWidgets });
-                      }}
-                      id={widget.id}
-                      iconColor="bg-blue-100/20" // Blue for dynamic widgets
-                      onSettingsClick={() => onWidgetConfig({ id: widget.id, label: widget.label })}
-                      isDynamic={true}
-                      widgetType="sidebar"
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         )}
+      </CustomizerSection>
+        
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
+      
+      {/* Sidebar Widget Section - Only show when "With Sidebar" layout is selected */}
+      {isGrowthFolderPage && selectedLayoutStyle === "with-sidebar" && (
+        <>
+          <CustomizerSection
+            title="Sidebar Widget"
+            isExpanded={sidebarWidgetExpanded}
+            onExpandedChange={setSidebarWidgetExpanded}
+            action={{
+              label: "Add Widget",
+              icon: Plus,
+              onClick: handleAddSidebarWidget
+            }}
+          >
+            <div className="space-y-2">
+              <PropertyToggle
+                icon={Calendar}
+                label="Quick Actions"
+                isSelected={sidebarWidgetStates.quickActions}
+                onChange={(value) => updateSidebarWidgetStates({ quickActions: value })}
+                id="quick-actions"
+                iconColor="bg-blue-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'quickActions', label: 'Quick Actions' })}
+              />
+              
+              <PropertyToggle
+                icon={File01}
+                label="Recent Activity"
+                isSelected={sidebarWidgetStates.recentActivity}
+                onChange={(value) => updateSidebarWidgetStates({ recentActivity: value })}
+                id="recent-activity"
+                iconColor="bg-blue-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'recentActivity', label: 'Recent Activity' })}
+              />
+              
+              {/* Dynamic Sidebar Widgets */}
+              {sidebarWidgetStates.dynamicWidgets.map((widget) => {
+                const IconComponent = widget.icon;
+                return (
+                  <PropertyToggle
+                    key={widget.id}
+                    icon={IconComponent}
+                    label={widget.label}
+                    isSelected={widget.enabled}
+                    onChange={(value) => {
+                      const updatedWidgets = sidebarWidgetStates.dynamicWidgets.map(w => 
+                        w.id === widget.id ? { ...w, enabled: value } : w
+                      );
+                      updateSidebarWidgetStates({ dynamicWidgets: updatedWidgets });
+                    }}
+                    id={widget.id}
+                    iconColor="bg-blue-100/20"
+                    onSettingsClick={() => onWidgetConfig({ id: widget.id, label: widget.label })}
+                    isDynamic={true}
+                    widgetType="sidebar"
+                  />
+                );
+              })}
+            </div>
+          </CustomizerSection>
+        </>
+      )}
     </div>
   );
-}; 
+};

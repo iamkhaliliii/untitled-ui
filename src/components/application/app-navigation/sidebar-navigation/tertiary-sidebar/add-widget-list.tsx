@@ -46,9 +46,22 @@ export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetL
   const widgets = widgetType === 'space' ? spaceWidgets : sidebarWidgets;
 
   return (
-    <div className="h-full flex flex-col p-4">
+    <div className="h-full flex flex-col">
+      {/* Header */}
+      <div className="sticky top-0 z-10 flex items-center gap-3 px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+        <button
+          onClick={onBack}
+          className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+        >
+          <ArrowLeft className="size-4 text-fg-quaternary" />
+        </button>
+        <h3 className="text-sm font-semibold text-brand-secondary">
+          Add {widgetType === 'space' ? 'Space' : 'Sidebar'} Widget
+        </h3>
+      </div>
+
       {/* Widget List */}
-      <div className="flex-1 min-w-0 text-content-subdued">
+      <div className="flex-1 min-w-0 text-content-subdued -m-2 p-4">
         <div className="space-y-1">
           {widgets.map((widget) => {
             const IconComponent = widget.icon;

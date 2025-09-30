@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { useResolvedTheme } from '@/hooks/use-resolved-theme';
 import { cx } from '@/utils/cx';
 import { useWidgetConfig } from '@/providers/widget-config-provider';
+import { CustomizerSection } from './customizer-section';
 
 interface SpaceItem {
   label: string;
@@ -71,12 +72,12 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   } = eventsListConfig;
   
   // Section collapse/expand states
-  const [infoExpanded, setInfoExpanded] = useState(true);
-  const [tabViewsExpanded, setTabViewsExpanded] = useState(true);
-  const [layoutExpanded, setLayoutExpanded] = useState(true);
-  const [propertiesExpanded, setPropertiesExpanded] = useState(true);
-  const [sourceExpanded, setSourceExpanded] = useState(true);
-  const [customCSSExpanded, setCustomCSSExpanded] = useState(true);
+  const [infoExpanded, setInfoExpanded] = useState(false);
+  const [tabViewsExpanded, setTabViewsExpanded] = useState(false);
+  const [layoutExpanded, setLayoutExpanded] = useState(false);
+  const [propertiesExpanded, setPropertiesExpanded] = useState(false);
+  const [sourceExpanded, setSourceExpanded] = useState(false);
+  const [customCSSExpanded, setCustomCSSExpanded] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   // Selected spaces for MultiSelect
@@ -421,22 +422,23 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   }) => {
     const IconComponent = option.icon;
     return (
-      <div
-        className={cx(
-          "flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105",
-          isSelected 
-            ? theme === 'dark'
-              ? 'border-brand-solid bg-brand-solid/20 text-brand-primary shadow-md'
-              : 'border-brand-solid bg-brand-50 text-brand-primary shadow-md'
-            : theme === 'dark'
-              ? 'border-gray-700 bg-gray-800 text-gray-200 hover:border-gray-600 hover:bg-gray-700 hover:shadow-sm'
-              : 'border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-        )}
+      <button
         onClick={onClick}
+        className={cx(
+          "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
+          isSelected
+            ? "border-brand-solid bg-brand-50 text-brand-secondary"
+            : "border-secondary bg-primary text-secondary hover:border-brand-200 hover:bg-brand-25"
+        )}
       >
-        <IconComponent className="h-6 w-6 mb-2" />
+        <div className={cx(
+          "p-2 rounded-md",
+          isSelected ? "bg-brand-100" : "bg-secondary/60"
+        )}>
+          <IconComponent className="size-4" />
+        </div>
         <span className="text-xs font-medium">{option.label}</span>
-      </div>
+      </button>
     );
   };
 
@@ -850,42 +852,39 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   };
 
   const renderEventsListConfig = () => (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Info Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={InfoCircle}
-          title="Info"
-          isExpanded={infoExpanded}
-          onToggle={() => setInfoExpanded(!infoExpanded)}
-        />
-        {infoExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-2">
-            <div className="space-y-3">
-              <div>
-                <Input
-                  label='Widget Title'
-                  id="widget-title"
-                  value={title}
-                  onChange={(value) => updateEventsListConfig({ title: value })}
-                  placeholder="Enter widget title"
-                />
-              </div>
-
-              <div>
-                <TextArea
-                  label='Description'
-                  id="description"
-                  value={description}
-                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
-                  placeholder="Enter widget description"
-                  rows={3}
-                />
-              </div>
-            </div>
+      <CustomizerSection
+        title="Info"
+        isExpanded={infoExpanded}
+        onExpandedChange={setInfoExpanded}
+      >
+        <div className="space-y-3">
+          <div>
+            <Input
+              label='Widget Title'
+              id="widget-title"
+              value={title}
+              onChange={(value) => updateEventsListConfig({ title: value })}
+              placeholder="Enter widget title"
+            />
           </div>
-        )}
-      </div>
+
+          <div>
+            <TextArea
+              label='Description'
+              id="description"
+              value={description}
+              onChange={(e) => updateEventsListConfig({ description: e.target.value })}
+              placeholder="Enter widget description"
+              rows={3}
+            />
+          </div>
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Source Section - Commented out */}
       {/* <div className="border border-secondary rounded-lg bg-primary p-2">
@@ -965,15 +964,12 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
 
       {/* Tab Views Section - Hidden when specific_events is selected */}
       {eventSource !== 'specific_events' && (
-        <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={Menu01}
-          title="Tab views"
-          isExpanded={tabViewsExpanded}
-          onToggle={() => setTabViewsExpanded(!tabViewsExpanded)}
-        />
-        {tabViewsExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-1">
+        <>
+          <CustomizerSection
+            title="Tab views"
+            isExpanded={tabViewsExpanded}
+            onExpandedChange={setTabViewsExpanded}
+          >
             <div className="space-y-1.5">
               {tabViews.map((tab) => (
                 <TabViewItem
@@ -998,113 +994,105 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 Add view
               </Button> */}
             </div>
-          </div>
-        )}
-      </div>
+          </CustomizerSection>
+
+          {/* Divider */}
+          <div className="border-t border-secondary"></div>
+        </>
       )}
 
       {/* Layout Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={LayoutAlt01}
-          title="Layout"
-          isExpanded={layoutExpanded}
-          onToggle={() => setLayoutExpanded(!layoutExpanded)}
-        />
-        {layoutExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-6">
+      <CustomizerSection
+        title="Layout"
+        isExpanded={layoutExpanded}
+        onExpandedChange={setLayoutExpanded}
+      >
+        <div className="space-y-4">
+          <div>
+            <div className="grid grid-cols-3 gap-2">
+              {styleOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={style === option.id}
+                  onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
+                />
+              ))}
+            </div>
+          </div>
+
+          {style === 'card' && (
+            <>
               <div>
-                <Label htmlFor="style">Style</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {styleOptions.map((option) => (
-                    <StyleTile
-                      key={option.id}
-                      option={option}
-                      isSelected={style === option.id}
-                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
-                    />
-                  ))}
-                </div>
+                <Select 
+                  label="Card Size"
+                  items={cardSizeOptions} 
+                  selectedKey={cardSize}
+                  onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
+                >
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                </Select>
               </div>
 
-              {style === 'card' && (
-                <>
-                  <div>
-                    <Select 
-                      label="Card Size"
-                      items={cardSizeOptions} 
-                      selectedKey={cardSize}
-                      onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
-                    >
-                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                    </Select>
-                  </div>
+              <div>
+                <Select 
+                  label="Card Style"
+                  items={cardStyleOptions} 
+                  selectedKey={cardStyle}
+                  onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
+                >
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                </Select>
+              </div>
+            </>
+          )}
+        </div>
+      </CustomizerSection>
 
-                  <div>
-                    <Select 
-                      label="Card Style"
-                      items={cardStyleOptions} 
-                      selectedKey={cardStyle}
-                      onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
-                    >
-                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                    </Select>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Properties Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={Eye}
-          title="Properties"
-          isExpanded={propertiesExpanded}
-          onToggle={() => setPropertiesExpanded(!propertiesExpanded)}
-        />
-        {propertiesExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-1">
-            <div className="space-y-2">
-              {!(style === 'card' && cardStyle === 'modern') && (
-                              <PropertyToggle
-                icon={Image01}
-                label="Event cover"
-                isSelected={coverImage}
-                onChange={(value) => updateEventsListConfig({ coverImage: value })}
-                id="cover-image"
-              />
-              )}
-              <PropertyToggle
-                icon={Calendar}
-                label="Event details"
-                isSelected={eventDetails}
-                onChange={(value) => updateEventsListConfig({ eventDetails: value })}
-                id="event-details"
-              />
+      <CustomizerSection
+        title="Properties"
+        isExpanded={propertiesExpanded}
+        onExpandedChange={setPropertiesExpanded}
+      >
+        <div className="space-y-2">
+          {!(style === 'card' && cardStyle === 'modern') && (
+            <PropertyToggle
+              icon={Image01}
+              label="Event cover"
+              isSelected={coverImage}
+              onChange={(value) => updateEventsListConfig({ coverImage: value })}
+              id="cover-image"
+            />
+          )}
+          <PropertyToggle
+            icon={Calendar}
+            label="Event details"
+            isSelected={eventDetails}
+            onChange={(value) => updateEventsListConfig({ eventDetails: value })}
+            id="event-details"
+          />
 
-              <PropertyToggle
-                icon={User02}
-                label="Host info"
-                isSelected={hostInfo}
-                onChange={(value) => updateEventsListConfig({ hostInfo: value })}
-                id="host-info"
-              />
+          <PropertyToggle
+            icon={User02}
+            label="Host info"
+            isSelected={hostInfo}
+            onChange={(value) => updateEventsListConfig({ hostInfo: value })}
+            id="host-info"
+          />
 
-              <PropertyToggle
-                icon={CheckCircle}
-                label="Attended"
-                isSelected={attended}
-                onChange={(value) => updateEventsListConfig({ attended: value })}
-                id="attended"
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          <PropertyToggle
+            icon={CheckCircle}
+            label="Attended"
+            isSelected={attended}
+            onChange={(value) => updateEventsListConfig({ attended: value })}
+            id="attended"
+          />
+        </div>
+      </CustomizerSection>
     </div>
   );
 
@@ -1120,418 +1108,381 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     ];
 
     return (
-      <div className="space-y-4">
+      <div className="space-y-2">
         {/* Style Section */}
-        <div className="border border-secondary rounded-lg bg-primary p-2">
-          <SectionHeader
-            icon={LayoutAlt01}
-            title="Style"
-            isExpanded={layoutExpanded}
-            onToggle={() => setLayoutExpanded(!layoutExpanded)}
-          />
-          {layoutExpanded && (
-            <div className="bg-secondary/20 rounded-lg p-3">
-              <div className="space-y-6">
-                <div>
-                  <Label htmlFor="style">Header Style</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {styleOptions.map((option) => (
-                      <StyleTile
-                        key={option.id}
-                        option={option}
-                        isSelected={style === option.id}
-                        onClick={() => updateSpaceHeaderConfig({ style: option.id as 'simple' | 'color' | 'image' | 'video' | 'gradient' })}
-                      />
-                    ))}
-                  </div>
-                </div>
+        <CustomizerSection
+          title="Style"
+          isExpanded={layoutExpanded}
+          onExpandedChange={setLayoutExpanded}
+        >
+          <div className="space-y-6">
+            <div>
+              <div className="grid grid-cols-3 gap-2">
+                {styleOptions.map((option) => (
+                  <StyleTile
+                    key={option.id}
+                    option={option}
+                    isSelected={style === option.id}
+                    onClick={() => updateSpaceHeaderConfig({ style: option.id as 'simple' | 'color' | 'image' | 'video' | 'gradient' })}
+                  />
+                ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className="border-t border-secondary"></div>
 
         {/* Properties Section */}
-        <div className="border border-secondary rounded-lg bg-primary p-2">
-          <SectionHeader
-            icon={Eye}
-            title="Properties"
-            isExpanded={propertiesExpanded}
-            onToggle={() => setPropertiesExpanded(!propertiesExpanded)}
-          />
-          {propertiesExpanded && (
-            <div className="bg-secondary/20 rounded-lg p-1">
-              <div className="space-y-2">
-                <PropertyToggle
-                  icon={Settings01}
-                  label="Icon"
-                  isSelected={showIcon}
-                  onChange={(value) => updateSpaceHeaderConfig({ showIcon: value })}
-                  id="show-icon"
-                />
+        <CustomizerSection
+          title="Properties"
+          isExpanded={propertiesExpanded}
+          onExpandedChange={setPropertiesExpanded}
+        >
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={Settings01}
+              label="Icon"
+              isSelected={showIcon}
+              onChange={(value) => updateSpaceHeaderConfig({ showIcon: value })}
+              id="show-icon"
+            />
 
-                <PropertyToggle
-                  icon={MessageSquare01}
-                  label="Description"
-                  isSelected={showDescription}
-                  onChange={(value) => updateSpaceHeaderConfig({ showDescription: value })}
-                  id="show-description"
-                />
+            <PropertyToggle
+              icon={MessageSquare01}
+              label="Description"
+              isSelected={showDescription}
+              onChange={(value) => updateSpaceHeaderConfig({ showDescription: value })}
+              id="show-description"
+            />
 
-                <PropertyToggle
-                  icon={BarChart03}
-                  label="Stats"
-                  isSelected={showStats}
-                  onChange={(value) => updateSpaceHeaderConfig({ showStats: value })}
-                  id="show-stats"
-                />
+            <PropertyToggle
+              icon={BarChart03}
+              label="Stats"
+              isSelected={showStats}
+              onChange={(value) => updateSpaceHeaderConfig({ showStats: value })}
+              id="show-stats"
+            />
 
-                <PropertyToggle
-                  icon={Users01}
-                  label="Members"
-                  isSelected={showMembers}
-                  onChange={(value) => updateSpaceHeaderConfig({ showMembers: value })}
-                  id="show-members"
-                />
+            <PropertyToggle
+              icon={Users01}
+              label="Members"
+              isSelected={showMembers}
+              onChange={(value) => updateSpaceHeaderConfig({ showMembers: value })}
+              id="show-members"
+            />
 
-                <PropertyToggle
-                  icon={Plus}
-                  label="Action: Add post"
-                  isSelected={actionAddPost}
-                  onChange={(value) => updateSpaceHeaderConfig({ actionAddPost: value })}
-                  id="action-add-post"
-                />
+            <PropertyToggle
+              icon={Plus}
+              label="Action: Add post"
+              isSelected={actionAddPost}
+              onChange={(value) => updateSpaceHeaderConfig({ actionAddPost: value })}
+              id="action-add-post"
+            />
 
-                <PropertyToggle
-                  icon={Settings01}
-                  label="Actions"
-                  isSelected={showActions}
-                  onChange={(value) => updateSpaceHeaderConfig({ showActions: value })}
-                  id="show-actions"
-                />
-              </div>
-            </div>
-          )}
-        </div>
+            <PropertyToggle
+              icon={Settings01}
+              label="Actions"
+              isSelected={showActions}
+              onChange={(value) => updateSpaceHeaderConfig({ showActions: value })}
+              id="show-actions"
+            />
+          </div>
+        </CustomizerSection>
       </div>
     );
   };
 
   const renderSingleEventConfig = () => (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Info Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={InfoCircle}
-          title="Info"
-          isExpanded={infoExpanded}
-          onToggle={() => setInfoExpanded(!infoExpanded)}
-        />
-        {infoExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-2">
-            <div className="space-y-3">
-              <div>
-                <Input
-                  label='Widget Title'
-                  id="widget-title"
-                  value={title}
-                  onChange={(value) => updateEventsListConfig({ title: value })}
-                  placeholder="Enter widget title"
-                />
-              </div>
-
-              <div>
-                <TextArea
-                  label='Description'
-                  id="description"
-                  value={description}
-                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
-                  placeholder="Enter widget description"
-                  rows={3}
-                />
-              </div>
-            </div>
+      <CustomizerSection
+        title="Info"
+        isExpanded={infoExpanded}
+        onExpandedChange={setInfoExpanded}
+      >
+        <div className="space-y-3">
+          <div>
+            <Input
+              label='Widget Title'
+              id="widget-title"
+              value={title}
+              onChange={(value) => updateEventsListConfig({ title: value })}
+              placeholder="Enter widget title"
+            />
           </div>
-        )}
-      </div>
+
+          <div>
+            <TextArea
+              label='Description'
+              id="description"
+              value={description}
+              onChange={(e) => updateEventsListConfig({ description: e.target.value })}
+              placeholder="Enter widget description"
+              rows={3}
+            />
+          </div>
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Resource Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={Database01}
-          title="Resource"
-          isExpanded={sourceExpanded}
-          onToggle={() => setSourceExpanded(!sourceExpanded)}
-        />
-        {sourceExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-4">
+      <CustomizerSection
+        title="Resource"
+        isExpanded={sourceExpanded}
+        onExpandedChange={setSourceExpanded}
+      >
+        <div className="space-y-4">
+          <div>
+            <Select 
+              label="Event source"
+              items={eventSourceOptions} 
+              selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'specific_events'}
+              onSelectionChange={(key) => updateEventsListConfig({ 
+                eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events',
+                selectedSpaces: key === 'specific_spaces' ? selectedSpaces : [],
+                selectedEvents: key === 'specific_events' ? selectedEvents : []
+              })}
+            >
+              {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+            </Select>
+          </div>
+
+          {eventSource === 'specific_spaces' && (
+            <div>
+              <MultiSelect
+                selectedItems={selectedSpacesItems}
+                label="Select spaces"
+                hint="Choose which spaces to include events from"
+                placeholder="Search spaces"
+                items={spacesData}
+                onItemInserted={handleSpaceInserted}
+                onItemCleared={handleSpaceCleared}
+              >
+                {(item) => (
+                  <MultiSelect.Item 
+                    id={item.id} 
+                    icon={item.icon}
+                  >
+                    {item.label}
+                  </MultiSelect.Item>
+                )}
+              </MultiSelect>
+            </div>
+          )}
+
+          {eventSource === 'specific_events' && (
+            <div>
+              <MultiSelect
+                selectedItems={selectedEventsItems}
+                label="Select events"
+                hint="Choose which specific events to display"
+                placeholder="Search events"
+                items={eventsData}
+                onItemInserted={handleEventInserted}
+                onItemCleared={handleEventCleared}
+              >
+                {(item) => (
+                  <MultiSelect.Item 
+                    id={item.id} 
+                    icon={item.icon}
+                  >
+                    {item.label}
+                  </MultiSelect.Item>
+                )}
+              </MultiSelect>
+            </div>
+          )}
+
+          {/* Add Filter Button */}
+          <div className="pt-2">
+            <Button
+              onClick={() => setIsFilterView(true)}
+              size="sm"
+              color="secondary"
+              iconLeading={Plus}
+              className="w-full"
+            >
+              Add filter
+            </Button>
+          </div>
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
+
+      {/* Layout Section */}
+      <CustomizerSection
+        title="Layout"
+        isExpanded={layoutExpanded}
+        onExpandedChange={setLayoutExpanded}
+      >
+        <div className="space-y-6">
+          <div>
+            <Label htmlFor="style">Style</Label>
+            <div className="grid grid-cols-4 gap-2 mt-3">
+              {styleOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={style === option.id}
+                  onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
+                />
+              ))}
+            </div>
+          </div>
+
+          {style === 'card' && (
+            <>
               <div>
                 <Select 
-                  label="Event source"
-                  items={eventSourceOptions} 
-                  selectedKey={eventSourceOptions.find(option => option.id === eventSource) ? eventSource : 'specific_events'}
-                  onSelectionChange={(key) => updateEventsListConfig({ 
-                    eventSource: key as 'all_spaces' | 'current_space' | 'specific_spaces' | 'specific_events',
-                    selectedSpaces: key === 'specific_spaces' ? selectedSpaces : [],
-                    selectedEvents: key === 'specific_events' ? selectedEvents : []
-                  })}
+                  label="Card Size"
+                  items={cardSizeOptions} 
+                  selectedKey={cardSize}
+                  onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
                 >
                   {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
                 </Select>
               </div>
 
-              {eventSource === 'specific_spaces' && (
-                <div>
-                  <MultiSelect
-                    selectedItems={selectedSpacesItems}
-                    label="Select spaces"
-                    hint="Choose which spaces to include events from"
-                    placeholder="Search spaces"
-                    items={spacesData}
-                    onItemInserted={handleSpaceInserted}
-                    onItemCleared={handleSpaceCleared}
-                  >
-                    {(item) => (
-                      <MultiSelect.Item 
-                        id={item.id} 
-                        icon={item.icon}
-                      >
-                        {item.label}
-                      </MultiSelect.Item>
-                    )}
-                  </MultiSelect>
-                </div>
-              )}
-
-              {eventSource === 'specific_events' && (
-                <div>
-                  <MultiSelect
-                    selectedItems={selectedEventsItems}
-                    label="Select events"
-                    hint="Choose which specific events to display"
-                    placeholder="Search events"
-                    items={eventsData}
-                    onItemInserted={handleEventInserted}
-                    onItemCleared={handleEventCleared}
-                  >
-                    {(item) => (
-                      <MultiSelect.Item 
-                        id={item.id} 
-                        icon={item.icon}
-                      >
-                        {item.label}
-                      </MultiSelect.Item>
-                    )}
-                  </MultiSelect>
-                </div>
-              )}
-
-              {/* Add Filter Button */}
-              <div className="pt-2">
-                <Button
-                  onClick={() => setIsFilterView(true)}
-                  size="sm"
-                  color="secondary"
-                  iconLeading={Plus}
-                  className="w-full"
-                >
-                  Add filter
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Layout Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={LayoutAlt01}
-          title="Layout"
-          isExpanded={layoutExpanded}
-          onToggle={() => setLayoutExpanded(!layoutExpanded)}
-        />
-        {layoutExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-6">
               <div>
-                <Label htmlFor="style">Style</Label>
-                <div className="grid grid-cols-4 gap-2">
-                  {styleOptions.map((option) => (
-                    <StyleTile
-                      key={option.id}
-                      option={option}
-                      isSelected={style === option.id}
-                      onClick={() => updateEventsListConfig({ style: option.id as 'card' | 'list' | 'feed' | 'carousel' })}
-                    />
-                  ))}
-                </div>
+                <Select 
+                  label="Card Style"
+                  items={cardStyleOptions} 
+                  selectedKey={cardStyle}
+                  onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
+                >
+                  {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+                </Select>
               </div>
+            </>
+          )}
+        </div>
+      </CustomizerSection>
 
-              {style === 'card' && (
-                <>
-                  <div>
-                    <Select 
-                      label="Card Size"
-                      items={cardSizeOptions} 
-                      selectedKey={cardSize}
-                      onSelectionChange={(key) => updateEventsListConfig({ cardSize: key as 'small' | 'medium' | 'large' | 'extralarge' })}
-                    >
-                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Select 
-                      label="Card Style"
-                      items={cardStyleOptions} 
-                      selectedKey={cardStyle}
-                      onSelectionChange={(key) => updateEventsListConfig({ cardStyle: key as 'modern' | 'simple' })}
-                    >
-                      {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-                    </Select>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Properties Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={Eye}
-          title="Properties"
-          isExpanded={propertiesExpanded}
-          onToggle={() => setPropertiesExpanded(!propertiesExpanded)}
-        />
-        {propertiesExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-1">
-            <div className="space-y-2">
-              {!(style === 'card' && cardStyle === 'modern') && (
-                <PropertyToggle
-                  icon={Image01}
-                  label="Event cover"
-                  isSelected={coverImage}
-                  onChange={(value) => updateEventsListConfig({ coverImage: value })}
-                  id="cover-image"
-                />
-              )}
-              <PropertyToggle
-                icon={Calendar}
-                label="Event details"
-                isSelected={eventDetails}
-                onChange={(value) => updateEventsListConfig({ eventDetails: value })}
-                id="event-details"
-              />
+      <CustomizerSection
+        title="Properties"
+        isExpanded={propertiesExpanded}
+        onExpandedChange={setPropertiesExpanded}
+      >
+        <div className="space-y-2">
+          {!(style === 'card' && cardStyle === 'modern') && (
+            <PropertyToggle
+              icon={Image01}
+              label="Event cover"
+              isSelected={coverImage}
+              onChange={(value) => updateEventsListConfig({ coverImage: value })}
+              id="cover-image"
+            />
+          )}
+          <PropertyToggle
+            icon={Calendar}
+            label="Event details"
+            isSelected={eventDetails}
+            onChange={(value) => updateEventsListConfig({ eventDetails: value })}
+            id="event-details"
+          />
 
-              <PropertyToggle
-                icon={User02}
-                label="Host info"
-                isSelected={hostInfo}
-                onChange={(value) => updateEventsListConfig({ hostInfo: value })}
-                id="host-info"
-              />
+          <PropertyToggle
+            icon={User02}
+            label="Host info"
+            isSelected={hostInfo}
+            onChange={(value) => updateEventsListConfig({ hostInfo: value })}
+            id="host-info"
+          />
 
-              <PropertyToggle
-                icon={CheckCircle}
-                label="Attended"
-                isSelected={attended}
-                onChange={(value) => updateEventsListConfig({ attended: value })}
-                id="attended"
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          <PropertyToggle
+            icon={CheckCircle}
+            label="Attended"
+            isSelected={attended}
+            onChange={(value) => updateEventsListConfig({ attended: value })}
+            id="attended"
+          />
+        </div>
+      </CustomizerSection>
     </div>
   );
 
   const renderDefaultConfig = () => (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Info Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={InfoCircle}
-          title="Info"
-          isExpanded={infoExpanded}
-          onToggle={() => setInfoExpanded(!infoExpanded)}
-        />
-        {infoExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-2">
-            <div className="space-y-3">
-              <div>
-                <Input
-                  label='Widget Title'
-                  id="widget-title"
-                  value={title}
-                  onChange={(value) => updateEventsListConfig({ title: value })}
-                  placeholder="Enter widget title"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <TextArea
-                  id="description"
-                  value={description}
-                  onChange={(e) => updateEventsListConfig({ description: e.target.value })}
-                  placeholder="Enter widget description"
-                  rows={3}
-                />
-              </div>
-            </div>
+      <CustomizerSection
+        title="Info"
+        isExpanded={infoExpanded}
+        onExpandedChange={setInfoExpanded}
+      >
+        <div className="space-y-3">
+          <div>
+            <Input
+              label='Widget Title'
+              id="widget-title"
+              value={title}
+              onChange={(value) => updateEventsListConfig({ title: value })}
+              placeholder="Enter widget title"
+            />
           </div>
-        )}
-      </div>
+
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <TextArea
+              id="description"
+              value={description}
+              onChange={(e) => updateEventsListConfig({ description: e.target.value })}
+              placeholder="Enter widget description"
+              rows={3}
+            />
+          </div>
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Layout Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={LayoutAlt01}
-          title="Layout"
-          isExpanded={layoutExpanded}
-          onToggle={() => setLayoutExpanded(!layoutExpanded)}
-        />
-        {layoutExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="max-items">Max Items</Label>
-                <Input
-                  id="max-items"
-                  type="number"
-                  defaultValue="10"
-                />
-              </div>
-            </div>
+      <CustomizerSection
+        title="Layout"
+        isExpanded={layoutExpanded}
+        onExpandedChange={setLayoutExpanded}
+      >
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="max-items">Max Items</Label>
+            <Input
+              id="max-items"
+              type="number"
+              defaultValue="10"
+            />
           </div>
-        )}
-      </div>
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Custom CSS Section */}
-      <div className="border border-secondary rounded-lg bg-primary p-2">
-        <SectionHeader
-          icon={Code01}
-          title="Custom CSS"
-          isExpanded={customCSSExpanded}
-          onToggle={() => setCustomCSSExpanded(!customCSSExpanded)}
-        />
-        {customCSSExpanded && (
-          <div className="bg-secondary/20 rounded-lg p-3">
-            <div className="space-y-4">
-              <div>
-                <TextArea
-                  placeholder="Enter custom CSS styles..."
-                  rows={4}
-                  className="font-mono text-sm"
-                />
-              </div>
-            </div>
+      <CustomizerSection
+        title="Custom CSS"
+        isExpanded={customCSSExpanded}
+        onExpandedChange={setCustomCSSExpanded}
+      >
+        <div className="space-y-4">
+          <div>
+            <TextArea
+              placeholder="Enter custom CSS styles..."
+              rows={4}
+              className="font-mono text-sm"
+            />
           </div>
-        )}
-      </div>
+        </div>
+      </CustomizerSection>
     </div>
   );
 
