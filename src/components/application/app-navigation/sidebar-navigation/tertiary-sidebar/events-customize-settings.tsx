@@ -446,13 +446,23 @@ export const EventsCustomizeSettings = ({
         className={cx(
           "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
           isSelected
-            ? "border-brand-solid bg-brand-50 text-brand-secondary"
-            : "border-secondary bg-primary text-secondary hover:border-brand-200 hover:bg-brand-25"
+            ? theme === 'dark'
+              ? "border-brand-solid bg-brand-solid/20 text-brand-primary"
+              : "border-brand-solid bg-brand-50 text-brand-secondary"
+            : theme === 'dark'
+              ? "border-gray-700 bg-gray-800/50 text-gray-200 hover:border-gray-600 hover:bg-gray-700/60"
+              : "border-secondary bg-primary text-secondary hover:border-brand-200 hover:bg-brand-25"
         )}
       >
         <div className={cx(
           "p-2 rounded-md",
-          isSelected ? "bg-brand-100" : "bg-secondary/60"
+          isSelected 
+            ? theme === 'dark' 
+              ? "bg-brand-solid/30" 
+              : "bg-brand-100"
+            : theme === 'dark'
+              ? "bg-gray-700/60"
+              : "bg-secondary/60"
         )}>
           <IconComponent className="size-4" />
         </div>
@@ -498,7 +508,10 @@ export const EventsCustomizeSettings = ({
       </CustomizerSection>
       
       {/* Divider */}
-      <div className="border-t border-secondary"></div>
+      <div className={cx(
+        "border-t",
+        theme === 'dark' ? "border-gray-700" : "border-secondary"
+      )}></div>
       
       {/* Space Layout Section - Only for Growth folder pages */}
       {isGrowthFolderPage && (
@@ -634,7 +647,10 @@ export const EventsCustomizeSettings = ({
       </CustomizerSection>
         
       {/* Divider */}
-      <div className="border-t border-secondary"></div>
+      <div className={cx(
+        "border-t",
+        theme === 'dark' ? "border-gray-700" : "border-secondary"
+      )}></div>
       
       {/* Sidebar Widget Section - Only show when "With Sidebar" layout is selected */}
       {isGrowthFolderPage && selectedLayoutStyle === "with-sidebar" && (

@@ -218,9 +218,13 @@ export const EventsMembersSettings = () => {
     switch (role.toLowerCase()) {
       case 'admin':
       case 'space admin':
-        return 'bg-violet-100 border border-violet-200 text-violet-600';
+        return theme === 'dark'
+          ? 'bg-violet-900/30 border border-violet-700 text-violet-300'
+          : 'bg-violet-100 border border-violet-200 text-violet-600';
       case 'moderator':
-        return 'bg-blue-100 border border-blue-200 text-blue-600';
+        return theme === 'dark'
+          ? 'bg-blue-900/30 border border-blue-700 text-blue-300'
+          : 'bg-blue-100 border border-blue-200 text-blue-600';
       case 'member':
       default:
         return theme === 'dark' 
@@ -293,7 +297,10 @@ export const EventsMembersSettings = () => {
 
   const renderMembersList = () => (
     <div className="space-y-4">
-      <div className="divide-y divide-gray-200">
+      <div className={cx(
+        "divide-y",
+        theme === 'dark' ? "divide-gray-700" : "divide-gray-200"
+      )}>
         {members.map((member) => (
           <div key={member.id} className="flex items-center justify-between py-3 hover:bg-secondary/10 transition-colors">
             <div className="flex items-center gap-3">
@@ -391,7 +398,10 @@ export const EventsMembersSettings = () => {
           <p className="text-xs text-tertiary">New membership requests will appear here for approval.</p>
         </div>
       ) : (
-        <div className="divide-y divide-gray-200">
+        <div className={cx(
+        "divide-y",
+        theme === 'dark' ? "divide-gray-700" : "divide-gray-200"
+      )}>
           {requests.map((request) => (
             <div key={request.id} className="flex items-center justify-between py-3 hover:bg-secondary/10 transition-colors">
               <div className="flex items-center gap-3">
