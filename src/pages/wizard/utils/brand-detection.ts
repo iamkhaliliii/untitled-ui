@@ -2,6 +2,7 @@ export interface BrandInfo {
   name: string;
   logo: string;
   primaryColor: string;
+  domain?: string;
 }
 
 export const BRAND_DATABASE: Record<string, BrandInfo> = {
