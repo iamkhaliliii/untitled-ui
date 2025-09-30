@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Upload01, Download01, Loading01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { InputBase } from "@/components/base/input/input";
 import { InputGroup } from "@/components/base/input/input-group";
 import { WizardFormData } from "../types";
 import { detectBrandFromUrl, BrandInfo } from "../utils/brand-detection";
+import { fetchBrandData, extractDomainFromEmail, shouldFetchBrandData } from "@/utils/brandfetch";
 import { cx } from "@/utils/cx";
 
 interface Step2BrandingProps {
@@ -39,11 +40,123 @@ export const Step2Branding = ({
 }: Step2BrandingProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [detectedBrand, setDetectedBrand] = useState<BrandInfo | null>(null);
+  const [detectedBrand, setDetectedBrand] = useState<BrandInfo | null>(() => {
+    // Initialize with saved brand data if available
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        if (brandData?.name && brandData?.domain) {
+          return {
+            name: brandData.name,
+            logo: brandData.icon || brandData.logo || '',
+            primaryColor: brandData.colors?.[0] || '#6366f1',
+            domain: brandData.domain
+          };
+        }
+      } catch (error) {
+        console.error('Error parsing saved brand data:', error);
+      }
+    }
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestedColors, setSuggestedColors] = useState<string[]>([]);
-  const [suggestedLogos, setSuggestedLogos] = useState<string[]>([]);
-  const [selectedLogoUrl, setSelectedLogoUrl] = useState<string | null>(null);
+  const [suggestedColors, setSuggestedColors] = useState<string[]>(() => {
+    // Initialize with brand colors if available
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        if (brandData?.colors && Array.isArray(brandData.colors)) {
+          const colorHexes = brandData.colors.map((color: any) => {
+            if (typeof color === 'object' && color.hex) {
+              return color.hex;
+            } else if (typeof color === 'string') {
+              return color;
+            }
+            return null;
+          }).filter(Boolean);
+          return colorHexes.slice(0, 6);
+        }
+      } catch (error) {
+        console.error('Error parsing saved brand colors:', error);
+      }
+    }
+    return [];
+  });
+  const [suggestedLogos, setSuggestedLogos] = useState<string[]>(() => {
+    // Initialize with brand logo if available
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        if (brandData.logos && Array.isArray(brandData.logos)) {
+          const logoUrls: string[] = [];
+          brandData.logos.forEach((logoGroup: any) => {
+            if (logoGroup.formats && Array.isArray(logoGroup.formats)) {
+              const svgFormat = logoGroup.formats.find((f: any) => f.format === 'svg');
+              const pngFormat = logoGroup.formats.find((f: any) => f.format === 'png');
+              const bestFormat = svgFormat || pngFormat || logoGroup.formats[0];
+              if (bestFormat && bestFormat.src) {
+                logoUrls.push(bestFormat.src);
+              }
+            }
+          });
+          return logoUrls.slice(0, 8);
+        } else {
+          const logo = brandData?.icon || brandData?.logo;
+          if (logo) {
+            return [logo];
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing saved brand logo:', error);
+      }
+    }
+    return [];
+  });
+
+  // Store full logo metadata for display
+  const [logoMetadata, setLogoMetadata] = useState<any[]>(() => {
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        return brandData.logos || [];
+      } catch (error) {
+        console.error('Error parsing saved logo metadata:', error);
+      }
+    }
+    return [];
+  });
+  const [selectedLogoUrl, setSelectedLogoUrl] = useState<string | null>(() => {
+    // Initialize with brand logo if available
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        const logo = brandData?.icon || brandData?.logo;
+        if (logo) {
+          // Also set the logo in the parent component
+          setTimeout(() => onLogoSelect(logo), 0);
+          return logo;
+        }
+      } catch (error) {
+        console.error('Error parsing saved brand logo:', error);
+      }
+    }
+    return null;
+  });
+
+  // Check if we have existing brand data (to conditionally show/hide website input)
+  const hasBrandData = detectedBrand !== null || suggestedColors.length > 0 || suggestedLogos.length > 0;
+
+  // Initialize primary color from brand data on mount
+  useEffect(() => {
+    if (detectedBrand && detectedBrand.primaryColor && formData.primaryColor === '#6366f1') {
+      onInputChange('primaryColor')(detectedBrand.primaryColor);
+    }
+  }, [detectedBrand, formData.primaryColor, onInputChange]);
 
   const handleUrlChange = (value: any) => {
     // Handle both string values and React events
@@ -68,34 +181,117 @@ export const Step2Branding = ({
     
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const brand = detectBrandFromUrl(url);
-    setDetectedBrand(brand);
-    
-    if (brand) {
-      // Generate color suggestions based on brand
-      const baseColor = brand.primaryColor;
-      setSuggestedColors([
-        baseColor,
-        adjustColorBrightness(baseColor, 20),
-        adjustColorBrightness(baseColor, -20)
-      ]);
+    try {
+      // Use real brandfetch API
+      const domain = url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      const brandData = await fetchBrandData(domain);
       
-      // Mock logo suggestions (in real app, these would be fetched)
-      setSuggestedLogos([
-        brand.logo,
-        brand.logo // In real app, would be different variations
-      ]);
+      if (brandData) {
+        // Create BrandInfo object from fetched data
+        const primaryColor = brandData.colors?.[0];
+        const brand: BrandInfo = {
+          name: brandData.name || domain,
+          logo: brandData.icon || brandData.logo || '',
+          primaryColor: (typeof primaryColor === 'object' && primaryColor.hex) ? primaryColor.hex : (typeof primaryColor === 'string' ? primaryColor : '#6366f1'),
+          domain: domain
+        };
+        
+        setDetectedBrand(brand);
+        
+        // Set color suggestions from fetched data
+        if (brandData.colors && Array.isArray(brandData.colors)) {
+          const colorHexes = brandData.colors.map((color: any) => {
+            // Handle both object format {hex: "#color"} and string format "#color"
+            if (typeof color === 'object' && color.hex) {
+              return color.hex;
+            } else if (typeof color === 'string') {
+              return color;
+            }
+            return '#6366f1'; // fallback color
+          }).filter(Boolean);
+          setSuggestedColors(colorHexes.slice(0, 6)); // Show more colors
+        } else {
+          setSuggestedColors([brand.primaryColor]);
+        }
+        
+        // Set logo suggestions from all available logos
+        if (brandData.logos && Array.isArray(brandData.logos)) {
+          const logoUrls: string[] = [];
+          
+          // Process all logos and get the best format for each
+          brandData.logos.forEach((logoGroup: any) => {
+            if (logoGroup.formats && Array.isArray(logoGroup.formats)) {
+              // Prefer SVG, then PNG, then other formats
+              const svgFormat = logoGroup.formats.find((f: any) => f.format === 'svg');
+              const pngFormat = logoGroup.formats.find((f: any) => f.format === 'png');
+              const bestFormat = svgFormat || pngFormat || logoGroup.formats[0];
+              
+              if (bestFormat && bestFormat.src) {
+                logoUrls.push(bestFormat.src);
+              }
+            }
+          });
+          
+          setSuggestedLogos(logoUrls.slice(0, 8)); // Show up to 8 logos
+          setLogoMetadata(brandData.logos); // Store full metadata
+          
+          // Set the first logo as selected by default
+          if (logoUrls.length > 0) {
+            setSelectedLogoUrl(logoUrls[0]);
+            onLogoSelect(logoUrls[0]);
+          }
+        } else {
+          // Fallback to old method
+          const logo = brandData.icon || brandData.logo;
+          if (logo) {
+            setSuggestedLogos([logo]);
+            setSelectedLogoUrl(logo);
+            onLogoSelect(logo);
+          }
+        }
+        
+        // Set primary color
+        onInputChange('primaryColor')(brand.primaryColor);
+      } else {
+        // Fallback to mock detection if API fails
+        const brand = detectBrandFromUrl(url);
+        setDetectedBrand(brand);
+        
+        if (brand) {
+          const baseColor = brand.primaryColor;
+          setSuggestedColors([
+            baseColor,
+            adjustColorBrightness(baseColor, 20),
+            adjustColorBrightness(baseColor, -20)
+          ]);
+          setSuggestedLogos([brand.logo]);
+          setSelectedLogoUrl(brand.logo);
+          onLogoSelect(brand.logo);
+          onInputChange('primaryColor')(baseColor);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching brand data:', error);
       
-      // Set the first logo as selected by default
-      setSelectedLogoUrl(brand.logo);
-      onLogoSelect(brand.logo);
-      onInputChange('primaryColor')(baseColor);
+      // Fallback to mock detection on error
+      const brand = detectBrandFromUrl(url);
+      setDetectedBrand(brand);
+      
+      if (brand) {
+        const baseColor = brand.primaryColor;
+        setSuggestedColors([
+          baseColor,
+          adjustColorBrightness(baseColor, 20),
+          adjustColorBrightness(baseColor, -20)
+        ]);
+        setSuggestedLogos([brand.logo]);
+        setSelectedLogoUrl(brand.logo);
+        onLogoSelect(brand.logo);
+        onInputChange('primaryColor')(baseColor);
+      }
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   // Helper function to adjust color brightness
@@ -157,8 +353,8 @@ export const Step2Branding = ({
   return (
     <div className="space-y-6">
       
-      {/* Website URL with Fetch */}
-      {!formData.isManualBranding && (
+      {/* Website URL with Fetch - Only show if no brand data exists and not manual branding */}
+      {!formData.isManualBranding && !hasBrandData && (
         <InputGroup 
           label="Company website"
           leadingAddon={<InputGroup.Prefix>https://</InputGroup.Prefix>}
@@ -183,6 +379,46 @@ export const Step2Branding = ({
           </InputGroup>
       )}
 
+      {/* Brand Data Info - Show when we have brand data */}
+      {!formData.isManualBranding && hasBrandData && detectedBrand && (
+        <div className="bg-secondary border border-tertiary rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {detectedBrand.logo && (
+                <img 
+                  src={detectedBrand.logo} 
+                  alt={detectedBrand.name}
+                  className="w-8 h-8 object-contain"
+                />
+              )}
+              <div>
+                <h3 className="text-sm font-medium text-primary">{detectedBrand.name}</h3>
+                <p className="text-xs text-tertiary">{detectedBrand.domain}</p>
+              </div>
+            </div>
+            
+            <Button
+              size="sm"
+              color="secondary"
+              onClick={() => {
+                // Clear current brand data and show URL input
+                setDetectedBrand(null);
+                setSuggestedColors([]);
+                setSuggestedLogos([]);
+                setLogoMetadata([]);
+                setSelectedLogoUrl(null);
+                onLogoSelect(null);
+                // Reset to default color
+                onInputChange('primaryColor')('#6366f1');
+              }}
+              className="text-xs"
+            >
+              Fetch from another URL
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Loading State */}
       {isLoading && (
         <div className="bg-secondary border border-tertiary rounded-lg p-6 text-center">
@@ -193,14 +429,14 @@ export const Step2Branding = ({
 
       {/* Suggested Branding */}
       {(suggestedColors.length > 0 || suggestedLogos.length > 0) && !isLoading && !formData.isManualBranding && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-4">
           
           {/* Colors */}
           {suggestedColors.length > 0 && (
             <div className="bg-primary border border-secondary rounded-lg p-3">
-              <h3 className="text-xs font-medium text-primary mb-2">Suggested colors</h3>
-              <div className="flex gap-2">
-                {suggestedColors.map((color, index) => (
+              <h3 className="text-xs font-medium text-primary mb-2">Brand colors</h3>
+              <div className="flex gap-1.5">
+                {suggestedColors.slice(0, 4).map((color, index) => (
                   <button
                     key={color}
                     onClick={() => onInputChange('primaryColor')(color)}
@@ -211,7 +447,7 @@ export const Step2Branding = ({
                         : "border-gray-200 hover:border-gray-300"
                     )}
                     style={{ backgroundColor: color }}
-                    title={index === 0 ? "Primary" : index === 1 ? "Lighter" : "Darker"}
+                    title={color}
                   />
                 ))}
               </div>
@@ -220,32 +456,74 @@ export const Step2Branding = ({
 
           {/* Logos */}
           {suggestedLogos.length > 0 && (
-            <div className="bg-primary border border-secondary rounded-lg p-3">
-              <h3 className="text-xs font-medium text-primary mb-2">Suggested logos</h3>
-              <div className="flex gap-2">
-                {suggestedLogos.slice(0, 2).map((logoUrl, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setSelectedLogoUrl(logoUrl);
-                      onLogoSelect(logoUrl);
-                      // Clear any manually uploaded logo
-                      onInputChange('logo')(null);
-                    }}
-                    className={cx(
-                      "w-12 h-12 border-2 rounded-md p-1.5 transition-all",
-                      selectedLogoUrl === logoUrl
-                        ? "border-brand-solid bg-brand-primary/10"
-                        : "border-gray-200 hover:border-gray-300"
-                    )}
-                  >
-                    <img 
-                      src={logoUrl} 
-                      alt={`Logo ${index + 1}`}
-                      className="w-full h-full object-contain"
-                    />
-                  </button>
-                ))}
+            <div className="bg-primary border border-secondary rounded-lg p-4">
+              <h3 className="text-sm font-medium text-primary mb-3">Brand logos</h3>
+              <div className="grid grid-cols-4 gap-3">
+                {suggestedLogos.map((logoUrl, index) => {
+                  // Find metadata for this logo
+                  const logoMeta = logoMetadata[index];
+                  const logoType = logoMeta?.type || 'logo';
+                  const logoTheme = logoMeta?.theme || 'light';
+                  const bestFormat = logoMeta?.formats?.find((f: any) => f.src === logoUrl);
+                  
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setSelectedLogoUrl(logoUrl);
+                        onLogoSelect(logoUrl);
+                        // Clear any manually uploaded logo
+                        onInputChange('logo')(null);
+                      }}
+                      className={cx(
+                        "relative group border-2 rounded-lg p-3 transition-all",
+                        selectedLogoUrl === logoUrl
+                          ? "border-brand-solid bg-brand-primary/5"
+                          : "border-gray-200 hover:border-gray-300"
+                      )}
+                      style={{
+                        backgroundColor: selectedLogoUrl === logoUrl 
+                          ? undefined 
+                          : 'rgba(156, 163, 175, 0.5)' // gray-400 with 50% opacity
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedLogoUrl !== logoUrl) {
+                          e.currentTarget.style.backgroundColor = 'rgba(156, 163, 175, 0.7)'; // darker on hover
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedLogoUrl !== logoUrl) {
+                          e.currentTarget.style.backgroundColor = 'rgba(156, 163, 175, 0.5)'; // back to normal
+                        }
+                      }}
+                    >
+                      <div className="aspect-square flex items-center justify-center mb-2">
+                        <img 
+                          src={logoUrl} 
+                          alt={`${logoType} logo`}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                      
+                      {/* Metadata */}
+                      <div className="text-center">
+                        <div className="text-[10px] font-medium text-tertiary capitalize">
+                          {logoType}
+                        </div>
+                        <div className="text-[9px] text-quaternary">
+                          {bestFormat?.format?.toUpperCase() || 'IMG'} • {logoTheme}
+                        </div>
+                      </div>
+                      
+                      {/* Selection indicator */}
+                      {selectedLogoUrl === logoUrl && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -382,7 +660,7 @@ export const Step2Branding = ({
             onClick={handleManualToggle}
             className="text-sm text-brand-secondary hover:text-brand-secondary_hover underline underline-offset-2 transition-colors"
           >
-            Detect automatically from my URL
+            {hasBrandData ? "Use detected branding" : "Detect automatically from my URL"}
           </button>
         )}
         

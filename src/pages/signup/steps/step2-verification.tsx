@@ -30,6 +30,8 @@ export const Step2Verification = ({
   isFetchingBrand,
   onShowBrandModal
 }: Step2VerificationProps) => {
+  // Note: Google auth now skips this step entirely
+
   // Add keyboard listener for 'B' key
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {

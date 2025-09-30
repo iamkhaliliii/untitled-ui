@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { 
-  ArrowLeft, 
   Users01, 
   Database01, 
   Globe01, 
@@ -152,7 +151,6 @@ interface Step11PlanSelectionProps {
   billingPeriod: 'annual' | 'monthly';
   isLoading: boolean;
   brandData?: BrandData | null;
-  onBack: () => void;
   onSetBillingPeriod: (period: 'annual' | 'monthly') => void;
   onSetSelectedPlan: (plan: string) => void;
   onSubmit: () => void;
@@ -163,13 +161,26 @@ export const Step11PlanSelection = ({
   billingPeriod,
   isLoading,
   brandData,
-  onBack,
   onSetBillingPeriod,
   onSetSelectedPlan,
   onSubmit
 }: Step11PlanSelectionProps) => {
 
   const recommendedPlanType = getRecommendedPlan(formData, brandData);
+  
+  // Get community name from wizard data if available
+  const getCommunityName = () => {
+    try {
+      const wizardData = sessionStorage.getItem('wizard-form-data');
+      if (wizardData) {
+        const parsedData = JSON.parse(wizardData);
+        return parsedData.communityName || formData.firstName;
+      }
+    } catch (error) {
+      console.error('Error parsing wizard data:', error);
+    }
+    return formData.firstName;
+  };
   
   const plans = [
     {
@@ -311,19 +322,9 @@ export const Step11PlanSelection = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 w-full">
       
-      {/* Left Side - Back Button + Recommendation Text */}
+      {/* Left Side - Recommendation Text */}
       <div className="flex flex-col gap-8">
-        <div className="">
-          <button 
-            onClick={onBack}
-            className="inline-flex items-center gap-2 text-sm text-brand-secondary hover:text-brand-secondary_hover transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </button>
-        </div>
-        
-        <div className="text-left">
+        <div className="text-left mt-24">
           {/* Advanced Recommendation Text with Typing Animation */}
           <div className="space-y-4">
             <TypingAnimation 
@@ -459,6 +460,12 @@ export const Step11PlanSelection = ({
                       size="sm"
                       onClick={() => {
                         onSetSelectedPlan(plan.id);
+                        // For trial buttons, log the community name for payment
+                        if (plan.buttonText.includes("trial")) {
+                          const communityName = getCommunityName();
+                          console.log(`Starting ${plan.buttonText} for: ${communityName}`);
+                          // You can add payment logic here that uses communityName instead of formData.firstName
+                        }
                         onSubmit();
                       }}
                       isLoading={isLoading && formData.selectedPlan === plan.id}

@@ -144,6 +144,49 @@ export const SignupPage = () => {
     }
   };
 
+  const handleGoogleAuth = async () => {
+    // Set loading state
+    setIsLoading(true);
+    
+    // Set Google auth data
+    setFormData(prev => ({
+      ...prev,
+      email: "amir@slack.com",
+      authMethod: 'google',
+      firstName: "Amir",
+      lastName: "Khalilii",
+      verificationCode: "GOOGLE" // Set a dummy verification code
+    }));
+    
+    // Clear any existing errors
+    setErrors({});
+    
+    try {
+      // Wait for brandfetch to complete
+      const domain = extractDomainFromEmail("amir@slack.com");
+      if (domain && shouldFetchBrandData("amir@slack.com")) {
+        setIsFetchingBrand(true);
+        const data = await fetchBrandData(domain);
+        setBrandData(data);
+        setIsFetchingBrand(false);
+      }
+      
+      // Add a small delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Jump directly to step 3
+      setCurrentStep(3);
+    } catch (error) {
+      console.error('Error during Google auth:', error);
+      setBrandData(null);
+      setIsFetchingBrand(false);
+      // Still proceed to step 3 even if brandfetch fails
+      setCurrentStep(3);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleArrayToggle = (field: 'currentTools' | 'enterpriseFeatures') => (value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -229,8 +272,14 @@ export const SignupPage = () => {
     
     setIsLoading(true);
     try {
+      // Simulate API call with the email (amir@slack.com for Google auth)
+      const apiData = {
+        ...formData,
+        email: formData.authMethod === 'google' ? 'amir@slack.com' : formData.email
+      };
+      
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Signup data:', formData);
+      console.log('Signup data sent to API:', apiData);
       
       // Show trial success message
       setShowTrialSuccess(true);
@@ -282,9 +331,11 @@ export const SignupPage = () => {
           <Step1Email
             formData={formData}
             errors={errors}
+            isLoading={isLoading}
             onInputChange={handleInputChange}
             onNext={handleNext}
             onSetAuthMethod={(method) => setFormData(prev => ({ ...prev, authMethod: method }))}
+            onGoogleAuth={handleGoogleAuth}
           />
         );
       case 2:
@@ -388,7 +439,7 @@ export const SignupPage = () => {
             billingPeriod={billingPeriod}
             isLoading={isLoading}
             brandData={brandData}
-            onBack={handleBack}
+            
             onSetBillingPeriod={setBillingPeriod}
             onSetSelectedPlan={(plan) => setFormData(prev => ({ ...prev, selectedPlan: plan }))}
             onSubmit={handleSubmit}
@@ -612,7 +663,24 @@ export const SignupPage = () => {
         <div 
           className="fixed inset-0 flex items-center justify-center p-8 z-50 animate-in fade-in slide-in-from-bottom-8 duration-1000"
           style={{
-            background: `linear-gradient(120deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%)`
+            backgroundColor: '#ffffff',
+            background: (() => {
+              // Get primary color from wizard data if available
+              try {
+                const wizardData = sessionStorage.getItem('wizard-form-data');
+                if (wizardData) {
+                  const parsedData = JSON.parse(wizardData);
+                  if (parsedData.primaryColor) {
+                    const color = parsedData.primaryColor;
+                    return `#ffffff, linear-gradient(120deg, ${color}15 0%, ${color}25 25%, ${color}35 50%, ${color}25 75%, ${color}15 100%)`;
+                  }
+                }
+              } catch (error) {
+                console.error('Error parsing wizard primary color:', error);
+              }
+              // Fallback to original gradient
+              return `#ffffff, linear-gradient(120deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%)`;
+            })()
           }}
         >
           {/* Success Content */}
@@ -620,7 +688,22 @@ export const SignupPage = () => {
             
             {/* Success Message */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              {formData.companyName || formData.firstName || 'Your community'} is ready!
+              {(() => {
+                // Get community name from wizard data if available
+                try {
+                  const wizardData = sessionStorage.getItem('wizard-form-data');
+                  if (wizardData) {
+                    const parsedData = JSON.parse(wizardData);
+                    if (parsedData.communityName) {
+                      return `${parsedData.communityName} is ready!`;
+                    }
+                  }
+                } catch (error) {
+                  console.error('Error parsing wizard data:', error);
+                }
+                // Fallback to original logic
+                return `${formData.companyName || formData.firstName || 'Your community'} is ready!`;
+              })()}
             </h1>
             
             <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">

@@ -22,7 +22,41 @@ const initialFormData: WizardFormData = {
 export const WizardPage = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<WizardFormData>(initialFormData);
+  const [formData, setFormData] = useState<WizardFormData>(() => {
+    // Initialize with brand data from signup if available
+    const savedBrandData = sessionStorage.getItem('signup-brand-data');
+    const savedFormData = sessionStorage.getItem('signup-form-data');
+    
+    let brandName = "";
+    let websiteUrl = "";
+    
+    if (savedBrandData) {
+      try {
+        const brandData = JSON.parse(savedBrandData);
+        brandName = brandData?.name || "";
+        websiteUrl = brandData?.domain || "";
+      } catch (error) {
+        console.error('Error parsing brand data:', error);
+      }
+    }
+    
+    if (savedFormData) {
+      try {
+        const signupData = JSON.parse(savedFormData);
+        if (signupData.companyName) {
+          brandName = signupData.companyName;
+        }
+      } catch (error) {
+        console.error('Error parsing signup data:', error);
+      }
+    }
+    
+    return {
+      ...initialFormData,
+      communityName: brandName,
+      websiteUrl: websiteUrl
+    };
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedLogoUrl, setSelectedLogoUrl] = useState<string | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -81,6 +115,8 @@ export const WizardPage = () => {
 
   const handleSubmit = () => {
     console.log("Final form data:", formData);
+    // Store wizard data before redirecting to pricing
+    sessionStorage.setItem('wizard-form-data', JSON.stringify(formData));
     // Redirect to pricing instead of showing success screen
     navigate('/signup', { state: { step: 11 } });
   };
