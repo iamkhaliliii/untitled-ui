@@ -243,10 +243,10 @@ export const Step2Branding = ({
           }
         } else {
           // Fallback to old method
-          if (brandData.logos && brandData.logos.length > 0) {
+          if (brandData.logos && Array.isArray(brandData.logos) && brandData.logos.length > 0) {
             const firstLogoGroup = brandData.logos[0];
-            if (firstLogoGroup.formats && firstLogoGroup.formats.length > 0) {
-              const logo = firstLogoGroup.formats[0].src;
+            if (firstLogoGroup && firstLogoGroup.formats && Array.isArray(firstLogoGroup.formats) && firstLogoGroup.formats.length > 0) {
+              const logo = firstLogoGroup.formats[0]?.src;
               if (logo) {
                 setSuggestedLogos([logo]);
                 setSelectedLogoUrl(logo);

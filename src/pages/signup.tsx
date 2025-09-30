@@ -220,8 +220,8 @@ export const SignupPage = () => {
     if (skipValidation || handleValidateStep(currentStep)) {
       let nextStep = currentStep + 1;
       
-      // Skip steps 5, 6, 7, 8 - go directly from 4 to 9
-      if (currentStep === 4) {
+      // Skip steps 6, 7, 8 - go from 5 to 9
+      if (currentStep === 5) {
         nextStep = 9;
       }
       
@@ -258,9 +258,9 @@ export const SignupPage = () => {
     setCurrentStep(prev => {
       let prevStep = prev - 1;
       
-      // Skip steps 5, 6, 7, 8 when going back - go directly from 9 to 4
+      // Skip steps 6, 7, 8 when going back - go directly from 9 to 5
       if (prev === 9) {
-        prevStep = 4;
+        prevStep = 5;
       }
       
       return Math.max(prevStep, 1);
@@ -451,8 +451,8 @@ export const SignupPage = () => {
   };
 
   const shouldShowBackButton = (step: number) => {
-    // Show back button for steps 4, 9, 10 (skipping 5,6,7,8)
-    return step === 4 || (step >= 9 && step <= 10);
+    // Show back button for steps 4, 5, 9, 10 (skipping 6,7,8)
+    return step === 4 || step === 5 || (step >= 9 && step <= 10);
   };
 
   return (
@@ -492,9 +492,9 @@ export const SignupPage = () => {
                           // Adjust progress calculation for skipped steps
                           let adjustedStep = currentStep;
                           if (currentStep >= 9) {
-                            adjustedStep = currentStep - 4; // Account for skipped steps 5,6,7,8
+                            adjustedStep = currentStep - 3; // Account for skipped steps 6,7,8
                           }
-                          return ((adjustedStep - 1) / 6) * 100; // Now 7 total steps instead of 11
+                          return ((adjustedStep - 1) / 7) * 100; // Now 8 total steps instead of 11
                         })()}%` 
                       }}
                     />
