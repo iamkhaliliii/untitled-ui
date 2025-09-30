@@ -1264,10 +1264,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         return "System Mode";
     };
 
-    const MAIN_SIDEBAR_WIDTH = 68;
-    const SECONDARY_SIDEBAR_WIDTH = 280; // w-80 equivalent
-    // Dynamic width calculation
-    const TERTIARY_SIDEBAR_WIDTH = 368;
+    const MAIN_SIDEBAR_WIDTH = 72;
+    const SECONDARY_SIDEBAR_WIDTH = 300;
+    const TERTIARY_SIDEBAR_WIDTH = 340;
     const TOTAL_WIDTH = MAIN_SIDEBAR_WIDTH + 
         (selectedSecondaryItem === "customize" ? TERTIARY_SIDEBAR_WIDTH : SECONDARY_SIDEBAR_WIDTH);
 
@@ -1367,19 +1366,34 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             className={cx("relative h-full overflow-hidden bg-primary", !(hideBorder || hideRightBorder) && "border-r border-secondary")}
         >
             <div className="flex h-full flex-col px-4 pt-6 pb-5">
-                <h3 className="text-sm font-semibold text-brand-secondary">
-                    {isEventsPage ? 
-                        (activeUrl?.includes("/site/spaces/growth/events") ? "Growth Events" : "Events") : 
-                     isBlogPage ? 
-                        (activeUrl?.includes("/site/spaces/growth/blog") ? "Growth Blog" : "Blog") : 
-                     isHelpPage ? 
-                        (activeUrl?.includes("/site/spaces/growth/help") ? "Growth Help" : "Help") : 
-                     isPostsPage ? 
-                        (activeUrl?.includes("/site/spaces/growth/posts") ? "Growth Posts" : "Posts") : 
-                     isPrivateSpacePage ? "Private Space" : 
-                     isCmsEventsPage ? "CMS Events" : 
-                     currentItem?.label}
-                </h3>
+                {/* Back Button - Only for space pages */}
+                {(isSpacePage || isSpacesCreatePage || isCmsEventsPage) && (
+                    <div className="mb-3">
+                        <button
+                            onClick={() => navigate(fromCms ? `/${currentAdminVersion}/content2/cms` : `/${currentAdminVersion}/site`)}
+                            className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                        >
+                            <ArrowLeft className="size-4 text-fg-quaternary" />
+                        </button>
+                    </div>
+                )}
+                
+                {/* Title - Large */}
+                <div className="mb-2">
+                    <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
+                        {isEventsPage ? 
+                            (activeUrl?.includes("/site/spaces/growth/events") ? "Growth Events" : "Events") : 
+                         isBlogPage ? 
+                            (activeUrl?.includes("/site/spaces/growth/blog") ? "Growth Blog" : "Blog") : 
+                         isHelpPage ? 
+                            (activeUrl?.includes("/site/spaces/growth/help") ? "Growth Help" : "Help") : 
+                         isPostsPage ? 
+                            (activeUrl?.includes("/site/spaces/growth/posts") ? "Growth Posts" : "Posts") : 
+                         isPrivateSpacePage ? "Private Space" : 
+                         isCmsEventsPage ? "CMS Events" : 
+                         currentItem?.label}
+                    </h3>
+                </div>
                 
                 {/* Show Navigation Settings when navigation is selected */}
                 {isNavigationSelected ? (
@@ -1680,14 +1694,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     </div>
                 ) : isSpacePage || isSpacesCreatePage || isCmsEventsPage ? (
                     <div className="mt-2">
-                        {/* Back Button */}
-                        <button
-                            onClick={() => navigate(fromCms ? `/${currentAdminVersion}/content2/cms` : `/${currentAdminVersion}/site`)}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors mb-4"
-                        >
-                            <ArrowLeft className="h-4 w-4" />
-                            {fromCms ? "Back to CMS" : "Back to Site"}
-                        </button>
 
                         {/* Spaces Create Page */}
                         {isSpacesCreatePage ? (
@@ -2184,7 +2190,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                     style={{ 
                         display: 'block',
                         left: MAIN_SIDEBAR_WIDTH + SECONDARY_SIDEBAR_WIDTH, // Position next to secondary sidebar
-                        width: 736,
+                        width: 576,
                         boxShadow: '20px 0 40px -10px rgba(0, 0, 0, 0.3)' // Simple right shadow on container
                     }}
                 >
