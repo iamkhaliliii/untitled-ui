@@ -43,12 +43,21 @@ export const EventsDangerSettings = ({}: EventsDangerSettingsProps) => {
                 {/* Delete Event Section */}
                 <div className="">
                     <div className="items-start gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-error/10">
-                            <AlertTriangle className="h-5 w-5 text-error" />
+                        <div className={cx(
+                            "flex h-10 w-10 items-center justify-center rounded-full",
+                            theme === 'dark' ? "bg-red-900/30" : "bg-error/10"
+                        )}>
+                            <AlertTriangle className={cx(
+                                "h-5 w-5",
+                                theme === 'dark' ? "text-red-400" : "text-error"
+                            )} />
                         </div>
                         <div className="flex-1 space-y-4">
                             <div>
-                                <h4 className="text-lg font-semibold text-error">Delete Event</h4>
+                                <h4 className={cx(
+                                    "text-lg font-semibold",
+                                    theme === 'dark' ? "text-red-400" : "text-error"
+                                )}>Delete Event</h4>
                                 <p className="text-sm text-tertiary mt-1">
                                     You will lose posts, comments, and all content related to the space.
                                 </p>
