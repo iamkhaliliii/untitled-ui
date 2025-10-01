@@ -226,6 +226,92 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         }
     ];
 
+    // Navigation Customization Tour Steps
+    const navigationTourSteps: TourStep[] = [
+        {
+            id: "select-navigation",
+            title: "🎯 Select Navigation in Tree",
+            description: "First, let's select the Navigation item from the tree view to access navigation settings. Look for the 'Navigation' item in the file tree and click on it.",
+            targetSelector: "[data-tour-navigation-item]",
+            position: "right",
+            action: () => {
+                // Automatically click the navigation item
+                const navigationItem = document.querySelector("[data-tour-navigation-item]") as HTMLElement;
+                if (navigationItem) {
+                    console.log('Clicking navigation item:', navigationItem);
+                    navigationItem.click();
+                    // Also set the navigation selected state
+                    setIsNavigationSelected(true);
+                } else {
+                    console.log('Navigation item not found for auto-click');
+                }
+            }
+        },
+        {
+            id: "navigation-overview",
+            title: "🧭 Navigation Settings Panel",
+            description: "Perfect! Now you can see the navigation settings. Here you can control the header and sidebar visibility, and customize navigation items.",
+            targetSelector: "[data-tour-navigation-panel]",
+            position: "right",
+            action: () => {
+                // Ensure navigation panel is open when entering this step
+                setIsNavigationSelected(true);
+            }
+        },
+        {
+            id: "header-toggle",
+            title: "📱 Header Toggle",
+            description: "Use this checkbox to show or hide the header navigation bar. The header contains your main navigation menu that appears at the top of your site.",
+            targetSelector: "[data-tour-header-toggle]",
+            position: "right"
+        },
+        {
+            id: "sidebar-toggle",
+            title: "📋 Sidebar Toggle",
+            description: "This checkbox controls the left sidebar visibility. The sidebar shows your collections, spaces, and navigation menu to help users navigate your community.",
+            targetSelector: "[data-tour-sidebar-toggle]",
+            position: "right"
+        },
+        {
+            id: "navigation-tree",
+            title: "🌳 Navigation Structure",
+            description: "This tree view shows your navigation structure. You can expand sections to see and customize individual navigation items like header menus and sidebar links.",
+            targetSelector: "[data-tour-navigation-tree]",
+            position: "right"
+        },
+        {
+            id: "save-navigation",
+            title: "💾 Save Your Navigation Changes",
+            description: "Great work! You've learned how to customize your navigation. The changes are automatically applied, and your navigation customization step is now complete!",
+            targetSelector: "[data-tour-navigation-panel]",
+            position: "right",
+            action: () => {
+                // Mark the "Customize Navigation" step as completed
+                console.log("Navigation customization tour completed!");
+                
+                // Update onboarding status - mark navigation as completed
+                const updateEvent = new CustomEvent('onboarding-step-completed', { 
+                    detail: { 
+                        stepId: 'customize-navigation',
+                        categoryId: 'onboarding'
+                    } 
+                });
+                window.dispatchEvent(updateEvent);
+                
+                // Show success message in floating progress button
+                setTimeout(() => {
+                    const showSuccessEvent = new CustomEvent('show-progress-success', { 
+                        detail: { 
+                            completedStep: 'Customize Navigation',
+                            nextStep: 'Customize a Space You Created'
+                        } 
+                    });
+                    window.dispatchEvent(showSuccessEvent);
+                }, 500);
+            }
+        }
+    ];
+
     // Start tour when URL parameter is present
     useEffect(() => {
         if (startTour && activeUrl?.includes('/site/spaces/create')) {
@@ -234,7 +320,32 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 tourGuide.startTour(spacesTourSteps);
             }, 500);
         }
+        
+        // Start navigation tour when on site page with startTour=true
+        if (startTour && activeUrl === `/${currentAdminVersion}/site`) {
+            // Longer delay to ensure sidebar is fully rendered
+            setTimeout(() => {
+                console.log('Starting navigation tour from sidebar...');
+                tourGuide.startTour(navigationTourSteps);
+            }, 1000);
+        }
     }, [startTour, activeUrl]);
+
+    // Listen for tour navigation reset events
+    useEffect(() => {
+        const handleTourReset = (event: CustomEvent) => {
+            if (event.detail.reset) {
+                console.log('Resetting navigation state for tour');
+                setIsNavigationSelected(false);
+            }
+        };
+
+        window.addEventListener('tour-reset-navigation', handleTourReset as EventListener);
+        
+        return () => {
+            window.removeEventListener('tour-reset-navigation', handleTourReset as EventListener);
+        };
+    }, []);
 
     // State for tree expansion
     const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
@@ -580,7 +691,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
             children: [
                 { id: "Configuration", label: "Config" , icon: <Settings01 className="size-5 text-fg-quaternary" />},
-            ]
+            ],
+            data: { "data-tour-navigation-item": true }
         },
         {
             id: "content-types",
@@ -1397,7 +1509,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 
                 {/* Show Navigation Settings when navigation is selected */}
                 {isNavigationSelected ? (
-                    <div className="mt-2">
+                    <div className="mt-2" data-tour-navigation-panel>
                         {/* Back Button */}
                         <button
                             onClick={() => setIsNavigationSelected(false)}
@@ -1420,7 +1532,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             
                             {/* Quick Toggle Checkboxes */}
                             <div className="grid grid-cols-2 gap-2 p-2 border border-secondary rounded-lg bg-primary">
-                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary" data-tour-header-toggle>
                                     <Checkbox
                                         isSelected={toggleStates.header}
                                         onChange={(isSelected) => updateToggleStates({ header: isSelected })}
@@ -1429,7 +1541,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     />
                                 </div>
                                 
-                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary" data-tour-sidebar-toggle>
                                     <Checkbox
                                         isSelected={toggleStates.leftSidebar}
                                         onChange={(isSelected) => updateToggleStates({ leftSidebar: isSelected })}
@@ -1440,7 +1552,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </div>
                             
                             {/* Navigation TreeView */}
-                            <div className="flex-1 overflow-y-auto">
+                            <div className="flex-1 overflow-y-auto" data-tour-navigation-tree>
                                 <TreeView
                                     data={[
                                         {

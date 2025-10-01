@@ -34,19 +34,42 @@ export const TourGuide: React.FC<TourGuideProps> = ({
 }) => {
     const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+    const [previousStep, setPreviousStep] = useState<number>(-1);
 
     const currentStepData = steps[currentStep];
+
+    // Track step changes to handle backwards navigation
+    useEffect(() => {
+        if (currentStep < previousStep) {
+            // Going backwards - handle state reset
+            console.log(`Going backwards from step ${previousStep} to step ${currentStep}`);
+            
+            // If going back to step 1 from step 2, reset navigation state
+            if (currentStep === 0 && previousStep === 1) {
+                // Reset navigation selection state
+                const event = new CustomEvent('tour-reset-navigation', { detail: { reset: true } });
+                window.dispatchEvent(event);
+            }
+        }
+        setPreviousStep(currentStep);
+    }, [currentStep, previousStep]);
 
     useEffect(() => {
         if (!isActive || !currentStepData) return;
 
         const findAndHighlightElement = () => {
+            console.log('Looking for element with selector:', currentStepData.targetSelector);
             const element = document.querySelector(currentStepData.targetSelector) as HTMLElement;
+            
             if (element) {
+                console.log('Found element:', element);
                 setTargetElement(element);
                 
                 // Add highlight class
                 element.classList.add('tour-guide-highlight');
+                
+                // Add tour-active class to body
+                document.body.classList.add('tour-active');
                 
                 // Add a subtle blur effect to non-sidebar content
                 const mainContent = document.querySelector('main');
@@ -55,57 +78,100 @@ export const TourGuide: React.FC<TourGuideProps> = ({
                     mainContent.style.transition = 'filter 0.3s ease';
                 }
                 
-                // Calculate tooltip position
-                const rect = element.getBoundingClientRect();
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                // Ensure element is visible and scrolled into view
+                element.style.position = 'relative';
+                element.style.zIndex = '10000';
                 
-                let top = rect.top + scrollTop;
-                let left = rect.left + scrollLeft;
-                
-                // Adjust position based on preferred position
-                switch (currentStepData.position) {
-                    case 'bottom':
-                        top = rect.bottom + scrollTop + 10;
-                        left = rect.left + scrollLeft + (rect.width / 2) - 150; // Center tooltip
-                        break;
-                    case 'top':
-                        top = rect.top + scrollTop - 180; // Tooltip height
-                        left = rect.left + scrollLeft + (rect.width / 2) - 150;
-                        break;
-                    case 'right':
-                        top = rect.top + scrollTop + (rect.height / 2) - 90; // Half tooltip height
-                        left = rect.right + scrollLeft + 10;
-                        break;
-                    case 'left':
-                    default:
-                        top = rect.top + scrollTop + (rect.height / 2) - 90;
-                        left = rect.left + scrollLeft - 310; // Tooltip width
-                        break;
-                }
-                
-                setTooltipPosition({ top, left });
-                
-                // Scroll element into view
+                // Scroll element into view first, then calculate position
                 element.scrollIntoView({ 
                     behavior: 'smooth', 
                     block: 'center',
-                    inline: 'center'
+                    inline: 'nearest'
                 });
+                
+                // Wait a bit for scroll to complete before calculating position
+                setTimeout(() => {
+                    const updatedRect = element.getBoundingClientRect();
+                    let updatedTop = updatedRect.top;
+                    let updatedLeft = updatedRect.left;
+                    
+                    // Recalculate position after scroll
+                    switch (currentStepData.position) {
+                        case 'bottom':
+                            updatedTop = updatedRect.bottom + 10;
+                            updatedLeft = updatedRect.left + (updatedRect.width / 2) - 192;
+                            break;
+                        case 'top':
+                            updatedTop = updatedRect.top - 200;
+                            updatedLeft = updatedRect.left + (updatedRect.width / 2) - 192;
+                            break;
+                        case 'right':
+                            updatedTop = updatedRect.top + (updatedRect.height / 2) - 150;
+                            updatedLeft = updatedRect.right + 20;
+                            break;
+                        case 'left':
+                        default:
+                            updatedTop = updatedRect.top + (updatedRect.height / 2) - 150;
+                            updatedLeft = updatedRect.left - 404;
+                            break;
+                    }
+                    
+                    // Apply viewport bounds to updated position
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+                    const tooltipWidth = 384;
+                    const tooltipHeight = 400;
+                    
+                    if (updatedLeft < 20) {
+                        updatedLeft = 20;
+                    } else if (updatedLeft + tooltipWidth > viewportWidth - 20) {
+                        updatedLeft = viewportWidth - tooltipWidth - 20;
+                    }
+                    
+                    if (updatedTop < 20) {
+                        updatedTop = 20;
+                    } else if (updatedTop + tooltipHeight > viewportHeight - 20) {
+                        updatedTop = Math.max(20, updatedRect.top - tooltipHeight - 10);
+                    }
+                    
+                    setTooltipPosition({ top: updatedTop, left: updatedLeft });
+                }, 300);
+            } else {
+                console.log('Element not found with selector:', currentStepData.targetSelector);
+                console.log('Available elements with data-tour attributes:', 
+                    document.querySelectorAll('[data-tour-navigation-item], [data-tour-navigation-panel], [data-tour-header-toggle], [data-tour-sidebar-toggle], [data-tour-navigation-tree]'));
+                return;
             }
         };
 
-        // Try to find element immediately
-        findAndHighlightElement();
+        // Try to find element with multiple attempts for dynamic content
+        let attempts = 0;
+        const maxAttempts = 10;
         
-        // If not found, try again after a short delay (for dynamic content)
-        const timeout = setTimeout(findAndHighlightElement, 100);
+        const tryFindElement = () => {
+            attempts++;
+            console.log(`Attempt ${attempts} to find element:`, currentStepData.targetSelector);
+            
+            const element = document.querySelector(currentStepData.targetSelector) as HTMLElement;
+            if (element) {
+                console.log('Found element on attempt', attempts);
+                findAndHighlightElement();
+            } else if (attempts < maxAttempts) {
+                console.log(`Element not found, retrying in ${attempts * 200}ms...`);
+                setTimeout(tryFindElement, attempts * 200); // Increasing delay
+            } else {
+                console.log('Max attempts reached, element not found');
+            }
+        };
+        
+        tryFindElement();
         
         return () => {
-            clearTimeout(timeout);
             // Remove highlight from previous element
             if (targetElement) {
                 targetElement.classList.remove('tour-guide-highlight');
+                targetElement.style.position = '';
+                targetElement.style.zIndex = '';
             }
             // Remove blur from main content
             const mainContent = document.querySelector('main');
@@ -113,6 +179,8 @@ export const TourGuide: React.FC<TourGuideProps> = ({
                 mainContent.style.filter = '';
                 mainContent.style.transition = '';
             }
+            // Remove tour-active class from body
+            document.body.classList.remove('tour-active');
         };
     }, [currentStep, currentStepData, isActive, targetElement]);
 
@@ -121,7 +189,11 @@ export const TourGuide: React.FC<TourGuideProps> = ({
         return () => {
             // Remove all tour highlights
             const highlightedElements = document.querySelectorAll('.tour-guide-highlight');
-            highlightedElements.forEach(el => el.classList.remove('tour-guide-highlight'));
+            highlightedElements.forEach(el => {
+                el.classList.remove('tour-guide-highlight');
+                (el as HTMLElement).style.position = '';
+                (el as HTMLElement).style.zIndex = '';
+            });
             
             // Remove blur from main content
             const mainContent = document.querySelector('main');
@@ -130,6 +202,8 @@ export const TourGuide: React.FC<TourGuideProps> = ({
                 mainContent.style.transition = '';
             }
             
+            // Remove tour-active class from body
+            document.body.classList.remove('tour-active');
         };
     }, [isActive]);
 
@@ -149,6 +223,22 @@ export const TourGuide: React.FC<TourGuideProps> = ({
 
     return (
         <>
+            {/* Tour Guide Styles */}
+            <style>{`
+                .tour-guide-highlight {
+                    position: relative !important;
+                    z-index: 9999 !important;
+                    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3) !important;
+                    border-radius: 8px !important;
+                }
+                .tour-guide-tooltip {
+                    pointer-events: auto !important;
+                }
+                body.tour-active {
+                    overflow: hidden;
+                }
+            `}</style>
+            
             {/* Smart Overlay with rectangular spotlight */}
             {targetElement && (
                 <>
@@ -201,11 +291,13 @@ export const TourGuide: React.FC<TourGuideProps> = ({
             
             {/* Enhanced Tour Tooltip */}
             <div
-                className="fixed z-[9999] w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden tour-guide-tooltip"
+                className="fixed z-[99999] w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden tour-guide-tooltip"
                 style={{
-                    top: tooltipPosition.top,
-                    left: tooltipPosition.left,
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                    top: Math.max(20, tooltipPosition.top),
+                    left: Math.max(20, Math.min(tooltipPosition.left, window.innerWidth - 404)),
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+                    maxHeight: 'calc(100vh - 40px)',
+                    transform: 'translateZ(0)' // Force hardware acceleration
                 }}
             >
                 {/* Enhanced Header with gradient background */}

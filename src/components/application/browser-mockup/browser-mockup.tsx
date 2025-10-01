@@ -142,52 +142,77 @@ export const BrowserMockup = ({
         </div>
         
         {/* Browser Content */}
-        <div className={cx(
-          "h-[calc(100vh-158px)] overflow-hidden flex flex-col",
-          theme === 'dark' ? "bg-gray-900" : "bg-gray-50"
-        )}>
+        <div 
+          className={cx(
+            "h-[calc(100vh-158px)] overflow-hidden flex flex-col",
+            theme === 'dark' ? "bg-gray-900" : "bg-gray-50"
+          )}
+          data-tour-browser-mockup
+        >
           {/* Site Navigation Header */}
-          <div className={cx(
-            "border-b px-4 py-2 transition-all duration-300 ease-in-out",
-            toggleStates?.header !== false 
-              ? "opacity-100 max-h-20 overflow-visible" 
-              : "opacity-0 max-h-0 overflow-hidden",
-            theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-          )}>
+          <div 
+            className={cx(
+              "border-b px-4 py-2 transition-all duration-300 ease-in-out",
+              toggleStates?.header !== false 
+                ? "opacity-100 max-h-20 overflow-visible" 
+                : "opacity-0 max-h-0 overflow-hidden",
+              theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+            )}
+            data-tour-main-nav
+          >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
                     <div className="w-3 h-3 bg-white rounded-sm"></div>
                   </div>
-                  <nav className="flex items-center gap-6">
+                  <nav className="flex items-center gap-6" data-tour-nav-items>
                     <span className={cx(
-                      "text-xs transition-colors",
+                      "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>Products</span>
                     <span className={cx(
-                      "text-xs transition-colors",
+                      "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>Services</span>
                     <span className={cx(
-                      "text-xs transition-colors",
+                      "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>Pricing</span>
                     <span className={cx(
-                      "text-xs transition-colors",
+                      "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>Resources</span>
                     <span className={cx(
-                      "text-xs transition-colors",
+                      "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>About</span>
                   </nav>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className={cx(
-                    "px-2 py-1 text-xs transition-colors",
-                    theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
-                  )}>Sign in</button>
-                  <button className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">Get started</button>
+                  <button 
+                    className={cx(
+                      "px-2 py-1 text-xs transition-colors",
+                      theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
+                    )}
+                    data-tour-add-nav-item
+                  >
+                    + Add Item
+                  </button>
+                  <button 
+                    className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                    data-tour-save-button
+                  >
+                    Save Changes
+                  </button>
+                  <button 
+                    className={cx(
+                      "px-2 py-1 text-xs transition-colors",
+                      theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
+                    )}
+                    data-tour-nav-settings
+                  >
+                    ⚙️
+                  </button>
                 </div>
               </div>
             </div>

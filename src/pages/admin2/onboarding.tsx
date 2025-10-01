@@ -34,38 +34,42 @@ const onboardingCategories = [
         description: "Core setup for your community",
         steps: [
             {
-                id: "permissions",
-                title: "Site permissions & privacy",
-                description: "Configure who can access your community",
+                id: "customize-navigation",
+                title: "Customize Navigation",
+                description: "Hit the save changes button in the design studio",
+                icon: BarChartSquare02,
+                status: "pending",
+                required: true,
+                href: "/admin2/site?startTour=true",
+                image: "/pic/onboarding/customize-navigation.jpg"
+            },
+            {
+                id: "customize-space",
+                title: "Customize a Space You Created",
+                description: "Hit the save changes button in the design studio",
+                icon: Database01,
+                status: "pending",
+                required: true,
+                href: "/admin2/site/spaces/create?startTour=true",
+                image: "/pic/onboarding/customize-spaces.jpg"
+            },
+            {
+                id: "setup-permissions",
+                title: "Setup Permissions Site Settings",
+                description: "Finishing the tour guide",
                 icon: Settings01,
-                status: "completed",
+                status: "pending",
+                required: false,
                 href: "/admin2/setting/site-settings",
                 image: "/pic/onboarding/moderation-rules.jpg"
             },
             {
-                id: "auth",
-                title: "Login/Auth",
-                description: "Set up authentication methods",
-                icon: Users01,
-                status: "completed",
-                href: "/admin2/setting/authentication",
-                image: "/pic/onboarding/social-login.jpg"
-            },
-            {
-                id: "domain",
-                title: "Community Domain",
-                description: "Configure your community URL",
-                icon: CodeBrowser,
-                status: "pending",
-                href: "/admin2/site",
-                image: "/pic/onboarding/update-community-name.jpg"
-            },
-            {
-                id: "invite",
-                title: "Invite teammates",
-                description: "Add your team members",
+                id: "invite-teammates",
+                title: "Invite Your Teammates",
+                description: "Finishing the tour guide",
                 icon: Users01,
                 status: "pending",
+                required: false,
                 href: "/admin2/people",
                 image: "/pic/onboarding/invite-members.jpg"
             }
@@ -77,31 +81,104 @@ const onboardingCategories = [
         description: "Make it yours",
         steps: [
             {
-                id: "branding",
-                title: "Branding & Theme",
-                description: "Upload logo and set colors",
+                id: "member-profile-fields",
+                title: "Add Member Profile Fields",
+                description: "Finishing the tour guide",
+                icon: Users01,
+                status: "pending",
+                required: false,
+                href: "/admin2/people",
+                image: "/pic/onboarding/customize-member-profile.jpg"
+            },
+            {
+                id: "appearance-settings",
+                title: "Customize Appearance Settings",
+                description: "Finishing the tour guide",
                 icon: Palette,
                 status: "pending",
+                required: true,
                 href: "/admin2/site-settings",
                 image: "/pic/onboarding/customize-theme.jpg"
             },
             {
-                id: "spaces",
-                title: "Create Spaces",
-                description: "Organize your content",
-                icon: Database01,
+                id: "setup-messaging",
+                title: "Setup Messaging",
+                description: "Finishing the tour guide",
+                icon: MessageChatCircle,
                 status: "pending",
-                href: "/admin2/site/spaces/create?startTour=true",
-                image: "/pic/onboarding/customize-spaces.jpg"
+                required: false,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/create-your-first-post.jpg"
             },
             {
-                id: "navigation",
-                title: "Navigation Setup",
-                description: "Configure menus and structure",
+                id: "custom-domain",
+                title: "Setup the Custom Domain",
+                description: "Finish the wizard!",
+                icon: CodeBrowser,
+                status: "pending",
+                required: true,
+                href: "/admin2/site",
+                image: "/pic/onboarding/update-community-name.jpg"
+            },
+            {
+                id: "login-methods",
+                title: "Setup Login Methods Authentication",
+                description: "Finishing the tour guide",
+                icon: Lock01,
+                status: "pending",
+                required: false,
+                href: "/admin2/setting/authentication",
+                image: "/pic/onboarding/social-login.jpg"
+            },
+            {
+                id: "email-domain",
+                title: "Setup Custom Email Domain",
+                description: "Finishing the tour guide",
+                icon: MessageChatCircle,
+                status: "pending",
+                required: false,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/manage-staff-seats.jpg"
+            },
+            {
+                id: "notifications",
+                title: "Managing Notifications & Email digest",
+                description: "Save to send the notifications at all!",
+                icon: Settings01,
+                status: "pending",
+                required: true,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/manage-staff-seats.jpg"
+            },
+            {
+                id: "localization",
+                title: "Setup Localization",
+                description: "Finishing the tour guide",
+                icon: Settings01,
+                status: "pending",
+                required: false,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/customize-theme.jpg"
+            },
+            {
+                id: "seo-settings",
+                title: "Setup Site SEO settings",
+                description: "Finishing the tour guide",
                 icon: BarChartSquare02,
                 status: "pending",
-                href: "/admin2/site",
-                image: "/pic/onboarding/customize-navigation.jpg"
+                required: false,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/build-app.jpg"
+            },
+            {
+                id: "add-post",
+                title: "Add a Post",
+                description: "Finishing the tour guide",
+                icon: Plus,
+                status: "pending",
+                required: false,
+                href: "/admin2/content2",
+                image: "/pic/onboarding/create-your-first-post.jpg"
             }
         ]
     },
@@ -111,74 +188,54 @@ const onboardingCategories = [
         description: "Advanced features",
         steps: [
             {
-                id: "integrations",
-                title: "Integrations",
-                description: "Connect external tools",
+                id: "security-privacy",
+                title: "Setup Security & Privacy",
+                description: "Finishing the tour guide",
+                icon: Lock01,
+                status: "pending",
+                required: false,
+                href: "/admin2/setting/site-settings",
+                image: "/pic/onboarding/moderation-rules.jpg"
+            },
+            {
+                id: "setup-moderation",
+                title: "Setup Moderation",
+                description: "Update the AI spam detector and keyword moderation",
+                icon: Settings01,
+                status: "pending",
+                required: true,
+                href: "/admin2/setting",
+                image: "/pic/onboarding/moderation-rules.jpg"
+            },
+            {
+                id: "setup-integrations",
+                title: "Setup Integrations",
+                description: "Finishing the tour guide",
                 icon: Data,
                 status: "pending",
+                required: false,
                 href: "/admin2/appstore",
                 image: "/pic/onboarding/explore-apps.jpg"
             },
             {
-                id: "analytics",
-                title: "Analytics Setup",
-                description: "Track community engagement",
-                icon: BarChartSquare02,
-                status: "pending",
-                href: "/admin2/report",
-                image: "/pic/onboarding/build-app.jpg"
-            },
-            {
-                id: "automation",
-                title: "Automation",
-                description: "Set up workflows and rules",
-                icon: Settings01,
-                status: "pending",
-                href: "/admin2/setting",
-                image: "/pic/onboarding/manage-staff-seats.jpg"
-            }
-        ]
-    },
-    {
-        id: "growth",
-        title: "Growth",
-        description: "Scale your community",
-        steps: [
-            {
-                id: "content-strategy",
-                title: "Content Strategy",
-                description: "Plan engaging content for your members",
-                icon: MessageChatCircle,
-                status: "pending",
-                href: "/admin2/content2",
-                image: "/pic/onboarding/customize-theme.jpg"
-            },
-            {
-                id: "member-engagement",
-                title: "Member Engagement",
-                description: "Build active community participation",
+                id: "invite-members",
+                title: "Invite Members",
+                description: "Invite at least one member",
                 icon: Users01,
                 status: "pending",
+                required: true,
                 href: "/admin2/people",
                 image: "/pic/onboarding/invite-members.jpg"
             },
             {
-                id: "monetization",
-                title: "Monetization",
-                description: "Explore revenue opportunities",
-                icon: Plus,
+                id: "publish-go-live",
+                title: "Publish and Go Live!",
+                description: "Launch your community to the world",
+                icon: Rocket01,
                 status: "pending",
-                href: "/admin2/setting",
+                required: true,
+                href: "/admin2/site",
                 image: "/pic/onboarding/build-app.jpg"
-            },
-            {
-                id: "community-insights",
-                title: "Community Insights",
-                description: "Track growth and member behavior",
-                icon: BarChartSquare02,
-                status: "pending",
-                href: "/admin2/report",
-                image: "/pic/onboarding/explore-apps.jpg"
             }
         ]
     }
@@ -189,6 +246,110 @@ export const AdminOnboardingPage = () => {
     const navigate = useNavigate();
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const [showOnboardingHub, setShowOnboardingHub] = useState(false);
+    
+    // State for dynamic onboarding data with localStorage persistence
+    const [dynamicOnboardingCategories, setDynamicOnboardingCategories] = useState(() => {
+        const saved = localStorage.getItem('onboarding-progress');
+        return saved ? JSON.parse(saved) : onboardingCategories;
+    });
+
+    // Helper functions for step logic using dynamic data
+    const getRequiredStepsForCategory = (categoryId: string) => {
+        const category = dynamicOnboardingCategories.find(cat => cat.id === categoryId);
+        return category?.steps.filter(step => step.required) || [];
+    };
+
+    const areRequiredStepsCompleted = (categoryId: string) => {
+        const requiredSteps = getRequiredStepsForCategory(categoryId);
+        return requiredSteps.every(step => step.status === 'completed');
+    };
+
+    const isCategoryLocked = (categoryId: string) => {
+        if (categoryId === 'onboarding') return false; // Onboarding is never locked
+        if (categoryId === 'setup') {
+            return !areRequiredStepsCompleted('onboarding');
+        }
+        if (categoryId === 'launch') {
+            return !areRequiredStepsCompleted('onboarding') || !areRequiredStepsCompleted('setup');
+        }
+        return false;
+    };
+
+    const getCompletedStepsCount = () => {
+        return dynamicOnboardingCategories.reduce((total, category) => {
+            return total + category.steps.filter(step => step.status === 'completed').length;
+        }, 0);
+    };
+
+    const getTotalStepsCount = () => {
+        return dynamicOnboardingCategories.reduce((total, category) => {
+            return total + category.steps.length;
+        }, 0);
+    };
+
+    const getProgressPercentage = () => {
+        const completed = getCompletedStepsCount();
+        const total = getTotalStepsCount();
+        return Math.round((completed / total) * 100);
+    };
+
+    const getRequiredStepsCount = () => {
+        return dynamicOnboardingCategories.reduce((total, category) => {
+            return total + category.steps.filter(step => step.required).length;
+        }, 0);
+    };
+
+    const getCompletedRequiredStepsCount = () => {
+        return dynamicOnboardingCategories.reduce((total, category) => {
+            return total + category.steps.filter(step => step.required && step.status === 'completed').length;
+        }, 0);
+    };
+
+    const getRemainingRequiredStepsCount = () => {
+        return getRequiredStepsCount() - getCompletedRequiredStepsCount();
+    };
+
+    const getRequiredProgressPercentage = () => {
+        const completedRequired = getCompletedRequiredStepsCount();
+        const totalRequired = getRequiredStepsCount();
+        if (totalRequired === 0) return 0;
+        
+        // Show progress up to Onboarding phase (25% minimum)
+        const baseProgress = 25;
+        const calculatedProgress = Math.round((completedRequired / totalRequired) * 100);
+        return Math.max(baseProgress, calculatedProgress);
+    };
+
+    // Listen for onboarding step completion events
+    useEffect(() => {
+        const handleStepCompleted = (event: CustomEvent) => {
+            const { stepId, categoryId } = event.detail;
+            console.log(`Updating step ${stepId} in category ${categoryId} to completed`);
+            
+            const updatedData = dynamicOnboardingCategories.map(category => 
+                category.id === categoryId 
+                    ? {
+                        ...category,
+                        steps: category.steps.map(step => 
+                            step.id === stepId 
+                                ? { ...step, status: 'completed' }
+                                : step
+                        )
+                    }
+                    : category
+            );
+            
+            setDynamicOnboardingCategories(updatedData);
+            // Persist to localStorage
+            localStorage.setItem('onboarding-progress', JSON.stringify(updatedData));
+        };
+
+        window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
+        
+        return () => {
+            window.removeEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
+        };
+    }, []);
 
     // Keyboard event handler for 'O' key
     useEffect(() => {
@@ -327,14 +488,14 @@ export const AdminOnboardingPage = () => {
                                                 <div className="mb-6">
                                                     <div className="flex items-center justify-between mb-2">
                                                         <h4 className="text-sm font-medium text-primary">Community Journey</h4>
-                                                        <span className="text-xs text-tertiary">3 more steps to complete setup</span>
+                                                        <span className="text-xs text-tertiary">{getRemainingRequiredStepsCount()} required steps to go live successfully</span>
                                                     </div>
                                                     <p className="text-xs text-tertiary">Track and complete every stage from setup to growth</p>
                                                 </div>
                                                 
                                                 <div className="relative mb-6">
                                                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                                        <div className="bg-purple-600 h-1.5 rounded-full" style={{width: '30%'}}></div>
+                                                        <div className="bg-purple-600 h-1.5 rounded-full" style={{width: `${getRequiredProgressPercentage()}%`}}></div>
                                                     </div>
                                                     
                                                     <div className="absolute -top-1.5 left-0 right-0 flex justify-between">
@@ -343,20 +504,16 @@ export const AdminOnboardingPage = () => {
                                                             <span className="text-xs text-brand-solid font-medium mt-2">Initial</span>
                                                         </div>
                                                         <div className="flex flex-col items-center">
-                                                            <div className="w-4 h-4 bg-brand-solid rounded-full"></div>
-                                                            <span className="text-xs text-brand-solid font-medium mt-2">Onboarded</span>
+                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('onboarding') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('onboarding') ? 'text-brand-solid' : 'text-tertiary'}`}>Onboarding</span>
                                                         </div>
                                                         <div className="flex flex-col items-center">
-                                                            <div className="w-4 h-4 bg-brand-secondary rounded-full"></div>
-                                                            <span className="text-xs text-brand-secondary font-medium mt-2">Setup</span>
+                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('setup') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('setup') ? 'text-brand-solid' : 'text-tertiary'}`}>Setup</span>
                                                         </div>
                                                         <div className="flex flex-col items-center">
-                                                            <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                                                            <span className="text-xs text-tertiary mt-2">Launch</span>
-                                                        </div>
-                                                        <div className="flex flex-col items-center">
-                                                            <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                                                            <span className="text-xs text-tertiary mt-2">Growth</span>
+                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('launch') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('launch') ? 'text-brand-solid' : 'text-tertiary'}`}>Launch</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -365,110 +522,113 @@ export const AdminOnboardingPage = () => {
                                             {/* Deep Enhanced Step List */}
                                             <div className="bg-gradient-to-br from-secondary via-primary to-secondary/50 rounded-2xl p-4 border border-secondary shadow-lg">
                                                 
-                                                <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-2 pr-2">
-                                                {/* Step 3 - Recommended Next Step */}
-                                                <div 
-                                                    className="flex items-center gap-4 p-3 bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-                                                    onClick={() => navigate("/admin2/site/spaces/create?startTour=true")}
-                                                >
-                                                    <Database01 className="w-5 h-5 text-brand-secondary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <h4 className="text-sm font-semibold text-primary">Create Spaces</h4>
-                                                            <Badge color="brand" size="sm">Recommended Next Step</Badge>
+                                                <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-3 pr-2">
+                                                {/* Categorized Pending Steps */}
+                                                {dynamicOnboardingCategories.map(category => {
+                                                    const pendingSteps = category.steps.filter(step => step.status === 'pending');
+                                                    if (pendingSteps.length === 0) return null;
+                                                    
+                                                    const isLocked = isCategoryLocked(category.id);
+                                                    
+                                                    return (
+                                                        <div key={category.id} className="space-y-2">
+                                                            {/* Category Label */}
+                                                            <div className="flex items-center justify-between px-2">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className={`w-2 h-2 rounded-full ${
+                                                                        category.id === 'onboarding' ? 'bg-brand-solid' :
+                                                                        category.id === 'setup' ? 'bg-brand-secondary' :
+                                                                        'bg-purple-500'
+                                                                    }`}></div>
+                                                                    <h5 className={`text-xs font-semibold uppercase tracking-wide ${
+                                                                        isLocked ? 'text-tertiary/50' : 'text-tertiary'
+                                                                    }`}>
+                                                                        {category.title}
+                                                                    </h5>
+                                                                    {isLocked && (
+                                                                        <Lock01 className="w-3 h-3 text-tertiary/50" />
+                                                                    )}
+                                                                </div>
+                                                                {isLocked ? (
+                                                                    <div className="flex items-center gap-1 text-xs text-tertiary/60 italic">
+                                                                        <span>Complete</span>
+                                                                        <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center">
+                                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full"></div>
+                                                                        </div>
+                                                                        <span>required steps to unlock</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center gap-1 text-xs text-tertiary/60">
+                                                                        <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center">
+                                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full"></div>
+                                                                        </div>
+                                                                        <span>Required</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            
+                                                            {/* Category Steps */}
+                                                            {pendingSteps.map((step, index) => {
+                                                                const isRecommended = index === 0 && category.id === 'onboarding'; // First onboarding step is recommended
+                                                                const IconComponent = step.icon;
+                                                                
+                                                                return (
+                                                                    <div 
+                                                                        key={step.id}
+                                                                        className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 ${
+                                                                            isRecommended 
+                                                                                ? 'bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary hover:shadow-lg transform hover:-translate-y-0.5'
+                                                                                : isLocked
+                                                                                    ? 'bg-secondary/50 border border-secondary/50 opacity-50 cursor-not-allowed'
+                                                                                    : 'bg-secondary border border-secondary hover:bg-brand-primary_alt/20'
+                                                                        }`}
+                                                                        onClick={() => !isLocked && navigate(step.href)}
+                                                                    >
+                                                                        <IconComponent className={`w-5 h-5 flex-shrink-0 ${
+                                                                            isRecommended ? 'text-brand-secondary' : isLocked ? 'text-tertiary/50' : 'text-tertiary'
+                                                                        }`} />
+                                                                        <div className="flex-1">
+                                                                            <div className="flex items-center gap-2 mb-1">
+                                                                                <h4 className={`text-sm font-medium ${
+                                                                                    isRecommended ? 'font-semibold text-primary' : 'text-primary'
+                                                                                }`}>
+                                                                                    {step.title}
+                                                                                </h4>
+                                                                                {isRecommended && (
+                                                                                    <Badge color="brand" size="sm">Recommended Next Step</Badge>
+                                                                                )}
+                                                                            {step.required && (
+                                                                                <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center" title="Required">
+                                                                                    <div className="w-1.5 h-1.5 bg-brand-solid rounded-full"></div>
+                                                                                </div>
+                                                                            )}
+                                                                                {isLocked && (
+                                                                                    <BadgeWithIcon 
+                                                                                        type="pill-color" 
+                                                                                        size="sm" 
+                                                                                        color="gray" 
+                                                                                        iconLeading={Lock01}
+                                                                                    >
+                                                                                        Locked
+                                                                                    </BadgeWithIcon>
+                                                                                )}
+                                                                            </div>
+                                                                            <p className="text-xs text-tertiary">{step.description}</p>
+                                                                        </div>
+                                                                        <div className={`${
+                                                                            isRecommended ? 'text-brand-secondary' : 'text-tertiary'
+                                                                        }`}>
+                                                                            <ArrowRight className="w-4 h-4" />
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
                                                         </div>
-                                                        <p className="text-xs text-tertiary">Organize your content structure</p>
-                                                    </div>
-                                                    <div className="text-brand-secondary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-                                                
-                                                {/* Step 4 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <Users01 className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Invite teammates</h4>
-                                                        <p className="text-xs text-tertiary">Add your team members</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 5 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <CodeBrowser className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Community Domain</h4>
-                                                        <p className="text-xs text-tertiary">Configure your community URL</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 6 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <MessageChatCircle className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Setup Communication</h4>
-                                                        <p className="text-xs text-tertiary">Configure messaging and notifications</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 7 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <BarChartSquare02 className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Analytics Setup</h4>
-                                                        <p className="text-xs text-tertiary">Track community engagement</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 8 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <Data className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Integrations</h4>
-                                                        <p className="text-xs text-tertiary">Connect external tools</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 9 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <Plus className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Content Creation</h4>
-                                                        <p className="text-xs text-tertiary">Add initial posts and content</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Step 10 - Pending */}
-                                                <div className="flex items-center gap-4 p-3 bg-secondary border border-secondary rounded-xl cursor-pointer hover:bg-brand-primary_alt/20 transition-all duration-300">
-                                                    <Rocket01 className="w-5 h-5 text-tertiary flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <h4 className="text-sm font-medium text-primary">Launch Community</h4>
-                                                        <p className="text-xs text-tertiary">Go live with your community</p>
-                                                    </div>
-                                                    <div className="text-tertiary">
-                                                        <ArrowRight className="w-4 h-4" />
-                                                    </div>
-                                                </div>
+                                                    );
+                                                })}
 
                                                 {/* Enhanced Completed Steps Section */}
+                                                {/* Enhanced Completed Steps Section - Always show for demo */}
                                                 <div className="pt-4 mt-4 border-t border-secondary/50">
                                                     <div className="flex items-center justify-between mb-3">
                                                         <div className="flex items-center gap-2">
@@ -480,22 +640,21 @@ export const AdminOnboardingPage = () => {
                                                         <div className="text-xs text-brand-solid/70 font-medium">2 done</div>
                                                     </div>
                                                     
-                                                    {/* Step 1 - Completed */}
+                                                    {/* Mock completed steps for demo */}
                                                     <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
-                                                        <Settings01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                        <Users01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
                                                         <div className="flex-1">
-                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Site permissions & privacy</h4>
+                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Create a new community</h4>
                                                         </div>
                                                         <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
                                                             <CheckCircle className="w-2.5 h-2.5 text-white" />
                                                         </div>
                                                     </div>
                                                     
-                                                    {/* Step 2 - Completed */}
                                                     <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 hover:opacity-80">
-                                                        <Palette className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                        <Database01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
                                                         <div className="flex-1">
-                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Branding & Theme</h4>
+                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Initial Setup Complete</h4>
                                                         </div>
                                                         <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
                                                             <CheckCircle className="w-2.5 h-2.5 text-white" />
@@ -583,7 +742,7 @@ export const AdminOnboardingPage = () => {
 
                                     {/* Bottom Section - Onboarding Categories as Horizontal Sections */}
                                     <div className="space-y-12">
-                        {onboardingCategories.map((category, categoryIndex) => (
+                        {dynamicOnboardingCategories.map((category, categoryIndex) => (
                             <div key={category.id} className="bg-primary">
                                 
                                 {/* Category Header */}
@@ -598,15 +757,19 @@ export const AdminOnboardingPage = () => {
 
                                 {/* Category Steps in 4-Column Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {category.steps.map((step, stepIndex) => (
+                                    {category.steps.map((step, stepIndex) => {
+                                        const isLocked = isCategoryLocked(category.id);
+                                        const IconComponent = step.icon;
+                                        
+                                        return (
                                         <div 
                                             key={step.id}
-                                            className={`bg-white border border-secondary rounded-lg hover:border-primary transition-colors cursor-pointer flex flex-col ${
-                                                step.status === 'pending' && (step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') 
-                                                ? 'opacity-50' 
-                                                : ''
+                                            className={`bg-white border border-secondary rounded-lg transition-colors cursor-pointer flex flex-col ${
+                                                isLocked 
+                                                    ? 'opacity-50 cursor-not-allowed' 
+                                                    : 'hover:border-primary'
                                             }`}
-                                            onClick={() => navigate(step.href)}
+                                            onClick={() => !isLocked && navigate(step.href)}
                                         >
                                             {/* Card Content */}
                                             <div className="p-6">
@@ -615,12 +778,19 @@ export const AdminOnboardingPage = () => {
                                                     <div className="flex justify-between items-start mb-4">
                                                         <div className="relative shrink-0 rounded-lg h-10 w-10" title={step.title}>
                                                             <div className="shrink-0 rounded-lg h-10 w-10 bg-gradient-to-br from-brand-primary_alt to-brand-secondary/20 flex items-center justify-center">
-                                                                <step.icon className="w-5 h-5 text-brand-secondary" />
+                                                                <IconComponent className="w-5 h-5 text-brand-secondary" />
                                                             </div>
                                                         </div>
                                                         <div className="flex flex-wrap justify-end gap-2">
-                                                            {/* Locked Badge for specific steps */}
-                                                            {step.status === 'pending' && (step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') && (
+                                                            {/* Required Icon */}
+                                                            {step.required && (
+                                                                <div className="w-4 h-4 bg-brand-primary_alt rounded-full flex items-center justify-center" title="Required">
+                                                                    <div className="w-2 h-2 bg-brand-solid rounded-full"></div>
+                                                                </div>
+                                                            )}
+                                                            
+                                                            {/* Locked Badge for locked categories */}
+                                                            {isLocked && (
                                                                 <BadgeWithIcon 
                                                                     type="pill-color" 
                                                                     size="sm" 
@@ -644,7 +814,7 @@ export const AdminOnboardingPage = () => {
                                                             )}
                                                             
                                                             {/* Ready Badge for available pending steps */}
-                                                            {step.status === 'pending' && !(step.id === 'branding' || step.id === 'spaces' || step.id === 'monetization' || step.id === 'community-insights') && (
+                                                            {step.status === 'pending' && !isLocked && (
                                                                 <Badge 
                                                                     type="pill-color" 
                                                                     size="sm" 
@@ -684,7 +854,8 @@ export const AdminOnboardingPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         ))}
