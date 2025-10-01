@@ -132,12 +132,12 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     upcomingEvents: true,
     heroBanner: false,
     menu: true,
-    // New widgets - default to false
+    // New widgets - default to true (show by default)
     composer: false,
-    announcementBanner: false,
-    leaderboard: false,
-    htmlScript: false,
-    richText: false,
+    announcementBanner: true,
+    leaderboard: true,
+    htmlScript: true,
+    richText: true,
     dynamicWidgets: [],
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({

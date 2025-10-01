@@ -87,12 +87,12 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   } = eventsListConfig;
   
   // Section collapse/expand states
-  const [infoExpanded, setInfoExpanded] = useState(false);
-  const [tabViewsExpanded, setTabViewsExpanded] = useState(false);
-  const [layoutExpanded, setLayoutExpanded] = useState(false);
-  const [propertiesExpanded, setPropertiesExpanded] = useState(false);
-  const [sourceExpanded, setSourceExpanded] = useState(false);
-  const [customCSSExpanded, setCustomCSSExpanded] = useState(false);
+  const [infoExpanded, setInfoExpanded] = useState(true);
+  const [tabViewsExpanded, setTabViewsExpanded] = useState(true);
+  const [layoutExpanded, setLayoutExpanded] = useState(true);
+  const [propertiesExpanded, setPropertiesExpanded] = useState(true);
+  const [sourceExpanded, setSourceExpanded] = useState(true);
+  const [customCSSExpanded, setCustomCSSExpanded] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
   // Selected spaces for MultiSelect
@@ -1455,7 +1455,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   );
 
   const renderAnnouncementBannerConfig = () => {
-    const { title, description, url, style, showIcon, showCloseButton } = announcementBannerConfig;
+    const { title, url, style, showIcon, showCloseButton } = announcementBannerConfig;
 
     const styleOptions = [
       { id: 'primary', label: 'Primary', icon: Zap },
@@ -1481,17 +1481,6 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
                 value={title}
                 onChange={(value) => updateAnnouncementBannerConfig({ title: value })}
                 placeholder="Enter announcement title"
-              />
-            </div>
-            
-            <div>
-              <TextArea
-                label="Description"
-                id="banner-description"
-                value={description}
-                onChange={(e) => updateAnnouncementBannerConfig({ description: e.target.value })}
-                placeholder="Enter announcement description"
-                rows={3}
               />
             </div>
             

@@ -409,6 +409,34 @@ export const BrowserMockup = ({
                           <SpaceHeaderWidget />
                         </div>
                       )}
+
+                      {/* Announcement Banner Widget */}
+                      {spaceWidgetStates?.announcementBanner && (
+                        <div className="transition-all duration-200 ease-out">
+                          <AnnouncementBannerWidget />
+                        </div>
+                      )}
+
+                      {/* Leaderboard Widget */}
+                      {spaceWidgetStates?.leaderboard && (
+                        <div className="transition-all duration-200 ease-out">
+                          <LeaderboardWidget />
+                        </div>
+                      )}
+
+                      {/* HTML Script Widget */}
+                      {spaceWidgetStates?.htmlScript && (
+                        <div className="transition-all duration-200 ease-out">
+                          <HtmlScriptWidget />
+                        </div>
+                      )}
+
+                      {/* Rich Text Widget */}
+                      {spaceWidgetStates?.richText && (
+                        <div className="transition-all duration-200 ease-out">
+                          <RichTextWidget />
+                        </div>
+                      )}
                       
                       {/* Events List Widget */}
                       {spaceWidgetStates?.eventsList && (
@@ -436,34 +464,6 @@ export const BrowserMockup = ({
                       {spaceWidgetStates?.composer && (
                         <div className="transition-all duration-200 ease-out">
                           <ComposerWidget />
-                        </div>
-                      )}
-
-                      {/* Announcement Banner Widget */}
-                      {spaceWidgetStates?.announcementBanner && (
-                        <div className="transition-all duration-200 ease-out">
-                          <AnnouncementBannerWidget />
-                        </div>
-                      )}
-
-                      {/* Leaderboard Widget */}
-                      {spaceWidgetStates?.leaderboard && (
-                        <div className="transition-all duration-200 ease-out">
-                          <LeaderboardWidget />
-                        </div>
-                      )}
-
-                      {/* HTML Script Widget */}
-                      {spaceWidgetStates?.htmlScript && (
-                        <div className="transition-all duration-200 ease-out">
-                          <HtmlScriptWidget />
-                        </div>
-                      )}
-
-                      {/* Rich Text Widget */}
-                      {spaceWidgetStates?.richText && (
-                        <div className="transition-all duration-200 ease-out">
-                          <RichTextWidget />
                         </div>
                       )}
                     </div>

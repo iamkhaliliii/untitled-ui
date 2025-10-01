@@ -62,10 +62,10 @@ export const EventsCustomizeSettings = ({
         heroBanner: false,
         menu: true,
         composer: false,
-        announcementBanner: false,
-        leaderboard: false,
-        htmlScript: false,
-        richText: false,
+        announcementBanner: true,
+        leaderboard: true,
+        htmlScript: true,
+        richText: true,
         dynamicWidgets: [],
       },
       updateSpaceWidgetStates: () => {},
@@ -608,37 +608,6 @@ export const EventsCustomizeSettings = ({
             />
             
             <PropertyToggle
-              icon={Calendar}
-              label="Events List"
-              isSelected={spaceWidgetStates.eventsList}
-              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
-              id="events-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
-            />
-            
-            {/* Hero Banner and Composer widgets are hidden for now */}
-            {/* <PropertyToggle
-              icon={File01}
-              label="Hero Banner"
-              isSelected={spaceWidgetStates.heroBanner}
-              onChange={(value) => updateSpaceWidgetStates({ heroBanner: value })}
-              id="hero-banner"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
-            />
-            
-            <PropertyToggle
-              icon={Edit03}
-              label="Composer"
-              isSelected={spaceWidgetStates.composer}
-              onChange={(value) => updateSpaceWidgetStates({ composer: value })}
-              id="composer"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'composer', label: 'Composer' })}
-            /> */}
-            
-            <PropertyToggle
               icon={HelpCircle}
               label="Announcement Banner"
               isSelected={spaceWidgetStates.announcementBanner}
@@ -677,6 +646,37 @@ export const EventsCustomizeSettings = ({
               iconColor="bg-blue-100/20"
               onSettingsClick={() => onWidgetConfig({ id: 'richText', label: 'Rich Text' })}
             />
+            
+            <PropertyToggle
+              icon={Calendar}
+              label="Events List"
+              isSelected={spaceWidgetStates.eventsList}
+              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
+              id="events-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
+            />
+            
+            {/* Hero Banner and Composer widgets are hidden for now */}
+            {/* <PropertyToggle
+              icon={File01}
+              label="Hero Banner"
+              isSelected={spaceWidgetStates.heroBanner}
+              onChange={(value) => updateSpaceWidgetStates({ heroBanner: value })}
+              id="hero-banner"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
+            />
+            
+            <PropertyToggle
+              icon={Edit03}
+              label="Composer"
+              isSelected={spaceWidgetStates.composer}
+              onChange={(value) => updateSpaceWidgetStates({ composer: value })}
+              id="composer"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'composer', label: 'Composer' })}
+            /> */}
             
             {/* Dynamic Widgets */}
             {spaceWidgetStates.dynamicWidgets.map((widget) => {

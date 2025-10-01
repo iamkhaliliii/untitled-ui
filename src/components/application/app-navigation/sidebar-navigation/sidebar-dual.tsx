@@ -171,7 +171,21 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             toggleStates: { header: true, leftSidebar: true, rightSidebar: false, footer: false },
             updateToggleStates: () => {},
             addSpaceWidget: () => {},
-            addSidebarWidget: () => {}
+            addSidebarWidget: () => {},
+            spaceWidgetStates: {
+                spaceHeader: true,
+                eventsList: true,
+                customEventsList: false,
+                upcomingEvents: true,
+                heroBanner: false,
+                menu: true,
+                composer: false,
+                announcementBanner: true,
+                leaderboard: true,
+                htmlScript: true,
+                richText: true,
+                dynamicWidgets: [],
+            }
         };
     }
     
