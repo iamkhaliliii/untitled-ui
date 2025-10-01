@@ -1,4 +1,4 @@
-import { CheckCircle, Settings01, Rocket01, CheckDone01 } from "@untitledui/icons";
+import { CheckCircle, Settings01, Rocket01, CheckDone01, BarChartSquare02, Database01, Users01, Palette, MessageChatCircle, CodeBrowser, Lock01, Plus, Data } from "@untitledui/icons";
 import { useState, useEffect } from "react";
 
 // Types for onboarding data
@@ -7,6 +7,7 @@ interface OnboardingStep {
     title: string;
     status: 'pending' | 'completed';
     required: boolean;
+    icon?: any;
 }
 
 interface OnboardingCategory {
@@ -57,10 +58,51 @@ const onboardingCategories: OnboardingCategory[] = [
 ];
 
 export const ProgressWidget = () => {
+    // Icon mapping for localStorage compatibility
+    const iconMap: Record<string, any> = {
+        'BarChartSquare02': BarChartSquare02,
+        'Database01': Database01,
+        'Settings01': Settings01,
+        'Users01': Users01,
+        'Palette': Palette,
+        'MessageChatCircle': MessageChatCircle,
+        'CodeBrowser': CodeBrowser,
+        'Lock01': Lock01,
+        'Plus': Plus,
+        'Data': Data,
+        'Rocket01': Rocket01
+    };
+
+    // Helper function to deserialize onboarding data from localStorage
+    const deserializeOnboardingData = (data: any): OnboardingCategory[] => {
+        return data.map((category: any) => ({
+            ...category,
+            steps: category.steps.map((step: any) => {
+                // Find the original step to get the correct icon
+                const originalCategory = onboardingCategories.find(cat => cat.id === category.id);
+                const originalStep = originalCategory?.steps.find(s => s.id === step.id);
+                
+                return {
+                    ...step,
+                    icon: originalStep?.icon || iconMap[step.icon] || Settings01 // Use original icon first, then mapped icon, then fallback
+                };
+            })
+        }));
+    };
+
     // State for dynamic onboarding data with localStorage persistence
-    const [onboardingData, setOnboardingData] = useState(() => {
+    const [onboardingData, setOnboardingData] = useState<OnboardingCategory[]>(() => {
         const saved = localStorage.getItem('onboarding-progress');
-        return saved ? JSON.parse(saved) : onboardingCategories;
+        if (saved) {
+            try {
+                const parsedData = JSON.parse(saved);
+                return deserializeOnboardingData(parsedData);
+            } catch (error) {
+                console.error('Error parsing saved onboarding data:', error);
+                return onboardingCategories;
+            }
+        }
+        return onboardingCategories;
     });
 
     // Listen for onboarding step completion events
@@ -91,6 +133,22 @@ export const ProgressWidget = () => {
             window.removeEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
         };
     }, [onboardingData]);
+
+    // Listen for onboarding reset events
+    useEffect(() => {
+        const handleReset = (event: CustomEvent) => {
+            if (event.detail.reset) {
+                console.log('ProgressWidget: Resetting onboarding data to default');
+                setOnboardingData(onboardingCategories);
+            }
+        };
+
+        window.addEventListener('onboarding-reset', handleReset as EventListener);
+        
+        return () => {
+            window.removeEventListener('onboarding-reset', handleReset as EventListener);
+        };
+    }, []);
 
     // Helper functions using dynamic data
     const getRequiredStepsForCategory = (categoryId: string) => {

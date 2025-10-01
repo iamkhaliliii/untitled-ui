@@ -10,7 +10,7 @@ interface OnboardingStep {
     status: 'pending' | 'completed';
     required: boolean;
     href: string;
-    icon: any;
+    icon?: any;
 }
 
 interface OnboardingCategory {
@@ -66,10 +66,51 @@ export const FloatingProgressButton = () => {
     const [showSimplePopover, setShowSimplePopover] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     
+    // Icon mapping for localStorage compatibility
+    const iconMap: Record<string, any> = {
+        'BarChartSquare02': BarChartSquare02,
+        'Database01': Database01,
+        'Settings01': Settings01,
+        'Users01': Users01,
+        'Palette': Palette,
+        'MessageChatCircle': MessageChatCircle,
+        'CodeBrowser': CodeBrowser,
+        'Lock01': Lock01,
+        'Plus': Plus,
+        'Data': Data,
+        'Rocket01': Rocket01
+    };
+
+    // Helper function to deserialize onboarding data from localStorage
+    const deserializeOnboardingData = (data: any): OnboardingCategory[] => {
+        return data.map((category: any) => ({
+            ...category,
+            steps: category.steps.map((step: any) => {
+                // Find the original step to get the correct icon
+                const originalCategory = onboardingCategories.find(cat => cat.id === category.id);
+                const originalStep = originalCategory?.steps.find(s => s.id === step.id);
+                
+                return {
+                    ...step,
+                    icon: originalStep?.icon || iconMap[step.icon] || Settings01 // Use original icon first, then mapped icon, then fallback
+                };
+            })
+        }));
+    };
+
     // State for onboarding progress with localStorage persistence
-    const [onboardingData, setOnboardingData] = useState(() => {
+    const [onboardingData, setOnboardingData] = useState<OnboardingCategory[]>(() => {
         const saved = localStorage.getItem('onboarding-progress');
-        return saved ? JSON.parse(saved) : onboardingCategories;
+        if (saved) {
+            try {
+                const parsedData = JSON.parse(saved);
+                return deserializeOnboardingData(parsedData);
+            } catch (error) {
+                console.error('Error parsing saved onboarding data:', error);
+                return onboardingCategories;
+            }
+        }
+        return onboardingCategories;
     });
     
     // State for success message
@@ -145,8 +186,18 @@ export const FloatingProgressButton = () => {
             );
             
             setOnboardingData(updatedData);
-            // Persist to localStorage
-            localStorage.setItem('onboarding-progress', JSON.stringify(updatedData));
+            console.log('FloatingProgressButton: Updated onboarding data:', updatedData);
+            
+            // Also save to localStorage to ensure persistence
+            const serializedData = updatedData.map((category: OnboardingCategory) => ({
+                ...category,
+                steps: category.steps.map((step: OnboardingStep) => ({
+                    ...step,
+                    icon: step.icon?.name || 'Settings01' // Store icon name instead of component
+                }))
+            }));
+            localStorage.setItem('onboarding-progress', JSON.stringify(serializedData));
+            console.log('FloatingProgressButton: Saved to localStorage:', serializedData);
         };
 
         window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
@@ -174,6 +225,24 @@ export const FloatingProgressButton = () => {
         
         return () => {
             window.removeEventListener('show-progress-success', handleShowSuccess as EventListener);
+        };
+    }, []);
+
+    // Listen for onboarding reset events
+    useEffect(() => {
+        const handleReset = (event: CustomEvent) => {
+            if (event.detail.reset) {
+                console.log('FloatingProgressButton: Resetting onboarding data to default');
+                setOnboardingData(onboardingCategories);
+                setShowSuccessMessage(false);
+                setSuccessData(null);
+            }
+        };
+
+        window.addEventListener('onboarding-reset', handleReset as EventListener);
+        
+        return () => {
+            window.removeEventListener('onboarding-reset', handleReset as EventListener);
         };
     }, []);
 
@@ -485,34 +554,63 @@ export const FloatingProgressButton = () => {
                                         );
                                     })}
 
-                                    {/* Completed Tasks */}
-                                    <div className="pt-3 mt-3 border-t border-gray-700">
-                                        <div className="text-xs text-gray-500 mb-2">Completed:</div>
+                                    {/* Completed Tasks - Mock + Dynamic */}
+                                    {(() => {
+                                        const completedSteps = onboardingData.flatMap((category: OnboardingCategory) => 
+                                            category.steps.filter((step: OnboardingStep) => step.status === 'completed')
+                                        );
                                         
-                                        <div className="p-2 bg-gray-800/50 rounded-lg opacity-60">
-                                            <div className="flex items-center gap-3">
-                                                <Users01 className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                                                <div className="flex-1">
-                                                    <span className="text-sm font-medium text-white line-through">Create a new community</span>
-                                                </div>
-                                                <div className="w-3 h-3 bg-violet-500 rounded-full flex items-center justify-center">
-                                                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        const totalCompleted = 2 + completedSteps.length; // Mock items + real completed steps
                                         
-                                        <div className="p-2 bg-gray-800/50 rounded-lg opacity-60 mt-2">
-                                            <div className="flex items-center gap-3">
-                                                <Database01 className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                                                <div className="flex-1">
-                                                    <span className="text-sm font-medium text-white line-through">Initial Setup Complete</span>
+                                        return (
+                                            <div className="pt-3 mt-3 border-t border-gray-700">
+                                                <div className="text-xs text-gray-500 mb-2">Completed:</div>
+                                                
+                                                {/* Mock completed steps */}
+                                                <div className="p-2 bg-gray-800/50 rounded-lg opacity-60 mb-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <Users01 className="w-4 h-4 text-violet-400 flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <span className="text-sm font-medium text-white line-through">Create a new community</span>
+                                                        </div>
+                                                        <div className="w-3 h-3 bg-violet-500 rounded-full flex items-center justify-center">
+                                                            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="w-3 h-3 bg-violet-500 rounded-full flex items-center justify-center">
-                                                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                                
+                                                <div className="p-2 bg-gray-800/50 rounded-lg opacity-60 mb-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <Database01 className="w-4 h-4 text-violet-400 flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <span className="text-sm font-medium text-white line-through">Initial Setup Complete</span>
+                                                        </div>
+                                                        <div className="w-3 h-3 bg-violet-500 rounded-full flex items-center justify-center">
+                                                            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                
+                                                {/* Dynamic completed steps */}
+                                                {completedSteps.map((step: OnboardingStep) => {
+                                                    const IconComponent = step.icon;
+                                                    return (
+                                                        <div key={step.id} className="p-2 bg-gray-800/50 rounded-lg opacity-60 mb-2">
+                                                            <div className="flex items-center gap-3">
+                                                                <IconComponent className="w-4 h-4 text-violet-400 flex-shrink-0" />
+                                                                <div className="flex-1">
+                                                                    <span className="text-sm font-medium text-white line-through">{step.title}</span>
+                                                                </div>
+                                                                <div className="w-3 h-3 bg-violet-500 rounded-full flex items-center justify-center">
+                                                                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
-                                        </div>
-                                    </div>
+                                        );
+                                    })()}
                                 </div>
                             </div>
                         </div>

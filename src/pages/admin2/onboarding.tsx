@@ -247,10 +247,67 @@ export const AdminOnboardingPage = () => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const [showOnboardingHub, setShowOnboardingHub] = useState(false);
     
+    // Icon mapping for localStorage compatibility
+    const iconMap: Record<string, any> = {
+        'BarChartSquare02': BarChartSquare02,
+        'Database01': Database01,
+        'Settings01': Settings01,
+        'Users01': Users01,
+        'Palette': Palette,
+        'MessageChatCircle': MessageChatCircle,
+        'CodeBrowser': CodeBrowser,
+        'Lock01': Lock01,
+        'Plus': Plus,
+        'Data': Data,
+        'Rocket01': Rocket01
+    };
+
+    // Helper function to serialize onboarding data for localStorage
+    const serializeOnboardingData = (data: typeof onboardingCategories) => {
+        return data.map(category => ({
+            ...category,
+            steps: category.steps.map(step => ({
+                ...step,
+                icon: step.icon?.name || 'Settings01' // Store icon name instead of component
+            }))
+        }));
+    };
+
+    // Helper function to deserialize onboarding data from localStorage
+    const deserializeOnboardingData = (data: any) => {
+        return data.map((category: any) => ({
+            ...category,
+            steps: category.steps.map((step: any) => {
+                // Find the original step to get the correct icon
+                const originalCategory = onboardingCategories.find(cat => cat.id === category.id);
+                const originalStep = originalCategory?.steps.find(s => s.id === step.id);
+                
+                return {
+                    ...step,
+                    icon: originalStep?.icon || iconMap[step.icon] || Settings01 // Use original icon first, then mapped icon, then fallback
+                };
+            })
+        }));
+    };
+
     // State for dynamic onboarding data with localStorage persistence
     const [dynamicOnboardingCategories, setDynamicOnboardingCategories] = useState(() => {
         const saved = localStorage.getItem('onboarding-progress');
-        return saved ? JSON.parse(saved) : onboardingCategories;
+        console.log('Loading onboarding data from localStorage:', saved);
+        if (saved) {
+            try {
+                const parsedData = JSON.parse(saved);
+                console.log('Parsed localStorage data:', parsedData);
+                const deserializedData = deserializeOnboardingData(parsedData);
+                console.log('Deserialized data:', deserializedData);
+                return deserializedData;
+            } catch (error) {
+                console.error('Error parsing saved onboarding data:', error);
+                return onboardingCategories;
+            }
+        }
+        console.log('No saved data, using default onboardingCategories');
+        return onboardingCategories;
     });
 
     // Helper functions for step logic using dynamic data
@@ -332,7 +389,7 @@ export const AdminOnboardingPage = () => {
                         ...category,
                         steps: category.steps.map(step => 
                             step.id === stepId 
-                                ? { ...step, status: 'completed' }
+                                ? { ...step, status: 'completed' as const }
                                 : step
                         )
                     }
@@ -340,8 +397,8 @@ export const AdminOnboardingPage = () => {
             );
             
             setDynamicOnboardingCategories(updatedData);
-            // Persist to localStorage
-            localStorage.setItem('onboarding-progress', JSON.stringify(updatedData));
+            // Persist to localStorage with serialization
+            localStorage.setItem('onboarding-progress', JSON.stringify(serializeOnboardingData(updatedData)));
         };
 
         window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
@@ -351,11 +408,27 @@ export const AdminOnboardingPage = () => {
         };
     }, []);
 
-    // Keyboard event handler for 'O' key
+    // Keyboard event handlers
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (event.key.toLowerCase() === 'o') {
                 setShowOnboardingHub(prev => !prev);
+            }
+            
+            if (event.key.toLowerCase() === 'x') {
+                console.log('Resetting onboarding progress to default state...');
+                
+                // Reset to default onboarding data
+                setDynamicOnboardingCategories(onboardingCategories);
+                
+                // Clear localStorage
+                localStorage.removeItem('onboarding-progress');
+                
+                // Dispatch event to update other components
+                const resetEvent = new CustomEvent('onboarding-reset', { detail: { reset: true } });
+                window.dispatchEvent(resetEvent);
+                
+                console.log('Onboarding progress reset complete');
             }
         };
 
@@ -628,39 +701,65 @@ export const AdminOnboardingPage = () => {
                                                 })}
 
                                                 {/* Enhanced Completed Steps Section */}
-                                                {/* Enhanced Completed Steps Section - Always show for demo */}
-                                                <div className="pt-4 mt-4 border-t border-secondary/50">
-                                                    <div className="flex items-center justify-between mb-3">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-5 h-5 bg-brand-solid/20 rounded-lg flex items-center justify-center">
-                                                                <CheckCircle className="w-3 h-3 text-brand-solid" />
+                                                {/* Dynamic Completed Steps Section */}
+                                                {(() => {
+                                                    const completedSteps = dynamicOnboardingCategories.flatMap(category => 
+                                                        category.steps.filter(step => step.status === 'completed')
+                                                    );
+                                                    
+                                                    // Always show completed section (has mock items + dynamic items)
+                                                    
+                                                    return (
+                                                        <div className="pt-4 mt-4 border-t border-secondary/50">
+                                                            <div className="flex items-center justify-between mb-3">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-5 h-5 bg-brand-solid/20 rounded-lg flex items-center justify-center">
+                                                                        <CheckCircle className="w-3 h-3 text-brand-solid" />
+                                                                    </div>
+                                                                    <h5 className="text-xs font-semibold text-brand-solid">Completed Tasks</h5>
+                                                                </div>
+                                                                <div className="text-xs text-brand-solid/70 font-medium">{2 + completedSteps.length} done</div>
                                                             </div>
-                                                            <h5 className="text-xs font-semibold text-brand-solid">Completed Tasks</h5>
+                                                            
+                                                            {/* Mock completed steps */}
+                                                            <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
+                                                                <Users01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                                <div className="flex-1">
+                                                                    <h4 className="text-xs font-medium text-brand-solid line-through">Create a new community</h4>
+                                                                </div>
+                                                                <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                                                                    <CheckCircle className="w-2.5 h-2.5 text-white" />
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
+                                                                <Database01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                                <div className="flex-1">
+                                                                    <h4 className="text-xs font-medium text-brand-solid line-through">Initial Setup Complete</h4>
+                                                                </div>
+                                                                <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                                                                    <CheckCircle className="w-2.5 h-2.5 text-white" />
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            {/* Dynamic completed steps */}
+                                                            {completedSteps.map(step => {
+                                                                const IconComponent = step.icon;
+                                                                return (
+                                                                    <div key={step.id} className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
+                                                                        <IconComponent className="w-4 h-4 text-brand-solid flex-shrink-0" />
+                                                                        <div className="flex-1">
+                                                                            <h4 className="text-xs font-medium text-brand-solid line-through">{step.title}</h4>
+                                                                        </div>
+                                                                        <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
+                                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
                                                         </div>
-                                                        <div className="text-xs text-brand-solid/70 font-medium">2 done</div>
-                                                    </div>
-                                                    
-                                                    {/* Mock completed steps for demo */}
-                                                    <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
-                                                        <Users01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
-                                                        <div className="flex-1">
-                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Create a new community</h4>
-                                                        </div>
-                                                        <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
-                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 hover:opacity-80">
-                                                        <Database01 className="w-4 h-4 text-brand-solid flex-shrink-0" />
-                                                        <div className="flex-1">
-                                                            <h4 className="text-xs font-medium text-brand-solid line-through">Initial Setup Complete</h4>
-                                                        </div>
-                                                        <div className="w-4 h-4 bg-brand-solid rounded-full flex items-center justify-center">
-                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    );
+                                                })()}
                                                 </div>
                                             </div>
                         </div>
