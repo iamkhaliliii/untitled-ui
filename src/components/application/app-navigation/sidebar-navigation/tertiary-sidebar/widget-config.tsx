@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useListData } from "react-stately";
-import { ArrowLeft, ArrowRight, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle, FileHeart01, FileCheck02, FileCheck03 } from '@untitledui/icons';
+import { ArrowLeft, ArrowRight, Settings01, Heart, Calendar, Eye, InfoCircle, LayoutAlt01, Code01, ChevronDown, ChevronUp, Grid01, List, Rows02, Dotpoints02, DotsGrid, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Database01, Zap, Menu01, Plus, Globe05, Home01, DotsHorizontal, Edit03, Copy01, Trash01, MessageSquare01, BarChart03, Users01, Image01, PlayCircle, FileHeart01, FileCheck02, FileCheck03, AlertTriangle, X } from '@untitledui/icons';
 import { Button } from '@/components/base/buttons/button';
 import { Input } from '@/components/base/input/input';
 import { Label } from '@/components/base/input/label';
@@ -43,7 +43,22 @@ interface WidgetConfigProps {
 }
 
 const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onSave, onTabConfigChange, onFilterViewChange }) => {
-  const { eventsListConfig, updateEventsListConfig, spaceHeaderConfig, updateSpaceHeaderConfig } = useWidgetConfig();
+  const { 
+    eventsListConfig, 
+    updateEventsListConfig, 
+    spaceHeaderConfig, 
+    updateSpaceHeaderConfig,
+    announcementBannerConfig,
+    updateAnnouncementBannerConfig,
+    composerConfig,
+    updateComposerConfig,
+    leaderboardConfig,
+    updateLeaderboardConfig,
+    htmlScriptConfig,
+    updateHtmlScriptConfig,
+    richTextConfig,
+    updateRichTextConfig
+  } = useWidgetConfig();
   const theme = useResolvedTheme();
   
   // Use config from context
@@ -1439,6 +1454,365 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
     </div>
   );
 
+  const renderAnnouncementBannerConfig = () => {
+    const { title, description, url, style, showIcon, showCloseButton } = announcementBannerConfig;
+
+    const styleOptions = [
+      { id: 'primary', label: 'Primary', icon: Zap },
+      { id: 'natural', label: 'Natural', icon: Square },
+      { id: 'warning', label: 'Warning', icon: AlertTriangle },
+      { id: 'error', label: 'Error', icon: X },
+      { id: 'info', label: 'Info', icon: InfoCircle }
+    ];
+
+    return (
+      <div className="space-y-2">
+        {/* Basic Section */}
+        <CustomizerSection
+          title="Basic"
+          isExpanded={infoExpanded}
+          onExpandedChange={setInfoExpanded}
+        >
+          <div className="space-y-4">
+            <div>
+              <Input
+                label="Title"
+                id="banner-title"
+                value={title}
+                onChange={(value) => updateAnnouncementBannerConfig({ title: value })}
+                placeholder="Enter announcement title"
+              />
+            </div>
+            
+            <div>
+              <TextArea
+                label="Description"
+                id="banner-description"
+                value={description}
+                onChange={(e) => updateAnnouncementBannerConfig({ description: e.target.value })}
+                placeholder="Enter announcement description"
+                rows={3}
+              />
+            </div>
+            
+            <div>
+              <Input
+                label="URL"
+                id="banner-url"
+                value={url}
+                onChange={(value) => updateAnnouncementBannerConfig({ url: value })}
+                placeholder="Enter link URL"
+              />
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Style Section */}
+        <CustomizerSection
+          title="Style"
+          isExpanded={layoutExpanded}
+          onExpandedChange={setLayoutExpanded}
+        >
+          <div className="space-y-6">
+            <div>
+              <div className="grid grid-cols-3 gap-2">
+                {styleOptions.map((option) => (
+                  <StyleTile
+                    key={option.id}
+                    option={option}
+                    isSelected={style === option.id}
+                    onClick={() => updateAnnouncementBannerConfig({ style: option.id as 'primary' | 'natural' | 'warning' | 'error' | 'info' })}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Properties Section */}
+        <CustomizerSection
+          title="Properties"
+          isExpanded={propertiesExpanded}
+          onExpandedChange={setPropertiesExpanded}
+        >
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={Settings01}
+              label="Icon"
+              isSelected={showIcon}
+              onChange={(value) => updateAnnouncementBannerConfig({ showIcon: value })}
+              id="show-icon"
+            />
+
+            <PropertyToggle
+              icon={X}
+              label="Close Button"
+              isSelected={showCloseButton}
+              onChange={(value) => updateAnnouncementBannerConfig({ showCloseButton: value })}
+              id="show-close-button"
+            />
+          </div>
+        </CustomizerSection>
+      </div>
+    );
+  };
+
+  const renderLeaderboardConfig = () => {
+    const { title, source, numberOfMembers, defaultTab, showScore, excludeAdminsModerators } = leaderboardConfig;
+
+    const sourceOptions = [
+      { id: 'all_spaces', label: 'All Spaces', icon: Globe05 },
+      { id: 'current_space', label: 'Current Space', icon: Home01 },
+      { id: 'event', label: 'Event', icon: Calendar },
+      { id: 'blog', label: 'Blog', icon: Edit03 }
+    ];
+
+    const defaultTabOptions = [
+      { id: 'all_time', label: 'All Time', icon: Globe05 },
+      { id: 'month', label: 'Month', icon: Calendar },
+      { id: 'week', label: 'Week', icon: Calendar }
+    ];
+
+    return (
+      <div className="space-y-2">
+        {/* Basic Section */}
+        <CustomizerSection
+          title="Basic"
+          isExpanded={infoExpanded}
+          onExpandedChange={setInfoExpanded}
+        >
+          <div className="space-y-4">
+            <div>
+              <Input
+                label="Title"
+                id="leaderboard-title"
+                value={title}
+                onChange={(value) => updateLeaderboardConfig({ title: value })}
+                placeholder="Enter leaderboard title"
+              />
+            </div>
+            
+            <div>
+              <Select
+                label="Source"
+                items={sourceOptions}
+                selectedKey={source}
+                onSelectionChange={(key) => updateLeaderboardConfig({ source: key as 'all_spaces' | 'current_space' | 'event' | 'blog' })}
+              >
+                {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+              </Select>
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Style Section */}
+        <CustomizerSection
+          title="Style"
+          isExpanded={layoutExpanded}
+          onExpandedChange={setLayoutExpanded}
+        >
+          <div className="space-y-4">
+            <div>
+              <Input
+                label="Number of Members"
+                id="number-of-members"
+                type="number"
+                value={numberOfMembers.toString()}
+                onChange={(value) => updateLeaderboardConfig({ numberOfMembers: parseInt(value) || 5 })}
+                placeholder="5"
+              />
+            </div>
+            
+            <div>
+              <Select
+                label="Default Tab"
+                items={defaultTabOptions}
+                selectedKey={defaultTab}
+                onSelectionChange={(key) => updateLeaderboardConfig({ defaultTab: key as 'all_time' | 'month' | 'week' })}
+              >
+                {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
+              </Select>
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Properties Section */}
+        <CustomizerSection
+          title="Properties"
+          isExpanded={propertiesExpanded}
+          onExpandedChange={setPropertiesExpanded}
+        >
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={BarChart03}
+              label="Show Score"
+              isSelected={showScore}
+              onChange={(value) => updateLeaderboardConfig({ showScore: value })}
+              id="show-score"
+            />
+
+            <PropertyToggle
+              icon={Users01}
+              label="Exclude Admins & Moderators"
+              isSelected={excludeAdminsModerators}
+              onChange={(value) => updateLeaderboardConfig({ excludeAdminsModerators: value })}
+              id="exclude-admins-moderators"
+            />
+          </div>
+        </CustomizerSection>
+      </div>
+    );
+  };
+
+  const renderHtmlScriptConfig = () => {
+    const { codeInput, cardStyle } = htmlScriptConfig;
+
+    const cardStyleOptions = [
+      { id: 'card', label: 'Card', icon: Square },
+      { id: 'no_padding', label: 'No Padding', icon: Minimize01 },
+      { id: 'none', label: 'None', icon: X }
+    ];
+
+    return (
+      <div className="space-y-2">
+        {/* Basic Section */}
+        <CustomizerSection
+          title="Basic"
+          isExpanded={infoExpanded}
+          onExpandedChange={setInfoExpanded}
+        >
+          <div className="space-y-4">
+            <div>
+              <TextArea
+                label="Code Input"
+                id="html-code-input"
+                value={codeInput}
+                onChange={(e) => updateHtmlScriptConfig({ codeInput: e.target.value })}
+                placeholder="Enter your HTML, CSS, or JavaScript code"
+                rows={8}
+                className="font-mono text-sm"
+              />
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Style Section */}
+        <CustomizerSection
+          title="Style"
+          isExpanded={layoutExpanded}
+          onExpandedChange={setLayoutExpanded}
+        >
+          <div className="space-y-6">
+            <div>
+              <div className="grid grid-cols-3 gap-2">
+                {cardStyleOptions.map((option) => (
+                  <StyleTile
+                    key={option.id}
+                    option={option}
+                    isSelected={cardStyle === option.id}
+                    onClick={() => updateHtmlScriptConfig({ cardStyle: option.id as 'card' | 'no_padding' | 'none' })}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </CustomizerSection>
+      </div>
+    );
+  };
+
+  const renderRichTextConfig = () => {
+    const { content, cardStyle } = richTextConfig;
+
+    const cardStyleOptions = [
+      { id: 'card', label: 'Card', icon: Square },
+      { id: 'no_padding', label: 'No Padding', icon: Minimize01 },
+      { id: 'none', label: 'None', icon: X }
+    ];
+
+    return (
+      <div className="space-y-2">
+        {/* Basic Section */}
+        <CustomizerSection
+          title="Basic"
+          isExpanded={infoExpanded}
+          onExpandedChange={setInfoExpanded}
+        >
+          <div className="space-y-4">
+            <div>
+              <TextArea
+                label="Content"
+                id="rich-text-content"
+                value={content}
+                onChange={(e) => updateRichTextConfig({ content: e.target.value })}
+                placeholder="Enter your rich text content (supports Markdown)"
+                rows={8}
+              />
+            </div>
+          </div>
+        </CustomizerSection>
+
+        {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
+
+        {/* Style Section */}
+        <CustomizerSection
+          title="Style"
+          isExpanded={layoutExpanded}
+          onExpandedChange={setLayoutExpanded}
+        >
+          <div className="space-y-6">
+            <div>
+              <div className="grid grid-cols-3 gap-2">
+                {cardStyleOptions.map((option) => (
+                  <StyleTile
+                    key={option.id}
+                    option={option}
+                    isSelected={cardStyle === option.id}
+                    onClick={() => updateRichTextConfig({ cardStyle: option.id as 'card' | 'no_padding' | 'none' })}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </CustomizerSection>
+      </div>
+    );
+  };
+
   const renderDefaultConfig = () => (
     <div className="space-y-2">
       {/* Info Section */}
@@ -1534,6 +1908,14 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
               ? renderSingleEventConfig()
             : selectedWidget.label === 'Space Header'
               ? renderSpaceHeaderConfig()
+            : selectedWidget.label === 'Announcement Banner'
+              ? renderAnnouncementBannerConfig()
+            : selectedWidget.label === 'Leaderboard'
+              ? renderLeaderboardConfig()
+            : selectedWidget.label === 'Html Script'
+              ? renderHtmlScriptConfig()
+            : selectedWidget.label === 'Rich Text'
+              ? renderRichTextConfig()
               : renderDefaultConfig()}
         </div>
       )}

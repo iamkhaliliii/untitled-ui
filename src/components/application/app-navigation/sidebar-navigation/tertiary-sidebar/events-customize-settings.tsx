@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid, ChevronUp, ChevronDown } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid, ChevronUp, ChevronDown, HelpCircle, Code01, Star01 } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
@@ -46,6 +46,40 @@ export const EventsCustomizeSettings = ({
   onSetWidgetSelectionType
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
+  
+  // Safe widget config usage - handle cases where provider is not available
+  let widgetConfig;
+  try {
+    widgetConfig = useWidgetConfig();
+  } catch (error) {
+    // Widget config provider not available - use fallback
+    widgetConfig = {
+      spaceWidgetStates: {
+        spaceHeader: true,
+        eventsList: true,
+        customEventsList: false,
+        upcomingEvents: true,
+        heroBanner: false,
+        menu: true,
+        composer: false,
+        announcementBanner: false,
+        leaderboard: false,
+        htmlScript: false,
+        richText: false,
+        dynamicWidgets: [],
+      },
+      updateSpaceWidgetStates: () => {},
+      layoutStates: { layoutStyle: 'simple' },
+      updateLayoutStates: () => {},
+      sidebarWidgetStates: { quickActions: true, recentActivity: false, dynamicWidgets: [] },
+      updateSidebarWidgetStates: () => {},
+      removeSpaceWidget: () => {},
+      duplicateSpaceWidget: () => {},
+      removeSidebarWidget: () => {},
+      duplicateSidebarWidget: () => {}
+    };
+  }
+  
   const { 
     spaceWidgetStates, 
     updateSpaceWidgetStates, 
@@ -57,7 +91,7 @@ export const EventsCustomizeSettings = ({
     duplicateSpaceWidget,
     removeSidebarWidget,
     duplicateSidebarWidget
-  } = useWidgetConfig();
+  } = widgetConfig;
   
   // Detect if we're on a private space page, CMS events page, or Growth folder page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -583,7 +617,8 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
             />
             
-            <PropertyToggle
+            {/* Hero Banner and Composer widgets are hidden for now */}
+            {/* <PropertyToggle
               icon={File01}
               label="Hero Banner"
               isSelected={spaceWidgetStates.heroBanner}
@@ -591,6 +626,56 @@ export const EventsCustomizeSettings = ({
               id="hero-banner"
               iconColor="bg-blue-100/20"
               onSettingsClick={() => onWidgetConfig({ id: 'heroBanner', label: 'hero banner' })}
+            />
+            
+            <PropertyToggle
+              icon={Edit03}
+              label="Composer"
+              isSelected={spaceWidgetStates.composer}
+              onChange={(value) => updateSpaceWidgetStates({ composer: value })}
+              id="composer"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'composer', label: 'Composer' })}
+            /> */}
+            
+            <PropertyToggle
+              icon={HelpCircle}
+              label="Announcement Banner"
+              isSelected={spaceWidgetStates.announcementBanner}
+              onChange={(value) => updateSpaceWidgetStates({ announcementBanner: value })}
+              id="announcement-banner"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'announcementBanner', label: 'Announcement Banner' })}
+            />
+            
+            <PropertyToggle
+              icon={Star01}
+              label="Leaderboard"
+              isSelected={spaceWidgetStates.leaderboard}
+              onChange={(value) => updateSpaceWidgetStates({ leaderboard: value })}
+              id="leaderboard"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'leaderboard', label: 'Leaderboard' })}
+            />
+            
+            <PropertyToggle
+              icon={Code01}
+              label="Html Script"
+              isSelected={spaceWidgetStates.htmlScript}
+              onChange={(value) => updateSpaceWidgetStates({ htmlScript: value })}
+              id="html-script"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'htmlScript', label: 'Html Script' })}
+            />
+            
+            <PropertyToggle
+              icon={File01}
+              label="Rich Text"
+              isSelected={spaceWidgetStates.richText}
+              onChange={(value) => updateSpaceWidgetStates({ richText: value })}
+              id="rich-text"
+              iconColor="bg-blue-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'richText', label: 'Rich Text' })}
             />
             
             {/* Dynamic Widgets */}

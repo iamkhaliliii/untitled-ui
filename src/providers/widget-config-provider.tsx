@@ -1,5 +1,20 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { EventsListConfig, defaultEventsListConfig, SpaceHeaderConfig, defaultSpaceHeaderConfig } from '@/types/widget-config';
+import { 
+  EventsListConfig, 
+  defaultEventsListConfig, 
+  SpaceHeaderConfig, 
+  defaultSpaceHeaderConfig,
+  AnnouncementBannerConfig,
+  defaultAnnouncementBannerConfig,
+  ComposerConfig,
+  defaultComposerConfig,
+  LeaderboardConfig,
+  defaultLeaderboardConfig,
+  HtmlScriptConfig,
+  defaultHtmlScriptConfig,
+  RichTextConfig,
+  defaultRichTextConfig
+} from '@/types/widget-config';
 
 interface ToggleStates {
   header: boolean;
@@ -23,6 +38,12 @@ interface SpaceWidgetStates {
   upcomingEvents: boolean;
   heroBanner: boolean;
   menu: boolean;
+  // New widgets
+  composer: boolean;
+  announcementBanner: boolean;
+  leaderboard: boolean;
+  htmlScript: boolean;
+  richText: boolean;
   // Dynamic widgets
   dynamicWidgets: SpaceWidget[];
 }
@@ -50,6 +71,16 @@ interface WidgetConfigContextType {
   updateEventsListConfig: (config: Partial<EventsListConfig>) => void;
   spaceHeaderConfig: SpaceHeaderConfig;
   updateSpaceHeaderConfig: (config: Partial<SpaceHeaderConfig>) => void;
+  announcementBannerConfig: AnnouncementBannerConfig;
+  updateAnnouncementBannerConfig: (config: Partial<AnnouncementBannerConfig>) => void;
+  composerConfig: ComposerConfig;
+  updateComposerConfig: (config: Partial<ComposerConfig>) => void;
+  leaderboardConfig: LeaderboardConfig;
+  updateLeaderboardConfig: (config: Partial<LeaderboardConfig>) => void;
+  htmlScriptConfig: HtmlScriptConfig;
+  updateHtmlScriptConfig: (config: Partial<HtmlScriptConfig>) => void;
+  richTextConfig: RichTextConfig;
+  updateRichTextConfig: (config: Partial<RichTextConfig>) => void;
   toggleStates: ToggleStates;
   updateToggleStates: (states: Partial<ToggleStates>) => void;
   spaceWidgetStates: SpaceWidgetStates;
@@ -83,6 +114,11 @@ interface WidgetConfigProviderProps {
 export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ children }) => {
   const [eventsListConfig, setEventsListConfig] = useState<EventsListConfig>(defaultEventsListConfig);
   const [spaceHeaderConfig, setSpaceHeaderConfig] = useState<SpaceHeaderConfig>(defaultSpaceHeaderConfig);
+  const [announcementBannerConfig, setAnnouncementBannerConfig] = useState<AnnouncementBannerConfig>(defaultAnnouncementBannerConfig);
+  const [composerConfig, setComposerConfig] = useState<ComposerConfig>(defaultComposerConfig);
+  const [leaderboardConfig, setLeaderboardConfig] = useState<LeaderboardConfig>(defaultLeaderboardConfig);
+  const [htmlScriptConfig, setHtmlScriptConfig] = useState<HtmlScriptConfig>(defaultHtmlScriptConfig);
+  const [richTextConfig, setRichTextConfig] = useState<RichTextConfig>(defaultRichTextConfig);
   const [toggleStates, setToggleStates] = useState<ToggleStates>({
     header: true,
     leftSidebar: true,
@@ -96,6 +132,12 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     upcomingEvents: true,
     heroBanner: false,
     menu: true,
+    // New widgets - default to false
+    composer: false,
+    announcementBanner: false,
+    leaderboard: false,
+    htmlScript: false,
+    richText: false,
     dynamicWidgets: [],
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
@@ -113,6 +155,26 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
 
   const updateSpaceHeaderConfig = (config: Partial<SpaceHeaderConfig>) => {
     setSpaceHeaderConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateAnnouncementBannerConfig = (config: Partial<AnnouncementBannerConfig>) => {
+    setAnnouncementBannerConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateComposerConfig = (config: Partial<ComposerConfig>) => {
+    setComposerConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateLeaderboardConfig = (config: Partial<LeaderboardConfig>) => {
+    setLeaderboardConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateHtmlScriptConfig = (config: Partial<HtmlScriptConfig>) => {
+    setHtmlScriptConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateRichTextConfig = (config: Partial<RichTextConfig>) => {
+    setRichTextConfig(prevConfig => ({ ...prevConfig, ...config }));
   };
 
   const updateToggleStates = (states: Partial<ToggleStates>) => {
@@ -226,6 +288,16 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateEventsListConfig,
       spaceHeaderConfig,
       updateSpaceHeaderConfig,
+      announcementBannerConfig,
+      updateAnnouncementBannerConfig,
+      composerConfig,
+      updateComposerConfig,
+      leaderboardConfig,
+      updateLeaderboardConfig,
+      htmlScriptConfig,
+      updateHtmlScriptConfig,
+      richTextConfig,
+      updateRichTextConfig,
       toggleStates,
       updateToggleStates,
       spaceWidgetStates,

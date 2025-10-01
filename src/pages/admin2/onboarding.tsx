@@ -609,9 +609,76 @@ export const AdminOnboardingPage = () => {
                                             <div className="bg-gradient-to-br from-secondary via-primary to-secondary/50 rounded-2xl p-4 border border-secondary shadow-lg">
                                                 
                                                 <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-3 pr-2">
+                                                {/* Global Recommended Next Step */}
+                                                {(() => {
+                                                    // Find the first required pending step across all categories
+                                                    const firstRequiredPendingStep = (() => {
+                                                        for (const cat of dynamicOnboardingCategories) {
+                                                            if (isCategoryLocked(cat.id)) continue;
+                                                            const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
+                                                            if (requiredPendingStep) return { step: requiredPendingStep, categoryId: cat.id };
+                                                        }
+                                                        return null;
+                                                    })();
+                                                    
+                                                    if (!firstRequiredPendingStep) return null;
+                                                    
+                                                    const IconComponent = firstRequiredPendingStep.step.icon;
+                                                    
+                                                    return (
+                                                        <div className="mb-4">
+                                                            <div 
+                                                                className="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary hover:shadow-lg transform hover:-translate-y-0.5"
+                                                                onClick={() => {
+                                                                    // Step 1 navigates to tour guide, all others mark as completed
+                                                                    if (firstRequiredPendingStep.step.id === 'customize-navigation') {
+                                                                        navigate(firstRequiredPendingStep.step.href);
+                                                                    } else {
+                                                                        // Mark step as completed with correct categoryId
+                                                                        const event = new CustomEvent('onboarding-step-completed', {
+                                                                            detail: { stepId: firstRequiredPendingStep.step.id, categoryId: firstRequiredPendingStep.categoryId }
+                                                                        });
+                                                                        window.dispatchEvent(event);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <IconComponent className="w-5 h-5 flex-shrink-0 text-brand-secondary" />
+                                                                <div className="flex-1">
+                                                                    <div className="flex items-center gap-2 mb-1">
+                                                                        <h4 className="text-sm font-semibold text-primary">
+                                                                            {firstRequiredPendingStep.step.title}
+                                                                        </h4>
+                                                                        <Badge color="brand" size="sm">Next Step</Badge>
+                                                                        <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center" title="Required">
+                                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className="text-xs text-tertiary">{firstRequiredPendingStep.step.description}</p>
+                                                                </div>
+                                                                <div className="text-brand-secondary">
+                                                                    <ArrowRight className="w-4 h-4" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
+                                                
                                                 {/* Categorized Pending Steps */}
                                                 {dynamicOnboardingCategories.map((category: any) => {
-                                                    const pendingSteps = category.steps.filter((step: any) => step.status === 'pending');
+                                                    // Find the global recommended step to exclude it from category lists
+                                                    const globalRecommendedStep = (() => {
+                                                        for (const cat of dynamicOnboardingCategories) {
+                                                            if (isCategoryLocked(cat.id)) continue;
+                                                            const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
+                                                            if (requiredPendingStep) return requiredPendingStep;
+                                                        }
+                                                        return null;
+                                                    })();
+                                                    
+                                                    // Filter out the recommended step from category display
+                                                    const pendingSteps = category.steps.filter((step: any) => 
+                                                        step.status === 'pending' && step.id !== globalRecommendedStep?.step?.id
+                                                    );
                                                     if (pendingSteps.length === 0) return null;
                                                     
                                                     const isLocked = isCategoryLocked(category.id);

@@ -190,6 +190,16 @@ export const FloatingProgressButton = () => {
                         : category
                 );
                 
+                // Save to localStorage to sync with onboarding page
+                const serializedData = updatedData.map((category: OnboardingCategory) => ({
+                    ...category,
+                    steps: category.steps.map((step: OnboardingStep) => ({
+                        ...step,
+                        icon: step.icon?.name || 'Settings01' // Store icon name instead of component
+                    }))
+                }));
+                localStorage.setItem('onboarding-progress', JSON.stringify(serializedData));
+                
                 return updatedData;
             });
         };

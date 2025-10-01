@@ -5,6 +5,11 @@ import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { SpaceHeaderWidget } from "./space-header-widget";
 import { EventsListWidget } from "./events-list-widget";
+import { ComposerWidget } from "./composer-widget";
+import { AnnouncementBannerWidget } from "./announcement-banner-widget";
+import { LeaderboardWidget } from "./leaderboard-widget";
+import { HtmlScriptWidget } from "./html-script-widget";
+import { RichTextWidget } from "./rich-text-widget";
 
 
 
@@ -399,42 +404,68 @@ export const BrowserMockup = ({
                     /* Events Content */
                     <div className="space-y-6">
                       {/* Space Header Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.spaceHeader 
-                          ? "opacity-100 max-h-96 overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <SpaceHeaderWidget />
-                      </div>
+                      {spaceWidgetStates?.spaceHeader && (
+                        <div className="transition-all duration-200 ease-out">
+                          <SpaceHeaderWidget />
+                        </div>
+                      )}
                       
                       {/* Events List Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.eventsList 
-                          ? "opacity-100 max-h-screen overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <EventsListWidget />
-                      </div>
+                      {spaceWidgetStates?.eventsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <EventsListWidget />
+                        </div>
+                      )}
                       
                       {/* Hero Banner Widget */}
-                      <div className={cx(
-                        "transition-all duration-200 ease-out",
-                        spaceWidgetStates?.heroBanner 
-                          ? "opacity-100 max-h-96 overflow-visible" 
-                          : "opacity-0 max-h-0 overflow-hidden"
-                      )}>
-                        <div className="rounded-lg border p-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                          <h2 className="text-2xl font-bold mb-2">Welcome to Our Events</h2>
-                          <p className="text-blue-100 mb-4">
-                            Discover amazing events and connect with your community.
-                          </p>
-                          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                            Explore Events
-                          </button>
+                      {spaceWidgetStates?.heroBanner && (
+                        <div className="transition-all duration-200 ease-out">
+                          <div className="rounded-lg border p-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                            <h2 className="text-2xl font-bold mb-2">Welcome to Our Events</h2>
+                            <p className="text-blue-100 mb-4">
+                              Discover amazing events and connect with your community.
+                            </p>
+                            <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                              Explore Events
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      )}
+
+                      {/* Composer Widget */}
+                      {spaceWidgetStates?.composer && (
+                        <div className="transition-all duration-200 ease-out">
+                          <ComposerWidget />
+                        </div>
+                      )}
+
+                      {/* Announcement Banner Widget */}
+                      {spaceWidgetStates?.announcementBanner && (
+                        <div className="transition-all duration-200 ease-out">
+                          <AnnouncementBannerWidget />
+                        </div>
+                      )}
+
+                      {/* Leaderboard Widget */}
+                      {spaceWidgetStates?.leaderboard && (
+                        <div className="transition-all duration-200 ease-out">
+                          <LeaderboardWidget />
+                        </div>
+                      )}
+
+                      {/* HTML Script Widget */}
+                      {spaceWidgetStates?.htmlScript && (
+                        <div className="transition-all duration-200 ease-out">
+                          <HtmlScriptWidget />
+                        </div>
+                      )}
+
+                      {/* Rich Text Widget */}
+                      {spaceWidgetStates?.richText && (
+                        <div className="transition-all duration-200 ease-out">
+                          <RichTextWidget />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

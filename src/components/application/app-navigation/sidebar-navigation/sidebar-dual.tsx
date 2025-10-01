@@ -160,7 +160,22 @@ interface SidebarNavigationDualProps {
 
 export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationDualProps) => {
     const navigate = useNavigate();
-    const { toggleStates, updateToggleStates, addSpaceWidget, addSidebarWidget } = useWidgetConfig();
+    
+    // Safe widget config usage - handle cases where provider is not available
+    let widgetConfig;
+    try {
+        widgetConfig = useWidgetConfig();
+    } catch (error) {
+        // Widget config provider not available - use fallback
+        widgetConfig = {
+            toggleStates: { header: true, leftSidebar: true, rightSidebar: false, footer: false },
+            updateToggleStates: () => {},
+            addSpaceWidget: () => {},
+            addSidebarWidget: () => {}
+        };
+    }
+    
+    const { toggleStates, updateToggleStates, addSpaceWidget, addSidebarWidget } = widgetConfig;
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
     
     // Check if user came from CMS page
