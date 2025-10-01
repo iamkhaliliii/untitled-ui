@@ -312,13 +312,13 @@ export const AdminOnboardingPage = () => {
 
     // Helper functions for step logic using dynamic data
     const getRequiredStepsForCategory = (categoryId: string) => {
-        const category = dynamicOnboardingCategories.find(cat => cat.id === categoryId);
-        return category?.steps.filter(step => step.required) || [];
+        const category = dynamicOnboardingCategories.find((cat: any) => cat.id === categoryId);
+        return category?.steps.filter((step: any) => step.required) || [];
     };
 
     const areRequiredStepsCompleted = (categoryId: string) => {
         const requiredSteps = getRequiredStepsForCategory(categoryId);
-        return requiredSteps.every(step => step.status === 'completed');
+        return requiredSteps.every((step: any) => step.status === 'completed');
     };
 
     const isCategoryLocked = (categoryId: string) => {
@@ -333,13 +333,13 @@ export const AdminOnboardingPage = () => {
     };
 
     const getCompletedStepsCount = () => {
-        return dynamicOnboardingCategories.reduce((total, category) => {
-            return total + category.steps.filter(step => step.status === 'completed').length;
+        return dynamicOnboardingCategories.reduce((total: number, category: any) => {
+            return total + category.steps.filter((step: any) => step.status === 'completed').length;
         }, 0);
     };
 
     const getTotalStepsCount = () => {
-        return dynamicOnboardingCategories.reduce((total, category) => {
+        return dynamicOnboardingCategories.reduce((total: number, category: any) => {
             return total + category.steps.length;
         }, 0);
     };
@@ -351,14 +351,14 @@ export const AdminOnboardingPage = () => {
     };
 
     const getRequiredStepsCount = () => {
-        return dynamicOnboardingCategories.reduce((total, category) => {
-            return total + category.steps.filter(step => step.required).length;
+        return dynamicOnboardingCategories.reduce((total: number, category: any) => {
+            return total + category.steps.filter((step: any) => step.required).length;
         }, 0);
     };
 
     const getCompletedRequiredStepsCount = () => {
-        return dynamicOnboardingCategories.reduce((total, category) => {
-            return total + category.steps.filter(step => step.required && step.status === 'completed').length;
+        return dynamicOnboardingCategories.reduce((total: number, category: any) => {
+            return total + category.steps.filter((step: any) => step.required && step.status === 'completed').length;
         }, 0);
     };
 
@@ -383,11 +383,11 @@ export const AdminOnboardingPage = () => {
             const { stepId, categoryId } = event.detail;
             console.log(`Updating step ${stepId} in category ${categoryId} to completed`);
             
-            const updatedData = dynamicOnboardingCategories.map(category => 
+            const updatedData = dynamicOnboardingCategories.map((category: any) => 
                 category.id === categoryId 
                     ? {
                         ...category,
-                        steps: category.steps.map(step => 
+                        steps: category.steps.map((step: any) => 
                             step.id === stepId 
                                 ? { ...step, status: 'completed' as const }
                                 : step
@@ -597,8 +597,8 @@ export const AdminOnboardingPage = () => {
                                                 
                                                 <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-3 pr-2">
                                                 {/* Categorized Pending Steps */}
-                                                {dynamicOnboardingCategories.map(category => {
-                                                    const pendingSteps = category.steps.filter(step => step.status === 'pending');
+                                                {dynamicOnboardingCategories.map((category: any) => {
+                                                    const pendingSteps = category.steps.filter((step: any) => step.status === 'pending');
                                                     if (pendingSteps.length === 0) return null;
                                                     
                                                     const isLocked = isCategoryLocked(category.id);
@@ -641,7 +641,7 @@ export const AdminOnboardingPage = () => {
                                                             </div>
                                                             
                                                             {/* Category Steps */}
-                                                            {pendingSteps.map((step, index) => {
+                                                            {pendingSteps.map((step: any, index: number) => {
                                                                 const isRecommended = index === 0 && category.id === 'onboarding'; // First onboarding step is recommended
                                                                 const IconComponent = step.icon;
                                                                 
@@ -703,8 +703,8 @@ export const AdminOnboardingPage = () => {
                                                 {/* Enhanced Completed Steps Section */}
                                                 {/* Dynamic Completed Steps Section */}
                                                 {(() => {
-                                                    const completedSteps = dynamicOnboardingCategories.flatMap(category => 
-                                                        category.steps.filter(step => step.status === 'completed')
+                                                    const completedSteps = dynamicOnboardingCategories.flatMap((category: any) => 
+                                                        category.steps.filter((step: any) => step.status === 'completed')
                                                     );
                                                     
                                                     // Always show completed section (has mock items + dynamic items)
@@ -743,7 +743,7 @@ export const AdminOnboardingPage = () => {
                                                             </div>
                                                             
                                                             {/* Dynamic completed steps */}
-                                                            {completedSteps.map(step => {
+                                                            {completedSteps.map((step: any) => {
                                                                 const IconComponent = step.icon;
                                                                 return (
                                                                     <div key={step.id} className="flex items-center gap-3 p-2 bg-brand-solid/5 border border-brand-solid/20 rounded-lg cursor-pointer opacity-60 transition-all duration-300 mb-2 hover:opacity-80">
@@ -841,7 +841,7 @@ export const AdminOnboardingPage = () => {
 
                                     {/* Bottom Section - Onboarding Categories as Horizontal Sections */}
                                     <div className="space-y-12">
-                        {dynamicOnboardingCategories.map((category, categoryIndex) => (
+                        {dynamicOnboardingCategories.map((category: any, categoryIndex: number) => (
                             <div key={category.id} className="bg-primary">
                                 
                                 {/* Category Header */}
@@ -856,7 +856,7 @@ export const AdminOnboardingPage = () => {
 
                                 {/* Category Steps in 4-Column Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {category.steps.map((step, stepIndex) => {
+                                    {category.steps.map((step: any, stepIndex: number) => {
                                         const isLocked = isCategoryLocked(category.id);
                                         const IconComponent = step.icon;
                                         
