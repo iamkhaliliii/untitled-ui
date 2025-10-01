@@ -371,10 +371,12 @@ export const AdminOnboardingPage = () => {
         const totalRequired = getRequiredStepsCount();
         if (totalRequired === 0) return 0;
         
-        // Show progress up to Onboarding phase (25% minimum)
-        const baseProgress = 25;
-        const calculatedProgress = Math.round((completedRequired / totalRequired) * 100);
-        return Math.max(baseProgress, calculatedProgress);
+        // Divide into 9 segments: 1 filled by default + 8 for required steps
+        // Each segment = 100% / 9 = ~11.11%
+        const segmentSize = 100 / 9;
+        const baseProgress = segmentSize; // 1 segment filled by default (~11.11%)
+        const calculatedProgress = baseProgress + (completedRequired * segmentSize);
+        return Math.min(calculatedProgress, 100);
     };
 
     // Listen for onboarding step completion events
@@ -383,22 +385,38 @@ export const AdminOnboardingPage = () => {
             const { stepId, categoryId } = event.detail;
             console.log(`Updating step ${stepId} in category ${categoryId} to completed`);
             
-            const updatedData = dynamicOnboardingCategories.map((category: any) => 
-                category.id === categoryId 
-                    ? {
+            setDynamicOnboardingCategories((currentData: any) => {
+                let updatedData;
+                
+                // If step 1 (customize-navigation) is completed, mark all steps as completed
+                if (stepId === 'customize-navigation') {
+                    updatedData = currentData.map((category: any) => ({
                         ...category,
-                        steps: category.steps.map((step: any) => 
-                            step.id === stepId 
-                                ? { ...step, status: 'completed' as const }
-                                : step
-                        )
-                    }
-                    : category
-            );
-            
-            setDynamicOnboardingCategories(updatedData);
-            // Persist to localStorage with serialization
-            localStorage.setItem('onboarding-progress', JSON.stringify(serializeOnboardingData(updatedData)));
+                        steps: category.steps.map((step: any) => ({
+                            ...step,
+                            status: 'completed' as const
+                        }))
+                    }));
+                } else {
+                    // For other steps, just mark the specific step as completed
+                    updatedData = currentData.map((category: any) => 
+                        category.id === categoryId 
+                            ? {
+                                ...category,
+                                steps: category.steps.map((step: any) => 
+                                    step.id === stepId 
+                                        ? { ...step, status: 'completed' as const }
+                                        : step
+                                )
+                            }
+                            : category
+                    );
+                }
+                
+                // Persist to localStorage with serialization
+                localStorage.setItem('onboarding-progress', JSON.stringify(serializeOnboardingData(updatedData)));
+                return updatedData;
+            });
         };
 
         window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
@@ -561,32 +579,27 @@ export const AdminOnboardingPage = () => {
                                                 <div className="mb-6">
                                                     <div className="flex items-center justify-between mb-2">
                                                         <h4 className="text-sm font-medium text-primary">Community Journey</h4>
-                                                        <span className="text-xs text-tertiary">{getRemainingRequiredStepsCount()} required steps to go live successfully</span>
+                                                        <span className="text-xs text-primary font-bold">{getRemainingRequiredStepsCount()} required steps remaining</span>
                                                     </div>
-                                                    <p className="text-xs text-tertiary">Track and complete every stage from setup to growth</p>
+                                                    <p className="text-xs text-tertiary">Track and complete every stage from onboarding to launch</p>
                                                 </div>
                                                 
-                                                <div className="relative mb-6">
-                                                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                                        <div className="bg-purple-600 h-1.5 rounded-full" style={{width: `${getRequiredProgressPercentage()}%`}}></div>
-                                                    </div>
+                                                <div className="mb-6">
+                                                    {/* Header */}
+
                                                     
-                                                    <div className="absolute -top-1.5 left-0 right-0 flex justify-between">
-                                                        <div className="flex flex-col items-center">
-                                                            <div className="w-4 h-4 bg-brand-solid rounded-full"></div>
-                                                            <span className="text-xs text-brand-solid font-medium mt-2">Initial</span>
+                                                    {/* Progress Bar */}
+                                                    <div className="mb-4">
+
+                                                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                                            <div 
+                                                                className="bg-brand-solid h-2 rounded-full transition-all duration-300 ease-out"
+                                                                style={{ width: `${getRequiredProgressPercentage()}%` }}
+                                                            ></div>
+                                                        <div className="flex items-center justify-between mt-2">
+                                                            <span className="text-xs text-tertiary">Get Started</span>
+                                                            <span className="text-xs text-tertiary">Publish and Go Live!</span>
                                                         </div>
-                                                        <div className="flex flex-col items-center">
-                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('onboarding') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
-                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('onboarding') ? 'text-brand-solid' : 'text-tertiary'}`}>Onboarding</span>
-                                                        </div>
-                                                        <div className="flex flex-col items-center">
-                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('setup') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
-                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('setup') ? 'text-brand-solid' : 'text-tertiary'}`}>Setup</span>
-                                                        </div>
-                                                        <div className="flex flex-col items-center">
-                                                            <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('launch') ? 'bg-brand-solid' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
-                                                            <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('launch') ? 'text-brand-solid' : 'text-tertiary'}`}>Launch</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -641,8 +654,28 @@ export const AdminOnboardingPage = () => {
                                                             </div>
                                                             
                                                             {/* Category Steps */}
-                                                            {pendingSteps.map((step: any, index: number) => {
-                                                                const isRecommended = index === 0 && category.id === 'onboarding'; // First onboarding step is recommended
+                                                            {(() => {
+                                                                // Find the first required pending step across all categories
+                                                                const firstRequiredPendingStep = (() => {
+                                                                    for (const cat of dynamicOnboardingCategories) {
+                                                                        if (isCategoryLocked(cat.id)) continue;
+                                                                        const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
+                                                                        if (requiredPendingStep) return requiredPendingStep;
+                                                                    }
+                                                                    return null;
+                                                                })();
+                                                                
+                                                                // Sort steps so recommended step comes first
+                                                                const sortedSteps = [...pendingSteps].sort((a, b) => {
+                                                                    const aIsRecommended = a.id === firstRequiredPendingStep?.id;
+                                                                    const bIsRecommended = b.id === firstRequiredPendingStep?.id;
+                                                                    if (aIsRecommended && !bIsRecommended) return -1;
+                                                                    if (!aIsRecommended && bIsRecommended) return 1;
+                                                                    return 0;
+                                                                });
+                                                                
+                                                                return sortedSteps.map((step: any, index: number) => {
+                                                                    const isRecommended = step.id === firstRequiredPendingStep?.id;
                                                                 const IconComponent = step.icon;
                                                                 
                                                                 return (
@@ -655,7 +688,20 @@ export const AdminOnboardingPage = () => {
                                                                                     ? 'bg-secondary/50 border border-secondary/50 opacity-50 cursor-not-allowed'
                                                                                     : 'bg-secondary border border-secondary hover:bg-brand-primary_alt/20'
                                                                         }`}
-                                                                        onClick={() => !isLocked && navigate(step.href)}
+                                                                        onClick={() => {
+                                                                            if (isLocked) return;
+                                                                            
+                                                                            // Step 1 navigates to tour guide, all others mark as completed
+                                                                            if (step.id === 'customize-navigation') {
+                                                                                navigate(step.href);
+                                                                            } else {
+                                                                                // Mark step as completed
+                                                                                const event = new CustomEvent('onboarding-step-completed', {
+                                                                                    detail: { stepId: step.id, categoryId: category.id }
+                                                                                });
+                                                                                window.dispatchEvent(event);
+                                                                            }
+                                                                        }}
                                                                     >
                                                                         <IconComponent className={`w-5 h-5 flex-shrink-0 ${
                                                                             isRecommended ? 'text-brand-secondary' : isLocked ? 'text-tertiary/50' : 'text-tertiary'
@@ -695,7 +741,8 @@ export const AdminOnboardingPage = () => {
                                                                         </div>
                                                                     </div>
                                                                 );
-                                                            })}
+                                                                });
+                                                            })()}
                                                         </div>
                                                     );
                                                 })}
@@ -868,7 +915,20 @@ export const AdminOnboardingPage = () => {
                                                     ? 'opacity-50 cursor-not-allowed' 
                                                     : 'hover:border-primary'
                                             }`}
-                                            onClick={() => !isLocked && navigate(step.href)}
+                                            onClick={() => {
+                                                if (isLocked) return;
+                                                
+                                                // Step 1 navigates to tour guide, all others mark as completed
+                                                if (step.id === 'customize-navigation') {
+                                                    navigate(step.href);
+                                                } else {
+                                                    // Mark step as completed
+                                                    const event = new CustomEvent('onboarding-step-completed', {
+                                                        detail: { stepId: step.id, categoryId: category.id }
+                                                    });
+                                                    window.dispatchEvent(event);
+                                                }
+                                            }}
                                         >
                                             {/* Card Content */}
                                             <div className="p-6">

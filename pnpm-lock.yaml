@@ -74,6 +74,9 @@ importers:
       react-stately:
         specifier: ^3.32.0
         version: 3.40.0(react@19.1.1)
+      react-step-progress-bar:
+        specifier: ^1.0.3
+        version: 1.0.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       recharts:
         specifier: ^2.15.0
         version: 2.15.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1511,6 +1514,9 @@ packages:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
 
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
 
@@ -1618,6 +1624,9 @@ packages:
   detect-libc@2.0.4:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
+
+  dom-helpers@3.4.0:
+    resolution: {integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==}
 
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
@@ -1814,6 +1823,9 @@ packages:
 
   intl-messageformat@10.7.16:
     resolution: {integrity: sha512-UmdmHUmp5CIKKjSoE10la5yfU+AYJAaiYLsodbjL4lji83JNvgOQUjGaGhGrpFCb0Uh7sl7qfP1IyILa8Z40ug==}
+
+  invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
@@ -2212,6 +2224,9 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
 
+  react-lifecycles-compat@3.0.4:
+    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+
   react-router@7.7.1:
     resolution: {integrity: sha512-jVKHXoWRIsD/qS6lvGveckwb862EekvapdHJN/cGmzw40KnJH5gg53ujOJ4qX6EKIK9LSBfFed/xiQ5yeXNrUA==}
     engines: {node: '>=20.0.0'}
@@ -2232,6 +2247,17 @@ packages:
     resolution: {integrity: sha512-Icg2q1pxTskx2dph3cFUu9RUQcInq25WZfUcKroX1Kl4jWxBobnfMvuxvJHHkysJh77IsnLmhF3+8If5oCoMFQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
+  react-step-progress-bar@1.0.3:
+    resolution: {integrity: sha512-h9ZMopLZWLdf7zejXikH5J9+0yaWvYdz63sITi+x1+N4uparmrUH0EpAmaRpGqBYv7nC08IPTAUwH8h1VVRe0g==}
+    peerDependencies:
+      react: '>=15.0.0'
+
+  react-transition-group@2.9.0:
+    resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
+    peerDependencies:
+      react: '>=15.0.0'
+      react-dom: '>=15.0.0'
 
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
@@ -4164,6 +4190,8 @@ snapshots:
 
   chownr@3.0.0: {}
 
+  classnames@2.5.1: {}
+
   client-only@0.0.1: {}
 
   clsx@2.1.1: {}
@@ -4246,6 +4274,10 @@ snapshots:
   deep-is@0.1.4: {}
 
   detect-libc@2.0.4: {}
+
+  dom-helpers@3.4.0:
+    dependencies:
+      '@babel/runtime': 7.28.2
 
   dom-helpers@5.2.1:
     dependencies:
@@ -4470,6 +4502,10 @@ snapshots:
       '@formatjs/fast-memoize': 2.2.7
       '@formatjs/icu-messageformat-parser': 2.11.2
       tslib: 2.8.1
+
+  invariant@2.2.4:
+    dependencies:
+      loose-envify: 1.4.0
 
   is-arrayish@0.2.1: {}
 
@@ -4811,6 +4847,8 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
+  react-lifecycles-compat@3.0.4: {}
+
   react-router@7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       cookie: 1.0.2
@@ -4856,6 +4894,24 @@ snapshots:
       '@react-stately/tree': 3.9.1(react@19.1.1)
       '@react-types/shared': 3.31.0(react@19.1.1)
       react: 19.1.1
+
+  react-step-progress-bar@1.0.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      classnames: 2.5.1
+      invariant: 2.2.4
+      react: 19.1.1
+      react-transition-group: 2.9.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+    transitivePeerDependencies:
+      - react-dom
+
+  react-transition-group@2.9.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      dom-helpers: 3.4.0
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+      react-lifecycles-compat: 3.0.4
 
   react-transition-group@4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:

@@ -111,20 +111,36 @@ export const ProgressWidget = () => {
             const { stepId, categoryId } = event.detail;
             console.log(`ProgressWidget: Updating step ${stepId} in category ${categoryId} to completed`);
             
-            const updatedData = onboardingData.map((category: OnboardingCategory) => 
-                category.id === categoryId 
-                    ? {
+            setOnboardingData(currentData => {
+                let updatedData;
+                
+                // If step 1 (customize-navigation) is completed, mark all steps as completed
+                if (stepId === 'customize-navigation') {
+                    updatedData = currentData.map((category: OnboardingCategory) => ({
                         ...category,
-                        steps: category.steps.map((step: OnboardingStep) => 
-                            step.id === stepId 
-                                ? { ...step, status: 'completed' as const }
-                                : step
-                        )
-                    }
-                    : category
-            );
-            
-            setOnboardingData(updatedData);
+                        steps: category.steps.map((step: OnboardingStep) => ({
+                            ...step,
+                            status: 'completed' as const
+                        }))
+                    }));
+                } else {
+                    // For other steps, just mark the specific step as completed
+                    updatedData = currentData.map((category: OnboardingCategory) => 
+                        category.id === categoryId 
+                            ? {
+                                ...category,
+                                steps: category.steps.map((step: OnboardingStep) => 
+                                    step.id === stepId 
+                                        ? { ...step, status: 'completed' as const }
+                                        : step
+                                )
+                            }
+                            : category
+                    );
+                }
+                
+                return updatedData;
+            });
         };
 
         window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
@@ -132,7 +148,7 @@ export const ProgressWidget = () => {
         return () => {
             window.removeEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
         };
-    }, [onboardingData]);
+    }, []);
 
     // Listen for onboarding reset events
     useEffect(() => {
@@ -182,40 +198,51 @@ export const ProgressWidget = () => {
         const totalRequired = getRequiredStepsCount();
         if (totalRequired === 0) return 0;
         
-        // Show progress up to Onboarding phase (25% minimum)
-        const baseProgress = 25;
-        const calculatedProgress = Math.round((completedRequired / totalRequired) * 100);
-        return Math.max(baseProgress, calculatedProgress);
+        // Divide into 9 segments: 1 filled by default + 8 for required steps
+        // Each segment = 100% / 9 = ~11.11%
+        const segmentSize = 100 / 9;
+        const baseProgress = segmentSize; // 1 segment filled by default (~11.11%)
+        const calculatedProgress = baseProgress + (completedRequired * segmentSize);
+        return Math.min(calculatedProgress, 100);
     };
+
+    const getTotalStepsCount = () => {
+        return onboardingData.reduce((total: number, category: OnboardingCategory) => {
+            return total + category.steps.length;
+        }, 0);
+    };
+
+    const getCompletedStepsCount = () => {
+        return onboardingData.reduce((total: number, category: OnboardingCategory) => {
+            return total + category.steps.filter((step: OnboardingStep) => step.status === 'completed').length;
+        }, 0);
+    };
+
+    // Simple progress calculation
+    const totalSteps = getTotalStepsCount();
+    const completedSteps = getCompletedStepsCount();
+    const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+    const remainingSteps = totalSteps - completedSteps;
 
     return (
         <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 w-full">
-            <div className="flex items-center justify-between mb-6">
-                <h4 className="text-sm font-medium text-white">Your Journey</h4>
-                <span className="text-xs text-gray-400">{getRemainingRequiredStepsCount()} required steps to go live</span>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-white font-bold">{getRemainingRequiredStepsCount()} required steps remaining</span>
             </div>
             
-            <div className="relative mb-6">
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
-                    <div className="bg-violet-500 h-1.5 rounded-full" style={{width: `${getRequiredProgressPercentage()}%`}}></div>
-                </div>
-                
-                <div className="absolute -top-1.5 left-0 right-0 flex justify-between">
-                    <div className="flex flex-col items-center">
-                        <div className="w-4 h-4 bg-violet-500 rounded-full"></div>
-                        <span className="text-xs text-violet-300 font-medium mt-2">Initial</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('onboarding') ? 'bg-violet-500' : 'bg-gray-600'}`}></div>
-                        <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('onboarding') ? 'text-violet-300' : 'text-gray-400'}`}>Onboarding</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('setup') ? 'bg-violet-500' : 'bg-gray-600'}`}></div>
-                        <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('setup') ? 'text-violet-300' : 'text-gray-400'}`}>Setup</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className={`w-4 h-4 rounded-full ${areRequiredStepsCompleted('launch') ? 'bg-violet-500' : 'bg-gray-600'}`}></div>
-                        <span className={`text-xs font-medium mt-2 ${areRequiredStepsCompleted('launch') ? 'text-violet-300' : 'text-gray-400'}`}>Launch</span>
+            <div className="mb-6">
+                {/* Progress Bar */}
+                <div className="mb-4">
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div 
+                            className="bg-violet-500 h-2 rounded-full transition-all duration-300 ease-out"
+                            style={{ width: `${getRequiredProgressPercentage()}%` }}
+                        ></div>
+                        <div className="flex items-center justify-between mt-2">
+                            <span className="text-xs text-gray-400">Get Started</span>
+                            <span className="text-xs text-gray-400">Publish and Go Live!</span>
+                        </div>
                     </div>
                 </div>
             </div>

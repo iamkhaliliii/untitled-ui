@@ -26,7 +26,7 @@ const onboardingCategories: OnboardingCategory[] = [
         title: "Onboarding",
         steps: [
             { id: "customize-navigation", title: "Customize Navigation", status: "pending", required: true, href: "/admin2/site?startTour=true", icon: BarChartSquare02 },
-            { id: "customize-space", title: "Customize a Space You Created", status: "pending", required: true, href: "/admin2/site/spaces/create?startTour=true", icon: Database01 },
+            { id: "customize-space", title: "Customize a Space You Created", status: "pending", required: true, href: "/admin2/onboarding", icon: Database01 },
             { id: "setup-permissions", title: "Setup Permissions Site Settings", status: "pending", required: false, href: "/admin2/setting/site-settings", icon: Settings01 },
             { id: "invite-teammates", title: "Invite Your Teammates", status: "pending", required: false, href: "/admin2/people", icon: Users01 }
         ]
@@ -113,9 +113,6 @@ export const FloatingProgressButton = () => {
         return onboardingCategories;
     });
     
-    // State for success message
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const [successData, setSuccessData] = useState<{completedStep: string, nextStep: string} | null>(null);
 
     // Helper functions using dynamic onboarding data
     const getRequiredStepsForCategory = (categoryId: string) => {
@@ -172,32 +169,29 @@ export const FloatingProgressButton = () => {
             const { stepId, categoryId } = event.detail;
             console.log(`Updating step ${stepId} in category ${categoryId} to completed`);
             
-            const updatedData = onboardingData.map((category: OnboardingCategory) => 
-                category.id === categoryId 
-                    ? {
-                        ...category,
-                        steps: category.steps.map((step: OnboardingStep) => 
-                            step.id === stepId 
-                                ? { ...step, status: 'completed' as const }
-                                : step
-                        )
-                    }
-                    : category
-            );
+            // Open main popover only when tour guide (step 1) is completed
+            if (stepId === 'customize-navigation') {
+                setIsOpen(true);
+                setShowSimplePopover(false);
+            }
             
-            setOnboardingData(updatedData);
-            console.log('FloatingProgressButton: Updated onboarding data:', updatedData);
-            
-            // Also save to localStorage to ensure persistence
-            const serializedData = updatedData.map((category: OnboardingCategory) => ({
-                ...category,
-                steps: category.steps.map((step: OnboardingStep) => ({
-                    ...step,
-                    icon: step.icon?.name || 'Settings01' // Store icon name instead of component
-                }))
-            }));
-            localStorage.setItem('onboarding-progress', JSON.stringify(serializedData));
-            console.log('FloatingProgressButton: Saved to localStorage:', serializedData);
+            setOnboardingData(currentData => {
+                // For all steps, just mark the specific step as completed (no auto-complete all)
+                const updatedData = currentData.map((category: OnboardingCategory) => 
+                    category.id === categoryId 
+                        ? {
+                            ...category,
+                            steps: category.steps.map((step: OnboardingStep) => 
+                                step.id === stepId 
+                                    ? { ...step, status: 'completed' as const }
+                                    : step
+                            )
+                        }
+                        : category
+                );
+                
+                return updatedData;
+            });
         };
 
         window.addEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
@@ -207,26 +201,6 @@ export const FloatingProgressButton = () => {
         };
     }, []);
 
-    // Listen for success message events
-    useEffect(() => {
-        const handleShowSuccess = (event: CustomEvent) => {
-            const { completedStep, nextStep } = event.detail;
-            console.log(`Showing success message for completed step: ${completedStep}`);
-            
-            setSuccessData({ completedStep, nextStep });
-            setShowSuccessMessage(true);
-            setIsOpen(true); // Open the main popover
-            setShowSimplePopover(false); // Hide simple popover
-            
-            // Don't auto-hide - user must click "Got it"
-        };
-
-        window.addEventListener('show-progress-success', handleShowSuccess as EventListener);
-        
-        return () => {
-            window.removeEventListener('show-progress-success', handleShowSuccess as EventListener);
-        };
-    }, []);
 
     // Listen for onboarding reset events
     useEffect(() => {
@@ -234,8 +208,6 @@ export const FloatingProgressButton = () => {
             if (event.detail.reset) {
                 console.log('FloatingProgressButton: Resetting onboarding data to default');
                 setOnboardingData(onboardingCategories);
-                setShowSuccessMessage(false);
-                setSuccessData(null);
             }
         };
 
@@ -422,60 +394,6 @@ export const FloatingProgressButton = () => {
                             <div className="p-4">
                                 <ProgressWidget />
                             </div>
-                            
-                            {/* Success Message */}
-                            {showSuccessMessage && successData && (
-                                <div className="p-4 border-t border-gray-700 bg-gradient-to-r from-green-900/40 to-emerald-900/40 border-b border-green-600/40">
-                                    <div className="flex items-start gap-3 mb-4">
-                                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                                            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="text-sm font-semibold text-green-300 mb-1">Step Completed! 🎉</h4>
-                                            <p className="text-xs text-green-200/90 leading-relaxed">
-                                                Now, you can start the{' '}
-                                                <button
-                                                    onClick={() => {
-                                                        const nextStep = getNextRecommendedStep();
-                                                        if (nextStep) {
-                                                            navigate(nextStep.href);
-                                                            setShowSuccessMessage(false);
-                                                            setSuccessData(null);
-                                                        }
-                                                    }}
-                                                    className="text-green-300 hover:text-green-200 underline hover:no-underline transition-colors font-medium"
-                                                >
-                                                    next recommended step
-                                                </button>{' '}
-                                                or explore more options in the{' '}
-                                                <button
-                                                    onClick={() => {
-                                                        navigate('/admin2/onboarding');
-                                                        setShowSuccessMessage(false);
-                                                        setSuccessData(null);
-                                                    }}
-                                                    className="text-green-300 hover:text-green-200 underline hover:no-underline transition-colors font-medium"
-                                                >
-                                                    Onboarding Hub
-                                                </button>.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            onClick={() => {
-                                                setShowSuccessMessage(false);
-                                                setSuccessData(null);
-                                            }}
-                                            className="text-gray-400 hover:text-gray-300 text-xs underline hover:no-underline transition-colors"
-                                        >
-                                            Got it
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
                             
                             {/* Setup Steps */}
                             <div className="p-4 border-t border-gray-700 bg-gray-800/50">
