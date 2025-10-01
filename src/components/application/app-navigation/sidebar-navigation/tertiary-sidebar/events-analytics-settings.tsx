@@ -3,6 +3,8 @@ import { Download01, TrendUp01, TrendDown01, Eye, Users01, Calendar, MessageCirc
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Badge } from "@/components/base/badges/badges";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { cx } from "@/utils/cx";
 
 interface AnalyticsCard {
     title: string;
@@ -16,7 +18,26 @@ interface AnalyticsCard {
 interface EventsAnalyticsSettingsProps {}
 
 export const EventsAnalyticsSettings = ({}: EventsAnalyticsSettingsProps) => {
+    const theme = useResolvedTheme();
     const [selectedPeriod, setSelectedPeriod] = useState('7d');
+
+    // Get icon color based on theme
+    const getIconColor = (baseColor: string) => {
+        switch (baseColor) {
+            case "text-blue-600":
+                return theme === 'dark' ? "text-blue-400" : "text-blue-600";
+            case "text-green-600":
+                return theme === 'dark' ? "text-green-400" : "text-green-600";
+            case "text-purple-600":
+                return theme === 'dark' ? "text-purple-400" : "text-purple-600";
+            case "text-orange-600":
+                return theme === 'dark' ? "text-orange-400" : "text-orange-600";
+            case "text-pink-600":
+                return theme === 'dark' ? "text-pink-400" : "text-pink-600";
+            default:
+                return theme === 'dark' ? "text-gray-400" : "text-gray-600";
+        }
+    };
 
     const analyticsData: AnalyticsCard[] = [
         {
@@ -84,13 +105,18 @@ export const EventsAnalyticsSettings = ({}: EventsAnalyticsSettingsProps) => {
                     {/* Header with icon and trend */}
                     <div className="flex items-center justify-between">
                         <div className={`p-2 rounded-lg bg-secondary/20 flex-shrink-0`}>
-                            <IconComponent className={`size-4 sm:size-5 ${data.color}`} />
+                            <IconComponent className={`size-4 sm:size-5 ${getIconColor(data.color)}`} />
                         </div>
-                        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
+                        <div className={cx(
+                            "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium flex-shrink-0",
                             data.changeType === 'up' 
-                                ? 'bg-success-50 text-success-700' 
-                                : 'bg-error-50 text-error-700'
-                        }`}>
+                                ? theme === 'dark'
+                                    ? 'bg-green-900/30 text-green-300'
+                                    : 'bg-success-50 text-success-700'
+                                : theme === 'dark'
+                                    ? 'bg-red-900/30 text-red-300'
+                                    : 'bg-error-50 text-error-700'
+                        )}>
                             <TrendIcon className="size-3" />
                             {data.change}
                         </div>

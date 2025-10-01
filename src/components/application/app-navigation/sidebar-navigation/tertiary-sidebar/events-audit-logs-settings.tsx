@@ -6,6 +6,7 @@ import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { Badge } from "@/components/base/badges/badges";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { cx } from "@/utils/cx";
 
 interface AuditLogEntry {
     id: string;
@@ -173,18 +174,26 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
         // Get background color for the circular icon based on type
         const getIconBgColor = (type: string) => {
             switch (type) {
-                case 'reaction': return 'bg-orange-100';
-                case 'wishlist': return 'bg-pink-100';
-                case 'reply': return 'bg-blue-100';
-                case 'member': return 'bg-green-100';
-                default: return 'bg-gray-100';
+                case 'reaction': 
+                    return theme === 'dark' ? 'bg-orange-900/30' : 'bg-orange-100';
+                case 'wishlist': 
+                    return theme === 'dark' ? 'bg-pink-900/30' : 'bg-pink-100';
+                case 'reply': 
+                    return theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100';
+                case 'member': 
+                    return theme === 'dark' ? 'bg-green-900/30' : 'bg-green-100';
+                default: 
+                    return theme === 'dark' ? 'bg-gray-800/50' : 'bg-gray-100';
             }
         };
 
         return (
             <div className="relative flex gap-4 pb-6">
                 {/* Timeline line */}
-                <div className="absolute left-4 top-6 bottom-0 w-px bg-gray-200"></div>
+                <div className={cx(
+                    "absolute left-4 top-6 bottom-0 w-px",
+                    theme === 'dark' ? "bg-gray-700" : "bg-gray-200"
+                )}></div>
                 
                 {/* Icon */}
                 <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full ${getIconBgColor(log.type)}`}>
@@ -193,10 +202,16 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
                 
                 {/* Content */}
                 <div className="flex-1 min-w-0 pt-1">
-                    <p className="text-sm font-normal text-gray-900 leading-relaxed">
+                    <p className={cx(
+                        "text-sm font-normal leading-relaxed",
+                        theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                    )}>
                         {log.action}
                     </p>
-                    <span className="text-xs text-gray-500">{log.timeAgo}</span>
+                    <span className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                    )}>{log.timeAgo}</span>
                 </div>
             </div>
         );

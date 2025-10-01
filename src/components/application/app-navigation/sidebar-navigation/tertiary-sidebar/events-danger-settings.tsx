@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Trash01, AlertTriangle } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { cx } from "@/utils/cx";
 
 interface EventsDangerSettingsProps {
     // Add any props if needed
 }
 
 export const EventsDangerSettings = ({}: EventsDangerSettingsProps) => {
+    const theme = useResolvedTheme();
     const [confirmationText, setConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
