@@ -295,13 +295,14 @@ export const AdminOnboardingPage = () => {
         return data.map((category: any) => ({
             ...category,
             steps: category.steps.map((step: any) => {
-                // Find the original step to get the correct icon
+                // Find the original step to get all original properties
                 const originalCategory = onboardingCategories.find(cat => cat.id === category.id);
                 const originalStep = originalCategory?.steps.find(s => s.id === step.id);
                 
                 return {
-                    ...step,
-                    icon: originalStep?.icon || iconMap[step.icon] || Settings01 // Use original icon first, then mapped icon, then fallback
+                    ...originalStep, // Start with original step data (preserves description, title, etc.)
+                    ...step, // Override with saved data (preserves status)
+                    icon: originalStep?.icon || iconMap[step.icon] || Settings01 // Ensure icon is properly restored
                 };
             })
         }));
@@ -599,8 +600,8 @@ export const AdminOnboardingPage = () => {
                 <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
                     {/* Main Content */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
-                        {/* Full Height Welcome Section - Hidden when onboarding is fully completed */}
-                        {!isOnboardingFullyCompleted() && (
+                        {/* Full Height Welcome Section - Hidden when onboarding is fully completed or hub is manually shown */}
+                        {!isOnboardingFullyCompleted() && !showOnboardingHub && (
                         <div className="min-h-screen flex items-center justify-center px-4 py-6 lg:px-6">
                             <div className="mx-auto max-w-7xl w-full">
                                 {/* Top Hero Section - Welcome Message and Suggested Steps */}
@@ -962,14 +963,27 @@ export const AdminOnboardingPage = () => {
                                                     );
                                                 })()}
                                                 </div>
+                                                
+                                                {/* Skip Onboarding Journey Button */}
+                                                <div className="pt-4 mt-4 border-t border-secondary/50">
+                                                    <button
+                                                        onClick={() => {
+                                                            setShowOnboardingHub(true);
+                                                        }}
+                                                        className="flex items-center gap-1 text-sm text-tertiary/70 hover:text-tertiary transition-colors w-full justify-center"
+                                                    >
+                                                        <span>Skip Onboarding Journey</span>
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         )}
 
-                        {/* Onboarding Hub Section - Separate scrollable section - Show when fully completed or toggled with 'O' key */}
+                        {/* Onboarding Hub Section - Show when fully completed, manually toggled, or skipped */}
                         {(showOnboardingHub || isOnboardingFullyCompleted()) && (
                             <div className="px-4 py-12 lg:px-6 bg-gray-50">
                                 <div className="mx-auto max-w-7xl">
