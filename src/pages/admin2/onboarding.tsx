@@ -247,6 +247,23 @@ export const AdminOnboardingPage = () => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const [showOnboardingHub, setShowOnboardingHub] = useState(false);
     
+    // Check if onboarding is fully completed (all required tasks + "Publish and Go Live!")
+    const isOnboardingFullyCompleted = () => {
+        // Check if all required steps are completed
+        const allRequiredCompleted = dynamicOnboardingCategories.every((category: any) => 
+            areRequiredStepsCompleted(category.id)
+        );
+        
+        // Check if "Publish and Go Live!" is specifically completed
+        const publishStep = dynamicOnboardingCategories
+            .find((cat: any) => cat.id === 'launch')
+            ?.steps.find((step: any) => step.id === 'publish-go-live');
+        
+        const publishCompleted = publishStep?.status === 'completed';
+        
+        return allRequiredCompleted && publishCompleted;
+    };
+    
     // Icon mapping for localStorage compatibility
     const iconMap: Record<string, any> = {
         'BarChartSquare02': BarChartSquare02,
@@ -330,6 +347,55 @@ export const AdminOnboardingPage = () => {
             return !areRequiredStepsCompleted('onboarding') || !areRequiredStepsCompleted('setup');
         }
         return false;
+    };
+
+    // New helper functions for section completion logic
+    const getActiveSections = () => {
+        const sections = [];
+        
+        // Add sections that still have required steps pending OR are locked (to show them)
+        for (const category of dynamicOnboardingCategories) {
+            if (!areRequiredStepsCompleted(category.id)) {
+                sections.push(category);
+            }
+        }
+        
+        return sections;
+    };
+
+    const getAdditionalSteps = () => {
+        const additionalSteps = [];
+        
+        // Collect optional steps from completed sections
+        for (const category of dynamicOnboardingCategories) {
+            if (areRequiredStepsCompleted(category.id)) {
+                const optionalSteps = category.steps.filter((step: any) => 
+                    !step.required && step.status === 'pending'
+                );
+                additionalSteps.push(...optionalSteps);
+            }
+        }
+        
+        return additionalSteps;
+    };
+
+    const getDisplayCategories = () => {
+        const activeSections = getActiveSections();
+        const additionalSteps = getAdditionalSteps();
+        
+        const displayCategories = [...activeSections];
+        
+        // Add "Additional Steps" section if there are optional steps from completed sections
+        if (additionalSteps.length > 0) {
+            displayCategories.push({
+                id: 'additional-steps',
+                title: 'Additional Steps',
+                description: 'Optional enhancements for your community',
+                steps: additionalSteps
+            });
+        }
+        
+        return displayCategories;
     };
 
     const getCompletedStepsCount = () => {
@@ -425,6 +491,13 @@ export const AdminOnboardingPage = () => {
             window.removeEventListener('onboarding-step-completed', handleStepCompleted as EventListener);
         };
     }, []);
+
+    // Auto-show onboarding hub when fully completed
+    useEffect(() => {
+        if (isOnboardingFullyCompleted()) {
+            setShowOnboardingHub(true);
+        }
+    }, [dynamicOnboardingCategories]);
 
     // Keyboard event handlers
     useEffect(() => {
@@ -523,7 +596,8 @@ export const AdminOnboardingPage = () => {
                 <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
                     {/* Main Content */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
-                        {/* Full Height Welcome Section */}
+                        {/* Full Height Welcome Section - Hidden when onboarding is fully completed */}
+                        {!isOnboardingFullyCompleted() && (
                         <div className="min-h-screen flex items-center justify-center px-4 py-6 lg:px-6">
                             <div className="mx-auto max-w-7xl w-full">
                                 {/* Top Hero Section - Welcome Message and Suggested Steps */}
@@ -611,9 +685,9 @@ export const AdminOnboardingPage = () => {
                                                 <div className="max-h-72 overflow-y-auto scrollbar-thin space-y-3 pr-2">
                                                 {/* Global Recommended Next Step */}
                                                 {(() => {
-                                                    // Find the first required pending step across all categories
+                                                    // Find the first required pending step across all display categories
                                                     const firstRequiredPendingStep = (() => {
-                                                        for (const cat of dynamicOnboardingCategories) {
+                                                        for (const cat of getDisplayCategories()) {
                                                             if (isCategoryLocked(cat.id)) continue;
                                                             const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
                                                             if (requiredPendingStep) return { step: requiredPendingStep, categoryId: cat.id };
@@ -626,48 +700,16 @@ export const AdminOnboardingPage = () => {
                                                     const IconComponent = firstRequiredPendingStep.step.icon;
                                                     
                                                     return (
-                                                        <div className="mb-4">
-                                                            <div 
-                                                                className="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary hover:shadow-lg transform hover:-translate-y-0.5"
-                                                                onClick={() => {
-                                                                    // Step 1 navigates to tour guide, all others mark as completed
-                                                                    if (firstRequiredPendingStep.step.id === 'customize-navigation') {
-                                                                        navigate(firstRequiredPendingStep.step.href);
-                                                                    } else {
-                                                                        // Mark step as completed with correct categoryId
-                                                                        const event = new CustomEvent('onboarding-step-completed', {
-                                                                            detail: { stepId: firstRequiredPendingStep.step.id, categoryId: firstRequiredPendingStep.categoryId }
-                                                                        });
-                                                                        window.dispatchEvent(event);
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <IconComponent className="w-5 h-5 flex-shrink-0 text-brand-secondary" />
-                                                                <div className="flex-1">
-                                                                    <div className="flex items-center gap-2 mb-1">
-                                                                        <h4 className="text-sm font-semibold text-primary">
-                                                                            {firstRequiredPendingStep.step.title}
-                                                                        </h4>
-                                                                        <Badge color="brand" size="sm">Next Step</Badge>
-                                                                        <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center" title="Required">
-                                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full"></div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <p className="text-xs text-tertiary">{firstRequiredPendingStep.step.description}</p>
-                                                                </div>
-                                                                <div className="text-brand-secondary">
-                                                                    <ArrowRight className="w-4 h-4" />
-                                                                </div>
-                                                            </div>
+                                                        <div>
                                                         </div>
                                                     );
                                                 })()}
                                                 
                                                 {/* Categorized Pending Steps */}
-                                                {dynamicOnboardingCategories.map((category: any) => {
+                                                {getDisplayCategories().map((category: any) => {
                                                     // Find the global recommended step to exclude it from category lists
                                                     const globalRecommendedStep = (() => {
-                                                        for (const cat of dynamicOnboardingCategories) {
+                                                        for (const cat of getDisplayCategories()) {
                                                             if (isCategoryLocked(cat.id)) continue;
                                                             const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
                                                             if (requiredPendingStep) return requiredPendingStep;
@@ -691,6 +733,7 @@ export const AdminOnboardingPage = () => {
                                                                     <div className={`w-2 h-2 rounded-full ${
                                                                         category.id === 'onboarding' ? 'bg-brand-solid' :
                                                                         category.id === 'setup' ? 'bg-brand-secondary' :
+                                                                        category.id === 'additional-steps' ? 'bg-gray-500' :
                                                                         'bg-purple-500'
                                                                     }`}></div>
                                                                     <h5 className={`text-xs font-semibold uppercase tracking-wide ${
@@ -710,6 +753,13 @@ export const AdminOnboardingPage = () => {
                                                                         </div>
                                                                         <span>required steps to unlock</span>
                                                                     </div>
+                                                                ) : category.id === 'additional-steps' ? (
+                                                                    <div className="flex items-center gap-1 text-xs text-tertiary/60">
+                                                                        <div className="w-3 h-3 bg-gray-200 rounded-full flex items-center justify-center">
+                                                                            <div className="w-1.5 h-1.5 bg-gray-500 rounded-full"></div>
+                                                                        </div>
+                                                                        <span>Optional</span>
+                                                                    </div>
                                                                 ) : (
                                                                     <div className="flex items-center gap-1 text-xs text-tertiary/60">
                                                                         <div className="w-3 h-3 bg-brand-primary_alt rounded-full flex items-center justify-center">
@@ -722,9 +772,9 @@ export const AdminOnboardingPage = () => {
                                                             
                                                             {/* Category Steps */}
                                                             {(() => {
-                                                                // Find the first required pending step across all categories
+                                                                // Find the first required pending step across all display categories
                                                                 const firstRequiredPendingStep = (() => {
-                                                                    for (const cat of dynamicOnboardingCategories) {
+                                                                    for (const cat of getDisplayCategories()) {
                                                                         if (isCategoryLocked(cat.id)) continue;
                                                                         const requiredPendingStep = cat.steps.find((s: any) => s.status === 'pending' && s.required);
                                                                         if (requiredPendingStep) return requiredPendingStep;
@@ -762,9 +812,21 @@ export const AdminOnboardingPage = () => {
                                                                             if (step.id === 'customize-navigation') {
                                                                                 navigate(step.href);
                                                                             } else {
+                                                                                // For additional steps, find the original category
+                                                                                let originalCategoryId = category.id;
+                                                                                if (category.id === 'additional-steps') {
+                                                                                    // Find the original category for this step
+                                                                                    for (const originalCat of dynamicOnboardingCategories) {
+                                                                                        if (originalCat.steps.some((s: any) => s.id === step.id)) {
+                                                                                            originalCategoryId = originalCat.id;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                
                                                                                 // Mark step as completed
                                                                                 const event = new CustomEvent('onboarding-step-completed', {
-                                                                                    detail: { stepId: step.id, categoryId: category.id }
+                                                                                    detail: { stepId: step.id, categoryId: originalCategoryId }
                                                                                 });
                                                                                 window.dispatchEvent(event);
                                                                             }
@@ -877,12 +939,13 @@ export const AdminOnboardingPage = () => {
                                                 </div>
                                             </div>
                         </div>
-                    </div>
                         </div>
                         </div>
+                        </div>
+                        )}
 
-                        {/* Onboarding Hub Section - Separate scrollable section - Hidden by default, toggle with 'O' key */}
-                        {showOnboardingHub && (
+                        {/* Onboarding Hub Section - Separate scrollable section - Show when fully completed or toggled with 'O' key */}
+                        {(showOnboardingHub || isOnboardingFullyCompleted()) && (
                             <div className="px-4 py-12 lg:px-6 bg-gray-50">
                                 <div className="mx-auto max-w-7xl">
 
@@ -910,22 +973,22 @@ export const AdminOnboardingPage = () => {
                                                     <span className="text-sm text-tertiary">Jacob from the customer education team</span>
                                                 </div>
                                                 
-                                                <h3 className="text-2xl font-bold text-primary mb-3">
+                                                <h3 className="text-lg font-semibold text-primary mb-2">
                                                     Get to know Bettermode
                                                 </h3>
                                                 
-                                                <p className="text-xs text-tertiary leading-relaxed mb-4">
+                                                <p className="text-sm text-tertiary leading-relaxed mb-4">
                                                     Take a tour around administration and learn how to create collections and spaces to organize your community.
                                                 </p>
                                                 
                                                 <div className="flex items-center gap-4">
-                                                    <a href="#" className="flex items-center gap-1 text-xs font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                    <a href="#" className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
                                                         <span>Academy</span>
-                                                        <ArrowRight className="w-3 h-3" />
+                                                        <ArrowRight className="w-4 h-4" />
                                                     </a>
-                                                    <a href="#" className="flex items-center gap-1 text-xs font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
+                                                    <a href="#" className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors">
                                                         <span>Help Center</span>
-                                                        <ArrowRight className="w-3 h-3" />
+                                                        <ArrowRight className="w-4 h-4" />
                                                     </a>
                                                 </div>
                                             </div>
@@ -947,7 +1010,7 @@ export const AdminOnboardingPage = () => {
                                                 </div>
                                                 {/* Video title overlay */}
                                                 <div className="absolute bottom-3 left-3 right-3 bg-gradient-to-t from-black/80 to-transparent p-2 rounded-b-lg">
-                                                    <p className="text-white font-medium text-xs">Getting Started with Bettermode</p>
+                                                    <p className="text-white font-medium text-sm">Getting Started with Bettermode</p>
                                                 </div>
                         </div>
                         </div>
@@ -956,7 +1019,7 @@ export const AdminOnboardingPage = () => {
                                     {/* Bottom Section - Onboarding Categories as Horizontal Sections */}
                                     <div className="space-y-12">
                         {dynamicOnboardingCategories.map((category: any, categoryIndex: number) => (
-                            <div key={category.id} className="bg-primary">
+                            <div key={category.id} className="">
                                 
                                 {/* Category Header */}
                                 <div className="text-left mb-6">
@@ -971,20 +1034,13 @@ export const AdminOnboardingPage = () => {
                                 {/* Category Steps in 4-Column Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                     {category.steps.map((step: any, stepIndex: number) => {
-                                        const isLocked = isCategoryLocked(category.id);
                                         const IconComponent = step.icon;
                                         
                                         return (
                                         <div 
                                             key={step.id}
-                                            className={`bg-white border border-secondary rounded-lg transition-colors cursor-pointer flex flex-col ${
-                                                isLocked 
-                                                    ? 'opacity-50 cursor-not-allowed' 
-                                                    : 'hover:border-primary'
-                                            }`}
+                                            className="bg-white border border-secondary rounded-lg transition-colors cursor-pointer flex flex-col hover:border-primary"
                                             onClick={() => {
-                                                if (isLocked) return;
-                                                
                                                 // Step 1 navigates to tour guide, all others mark as completed
                                                 if (step.id === 'customize-navigation') {
                                                     navigate(step.href);
@@ -998,85 +1054,77 @@ export const AdminOnboardingPage = () => {
                                             }}
                                         >
                                             {/* Card Content */}
-                                            <div className="p-6">
-                                                <div className="flex flex-col h-full">
-                                                    {/* Header with Icon and Badge */}
-                                                    <div className="flex justify-between items-start mb-4">
-                                                        <div className="relative shrink-0 rounded-lg h-10 w-10" title={step.title}>
-                                                            <div className="shrink-0 rounded-lg h-10 w-10 bg-gradient-to-br from-brand-primary_alt to-brand-secondary/20 flex items-center justify-center">
-                                                                <IconComponent className="w-5 h-5 text-brand-secondary" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap justify-end gap-2">
-                                                            {/* Required Icon */}
-                                                            {step.required && (
-                                                                <div className="w-4 h-4 bg-brand-primary_alt rounded-full flex items-center justify-center" title="Required">
-                                                                    <div className="w-2 h-2 bg-brand-solid rounded-full"></div>
-                                                                </div>
-                                                            )}
-                                                            
-                                                            {/* Locked Badge for locked categories */}
-                                                            {isLocked && (
-                                                                <BadgeWithIcon 
-                                                                    type="pill-color" 
-                                                                    size="sm" 
-                                                                    color="gray" 
-                                                                    iconLeading={Lock01}
-                                                                >
-                                                                    Locked
-                                                                </BadgeWithIcon>
-                                                            )}
-                                                            
-                                                            {/* Done Badge for completed steps */}
-                                                            {step.status === 'completed' && (
-                                                                <BadgeWithIcon 
-                                                                    type="pill-color" 
-                                                                    size="sm" 
-                                                                    color="success" 
-                                                                    iconLeading={CheckCircle}
-                                                                >
-                                                                    Done
-                                                                </BadgeWithIcon>
-                                                            )}
-                                                            
-                                                            {/* Ready Badge for available pending steps */}
-                                                            {step.status === 'pending' && !isLocked && (
-                                                                <Badge 
-                                                                    type="pill-color" 
-                                                                    size="sm" 
-                                                                    color="brand"
-                                                                >
-                                                                    Ready
-                                                                </Badge>
-                                                            )}
+                                            <div className="p-6 h-full flex flex-col">
+                                                {/* Header with Icon and Badge */}
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className="relative shrink-0 rounded-lg h-10 w-10" title={step.title}>
+                                                        <div className="shrink-0 rounded-lg h-10 w-10 bg-gradient-to-br from-brand-primary_alt to-brand-secondary/20 flex items-center justify-center">
+                                                            <IconComponent className="w-5 h-5 text-brand-secondary" />
                                                         </div>
                                                     </div>
-                                                    
-                                                    {/* Title and Description */}
-                                                    <div className="flex-1 mb-6">
-                                                        <h4 className="text-lg font-semibold text-primary mb-2">{step.title}</h4>
-                                                        <p className="text-sm text-tertiary leading-relaxed">{step.description}</p>
+                                                    <div className="flex flex-wrap justify-end gap-2">
+                                                        {/* Done Badge for completed steps */}
+                                                        {step.status === 'completed' && (
+                                                            <BadgeWithIcon 
+                                                                type="pill-color" 
+                                                                size="sm" 
+                                                                color="success" 
+                                                                iconLeading={CheckCircle}
+                                                            >
+                                                                Done
+                                                            </BadgeWithIcon>
+                                                        )}
+                                                        
+                                                        {/* Pending Badge for pending steps */}
+                                                        {step.status === 'pending' && (
+                                                            <Badge 
+                                                                type="pill-color" 
+                                                                size="sm" 
+                                                                color="gray"
+                                                            >
+                                                                Pending
+                                                            </Badge>
+                                                        )}
                                                     </div>
-                                                    
-                                                    {/* CTA Footer */}
-                                                    <div className="flex items-center justify-end gap-4 pt-4 mt-auto border-t border-secondary/10">
-                                                        <a 
-                                                            href="#" 
-                                                            className="flex items-center gap-1 text-sm text-tertiary hover:text-secondary transition-colors"
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        >
-                                                            <span>Learn more</span>
-                                                            <LinkExternal01 className="w-4 h-4" />
-                                                        </a>
-                                                        <a 
-                                                            href={step.href} 
-                                                            className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors"
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        >
-                                                            <span>Setup</span>
-                                                            <ArrowRight className="w-4 h-4" />
-                                                        </a>
-                                                    </div>
+                                                </div>
+                                                
+                                                {/* Title and Description */}
+                                                <div className="flex-1 mb-4">
+                                                    <h4 className="text-lg font-semibold text-primary mb-2">{step.title}</h4>
+                                                    <p className="text-sm text-tertiary leading-relaxed">{step.description}</p>
+                                                </div>
+                                                
+                                                {/* CTA Footer - Always at bottom */}
+                                                <div className="flex items-center justify-end pt-4 border-t border-secondary/10 mt-auto">
+                                                        {step.status === 'completed' ? (
+                                                            <a 
+                                                                href={step.href} 
+                                                                className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors"
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            >
+                                                                <span>Redo</span>
+                                                                <ArrowRight className="w-4 h-4" />
+                                                            </a>
+                                                        ) : (
+                                                            <>
+                                                                <a 
+                                                                    href="#" 
+                                                                    className="flex items-center gap-1 text-sm text-tertiary hover:text-secondary transition-colors mr-4"
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                >
+                                                                    <span>Learn more</span>
+                                                                    <LinkExternal01 className="w-4 h-4" />
+                                                                </a>
+                                                                <a 
+                                                                    href={step.href} 
+                                                                    className="flex items-center gap-1 text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors"
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                >
+                                                                    <span>Setup</span>
+                                                                    <ArrowRight className="w-4 h-4" />
+                                                                </a>
+                                                            </>
+                                                        )}
                                                 </div>
                                             </div>
                                         </div>
