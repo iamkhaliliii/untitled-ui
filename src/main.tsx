@@ -38,6 +38,26 @@ import { SiteSpacesPostsPage as Admin2SiteSpacesPostsPage } from "@/pages/admin2
 import { SiteSpacesCreatePage as Admin2SiteSpacesCreatePage } from "@/pages/admin2/site-spaces-create";
 import Admin2EventsCustomizePage from "@/pages/admin2/events-customize";
 import { SiteCmsEventsPage as Admin2SiteCmsEventsPage } from "@/pages/admin2/site-cms-events";
+
+// Admin 4.0 imports
+import { AdminDashboardPage as Admin4DashboardPage } from "@/pages/admin4/dashboard";
+import { AdminContentEventsCreatePage as Admin4ContentEventsCreatePage } from "@/pages/admin4/content-events-create";
+import { AdminContent2Page as Admin4Content2Page } from "@/pages/admin4/content2";
+import { AdminPeoplePage as Admin4PeoplePage } from "@/pages/admin4/people";
+import { AdminGamificationPage as Admin4GamificationPage } from "@/pages/admin4/gamification";
+import { AdminSiteSettingsPage as Admin4SiteSettingsPage } from "@/pages/admin4/site-settings";
+import { AdminAuthenticationPage as Admin4AuthenticationPage } from "@/pages/admin4/authentication";
+import { AdminSitePage as Admin4SitePage } from "@/pages/admin4/site";
+import { SiteFilesPage as Admin4SiteFilesPage } from "@/pages/admin4/site-files";
+import { AdminOnboardingPage as Admin4OnboardingPage } from "@/pages/admin4/onboarding";
+import { SiteSpacesEventsPage as Admin4SiteSpacesEventsPage } from "@/pages/admin4/site-spaces-events";
+import { SiteSpacesEventsCreatePage as Admin4SiteSpacesEventsCreatePage } from "@/pages/admin4/site-spaces-events-create";
+import { SiteSpacesBlogPage as Admin4SiteSpacesBlogPage } from "@/pages/admin4/site-spaces-blog";
+import { SiteSpacesHelpPage as Admin4SiteSpacesHelpPage } from "@/pages/admin4/site-spaces-help";
+import { SiteSpacesPostsPage as Admin4SiteSpacesPostsPage } from "@/pages/admin4/site-spaces-posts";
+import { SiteSpacesCreatePage as Admin4SiteSpacesCreatePage } from "@/pages/admin4/site-spaces-create";
+import Admin4EventsCustomizePage from "@/pages/admin4/events-customize";
+import { SiteCmsEventsPage as Admin4SiteCmsEventsPage } from "@/pages/admin4/site-cms-events";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
@@ -195,6 +215,102 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin2/site/cms/events/settings" element={<Admin2SiteCmsEventsPage />} />
                         <Route path="/admin2/site/cms/events/customize" element={<Admin2SiteCmsEventsPage />} />
                         <Route path="/admin2/onboarding" element={<AdminOnboardingPage />} />
+                        
+                        {/* Admin 4.0 Routes */}
+                        <Route path="/admin4" element={<Navigate to="/admin4/content2/posts" replace />} />
+                        <Route path="/admin4/dashboard" element={<Admin4DashboardPage />} />
+                        <Route path="/admin4/content2" element={<Navigate to="/admin4/content2/posts" replace />} />
+                        <Route path="/admin4/content2/events" element={<Admin4Content2Page />} />
+                        <Route path="/admin4/content2/events/create" element={<Admin4ContentEventsCreatePage />} />
+                        <Route path="/admin4/content2/posts" element={<Admin4Content2Page />} />
+                        <Route path="/admin4/content2/spaces" element={<Admin4Content2Page />} />
+                        <Route path="/admin4/content2/tag" element={<Admin4Content2Page />} />
+                        <Route path="/admin4/content2/cms" element={<Admin4Content2Page />} />
+
+                        <Route path="/admin4/people" element={<Admin4PeoplePage />} />
+                        <Route path="/admin4/setting" element={<Navigate to="/admin4/setting/site-settings" replace />} />
+                        <Route path="/admin4/setting/site-settings" element={<Admin4SiteSettingsPage />} />
+                        <Route path="/admin4/setting/authentication" element={<Admin4AuthenticationPage />} />
+                        <Route path="/admin4/setting/gamification" element={<Admin4GamificationPage />} />
+                        <Route path="/admin4/site" element={<Admin4SitePage />} />
+                        <Route path="/admin4/site/spaces/create" element={<Admin4SiteSpacesCreatePage />} />
+                        <Route path="/admin4/site/files" element={<Admin4SiteFilesPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/create" element={<Admin4SiteSpacesEventsCreatePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/permissions" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/members" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/analytics" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/audit-logs" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/seo" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/danger" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/permissions" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/members" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/analytics" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/audit-logs" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/seo" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/danger" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/permissions" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/members" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/analytics" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/audit-logs" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/seo" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/danger" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/permissions" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/members" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/analytics" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/audit-logs" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/seo" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/danger" element={<Admin4SiteSpacesPostsPage />} />
+                        
+                        {/* Admin4 Growth folder routes */}
+                        <Route path="/admin4/site/spaces/growth/events" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/create" element={<Admin4SiteSpacesEventsCreatePage />} />
+                        <Route path="/admin4/site/spaces/growth/events/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/events/permissions" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/members" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/analytics" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/audit-logs" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/seo" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/events/danger" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/permissions" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/members" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/analytics" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/audit-logs" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/seo" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/danger" element={<Admin4SiteSpacesBlogPage />} />
+                        <Route path="/admin4/site/spaces/growth/help" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/help/permissions" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/members" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/analytics" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/audit-logs" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/seo" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/help/danger" element={<Admin4SiteSpacesHelpPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/permissions" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/members" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/analytics" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/audit-logs" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/seo" element={<Admin4SiteSpacesPostsPage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/danger" element={<Admin4SiteSpacesPostsPage />} />
+                        
+                        <Route path="/admin4/site/spaces/private-space" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/private-space/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/private-space/permissions" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/cms/events" element={<Navigate to="/admin4/site/cms/events/customize" replace />} />
+                        <Route path="/admin4/site/cms/events/settings" element={<Admin4SiteCmsEventsPage />} />
+                        <Route path="/admin4/site/cms/events/customize" element={<Admin4SiteCmsEventsPage />} />
+                        <Route path="/admin4/onboarding" element={<Admin4OnboardingPage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />

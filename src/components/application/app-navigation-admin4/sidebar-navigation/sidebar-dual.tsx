@@ -202,6 +202,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Determine current admin version from activeUrl
     const getCurrentAdminVersion = () => {
+        if (activeUrl?.includes('/admin4')) return 'admin4';
         if (activeUrl?.includes('/admin2')) return 'admin2';
         if (activeUrl?.includes('/admin3')) return 'admin3';
         return 'admin3'; // default to admin3
@@ -1422,13 +1423,15 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             <div
                 className={cx(
                     "flex w-auto flex-col justify-between rounded-xl ring-1 ring-secondary transition duration-300 ring-inset",
-                    isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3' ? "pt-0" : "pt-5", // No padding when logo is hidden
+                    isAdmin && adminHeaderVisible && (currentAdminVersion === 'admin3' || currentAdminVersion === 'admin4') ? "pt-0" : "pt-5", // No padding when logo is hidden
                     hideBorder && "ring-transparent",
                 )}
             >
-                <div className="flex justify-center px-3">
-                    <UntitledLogoMinimal className="size-8" />
-                </div>
+                {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
+                    <div className="flex justify-center px-3">
+                        <UntitledLogoMinimal className="size-8" />
+                    </div>
+                )}
 
                 <ul className="mt-4 flex flex-col gap-0.5 px-3">
                         {items.map((item) => (
@@ -2218,11 +2221,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             
             {/* Desktop dual sidebar navigation */}
                 <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
-                    isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
-                        ? adminHeaderCollapsed
-                            ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
-                            : 'lg:top-12 lg:bottom-0' // Full header height
-                        : 'lg:inset-y-0'
+                    currentAdminVersion === 'admin4'
+                        ? 'lg:top-12 lg:bottom-0' // Always full header height for admin4
+                        : isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
+                            ? adminHeaderCollapsed
+                                ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                                : 'lg:top-12 lg:bottom-0' // Full header height
+                            : 'lg:inset-y-0'
                 }`}>
                 {mainSidebar}
                 {selectedSecondaryItem !== "customize" && secondarySidebar}
@@ -2322,11 +2327,13 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             {isSpacePage && (selectedSecondaryItem === "general" || selectedSecondaryItem === "permissions" || selectedSecondaryItem === "members" || selectedSecondaryItem === "analytics" || selectedSecondaryItem === "audit-logs" || selectedSecondaryItem === "seo" || selectedSecondaryItem === "danger") && (
                 <div 
                     className={`z-50 lg:fixed ${
-                        isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
-                            ? adminHeaderCollapsed
-                                ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
-                                : 'lg:top-12 lg:bottom-0' // Full header height
-                            : 'lg:inset-y-0'
+                        currentAdminVersion === 'admin4'
+                            ? 'lg:top-12 lg:bottom-0' // Always full header height for admin4
+                            : isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
+                                ? adminHeaderCollapsed
+                                    ? 'lg:top-3 lg:bottom-0'  // Collapsed header height
+                                    : 'lg:top-12 lg:bottom-0' // Full header height
+                                : 'lg:inset-y-0'
                     }`}
                     style={{ 
                         display: 'block',

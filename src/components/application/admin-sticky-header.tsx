@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router";
+import React from "react";
 import {
     File04,
     Database01,
@@ -10,9 +11,12 @@ import {
     ChevronUp,
     ChevronDown,
     Menu01,
-    Globe01
+    Globe01,
+    DotsHorizontal
 } from "@untitledui/icons";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
+import { Button as AriaButton } from "react-aria-components";
 import { useAdmin } from "@/hooks/use-admin";
 
 export interface AdminStickyHeaderProps {
@@ -34,22 +38,126 @@ export const AdminStickyHeader = ({
         return null;
     }
 
-    // Get current page name based on URL
-    const getCurrentPageName = () => {
+    // Get breadcrumbs based on URL
+    const getBreadcrumbsData = () => {
         const path = location.pathname;
-        if (path.includes('/admin3')) return 'Admin Panel 3.0';
-        if (path.includes('/admin2')) return 'Admin Panel 2.0';
-        if (path.includes('/admin')) return 'Admin Panel';
-        if (path.includes('/site/feed')) return 'Site Feed';
-        if (path.includes('/site/event')) return 'Events';
-        if (path.includes('/site/home') || path === '/site') return 'Site Home';
-        if (path.includes('/test-admin')) return 'Admin Test';
-        return 'Site Dashboard';
+        const segments = path.split('/').filter(Boolean);
+        
+        if (segments.length === 0) return [{ label: 'Home', path: '/' }];
+        
+        // Build breadcrumbs from URL segments
+        const breadcrumbs = [];
+        let currentPath = '';
+        
+        for (let i = 0; i < segments.length; i++) {
+            const segment = segments[i];
+            currentPath += `/${segment}`;
+            
+            let label = segment;
+            if (segment.startsWith('admin')) {
+                label = segment === 'admin4' ? 'Admin Panel' : 
+                       segment === 'admin3' ? 'Admin3' : 
+                       segment === 'admin2' ? 'Admin2' : 'Admin';
+            } else {
+                label = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/[-_]/g, ' ');
+            }
+            
+            breadcrumbs.push({ label, path: currentPath });
+        }
+        
+        return breadcrumbs;
+    };
+
+    const renderBreadcrumbs = () => {
+        const breadcrumbs = getBreadcrumbsData();
+        
+        if (breadcrumbs.length <= 3) {
+            // Show all if 3 or less
+            return breadcrumbs.map((crumb, index) => (
+                <span key={crumb.path} className="flex items-center gap-1">
+                    <button
+                        onClick={() => navigate(crumb.path)}
+                        className={`cursor-pointer hover:text-white dark:hover:text-black transition-colors ${
+                            index === breadcrumbs.length - 1 
+                                ? 'text-white dark:text-black font-medium' 
+                                : 'text-gray-300 dark:text-gray-600'
+                        }`}
+                    >
+                        {crumb.label}
+                    </button>
+                    {index < breadcrumbs.length - 1 && (
+                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                    )}
+                </span>
+            ));
+        } else {
+            // Show first, second, ..., second-to-last, last
+            return (
+                <>
+                    <span className="flex items-center gap-1">
+                        <button
+                            onClick={() => navigate(breadcrumbs[0].path)}
+                            className="cursor-pointer text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black transition-colors"
+                        >
+                            {breadcrumbs[0].label}
+                        </button>
+                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <button
+                            onClick={() => navigate(breadcrumbs[1].path)}
+                            className="cursor-pointer text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black transition-colors"
+                        >
+                            {breadcrumbs[1].label}
+                        </button>
+                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                    </span>
+                    <Dropdown.Root>
+                        <AriaButton
+                            aria-label="Show hidden breadcrumbs"
+                            className="cursor-pointer rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-300 dark:hover:text-gray-500 transition-colors p-1"
+                        >
+                            <DotsHorizontal className="w-4 h-4  " />
+                        </AriaButton>
+                        <Dropdown.Popover className="z-[70] !min-w-32">
+                            <Dropdown.Menu>
+                                {breadcrumbs.slice(2, -2).map((crumb) => (
+                                    <Dropdown.Item
+                                        key={crumb.path}
+                                        label={crumb.label}
+                                        onAction={() => navigate(crumb.path)}
+                                    />
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown.Popover>
+                    </Dropdown.Root>
+                    <span className="text-gray-500 dark:text-gray-400">›</span>
+                    <span className="flex items-center gap-1">
+                        <button
+                            onClick={() => navigate(breadcrumbs[breadcrumbs.length - 2].path)}
+                            className="cursor-pointer text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black transition-colors"
+                        >
+                            {breadcrumbs[breadcrumbs.length - 2].label}
+                        </button>
+                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                    </span>
+                    <span>
+                        <button
+                            onClick={() => navigate(breadcrumbs[breadcrumbs.length - 1].path)}
+                            className="cursor-pointer text-white dark:text-black font-medium hover:text-gray-200 dark:hover:text-gray-800 transition-colors"
+                        >
+                            {breadcrumbs[breadcrumbs.length - 1].label}
+                        </button>
+                    </span>
+                </>
+            );
+        }
     };
 
     // Determine current admin version
     const getCurrentAdminVersion = () => {
         const path = location.pathname;
+        if (path.includes('/admin4')) return 'admin4';
         if (path.includes('/admin2')) return 'admin2';
         if (path.includes('/admin3')) return 'admin3';
         return 'admin3'; // default to admin3
@@ -96,8 +204,10 @@ export const AdminStickyHeader = ({
         console.log("AI Assistant clicked");
     };
 
+    const isAdmin4 = location.pathname.includes('/admin4');
+    
     return (
-        <div className="sticky top-0 left-0 right-0 z-[60] bg-gray-900 dark:bg-white border-b border-gray-700 dark:border-gray-200 overflow-hidden relative">
+        <div className="sticky top-0 left-0 right-0 z-[60] bg-black dark:bg-white border-b border-gray-800 dark:border-gray-200 overflow-hidden relative">
             {/* Main Header Content */}
             <div className={`transition-all duration-400 ease-in-out transform ${
                 adminHeaderCollapsed 
@@ -107,8 +217,8 @@ export const AdminStickyHeader = ({
                 <div className="flex items-center h-12">
                     {/* Logo Section */}
                     <div 
-                        className="relative w-16 h-12 flex items-center justify-center transition-all duration-300 ease-in-out border-r border-gray-700 dark:border-gray-200 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-100"
-                        onClick={() => navigate("/admin")}
+                        className="relative w-16 h-12 flex items-center justify-center transition-all duration-300 ease-in-out border-r border-gray-800 dark:border-gray-200 cursor-pointer hover:bg-gray-900 dark:hover:bg-gray-100"
+                        onClick={() => navigate("/admin4")}
                         title="Go to Admin Dashboard"
                     >
                         <svg 
@@ -132,7 +242,7 @@ export const AdminStickyHeader = ({
 
                     <div className="flex-1 flex items-center">
                         {/* Tools Section */}
-                        <div className="w-64 flex-shrink-0 h-full border-r border-gray-700 dark:border-gray-200">
+                        <div className="w-77 flex-shrink-0 h-full border-r border-gray-800 dark:border-gray-200">
                             <div className="flex h-full items-center justify-center gap-2 px-2">
                                 {adminTools.map((tool, index) => (
                                     <div key={index} className="relative group">
@@ -142,7 +252,7 @@ export const AdminStickyHeader = ({
                                             icon={tool.icon}
                                             tooltip={tool.label}
                                             onClick={tool.onClick}
-                                            className="border border-gray-700 dark:border-gray-200 bg-gray-900 dark:bg-white text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200"
+                                            className="border border-gray-800 dark:border-gray-300 bg-black dark:bg-white text-gray-300 dark:text-gray-600 hover:bg-gray-900 dark:hover:bg-gray-100"
                                         />
                                     </div>
                                 ))}
@@ -151,32 +261,35 @@ export const AdminStickyHeader = ({
 
                         {/* Main Content Area */}
                         <div className="flex-1 flex items-center justify-between pl-3">
-                            <div className="flex items-center text-xs text-gray-400 dark:text-gray-500">
-                                <span>{getCurrentPageName()}</span>
+                            <div className="flex items-center gap-2 text-xs">
+                                <div className="flex items-center gap-1">
+                                    {renderBreadcrumbs()}
+                                </div>
+
                             </div>
 
                             {/* Actions */}
                             <div className="flex items-center space-x-2">
                                 <div className="flex items-center">
-                                    <div className="h-12 flex items-center justify-center border-r border-l border-gray-700 dark:border-gray-200">
+                                    <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
                                         <ButtonUtility 
                                             size="sm"
                                             color="tertiary" 
                                             icon={Plus}
                                             tooltip="Add New Event"
                                             onClick={handleAddNew}
-                                            className="w-12 h-12 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 text-gray-300 dark:text-gray-600"
+                                            className="w-12 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600"
                                         />
                                     </div>
 
-                                    <div className="h-12 flex items-center justify-center border-r border-gray-700 dark:border-gray-200">
+                                    <div className="h-12 flex items-center justify-center border-r border-gray-800 dark:border-gray-200">
                                         <ButtonUtility 
                                             size="sm"
                                             color="tertiary" 
                                             icon={isAdminPage ? Globe01 : Settings01}
                                             tooltip={isAdminPage ? "View Site" : "Admin Settings"}
                                             onClick={handleSettings}
-                                            className="w-12 h-12 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 text-gray-300 dark:text-gray-600"
+                                            className="w-12 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600"
                                         />
                                     </div>
 
@@ -187,7 +300,7 @@ export const AdminStickyHeader = ({
                                             icon={Stars01}
                                             tooltip="AI Assistant"
                                             onClick={handleAIAssistant}
-                                            className="w-12 h-12 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 text-gray-300 dark:text-gray-600"
+                                            className="w-12 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600"
                                         />
                                     </div>
                                 </div>
@@ -211,7 +324,7 @@ export const AdminStickyHeader = ({
                                         color="tertiary"
                                         icon={Menu01}
                                         tooltip="Menu"
-                                        className="text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200"
+                                        className="text-gray-300 dark:text-gray-600 hover:bg-gray-900 dark:hover:bg-gray-100"
                                     />
                                 </div>
                             </div>
@@ -229,7 +342,7 @@ export const AdminStickyHeader = ({
                         icon={ChevronDown}
                         onClick={toggleAdminHeaderCollapse}
                         tooltip="Show Admin Header"
-                        className="text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200 h-6 w-8 rounded-b-md"
+                        className="text-gray-300 dark:text-gray-600 hover:bg-gray-900 dark:hover:bg-gray-100 h-6 w-8 rounded-b-md"
                     />
                 </div>
             )}

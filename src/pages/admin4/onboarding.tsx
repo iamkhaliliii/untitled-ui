@@ -20,11 +20,11 @@ import {
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Badge, BadgeWithIcon } from "@/components/base/badges/badges";
-import { SidebarNavigationSlim } from "@/components/application/app-navigation/sidebar-navigation/sidebar-slim";
+import { SidebarNavigationSlim } from "@/components/application/app-navigation-admin4/sidebar-navigation/sidebar-slim";
 import { AdminStickyHeader } from "@/components/application/admin-sticky-header";
 import { useAdmin } from "@/hooks/use-admin";
 import { useLocation, useNavigate } from "react-router";
-import type { NavItemType } from "@/components/application/app-navigation/config";
+import type { NavItemType } from "@/components/application/app-navigation-admin4/config";
 import { useState, useEffect } from "react";
 
 const onboardingCategories = [
@@ -40,7 +40,7 @@ const onboardingCategories = [
                 icon: BarChartSquare02,
                 status: "pending",
                 required: true,
-                href: "/admin2/site?startTour=true",
+                href: "/admin4/site?startTour=true",
                 image: "/pic/onboarding/customize-navigation.jpg"
             },
             {
@@ -50,7 +50,7 @@ const onboardingCategories = [
                 icon: Database01,
                 status: "pending",
                 required: true,
-                href: "/admin2/site/spaces/create?startTour=true",
+                href: "/admin4/site/spaces/create?startTour=true",
                 image: "/pic/onboarding/customize-spaces.jpg"
             },
             {
@@ -60,7 +60,7 @@ const onboardingCategories = [
                 icon: Settings01,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting/site-settings",
+                href: "/admin4/setting/site-settings",
                 image: "/pic/onboarding/moderation-rules.jpg"
             },
             {
@@ -70,7 +70,7 @@ const onboardingCategories = [
                 icon: Users01,
                 status: "pending",
                 required: false,
-                href: "/admin2/people",
+                href: "/admin4/people",
                 image: "/pic/onboarding/invite-members.jpg"
             }
         ]
@@ -87,7 +87,7 @@ const onboardingCategories = [
                 icon: Users01,
                 status: "pending",
                 required: false,
-                href: "/admin2/people",
+                href: "/admin4/people",
                 image: "/pic/onboarding/customize-member-profile.jpg"
             },
             {
@@ -97,7 +97,7 @@ const onboardingCategories = [
                 icon: Palette,
                 status: "pending",
                 required: true,
-                href: "/admin2/site-settings",
+                href: "/admin4/site-settings",
                 image: "/pic/onboarding/customize-theme.jpg"
             },
             {
@@ -107,7 +107,7 @@ const onboardingCategories = [
                 icon: MessageChatCircle,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/create-your-first-post.jpg"
             },
             {
@@ -117,7 +117,7 @@ const onboardingCategories = [
                 icon: CodeBrowser,
                 status: "pending",
                 required: true,
-                href: "/admin2/site",
+                href: "/admin4/site",
                 image: "/pic/onboarding/update-community-name.jpg"
             },
             {
@@ -127,7 +127,7 @@ const onboardingCategories = [
                 icon: Lock01,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting/authentication",
+                href: "/admin4/setting/authentication",
                 image: "/pic/onboarding/social-login.jpg"
             },
             {
@@ -137,7 +137,7 @@ const onboardingCategories = [
                 icon: MessageChatCircle,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/manage-staff-seats.jpg"
             },
             {
@@ -147,7 +147,7 @@ const onboardingCategories = [
                 icon: Settings01,
                 status: "pending",
                 required: true,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/manage-staff-seats.jpg"
             },
             {
@@ -157,7 +157,7 @@ const onboardingCategories = [
                 icon: Settings01,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/customize-theme.jpg"
             },
             {
@@ -167,7 +167,7 @@ const onboardingCategories = [
                 icon: BarChartSquare02,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/build-app.jpg"
             },
             {
@@ -177,7 +177,7 @@ const onboardingCategories = [
                 icon: Plus,
                 status: "pending",
                 required: false,
-                href: "/admin2/content2",
+                href: "/admin4/content2",
                 image: "/pic/onboarding/create-your-first-post.jpg"
             }
         ]
@@ -194,7 +194,7 @@ const onboardingCategories = [
                 icon: Lock01,
                 status: "pending",
                 required: false,
-                href: "/admin2/setting/site-settings",
+                href: "/admin4/setting/site-settings",
                 image: "/pic/onboarding/moderation-rules.jpg"
             },
             {
@@ -204,7 +204,7 @@ const onboardingCategories = [
                 icon: Settings01,
                 status: "pending",
                 required: true,
-                href: "/admin2/setting",
+                href: "/admin4/setting",
                 image: "/pic/onboarding/moderation-rules.jpg"
             },
             {
@@ -214,7 +214,7 @@ const onboardingCategories = [
                 icon: Data,
                 status: "pending",
                 required: false,
-                href: "/admin2/appstore",
+                href: "/admin4/appstore",
                 image: "/pic/onboarding/explore-apps.jpg"
             },
             {
@@ -224,7 +224,7 @@ const onboardingCategories = [
                 icon: Users01,
                 status: "pending",
                 required: true,
-                href: "/admin2/people",
+                href: "/admin4/people",
                 image: "/pic/onboarding/invite-members.jpg"
             },
             {
@@ -234,7 +234,7 @@ const onboardingCategories = [
                 icon: Rocket01,
                 status: "pending",
                 required: true,
-                href: "/admin2/site",
+                href: "/admin4/site",
                 image: "/pic/onboarding/build-app.jpg"
             }
         ]
@@ -536,40 +536,47 @@ export const AdminOnboardingPage = () => {
     // Admin2 navigation items
     const navItems: NavItemType[] = [
         {
-            label: "Content 2",
-            href: "/admin2/content2",
+            label: "Content",
+            href: "/admin4/content2",
             icon: Database01,
         },
         {
             label: "Site",
-            href: "/admin2/site",
+            href: "/admin4/site",
             icon: CodeBrowser,
         },
         {
             label: "People",
-            href: "/admin2/people",
+            href: "/admin4/people",
             icon: Users01,
         },
         {
             label: "Setting",
-            href: "/admin2/setting/site-settings",
+            href: "/admin4/setting/site-settings",
             icon: Settings01,
         },
         {
             label: "Report",
-            href: "/admin2/report",
+            href: "/admin4/report",
             icon: BarChartSquare02,
         },
         {
             label: "AppStore",
-            href: "/admin2/appstore",
+            href: "/admin4/appstore",
             icon: Data,
         },
     ];
 
     return (
         <div className="flex flex-col h-dvh">
-            {/* Admin Sticky Header - Disabled for admin2 onboarding */}
+            {/* Admin Sticky Header */}
+            {isAdmin && (
+                <AdminStickyHeader 
+                    isVisible={adminHeaderVisible} 
+                    onToggleVisibility={toggleAdminHeader}
+                    isAdminPage={true}
+                />
+            )}
 
             {/* Main layout with slim sidebar */}
             <div className="flex flex-1 overflow-hidden">
@@ -584,7 +591,7 @@ export const AdminOnboardingPage = () => {
                         },
                         {
                             label: "Onboarding",
-                            href: "/admin2/onboarding",
+                            href: "/admin4/onboarding",
                             icon: GraduationHat02,
                         },
                     ]}

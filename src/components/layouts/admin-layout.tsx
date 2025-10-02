@@ -78,30 +78,14 @@ const generateNavItems = (adminVersion: string): NavItemType[] => {
     
     // Content 2 for both admin versions
     items.push({
-        label: "Content 2",
+        label: "Content",
         href: `/${adminVersion}/content2`,
         icon: Database01,
         items: [
-            { 
-                label: "Contents", 
-                href: `/${adminVersion}/content2/contents`, 
-                icon: Package,
-                items: [
-                    { label: "Events", href: `/${adminVersion}/content2/contents/events`, icon: Calendar },
-                    { label: "Discussion", href: `/${adminVersion}/content2/contents/discussion`, icon: MessageChatCircle },
-                ]
-            },
-            { 
-                label: "Spaces", 
-                href: `/${adminVersion}/content2/spaces`, 
-                icon: Archive,
-                items: [
-                    { label: "Events", href: `/${adminVersion}/content2/spaces/events`, icon: Calendar },
-                    { label: "Discussion", href: `/${adminVersion}/content2/spaces/discussion`, icon: MessageChatCircle },
-                ]
-            },
+            { label: "Posts", href: `/${adminVersion}/content2/posts`, icon: Package },
+            { label: "Events", href: `/${adminVersion}/content2/events`, icon: Calendar },
+            { label: "Spaces", href: `/${adminVersion}/content2/spaces`, icon: Archive },
             { label: "Tag", href: `/${adminVersion}/content2/tag`, icon: Tag01 },
-            { label: "CMS", href: `/${adminVersion}/content2/cms`, icon: Settings01 },
         ],
     });
     
