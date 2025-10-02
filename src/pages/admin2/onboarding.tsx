@@ -512,6 +512,9 @@ export const AdminOnboardingPage = () => {
                 // Reset to default onboarding data
                 setDynamicOnboardingCategories(onboardingCategories);
                 
+                // Hide onboarding hub to show only Welcome Section
+                setShowOnboardingHub(false);
+                
                 // Clear localStorage
                 localStorage.removeItem('onboarding-progress');
                 
@@ -717,11 +720,11 @@ export const AdminOnboardingPage = () => {
                                                         return null;
                                                     })();
                                                     
-                                                    // Filter out the recommended step from category display
-                                                    const pendingSteps = category.steps.filter((step: any) => 
-                                                        step.status === 'pending' && step.id !== globalRecommendedStep?.step?.id
+                                                    // Filter out the recommended step from category display, show both pending and completed steps
+                                                    const visibleSteps = category.steps.filter((step: any) => 
+                                                        step.id !== globalRecommendedStep?.step?.id
                                                     );
-                                                    if (pendingSteps.length === 0) return null;
+                                                    if (visibleSteps.length === 0) return null;
                                                     
                                                     const isLocked = isCategoryLocked(category.id);
                                                     
@@ -783,7 +786,7 @@ export const AdminOnboardingPage = () => {
                                                                 })();
                                                                 
                                                                 // Sort steps so recommended step comes first
-                                                                const sortedSteps = [...pendingSteps].sort((a, b) => {
+                                                                const sortedSteps = [...visibleSteps].sort((a, b) => {
                                                                     const aIsRecommended = a.id === firstRequiredPendingStep?.id;
                                                                     const bIsRecommended = b.id === firstRequiredPendingStep?.id;
                                                                     if (aIsRecommended && !bIsRecommended) return -1;
@@ -799,14 +802,22 @@ export const AdminOnboardingPage = () => {
                                                                     <div 
                                                                         key={step.id}
                                                                         className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 ${
-                                                                            isRecommended 
-                                                                                ? 'bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary hover:shadow-lg transform hover:-translate-y-0.5'
-                                                                                : isLocked
-                                                                                    ? 'bg-secondary/50 border border-secondary/50 opacity-50 cursor-not-allowed'
-                                                                                    : 'bg-secondary border border-secondary hover:bg-brand-primary_alt/20'
+                                                                            step.status === 'completed'
+                                                                                ? 'bg-brand-solid/5 border border-brand-solid/20 opacity-70 hover:opacity-90'
+                                                                                : isRecommended 
+                                                                                    ? 'bg-gradient-to-r from-brand-primary_alt to-brand-secondary/10 border-2 border-brand-secondary hover:shadow-lg transform hover:-translate-y-0.5'
+                                                                                    : isLocked
+                                                                                        ? 'bg-secondary/50 border border-secondary/50 opacity-50 cursor-not-allowed'
+                                                                                        : 'bg-secondary border border-secondary hover:bg-brand-primary_alt/20'
                                                                         }`}
                                                                         onClick={() => {
                                                                             if (isLocked) return;
+                                                                            
+                                                                            // If step is already completed, navigate to href (like "Redo")
+                                                                            if (step.status === 'completed') {
+                                                                                navigate(step.href);
+                                                                                return;
+                                                                            }
                                                                             
                                                                             // Step 1 navigates to tour guide, all others mark as completed
                                                                             if (step.id === 'customize-navigation') {
@@ -833,12 +844,22 @@ export const AdminOnboardingPage = () => {
                                                                         }}
                                                                     >
                                                                         <IconComponent className={`w-5 h-5 flex-shrink-0 ${
-                                                                            isRecommended ? 'text-brand-secondary' : isLocked ? 'text-tertiary/50' : 'text-tertiary'
+                                                                            step.status === 'completed' 
+                                                                                ? 'text-brand-solid' 
+                                                                                : isRecommended 
+                                                                                    ? 'text-brand-secondary' 
+                                                                                    : isLocked 
+                                                                                        ? 'text-tertiary/50' 
+                                                                                        : 'text-tertiary'
                                                                         }`} />
                                                                         <div className="flex-1">
                                                                             <div className="flex items-center gap-2 mb-1">
                                                                                 <h4 className={`text-sm font-medium ${
-                                                                                    isRecommended ? 'font-semibold text-primary' : 'text-primary'
+                                                                                    step.status === 'completed'
+                                                                                        ? 'text-brand-solid line-through'
+                                                                                        : isRecommended 
+                                                                                            ? 'font-semibold text-primary' 
+                                                                                            : 'text-primary'
                                                                                 }`}>
                                                                                     {step.title}
                                                                                 </h4>
@@ -864,7 +885,11 @@ export const AdminOnboardingPage = () => {
                                                                             <p className="text-xs text-tertiary">{step.description}</p>
                                                                         </div>
                                                                         <div className={`${
-                                                                            isRecommended ? 'text-brand-secondary' : 'text-tertiary'
+                                                                            step.status === 'completed'
+                                                                                ? 'text-brand-solid'
+                                                                                : isRecommended 
+                                                                                    ? 'text-brand-secondary' 
+                                                                                    : 'text-tertiary'
                                                                         }`}>
                                                                             <ArrowRight className="w-4 h-4" />
                                                                         </div>
