@@ -58,6 +58,7 @@ import { SiteSpacesPostsPage as Admin4SiteSpacesPostsPage } from "@/pages/admin4
 import { SiteSpacesCreatePage as Admin4SiteSpacesCreatePage } from "@/pages/admin4/site-spaces-create";
 import Admin4EventsCustomizePage from "@/pages/admin4/events-customize";
 import { SiteCmsEventsPage as Admin4SiteCmsEventsPage } from "@/pages/admin4/site-cms-events";
+import { AdminDesignPage as Admin4DesignPage } from "@/pages/admin4/design";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
@@ -311,6 +312,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/cms/events/settings" element={<Admin4SiteCmsEventsPage />} />
                         <Route path="/admin4/site/cms/events/customize" element={<Admin4SiteCmsEventsPage />} />
                         <Route path="/admin4/onboarding" element={<Admin4OnboardingPage />} />
+                        <Route path="/admin4/design" element={<Admin4DesignPage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />

@@ -245,7 +245,30 @@ export const AdminStickyHeader = ({
             icon: Brush02, 
             label: "Design Mode",
             isActive: isDesignPage,
-            onClick: () => navigate(`/${currentAdminVersion}/design`)
+            onClick: () => navigate(`/${currentAdminVersion}/design`),
+            items: [
+                { 
+                    label: "Recently Visited Spaces",
+                    isSection: true
+                },
+                { label: "Growth Events", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/growth/events`) },
+                { label: "Events", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/events`) },
+                { label: "Blog", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/blog`) },
+                { label: "Help", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/help`) },
+                { label: "See more", onClick: () => navigate(`/${currentAdminVersion}/site`) },
+                { 
+                    label: "separator1",
+                    isSeparator: true
+                },
+                { 
+                    label: "Quick Access",
+                    isSection: true
+                },
+                { label: "Logos", onClick: () => navigate(`/${currentAdminVersion}/design?tool=logos`) },
+                { label: "Themes", onClick: () => navigate(`/${currentAdminVersion}/design?tool=themes`) },
+                { label: "Typographies", onClick: () => navigate(`/${currentAdminVersion}/design?tool=typographies`) },
+                { label: "Styles", onClick: () => navigate(`/${currentAdminVersion}/design?tool=styles`) },
+            ]
         },
         { 
             icon: Shield01, 
@@ -321,7 +344,21 @@ export const AdminStickyHeader = ({
                             <div className="flex h-full items-center justify-center gap-2 px-2">
                                 {adminTools.map((tool, index) => (
                                     <div key={index} className="relative group">
-                                        {tool.items ? (
+                                        {tool.isActive ? (
+                                            <Dropdown.Root>
+                                                <div className={`flex items-center gap-1 px-2 py-1 mr-3 rounded-md border border-brand-400 dark:border-brand-500 bg-brand-600 dark:bg-brand-500 text-white hover:bg-brand-700 dark:hover:bg-brand-600 transition-colors cursor-pointer`}
+                                                    onClick={tool.onClick}
+                                                >
+                                                    <tool.icon className="w-5 h-5" />
+                                                    <span className="text-sm font-medium">{tool.label}</span>
+                                                </div>
+                                                {tool.items && (
+                                                    <Dropdown.Popover className="z-[70] !w-56">
+                                                        <AdminStickyHeaderDropdown items={tool.items} />
+                                                    </Dropdown.Popover>
+                                                )}
+                                            </Dropdown.Root>
+                                        ) : tool.items ? (
                                             <Dropdown.Root>
                                                 <ButtonUtility 
                                                     size="sm" 
@@ -334,7 +371,7 @@ export const AdminStickyHeader = ({
                                                     <AdminStickyHeaderDropdown items={tool.items} />
                                                 </Dropdown.Popover>
                                             </Dropdown.Root>
-                                        ) : tool.isActive ? (
+                                        ) : (
                                             <div className={`flex items-center gap-1 px-2 py-1 mr-3 rounded-md border border-brand-400 dark:border-brand-500 bg-brand-600 dark:bg-brand-500 text-white hover:bg-brand-700 dark:hover:bg-brand-600 transition-colors cursor-pointer`}
                                                 onClick={tool.onClick}
                                             >
