@@ -22,7 +22,7 @@ export const EventsGeneralSettings = ({ formToggles, setFormToggles, pageType = 
     const [slug, setSlug] = useState<string>("");
 
     return (
-        <div className="space-y-6 p-4 pb-6">
+        <div className="space-y-6 pb-6">
             <div className="space-y-6 ">
                 {/* Icon Upload */}
                 <div className="space-y-2">

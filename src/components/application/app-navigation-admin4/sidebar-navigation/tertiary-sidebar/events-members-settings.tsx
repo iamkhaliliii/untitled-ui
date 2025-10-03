@@ -281,19 +281,7 @@ export const EventsMembersSettings = () => {
 
 
 
-  const renderNotificationConfig = () => (
-    <div className="mb-4">
-      <h5 className="text-md font-semibold text-primary mb-3">Notification Config</h5>
-      <Toggle
-        label="Auto-subscribe new and existing members"
-        hint="Enable this setting to automatically subscribe new and existing members to notifications for updates and posts, unless they have already adjusted their notification settings."
-        size="sm"
-        slim
-        isSelected={autoSubscribe}
-        onChange={(value) => setAutoSubscribe(value)}
-      />
-    </div>
-  );
+
 
   const renderMembersList = () => (
     <div className="space-y-4">
@@ -445,37 +433,8 @@ export const EventsMembersSettings = () => {
   ];
 
   return (
-    <div className="space-y-4 p-4">
-      {renderNotificationConfig()}
+    <div className="space-y-4">
 
-      <div className="mb-4">
-        <div className="flex items-center justify-between">
-          <h5 className="text-md font-semibold text-primary">Space Members</h5>
-          <div className="flex items-center gap-2">
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={SearchMd}
-              tooltip="Search Members"
-              onClick={handleSearchMembers}
-            />
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={Download01}
-              tooltip="Export Data"
-              onClick={handleExportData}
-            />
-            <ButtonUtility
-              size="sm"
-              color="tertiary"
-              icon={UsersPlus}
-              tooltip="Add Member"
-              onClick={() => setIsAddModalOpen(true)}
-            />
-          </div>
-        </div>
-      </div>
 
       <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))}>
         <Tabs.List

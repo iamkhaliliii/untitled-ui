@@ -379,7 +379,7 @@ export const AdminStickyHeader = ({
                                         />
                                     </div>
 
-                                    <div className="h-12 flex items-center justify-center border-r border-gray-800 dark:border-gray-200">
+                                    <div className="h-12 flex items-center justify-center border-gray-800 dark:border-gray-200">
                                         <ButtonUtility 
                                             size="sm"
                                             color="tertiary" 
@@ -390,16 +390,6 @@ export const AdminStickyHeader = ({
                                         />
                                     </div>
 
-                                    <div className="h-12 flex items-center justify-center">
-                                        <ButtonUtility 
-                                            size="sm"
-                                            color="tertiary" 
-                                            icon={Stars01}
-                                            tooltip="AI Assistant"
-                                            onClick={handleAIAssistant}
-                                            className="w-12 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600"
-                                        />
-                                    </div>
                                 </div>
 
                                                                {/* Hide/Show Toggle - Only show on site pages, not admin pages */}

@@ -14,12 +14,14 @@ interface CustomizerSectionProps {
   isExpanded?: boolean;
   /** Callback when expansion state changes */
   onExpandedChange?: (expanded: boolean) => void;
-  /** Optional action button */
+  /** Optional single action button (link style) */
   action?: {
     label: string;
     icon?: React.ComponentType<{ className?: string }>;
     onClick: () => void;
   };
+  /** Optional multiple utility actions */
+  utilityActions?: React.ReactNode;
   /** Children content to show when expanded */
   children?: React.ReactNode;
   /** Additional className for the container */
@@ -32,6 +34,7 @@ export const CustomizerSection = ({
   isExpanded: controlledExpanded,
   onExpandedChange,
   action,
+  utilityActions,
   children,
   className
 }: CustomizerSectionProps) => {
@@ -64,7 +67,18 @@ export const CustomizerSection = ({
       >
         <span className="flex-grow truncate tracking-tight">{title}</span>
         <div className="flex items-center gap-2 ml-2">
-          {action && (
+          {/* Show utility actions if provided */}
+          {utilityActions && (
+            <div 
+              className="flex items-center gap-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {utilityActions}
+            </div>
+          )}
+          
+          {/* Show single action if provided and no utility actions */}
+          {action && !utilityActions && (
             <button
               className={cx(
                 "flex items-center gap-1 px-1 py-0.5 text-xs font-medium transition-colors cursor-pointer",
@@ -81,6 +95,7 @@ export const CustomizerSection = ({
               {action.label}
             </button>
           )}
+          
           {isExpanded ? (
             <ChevronUp className={cx(
               "h-5 w-5 transform transition-all ease-in-out duration-150 flex-shrink-0 shrink-0 ms-2",

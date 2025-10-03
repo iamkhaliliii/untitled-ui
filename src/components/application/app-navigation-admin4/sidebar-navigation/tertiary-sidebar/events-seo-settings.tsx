@@ -25,7 +25,7 @@ export const EventsSeoSettings = ({}: EventsSeoSettingsProps) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="space-y-4">
             <div className="space-y-6">
                 {/* Meta Title */}
                 <div>

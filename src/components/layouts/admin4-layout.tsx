@@ -262,32 +262,29 @@ export const Admin4Layout = ({
                     {!hideHeader && (
                         <header className="flex items-center justify-between border-b border-secondary bg-primary px-6 py-4">
                             <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <h1 className="text-xl font-semibold text-primary">{title}</h1>
-                                    <span className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full">
-                                        Admin4 Pro
-                                    </span>
-                                </div>
+                                <h1 className="text-xl font-semibold text-primary">{title}</h1>
                                 <p className="text-sm text-tertiary">{description}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                {showAdvancedFeatures && (
-                                    <Button 
-                                        color="secondary" 
-                                        size="sm"
-                                        iconLeading={Target03}
-                                    >
-                                        Quick Actions
-                                    </Button>
-                                )}
                                 {headerActions || (
-                                    <Button 
-                                        color="secondary" 
-                                        size="sm"
-                                        iconLeading={Bell01}
-                                    >
-                                        Notifications
-                                    </Button>
+                                    <>
+                                        {showAdvancedFeatures && (
+                                            <Button 
+                                                color="secondary" 
+                                                size="sm"
+                                                iconLeading={Target03}
+                                            >
+                                                Quick Actions
+                                            </Button>
+                                        )}
+                                        <Button 
+                                            color="secondary" 
+                                            size="sm"
+                                            iconLeading={Bell01}
+                                        >
+                                            Notifications
+                                        </Button>
+                                    </>
                                 )}
                             </div>
                         </header>

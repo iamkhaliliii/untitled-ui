@@ -56,7 +56,10 @@ import { SiteSpacesBlogPage as Admin4SiteSpacesBlogPage } from "@/pages/admin4/s
 import { SiteSpacesHelpPage as Admin4SiteSpacesHelpPage } from "@/pages/admin4/site-spaces-help";
 import { SiteSpacesPostsPage as Admin4SiteSpacesPostsPage } from "@/pages/admin4/site-spaces-posts";
 import { SiteSpacesCreatePage as Admin4SiteSpacesCreatePage } from "@/pages/admin4/site-spaces-create";
-import Admin4EventsCustomizePage from "@/pages/admin4/events-customize";
+import { SiteSpacesEventsCustomizePage as Admin4SiteSpacesEventsCustomizePage } from "@/pages/admin4/site-spaces-events-customize";
+import { SiteSpacesBlogCustomizePage as Admin4SiteSpacesBlogCustomizePage } from "@/pages/admin4/site-spaces-blog-customize";
+import { SiteSpacesHelpCustomizePage as Admin4SiteSpacesHelpCustomizePage } from "@/pages/admin4/site-spaces-help-customize";
+import { SiteSpacesPostsCustomizePage as Admin4SiteSpacesPostsCustomizePage } from "@/pages/admin4/site-spaces-posts-customize";
 import { SiteCmsEventsPage as Admin4SiteCmsEventsPage } from "@/pages/admin4/site-cms-events";
 import { AdminDesignPage as Admin4DesignPage } from "@/pages/admin4/design";
 import { SiteHomePage } from "@/pages/site/home";
@@ -238,7 +241,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/files" element={<Admin4SiteFilesPage />} />
                         <Route path="/admin4/site/spaces/myfolder/events" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/events/create" element={<Admin4SiteSpacesEventsCreatePage />} />
-                        <Route path="/admin4/site/spaces/myfolder/events/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/myfolder/events/permissions" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/events/members" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/events/analytics" element={<Admin4SiteSpacesEventsPage />} />
@@ -246,7 +249,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/myfolder/events/seo" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/events/danger" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/blog" element={<Admin4SiteSpacesBlogPage />} />
-                        <Route path="/admin4/site/spaces/myfolder/blog/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/blog/customize" element={<Admin4SiteSpacesBlogCustomizePage />} />
                         <Route path="/admin4/site/spaces/myfolder/blog/permissions" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/myfolder/blog/members" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/myfolder/blog/analytics" element={<Admin4SiteSpacesBlogPage />} />
@@ -254,7 +257,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/myfolder/blog/seo" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/myfolder/blog/danger" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/myfolder/help" element={<Admin4SiteSpacesHelpPage />} />
-                        <Route path="/admin4/site/spaces/myfolder/help/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/help/customize" element={<Admin4SiteSpacesHelpCustomizePage />} />
                         <Route path="/admin4/site/spaces/myfolder/help/permissions" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/myfolder/help/members" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/myfolder/help/analytics" element={<Admin4SiteSpacesHelpPage />} />
@@ -262,7 +265,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/myfolder/help/seo" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/myfolder/help/danger" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/myfolder/posts" element={<Admin4SiteSpacesPostsPage />} />
-                        <Route path="/admin4/site/spaces/myfolder/posts/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/myfolder/posts/customize" element={<Admin4SiteSpacesPostsCustomizePage />} />
                         <Route path="/admin4/site/spaces/myfolder/posts/permissions" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/posts/members" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/myfolder/posts/analytics" element={<Admin4SiteSpacesPostsPage />} />
@@ -273,7 +276,7 @@ createRoot(document.getElementById("root")!).render(
                         {/* Admin4 Growth folder routes */}
                         <Route path="/admin4/site/spaces/growth/events" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/growth/events/create" element={<Admin4SiteSpacesEventsCreatePage />} />
-                        <Route path="/admin4/site/spaces/growth/events/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/events/permissions" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/growth/events/members" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/growth/events/analytics" element={<Admin4SiteSpacesEventsPage />} />
@@ -281,7 +284,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/events/seo" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/growth/events/danger" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/growth/blog" element={<Admin4SiteSpacesBlogPage />} />
-                        <Route path="/admin4/site/spaces/growth/blog/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/blog/customize" element={<Admin4SiteSpacesBlogCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/blog/permissions" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/growth/blog/members" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/growth/blog/analytics" element={<Admin4SiteSpacesBlogPage />} />
@@ -289,7 +292,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/blog/seo" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/growth/blog/danger" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/growth/help" element={<Admin4SiteSpacesHelpPage />} />
-                        <Route path="/admin4/site/spaces/growth/help/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/help/customize" element={<Admin4SiteSpacesHelpCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/help/permissions" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/growth/help/members" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/growth/help/analytics" element={<Admin4SiteSpacesHelpPage />} />
@@ -297,7 +300,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/help/seo" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/growth/help/danger" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/growth/posts" element={<Admin4SiteSpacesPostsPage />} />
-                        <Route path="/admin4/site/spaces/growth/posts/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/posts/customize" element={<Admin4SiteSpacesPostsCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/posts/permissions" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/growth/posts/members" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/growth/posts/analytics" element={<Admin4SiteSpacesPostsPage />} />
@@ -306,7 +309,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/posts/danger" element={<Admin4SiteSpacesPostsPage />} />
                         
                         <Route path="/admin4/site/spaces/private-space" element={<Admin4SiteSpacesEventsPage />} />
-                        <Route path="/admin4/site/spaces/private-space/customize" element={<Admin4EventsCustomizePage />} />
+                        <Route path="/admin4/site/spaces/private-space/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/private-space/permissions" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/cms/events" element={<Navigate to="/admin4/site/cms/events/customize" replace />} />
                         <Route path="/admin4/site/cms/events/settings" element={<Admin4SiteCmsEventsPage />} />

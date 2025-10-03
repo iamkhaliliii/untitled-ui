@@ -218,7 +218,7 @@ export const EventsAuditLogsSettings = ({}: EventsAuditLogsSettingsProps) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="space-y-4">
             {/* Simple Timeline Only */}
             <div className="space-y-2">
                 {auditLogs.map((log) => (

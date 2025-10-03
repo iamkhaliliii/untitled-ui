@@ -1905,31 +1905,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </button>
                                 </li>
                             )}
-                            {/* Show Customize tab for both CMS and regular pages */}
-                            <li>
-                                <button
-                                    onClick={() => handleSecondaryItemClick("customize", 
-                                        isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
-                                        isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
-                                        activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
-                                        activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
-                                        activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
-                                        activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
-                                        isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
-                                        isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
-                                        isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
-                                        `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
-                                    )}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        selectedSecondaryItem === "customize"
-                                            ? "bg-active text-secondary_hover"
-                                            : "text-secondary hover:text-primary hover:bg-secondary"
-                                    }`}
-                                >
-                                    <Palette className="h-4 w-4" />
-                                    Customize
-                                </button>
-                            </li>
                             {/* Show Permissions tab for non-CMS pages */}
                             {!isCmsEventsPage && (
                                 <li>
@@ -1953,22 +1928,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     >
                                         <Shield01 className="h-4 w-4" />
                                         Permissions
-                                    </button>
-                                </li>
-                            )}
-                            {/* Show Settings tab only for CMS pages */}
-                            {isCmsEventsPage && (
-                                <li>
-                                    <button
-                                        onClick={() => handleSecondaryItemClick("general", `/${currentAdminVersion}/site/cms/events/settings`)}
-                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                            selectedSecondaryItem === "general"
-                                                ? "bg-active text-secondary_hover"
-                                                : "text-secondary hover:text-primary hover:bg-secondary"
-                                        }`}
-                                    >
-                                        <Settings01 className="h-4 w-4" />
-                                        Settings
                                     </button>
                                 </li>
                             )}
@@ -2063,6 +2022,43 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             SEO
                                         </button>
                                     </li>
+                                    
+                                    {/* Divider */}
+                                    <li className="py-2">
+                                        <div className="border-t border-secondary"></div>
+                                    </li>
+                                    
+                                    {/* Show Customize tab for both CMS and regular pages */}
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("customize", 
+                                                isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
+                                                isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
+                                            )}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "customize"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <Palette className="h-4 w-4" />
+                                            Customizer
+                                        </button>
+                                    </li>
+                                    
+                                    {/* Divider */}
+                                    <li className="py-2">
+                                        <div className="border-t border-secondary"></div>
+                                    </li>
+                                    
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("danger", 
@@ -2086,6 +2082,49 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                         </button>
                                     </li>
                                 </>
+                            )}
+                            {/* Show Settings tab only for CMS pages */}
+                            {isCmsEventsPage && (
+                                <li>
+                                    <button
+                                        onClick={() => handleSecondaryItemClick("general", `/${currentAdminVersion}/site/cms/events/settings`)}
+                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            selectedSecondaryItem === "general"
+                                                ? "bg-active text-secondary_hover"
+                                                : "text-secondary hover:text-primary hover:bg-secondary"
+                                        }`}
+                                    >
+                                        <Settings01 className="h-4 w-4" />
+                                        Settings
+                                    </button>
+                                </li>
+                            )}
+                            {/* Show Customize tab for both CMS and regular pages - for non-space pages */}
+                            {!(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && (
+                                <li>
+                                    <button
+                                        onClick={() => handleSecondaryItemClick("customize", 
+                                            isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
+                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
+                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
+                                            isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
+                                            isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
+                                            isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
+                                            `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
+                                        )}
+                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            selectedSecondaryItem === "customize"
+                                                ? "bg-active text-secondary_hover"
+                                                : "text-secondary hover:text-primary hover:bg-secondary"
+                                        }`}
+                                    >
+                                        <Palette className="h-4 w-4" />
+                                        Customize
+                                    </button>
+                                </li>
                             )}
                         </ul>
                         )}
@@ -2324,7 +2363,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
             </div>
             
             {/* Tertiary sidebar overlay - positioned over main content */}
-            {isSpacePage && (selectedSecondaryItem === "general" || selectedSecondaryItem === "permissions" || selectedSecondaryItem === "members" || selectedSecondaryItem === "analytics" || selectedSecondaryItem === "audit-logs" || selectedSecondaryItem === "seo" || selectedSecondaryItem === "danger") && (
+            {isSpacePage && selectedSecondaryItem === "customize" && (
                 <div 
                     className={`z-50 lg:fixed ${
                         currentAdminVersion === 'admin4'

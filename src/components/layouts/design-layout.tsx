@@ -41,11 +41,14 @@ export const DesignLayout = ({
             <div className="flex flex-1 overflow-hidden">
                 {/* Secondary Sidebar */}
                 <div className={`${sidebarWidth} h-full bg-primary border-r border-secondary overflow-y-auto`}>
-                    <div className="p-4">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-semibold text-primary mb-2">{title}</h2>
-                            <p className="text-sm text-tertiary">{description}</p>
-                        </div>
+                    <div className="p-2">
+                        {/* Only show title/description if they're not empty */}
+                        {(title || description) && (
+                            <div className="mb-6">
+                                {title && <h2 className="text-lg font-semibold text-primary mb-2">{title}</h2>}
+                                {description && <p className="text-sm text-tertiary">{description}</p>}
+                            </div>
+                        )}
                         
                         {sidebarContent}
                     </div>
@@ -58,4 +61,4 @@ export const DesignLayout = ({
             </div>
         </div>
     );
-};0
+};
