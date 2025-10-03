@@ -421,44 +421,46 @@ export const AdminStickyHeader = ({
                             {/* Actions */}
                             <div className="flex items-center space-x-2">
                                 <div className="flex items-center">
-                                    {/* Mode Dropdown */}
-                                    <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
-                                        <Dropdown.Root>
-                                            <AriaButton
-                                                aria-label="Switch Mode"
-                                                className="flex items-center gap-2 px-3 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
-                                            >
-                                                <currentMode.icon className="w-4 h-4" />
-                                                <span className="text-sm font-medium">{currentMode.label}</span>
-                                                <ChevronDown className="w-3 h-3" />
-                                            </AriaButton>
-                                            <Dropdown.Popover className="z-[70] !min-w-64">
-                                                <Dropdown.Menu>
-                                                    {currentMode.label !== 'Admin Mode' && (
-                                                        <Dropdown.Item
-                                                            icon={Settings02}
-                                                            label="Admin Mode"
-                                                            onAction={() => navigate(`/${currentAdminVersion}`)}
-                                                        />
-                                                    )}
-                                                    {currentMode.label !== 'Design Mode' && (
-                                                        <Dropdown.Item
-                                                            icon={Brush02}
-                                                            label="Design Mode"
-                                                            onAction={() => navigate(`/${currentAdminVersion}/design`)}
-                                                        />
-                                                    )}
-                                                    {currentMode.label !== 'Moderation Mode' && (
-                                                        <Dropdown.Item
-                                                            icon={Shield01}
-                                                            label="Moderation Mode"
-                                                            onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
-                                                        />
-                                                    )}
-                                                </Dropdown.Menu>
-                                            </Dropdown.Popover>
-                                        </Dropdown.Root>
-                                    </div>
+                                    {/* Mode Dropdown - Only show on admin pages, not site pages */}
+                                    {isAdminPage && (
+                                        <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
+                                            <Dropdown.Root>
+                                                <AriaButton
+                                                    aria-label="Switch Mode"
+                                                    className="flex items-center gap-2 px-3 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                                >
+                                                    <currentMode.icon className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">{currentMode.label}</span>
+                                                    <ChevronDown className="w-3 h-3" />
+                                                </AriaButton>
+                                                <Dropdown.Popover className="z-[70] !min-w-64">
+                                                    <Dropdown.Menu>
+                                                        {currentMode.label !== 'Admin Mode' && (
+                                                            <Dropdown.Item
+                                                                icon={Settings02}
+                                                                label="Admin Mode"
+                                                                onAction={() => navigate(`/${currentAdminVersion}`)}
+                                                            />
+                                                        )}
+                                                        {currentMode.label !== 'Design Mode' && (
+                                                            <Dropdown.Item
+                                                                icon={Brush02}
+                                                                label="Design Mode"
+                                                                onAction={() => navigate(`/${currentAdminVersion}/design`)}
+                                                            />
+                                                        )}
+                                                        {currentMode.label !== 'Moderation Mode' && (
+                                                            <Dropdown.Item
+                                                                icon={Shield01}
+                                                                label="Moderation Mode"
+                                                                onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
+                                                            />
+                                                        )}
+                                                    </Dropdown.Menu>
+                                                </Dropdown.Popover>
+                                            </Dropdown.Root>
+                                        </div>
+                                    )}
 
                                     {/* Plus Action - Hidden */}
                                     {/* <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
