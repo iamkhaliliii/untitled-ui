@@ -316,6 +316,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/cms/events/settings" element={<Admin4SiteCmsEventsPage />} />
                         <Route path="/admin4/site/cms/events/customize" element={<Admin4SiteCmsEventsCustomizePage />} />
                         <Route path="/admin4/onboarding" element={<Admin4OnboardingPage />} />
+                        <Route path="/admin4/appearance" element={<Navigate to="/admin4/design" replace />} />
                         <Route path="/admin4/design" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/page-customizer" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/site-appearance" element={<Admin4DesignPage />} />
@@ -323,6 +324,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/design/site-appearance/themes" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/site-appearance/typographies" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/site-appearance/styles" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance/navigation" element={<Admin4DesignPage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />

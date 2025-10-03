@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
     Palette,
@@ -13,7 +13,8 @@ import {
     Image01,
     ArrowLeft,
     Upload01,
-    ChevronRight
+    ChevronRight,
+    Menu01
 } from "@untitledui/icons";
 import { DesignLayout } from "@/components/layouts/design-layout";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
@@ -22,8 +23,13 @@ import { CustomizerSection } from "@/components/application/app-navigation-admin
 import { Input } from "@/components/base/input/input";
 import { FileTrigger } from "@/components/base/file-upload-trigger/file-upload-trigger";
 import { Button } from "@/components/base/buttons/button";
+import { Checkbox } from "@/components/base/checkbox/checkbox";
+import { Toggle } from "@/components/base/toggle/toggle";
+import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
-import { File05, Folder, Calendar, File01, Package, Database01, SearchLg } from "@untitledui/icons";
+import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01 } from "@untitledui/icons";
+import { cx } from "@/utils/cx";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 // Design tools navigation - minimal sidebar
 const designTools = [
@@ -60,20 +66,61 @@ const siteAppearanceTools = [
         label: "Styles",
         href: "/admin4/design/site-appearance/styles",
         icon: Colors,
+    },
+    {
+        label: "Navigation",
+        href: "/admin4/design/site-appearance/navigation",
+        icon: Menu01,
     }
 ];
 
 export const AdminDesignPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const theme = useResolvedTheme();
     
     // Check if we're on site appearance page or sub-pages
     const isSiteAppearancePage = location.pathname.includes('/site-appearance');
     const isLogosPage = location.pathname.includes('/site-appearance/logos');
     const isPageCustomizerPage = location.pathname.includes('/page-customizer');
+    const isNavigationPage = location.pathname.includes('/site-appearance/navigation');
+    
+    // Check if user came from customize page
+    const cameFromCustomizePage = location.state?.from === 'customize-page';
+    const returnToUrl = location.state?.returnTo;
     
     // State for TreeView
     const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
+    
+    // State for Navigation config
+    const [headerSidebarExpanded, setHeaderSidebarExpanded] = useState(true);
+    const [headerWidgetsExpanded, setHeaderWidgetsExpanded] = useState(true);
+    const [sidebarWidgetsExpanded, setSidebarWidgetsExpanded] = useState(true);
+    const [navToggleStates, setNavToggleStates] = useState({
+        header: true,
+        leftSidebar: true
+    });
+    
+    // State for navigation widgets
+    const [navigationWidgets, setNavigationWidgets] = useState({
+        topNavigation: true,
+        menu: true
+    });
+    
+    // Dropdown state for widget settings
+    const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+    
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (openDropdownId && !(event.target as Element).closest('.relative')) {
+                setOpenDropdownId(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [openDropdownId]);
     
     // Get current admin version
     const getCurrentAdminVersion = () => {
@@ -83,6 +130,17 @@ export const AdminDesignPage = () => {
     };
     
     const currentAdminVersion = getCurrentAdminVersion();
+    
+    // Handlers for navigation widget actions
+    const handleAddHeaderWidget = () => {
+        console.log("Add header widget clicked");
+        // Add logic to show widget selection for header
+    };
+    
+    const handleAddSidebarWidget = () => {
+        console.log("Add sidebar widget clicked");
+        // Add logic to show widget selection for sidebar
+    };
     
     // Tree data for page customizer (exact copy from site tree but with customize links)
     const pageCustomizerTreeData: TreeNode[] = [
@@ -346,6 +404,9 @@ export const AdminDesignPage = () => {
                         <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
                             Page Customizer
                         </h3>
+                        <p className="text-sm text-tertiary mt-1">
+                            Select pages to customize their layout and content
+                        </p>
                     </div>
                 </div>
 
@@ -412,10 +473,10 @@ export const AdminDesignPage = () => {
                 </div>
 
                 {/* Content Section - Reduced top margin */}
-                <div className="mt-2 px-4 space-y-6">
-
-                {/* Light Version Logo Section */}
-                <CustomizerSection title="Light version logo" defaultExpanded={true}>
+                <div className="mt-2 flex-1 overflow-y-auto">
+                    <div className="px-6 space-y-2">
+                        {/* Light Version Logo Section */}
+                        <CustomizerSection title="Light version logo" defaultExpanded={true}>
                     <div className="space-y-4">
                         {/* Light logo image */}
                         <div className="space-y-2">
@@ -481,6 +542,11 @@ export const AdminDesignPage = () => {
                         </div>
                     </div>
                 </CustomizerSection>
+                   {/* Divider */}
+        <div className={cx(
+          "border-t",
+          theme === 'dark' ? "border-gray-700" : "border-secondary"
+        )}></div>
 
                 {/* Dark Version Logo Section */}
                 <CustomizerSection title="Dark version logo" defaultExpanded={true}>
@@ -547,8 +613,9 @@ export const AdminDesignPage = () => {
                                 Recommended size is 512 x 512 pixels.
                             </p>
                         </div>
+                        </div>
+                    </CustomizerSection>
                     </div>
-                </CustomizerSection>
                 </div>
 
                 {/* Footer spacer - Same as other pages */}
@@ -557,11 +624,319 @@ export const AdminDesignPage = () => {
         );
     };
 
+    const renderNavigationConfig = () => {
+        return (
+            <div>
+                {/* Header Section */}
+                <div className="px-4 lg:px-5">
+                    {/* Back Button */}
+                    <div className="mb-2">
+                        <button
+                            onClick={() => {
+                                if (cameFromCustomizePage && returnToUrl) {
+                                    navigate(returnToUrl);
+                                } else {
+                                    navigate('/admin4/design/site-appearance');
+                                }
+                            }}
+                            className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                        >
+                            <ArrowLeft className="size-4 text-fg-quaternary" />
+                        </button>
+                    </div>
+                    
+                    {/* Title */}
+                    <div className="mb-3">
+                        <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
+                            Navigation
+                        </h3>
+                        <p className="text-sm text-tertiary mt-1">
+                            Configure header and sidebar navigation elements
+                        </p>
+                    </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="mt-2 flex-1 overflow-y-auto">
+                    <div className="space-y-2 p-6">
+                        {/* Header and sidebar Section */}
+                        <CustomizerSection
+                            title="Header and sidebar"
+                            isExpanded={headerSidebarExpanded}
+                            onExpandedChange={setHeaderSidebarExpanded}
+                        >
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                    <Checkbox
+                                        isSelected={navToggleStates.header}
+                                        onChange={(isSelected) => setNavToggleStates(prev => ({ ...prev, header: isSelected }))}
+                                        label="Header"
+                                        size="sm"
+                                    />
+                                </div>
+                                
+                                <div className="flex flex-row col-span-1 py-1 px-2 hover:bg-secondary border border-secondary rounded-md items-center text-tertiary">
+                                    <Checkbox
+                                        isSelected={navToggleStates.leftSidebar}
+                                        onChange={(isSelected) => setNavToggleStates(prev => ({ ...prev, leftSidebar: isSelected }))}
+                                        label="Sidebar"
+                                        size="sm"
+                                    />
+                                </div>
+                            </div>
+                        </CustomizerSection>
+                        
+                        {/* Divider */}
+                        <div className={cx(
+                            "border-t",
+                            theme === 'dark' ? "border-gray-700" : "border-secondary"
+                        )}></div>
+
+                        {/* Header Widgets Section */}
+                        <CustomizerSection 
+                            title="Header Widgets" 
+                            isExpanded={headerWidgetsExpanded}
+                            onExpandedChange={setHeaderWidgetsExpanded}
+                            action={{
+                                label: "Add Widget",
+                                icon: Plus,
+                                onClick: handleAddHeaderWidget
+                            }}
+                        >
+                            <div className="space-y-2">
+                                {/* Top Navigation Widget */}
+                                <div className={cx(
+                                    "flex items-center py-2 px-2 border rounded-md transition-all duration-300 ease-in-out relative",
+                                    theme === 'dark' 
+                                        ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+                                        : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+                                )}>
+                                    <div className="flex items-center space-x-3">
+                                        {/* Reorder handle */}
+                                        <div className="cursor-move p-1">
+                                            <DotsGrid className={cx(
+                                                "h-4 w-4",
+                                                theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                                            )} />
+                                        </div>
+                                        
+                                        <div className="p-1.5 rounded-md bg-blue-100/20">
+                                            <LayoutTop className="h-4 w-4 text-blue-400" />
+                                        </div>
+                                        <span className={cx(
+                                            "text-sm font-medium",
+                                            theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                                        )}>Top Navigation</span>
+                                    </div>
+                                    <div className="ml-auto flex items-center space-x-1">
+                                        {/* Dropdown Menu Button */}
+                                        <div className="relative">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setOpenDropdownId(openDropdownId === 'top-navigation' ? null : 'top-navigation');
+                                                }}
+                                                className={cx(
+                                                    "p-1 rounded-md hover:bg-secondary/60 transition-colors",
+                                                    theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                                                )}
+                                            >
+                                                <DotsHorizontal className={cx(
+                                                    "h-4 w-4",
+                                                    theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                                                )} />
+                                            </button>
+                                            
+                                            {/* Dropdown Menu */}
+                                            {openDropdownId === 'top-navigation' && (
+                                                <div className={cx(
+                                                    "absolute right-0 top-8 w-40 rounded-lg border shadow-lg py-1 z-50",
+                                                    theme === 'dark' 
+                                                        ? "bg-gray-800 border-gray-700" 
+                                                        : "bg-white border-gray-200"
+                                                )}>
+                                                    <button
+                                                        onClick={() => {
+                                                            console.log("Configure Top Navigation");
+                                                            setOpenDropdownId(null);
+                                                        }}
+                                                        className={cx(
+                                                            "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                                                            theme === 'dark' 
+                                                                ? "text-gray-200 hover:bg-gray-700 hover:text-gray-100"
+                                                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                                        )}
+                                                    >
+                                                        <Settings01 className="size-3 mr-2" />
+                                                        Config
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        <Toggle
+                                            id="top-navigation"
+                                            isSelected={navigationWidgets.topNavigation}
+                                            onChange={(isSelected) => setNavigationWidgets(prev => ({ ...prev, topNavigation: isSelected }))}
+                                            size="sm"
+                                            slim
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </CustomizerSection>
+
+                        {/* Divider */}
+                        <div className={cx(
+                            "border-t",
+                            theme === 'dark' ? "border-gray-700" : "border-secondary"
+                        )}></div>
+
+                        {/* Sidebar Widgets Section */}
+                        <CustomizerSection 
+                            title="Sidebar Widgets" 
+                            isExpanded={sidebarWidgetsExpanded}
+                            onExpandedChange={setSidebarWidgetsExpanded}
+                            action={{
+                                label: "Add Widget",
+                                icon: Plus,
+                                onClick: handleAddSidebarWidget
+                            }}
+                        >
+                            <div className="space-y-2">
+                                {/* Menu Widget */}
+                                <div className={cx(
+                                    "flex items-center py-2 px-2 border rounded-md transition-all duration-300 ease-in-out relative",
+                                    theme === 'dark' 
+                                        ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+                                        : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+                                )}>
+                                    <div className="flex items-center space-x-3">
+                                        {/* Reorder handle */}
+                                        <div className="cursor-move p-1">
+                                            <DotsGrid className={cx(
+                                                "h-4 w-4",
+                                                theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                                            )} />
+                                        </div>
+                                        
+                                        <div className="p-1.5 rounded-md bg-green-100/20">
+                                            <Menu01 className="h-4 w-4 text-green-400" />
+                                        </div>
+                                        <span className={cx(
+                                            "text-sm font-medium",
+                                            theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                                        )}>Menu</span>
+                                    </div>
+                                    <div className="ml-auto flex items-center space-x-1">
+                                        {/* Dropdown Menu Button */}
+                                        <div className="relative">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setOpenDropdownId(openDropdownId === 'menu' ? null : 'menu');
+                                                }}
+                                                className={cx(
+                                                    "p-1 rounded-md hover:bg-secondary/60 transition-colors",
+                                                    theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                                                )}
+                                            >
+                                                <DotsHorizontal className={cx(
+                                                    "h-4 w-4",
+                                                    theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                                                )} />
+                                            </button>
+                                            
+                                            {/* Dropdown Menu */}
+                                            {openDropdownId === 'menu' && (
+                                                <div className={cx(
+                                                    "absolute right-0 top-8 w-40 rounded-lg border shadow-lg py-1 z-50",
+                                                    theme === 'dark' 
+                                                        ? "bg-gray-800 border-gray-700" 
+                                                        : "bg-white border-gray-200"
+                                                )}>
+                                                    <button
+                                                        onClick={() => {
+                                                            console.log("Configure Menu");
+                                                            setOpenDropdownId(null);
+                                                        }}
+                                                        className={cx(
+                                                            "flex items-center w-full px-3 py-2 text-sm transition-colors",
+                                                            theme === 'dark' 
+                                                                ? "text-gray-200 hover:bg-gray-700 hover:text-gray-100"
+                                                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                                        )}
+                                                    >
+                                                        <Settings01 className="size-3 mr-2" />
+                                                        Config
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        <Toggle
+                                            id="menu"
+                                            isSelected={navigationWidgets.menu}
+                                            onChange={(isSelected) => setNavigationWidgets(prev => ({ ...prev, menu: isSelected }))}
+                                            size="sm"
+                                            slim
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </CustomizerSection>
+                    </div>
+                </div>
+
+                {/* Footer spacer */}
+                <div className="mt-auto py-4"></div>
+            </div>
+        );
+    };
+
     const renderMainContent = () => {
         return (
-            <div className="p-6">
+            <div className="p-4">
+                {/* Control bar above browser mockup */}
+                <div className="flex items-center justify-between mb-3">
+                    {/* Left side: Device and Navigation ButtonGroups */}
+                    <div className="flex items-center gap-4">
+                        {/* Device ButtonGroup */}
+                        <ButtonGroup 
+                            size="sm"
+                            selectedKeys={["desktop"]}
+                            onSelectionChange={(keys) => {
+                                const selected = Array.from(keys)[0] as string;
+                                console.log('Device changed:', selected);
+                            }}
+                        >
+                            <ButtonGroupItem id="mobile" iconLeading={Phone01} />
+                            <ButtonGroupItem id="tablet" iconLeading={Tablet01} />
+                            <ButtonGroupItem id="desktop" iconLeading={Monitor01} />
+                        </ButtonGroup>
+                        
+                        {/* Navigation ButtonGroup */}
+                        <ButtonGroup
+                            size="sm"
+                            selectedKeys={["forward"]}
+                            onSelectionChange={(keys) => {
+                                const selected = Array.from(keys)[0] as string;
+                                console.log('Navigation changed:', selected);
+                            }}
+                        >
+                            <ButtonGroupItem id="back" iconLeading={FlipBackward} />
+                            <ButtonGroupItem id="forward" iconLeading={FlipForward} />
+                        </ButtonGroup>
+                    </div>
+                    
+                    {/* Right side: Save button */}
+  
+                </div>
+
                 {/* Browser Mockup */}
-                <div className="max-w-6xl mx-auto">
+                <div className="mx-auto">
                     <BrowserMockup />
                 </div>
             </div>
@@ -570,17 +945,19 @@ export const AdminDesignPage = () => {
 
     const sidebarContent = (
         <aside className="flex h-full max-w-full flex-col justify-between overflow-auto scrollbar-thin bg-primary pt-4 lg:pt-6">
-            {/* Show logos config when on logos page */}
+            {/* Show specific config based on current page */}
             {isLogosPage ? (
                 renderLogosConfig()
+            ) : isNavigationPage ? (
+                renderNavigationConfig()
             ) : isPageCustomizerPage ? (
                 renderPageCustomizerContent()
             ) : (
                 <>
                     {/* Header Section - Reduced spacing */}
                     <div className="px-4 lg:px-5">
-                        {/* Back Button - Only for site appearance pages */}
-                        {isSiteAppearancePage && (
+                        {/* Back Button - Only for site appearance pages, Home Button for main design page */}
+                        {isSiteAppearancePage ? (
                             <div className="mb-2">
                                 <button
                                     onClick={() => navigate('/admin4/design')}
@@ -589,12 +966,30 @@ export const AdminDesignPage = () => {
                                     <ArrowLeft className="size-4 text-fg-quaternary" />
                                 </button>
                             </div>
+                        ) : (
+                            <div className="mb-2">
+                                <button
+                                    onClick={() => navigate('/admin4')}
+                                    className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                                >
+                                    <FlipBackward className="size-4 text-fg-quaternary" />
+                                </button>
+                            </div>
                         )}
                         
-                        <div className={isSiteAppearancePage ? "mb-3" : "mb-2"}>
+                        <div className="mb-3">
                             <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
                                 {isSiteAppearancePage ? 'Site Appearance' : 'Design Studio'}
                             </h3>
+                            {isSiteAppearancePage ? (
+                                <p className="text-sm text-tertiary mt-1">
+                                    Manage your brand identity and visual styling
+                                </p>
+                            ) : (
+                                <p className="text-sm text-tertiary mt-1">
+                                    Customize your community's visual design and layouts
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -616,8 +1011,15 @@ export const AdminDesignPage = () => {
                         </div>
                     </div>
 
-                    {/* Footer spacer */}
-                    <div className="mt-auto py-4"></div>
+                    {/* Footer with title and description */}
+                    <div className="mt-auto px-4 py-4 border-t border-secondary">
+                        <div className="space-y-2">
+                            <h4 className="text-sm font-semibold text-primary">Design Studio</h4>
+                            <p className="text-xs text-tertiary leading-relaxed">
+                                For enterprise plans, you can use Design Studio Pro to create advanced custom layouts for each page with enhanced design capabilities.
+                            </p>
+                        </div>
+                    </div>
                 </>
             )}
         </aside>

@@ -318,12 +318,13 @@ export const AdminStickyHeader = ({
     // Determine current mode based on URL
     const getCurrentMode = () => {
         const path = location.pathname;
-        if (path.includes('/design')) {
+        // Check if on any design-related page (including ALL customize pages since they use DesignLayout)
+        if (path.includes('/design') || path.includes('/customize')) {
             return { icon: Brush02, label: 'Design Mode' };
         } else if (path.includes('/moderation')) {
             return { icon: Eye, label: 'Moderation Mode' };
         } else {
-            return { icon: Shield01, label: 'Admin Mode' };
+            return { icon: Settings02, label: 'Admin Mode' };
         }
     };
 

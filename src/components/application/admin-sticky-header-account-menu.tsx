@@ -62,19 +62,6 @@ export const AdminStickyHeaderAccountMenu = () => {
             <Dropdown.Menu>
                 <Dropdown.Section>
                     <Dropdown.Item 
-                        icon={Monitor02} 
-                        label="View Community"
-                        onAction={() => window.open('/site', '_blank')}
-                    />
-                    <Dropdown.Item 
-                        icon={Settings01} 
-                        label="Admin Panel"
-                        onAction={() => window.location.reload()}
-                    />
-                </Dropdown.Section>
-                <Dropdown.Separator />
-                <Dropdown.Section>
-                    <Dropdown.Item 
                         addon="⌥⇧Q" 
                         icon={LogOut01}
                         label="Sign out"

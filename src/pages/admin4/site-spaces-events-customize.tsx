@@ -73,7 +73,13 @@ export const SiteSpacesEventsCustomizePage = () => {
     };
 
     const handleEditGlobalWidgets = () => {
-        setShowNavigationInTertiary(true);
+        // Navigate to design navigation page with state to track where we came from
+        navigate('/admin4/design/site-appearance/navigation', {
+            state: { 
+                from: 'customize-page',
+                returnTo: location.pathname 
+            }
+        });
     };
 
     const handleWidgetSelect = (widget: any) => {
