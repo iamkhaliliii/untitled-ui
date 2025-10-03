@@ -14,7 +14,11 @@ import {
     Globe01,
     DotsHorizontal,
     Brush02,
-    CodeBrowser
+    CodeBrowser,
+    Monitor01,
+    Eye,
+    ChevronDownDouble,
+    Settings02
 } from "@untitledui/icons";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Button } from "@/components/base/buttons/button";
@@ -38,6 +42,10 @@ export const AdminStickyHeader = ({
     const navigate = useNavigate();
     const location = useLocation();
     const { adminHeaderCollapsed, toggleAdminHeaderCollapse } = useAdmin();
+    
+    // Check if user came from Page Customizer
+    const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
+                                   document.referrer.includes('/admin4/design/page-customizer');
 
     if (!isVisible) {
         return null;
@@ -50,7 +58,37 @@ export const AdminStickyHeader = ({
         
         if (segments.length === 0) return [{ label: 'Home', path: '/' }];
         
-        // Build breadcrumbs from URL segments
+        // If user came from Page Customizer and is on a customize page, show Page Customizer in breadcrumb
+        if (cameFromPageCustomizer && path.includes('/customize')) {
+            const breadcrumbs = [];
+            
+            // Add Admin Panel
+            breadcrumbs.push({ label: 'Admin Panel', path: '/admin4' });
+            
+            // Add Design
+            breadcrumbs.push({ label: 'Design', path: '/admin4/design' });
+            
+            // Add Page Customizer
+            breadcrumbs.push({ label: 'Page Customizer', path: '/admin4/design/page-customizer' });
+            
+            // Add current page name
+            const pathParts = path.split('/');
+            const spaceName = pathParts[pathParts.length - 3]; // e.g., 'myfolder' or 'growth'
+            const pageType = pathParts[pathParts.length - 2]; // e.g., 'events', 'blog'
+            
+            let displayName = pageType.charAt(0).toUpperCase() + pageType.slice(1);
+            if (spaceName === 'growth') {
+                displayName = `Growth ${displayName}`;
+            } else if (spaceName !== 'myfolder') {
+                displayName = `${spaceName.charAt(0).toUpperCase() + spaceName.slice(1)} ${displayName}`;
+            }
+            
+            breadcrumbs.push({ label: `${displayName} Customize`, path: path });
+            
+            return breadcrumbs;
+        }
+        
+        // Build breadcrumbs from URL segments (original logic)
         const breadcrumbs = [];
         let currentPath = '';
         
@@ -277,6 +315,20 @@ export const AdminStickyHeader = ({
 
     const isAdmin4 = location.pathname.includes('/admin4');
     
+    // Determine current mode based on URL
+    const getCurrentMode = () => {
+        const path = location.pathname;
+        if (path.includes('/design')) {
+            return { icon: Brush02, label: 'Design Mode' };
+        } else if (path.includes('/moderation')) {
+            return { icon: Eye, label: 'Moderation Mode' };
+        } else {
+            return { icon: Shield01, label: 'Admin Mode' };
+        }
+    };
+
+    const currentMode = getCurrentMode();
+    
     return (
         <div className="sticky top-0 left-0 right-0 z-[60] bg-black dark:bg-white border-b border-gray-800 dark:border-gray-200 overflow-hidden relative">
             {/* Main Header Content */}
@@ -316,8 +368,8 @@ export const AdminStickyHeader = ({
                     </Dropdown.Root>
 
                     <div className="flex-1 flex items-center">
-                        {/* Tools Section */}
-                        <div className="w-77 flex-shrink-0 h-full border-r border-gray-800 dark:border-gray-200">
+                        {/* Tools Section - Hidden */}
+                        {/* <div className="w-77 flex-shrink-0 h-full border-r border-gray-800 dark:border-gray-200">
                             <div className="flex h-full items-center justify-center gap-2 px-2">
                                 {adminTools.map((tool, index) => (
                                     <div key={index} className="relative group">
@@ -354,7 +406,7 @@ export const AdminStickyHeader = ({
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Main Content Area */}
                         <div className="flex-1 flex items-center justify-between pl-3">
@@ -368,7 +420,41 @@ export const AdminStickyHeader = ({
                             {/* Actions */}
                             <div className="flex items-center space-x-2">
                                 <div className="flex items-center">
+                                    {/* Mode Dropdown */}
                                     <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
+                                        <Dropdown.Root>
+                                            <AriaButton
+                                                aria-label="Switch Mode"
+                                                className="flex items-center gap-2 px-3 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                            >
+                                                <currentMode.icon className="w-4 h-4" />
+                                                <span className="text-sm font-medium">{currentMode.label}</span>
+                                                <ChevronDown className="w-3 h-3" />
+                                            </AriaButton>
+                                            <Dropdown.Popover className="z-[70] !min-w-64">
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                        icon={Settings02}
+                                                        label="Admin Mode"
+                                                        onAction={() => navigate(`/${currentAdminVersion}`)}
+                                                    />
+                                                    <Dropdown.Item
+                                                        icon={Brush02}
+                                                        label="Design Mode"
+                                                        onAction={() => navigate(`/${currentAdminVersion}/design`)}
+                                                    />
+                                                    <Dropdown.Item
+                                                        icon={Shield01}
+                                                        label="Moderation Mode"
+                                                        onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
+                                                    />
+                                                </Dropdown.Menu>
+                                            </Dropdown.Popover>
+                                        </Dropdown.Root>
+                                    </div>
+
+                                    {/* Plus Action - Hidden */}
+                                    {/* <div className="h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
                                         <ButtonUtility 
                                             size="sm"
                                             color="tertiary" 
@@ -377,7 +463,7 @@ export const AdminStickyHeader = ({
                                             onClick={handleAddNew}
                                             className="w-12 h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600"
                                         />
-                                    </div>
+                                    </div> */}
 
                                     <div className="h-12 flex items-center justify-center border-gray-800 dark:border-gray-200">
                                         <ButtonUtility 

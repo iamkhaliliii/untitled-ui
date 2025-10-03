@@ -8,16 +8,12 @@ import WidgetConfig from "@/components/application/app-navigation-admin4/sidebar
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
-import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01 } from "@untitledui/icons";
+import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 
-export const SiteSpacesEventsCustomizePage = () => {
+export const SiteCmsEventsCustomizePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    
-    // Check if user came from Page Customizer
-    const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
-                                   document.referrer.includes('/admin4/design/page-customizer');
     const currentPath = location.pathname;
     
     // Use widget config context for toggle states
@@ -40,17 +36,48 @@ export const SiteSpacesEventsCustomizePage = () => {
     
     // Get page title and description
     const getPageTitle = () => {
-        if (currentPath.includes("/admin4/site/spaces/private-space")) {
-            return "Customize your private space layout and appearance";
-        }
-        if (currentPath.includes("/admin4/site/spaces/growth/events")) {
-            return "Customize your events page layout and appearance";
-        }
-        return "Customize your events page layout and appearance";
+        return "Customize your CMS events layout and appearance";
     };
 
     const getMainTitle = () => {
         return "Customizer";
+    };
+    
+    // Get sidebar title based on current state
+    const getSidebarTitle = () => {
+        if (showWidgetSelection) {
+            return "Add Widget";
+        }
+        
+        if (showWidgetConfig && selectedWidgetForConfig) {
+            if (isTabConfigMode && tabConfigLabel) {
+                return `"${tabConfigLabel}" Tab Config`;
+            }
+            return `Configure ${selectedWidgetForConfig.label}`;
+        }
+        
+        if (showNavigationInTertiary) {
+            return "Header and sidebar";
+        }
+        
+        return "Customizer";
+    };
+
+    // Get sidebar description based on current state
+    const getSidebarDescription = () => {
+        if (showWidgetSelection) {
+            return "Choose widgets to add to your space";
+        }
+        
+        if (showWidgetConfig && selectedWidgetForConfig) {
+            return "Configure widget settings and appearance";
+        }
+        
+        if (showNavigationInTertiary) {
+            return "Configure navigation settings";
+        }
+        
+        return "Customize your CMS events layout and appearance";
     };
     
     // Handlers for EventsCustomizeSettings
@@ -126,14 +153,8 @@ export const SiteSpacesEventsCustomizePage = () => {
 
     // Space Settings button handler
     const handleSpaceSettings = () => {
-        // Navigate back to the main events page (without /customize)
-        const basePath = currentPath.replace('/customize', '');
-        navigate(basePath);
-    };
-    
-    // Back to Page Customizer handler
-    const handleBackToPageCustomizer = () => {
-        navigate('/admin4/design/page-customizer');
+        // Navigate back to the CMS events settings page
+        navigate('/admin4/site/cms/events/settings');
     };
 
     // Device selection handler
@@ -150,43 +171,6 @@ export const SiteSpacesEventsCustomizePage = () => {
     const handleSaveChanges = () => {
         console.log("Save changes clicked");
         // Add save functionality here
-    };
-    
-    // Get sidebar title based on current state
-    const getSidebarTitle = () => {
-        if (showWidgetSelection) {
-            return "Add Widget";
-        }
-        
-        if (showWidgetConfig && selectedWidgetForConfig) {
-            if (isTabConfigMode && tabConfigLabel) {
-                return `"${tabConfigLabel}" Tab Config`;
-            }
-            return `Configure ${selectedWidgetForConfig.label}`;
-        }
-        
-        if (showNavigationInTertiary) {
-            return "Header and sidebar";
-        }
-        
-        return "Customizer";
-    };
-
-    // Get sidebar description based on current state
-    const getSidebarDescription = () => {
-        if (showWidgetSelection) {
-            return "Choose widgets to add to your space";
-        }
-        
-        if (showWidgetConfig && selectedWidgetForConfig) {
-            return "Configure widget settings and appearance";
-        }
-        
-        if (showNavigationInTertiary) {
-            return "Configure navigation settings";
-        }
-        
-        return "Customize your events page layout and appearance";
     };
 
     // Render sidebar content based on current state
@@ -242,48 +226,42 @@ export const SiteSpacesEventsCustomizePage = () => {
         // Wrap content with header controls first, then title
         return (
             <div className="flex flex-col h-full">
-                {/* Header Section - Match Page Customizer styling */}
-                <div className="px-4 mt-6 lg:px-5">
+                {/* Header controls - Sticky */}
+                <div className="sticky top-0 z-10 bg-primary p-2 border-b border-secondary">
                     <div className="flex items-center justify-between mb-2">
-                        {/* Left: Back button - show widget back button OR page customizer back button */}
+                        {/* Left: Circular back button - only show if not on main customizer state */}
                         {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) ? (
-                            <button
+                            <ButtonUtility
+                                size="sm"
+                                color="tertiary"
+                                icon={ArrowLeft}
+                                tooltip="Back to Customizer"
                                 onClick={handleBackToCustomizer}
-                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
-                            >
-                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                            </button>
-                        ) : cameFromPageCustomizer ? (
-                            <button
-                                onClick={handleBackToPageCustomizer}
-                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
-                            >
-                                <ArrowLeft className="size-4 text-fg-quaternary" />
-                            </button>
+                                className="rounded-full border border-secondary"
+                            />
                         ) : (
                             <div></div> // Empty div to maintain layout
                         )}
                         
-                        {/* Right: Space Settings button - only show on main customizer state */}
-                        {!(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) && (
-                            <button
-                                onClick={handleSpaceSettings}
-                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
-                            >
-                                <Settings01 className="size-4 text-fg-quaternary" />
-                            </button>
-                        )}
+                        {/* Right: Space Settings link */}
+                        <button
+                            onClick={handleSpaceSettings}
+                            className="flex items-center gap-1 px-1 py-0.5 text-xs font-medium transition-colors cursor-pointer text-brand-secondary hover:text-brand-secondary_hover"
+                        >
+                            <FlipBackward className="size-3" />
+                            Back to CMS Settings
+                        </button>
                     </div>
                     
                     {/* Title and Description */}
-                    <div className="mb-3">
-                        <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">{getSidebarTitle()}</h3>
-                        <p className="text-sm text-tertiary mt-1">{getSidebarDescription()}</p>
+                    <div>
+                        <h2 className="text-lg font-semibold text-primary">{getSidebarTitle()}</h2>
+                        <p className="text-sm text-tertiary">{getSidebarDescription()}</p>
                     </div>
                 </div>
                 
                 {/* Main content */}
-                <div className="mt-2 px-4 flex-1 overflow-y-auto">
+                <div className="flex-1 overflow-y-auto">
                     {content}
                 </div>
             </div>

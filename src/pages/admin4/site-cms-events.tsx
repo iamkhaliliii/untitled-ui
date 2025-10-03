@@ -1,6 +1,7 @@
 import { Admin4Layout } from "@/components/layouts/admin4-layout";
 import { useLocation } from "react-router";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
+import { CmsEventsSettings } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/cms-events-settings";
 
 export const SiteCmsEventsPage = () => {
     const location = useLocation();
@@ -11,21 +12,32 @@ export const SiteCmsEventsPage = () => {
     
     const renderSettingsContent = () => (
         <div className="h-full overflow-y-auto p-6">
-            <div className="max-w-2xl mx-auto">
-                <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-                    {/* Form Header */}
-                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-900">
-                                    Form preview
-                                </h2>
-                            </div>
+            <div className="">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* Left Column: CMS Settings */}
+                    <div className="space-y-6">
+                        <div className="bg-primary">
+
+                            <CmsEventsSettings />
                         </div>
                     </div>
+                    
+                    {/* Right Column: Form Preview */}
+                    <div className="space-y-6">
+                        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+                            {/* Form Header */}
+                            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-gray-900">
+                                            Form preview
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
 
-                    {/* Form Content */}
-                    <div className="p-6 space-y-6">
+                            {/* Form Content */}
+                            <div className="p-6 space-y-6">
                         {/* Event Title */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -222,6 +234,8 @@ export const SiteCmsEventsPage = () => {
                                     </svg>
                                 </button>
                             </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,14 +254,14 @@ export const SiteCmsEventsPage = () => {
     
     return (
         <Admin4Layout title="CMS Events"
-        hideHeader={true}
+        hideHeader={false}
          currentPath={location.pathname}>
             <div className="flex h-full">
-                <div className="flex-1 p-6">
+                <div className="flex-1 p-1">
                     <div className="h-full flex flex-col">
                         
                         {/* Main content area */}
-                        <div className="flex-1 bg-primary border border-secondary rounded-lg overflow-hidden">
+                        <div className="flex-1 bg-primary ">
                             {isSettingsTab ? renderSettingsContent() : isCustomizeTab ? renderCustomizeContent() : renderCustomizeContent()}
                         </div>
                     </div>

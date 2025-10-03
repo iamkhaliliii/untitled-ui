@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/error-boundary";
 interface DesignLayoutProps {
     children: ReactNode;
     sidebarContent: ReactNode;
+    tertiarySidebarContent?: ReactNode;
     sidebarWidth?: string;
     title?: string;
     description?: string;
@@ -15,6 +16,7 @@ interface DesignLayoutProps {
 export const DesignLayout = ({ 
     children, 
     sidebarContent,
+    tertiarySidebarContent,
     sidebarWidth = "w-93",
     title = "Design Studio",
     description = "Customize your community's appearance",
@@ -37,22 +39,27 @@ export const DesignLayout = ({
                 />
             </ErrorBoundary>
 
-            {/* Main layout - Only secondary sidebar */}
+            {/* Main layout - Secondary sidebar and optional tertiary sidebar */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Secondary Sidebar */}
                 <div className={`${sidebarWidth} h-full bg-primary border-r border-secondary overflow-y-auto`}>
-                    <div className="p-2">
-                        {/* Only show title/description if they're not empty */}
-                        {(title || description) && (
-                            <div className="mb-6">
-                                {title && <h2 className="text-lg font-semibold text-primary mb-2">{title}</h2>}
-                                {description && <p className="text-sm text-tertiary">{description}</p>}
-                            </div>
-                        )}
-                        
-                        {sidebarContent}
-                    </div>
+                    {/* Only show title/description if they're not empty */}
+                    {(title || description) && (
+                        <div className="p-4 pt-6 mb-6">
+                            {title && <h2 className="text-lg font-semibold text-primary mb-2">{title}</h2>}
+                            {description && <p className="text-sm text-tertiary">{description}</p>}
+                        </div>
+                    )}
+                    
+                    {sidebarContent}
                 </div>
+
+                {/* Tertiary Sidebar - Only show when content is provided */}
+                {tertiarySidebarContent && (
+                    <div className="w-80 h-full bg-primary border-r border-secondary overflow-y-auto">
+                        {tertiarySidebarContent}
+                    </div>
+                )}
 
                 {/* Main Content Area */}
                 <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">

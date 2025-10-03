@@ -61,6 +61,7 @@ import { SiteSpacesBlogCustomizePage as Admin4SiteSpacesBlogCustomizePage } from
 import { SiteSpacesHelpCustomizePage as Admin4SiteSpacesHelpCustomizePage } from "@/pages/admin4/site-spaces-help-customize";
 import { SiteSpacesPostsCustomizePage as Admin4SiteSpacesPostsCustomizePage } from "@/pages/admin4/site-spaces-posts-customize";
 import { SiteCmsEventsPage as Admin4SiteCmsEventsPage } from "@/pages/admin4/site-cms-events";
+import { SiteCmsEventsCustomizePage as Admin4SiteCmsEventsCustomizePage } from "@/pages/admin4/site-cms-events-customize";
 import { AdminDesignPage as Admin4DesignPage } from "@/pages/admin4/design";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
@@ -311,11 +312,17 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/private-space" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/private-space/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/private-space/permissions" element={<Admin4SiteSpacesEventsPage />} />
-                        <Route path="/admin4/site/cms/events" element={<Navigate to="/admin4/site/cms/events/customize" replace />} />
+                        <Route path="/admin4/site/cms/events" element={<Navigate to="/admin4/site/cms/events/settings" replace />} />
                         <Route path="/admin4/site/cms/events/settings" element={<Admin4SiteCmsEventsPage />} />
-                        <Route path="/admin4/site/cms/events/customize" element={<Admin4SiteCmsEventsPage />} />
+                        <Route path="/admin4/site/cms/events/customize" element={<Admin4SiteCmsEventsCustomizePage />} />
                         <Route path="/admin4/onboarding" element={<Admin4OnboardingPage />} />
                         <Route path="/admin4/design" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/page-customizer" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance/logos" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance/themes" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance/typographies" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/site-appearance/styles" element={<Admin4DesignPage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />
