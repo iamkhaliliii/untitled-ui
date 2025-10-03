@@ -434,21 +434,27 @@ export const AdminStickyHeader = ({
                                             </AriaButton>
                                             <Dropdown.Popover className="z-[70] !min-w-64">
                                                 <Dropdown.Menu>
-                                                    <Dropdown.Item
-                                                        icon={Settings02}
-                                                        label="Admin Mode"
-                                                        onAction={() => navigate(`/${currentAdminVersion}`)}
-                                                    />
-                                                    <Dropdown.Item
-                                                        icon={Brush02}
-                                                        label="Design Mode"
-                                                        onAction={() => navigate(`/${currentAdminVersion}/design`)}
-                                                    />
-                                                    <Dropdown.Item
-                                                        icon={Shield01}
-                                                        label="Moderation Mode"
-                                                        onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
-                                                    />
+                                                    {currentMode.label !== 'Admin Mode' && (
+                                                        <Dropdown.Item
+                                                            icon={Settings02}
+                                                            label="Admin Mode"
+                                                            onAction={() => navigate(`/${currentAdminVersion}`)}
+                                                        />
+                                                    )}
+                                                    {currentMode.label !== 'Design Mode' && (
+                                                        <Dropdown.Item
+                                                            icon={Brush02}
+                                                            label="Design Mode"
+                                                            onAction={() => navigate(`/${currentAdminVersion}/design`)}
+                                                        />
+                                                    )}
+                                                    {currentMode.label !== 'Moderation Mode' && (
+                                                        <Dropdown.Item
+                                                            icon={Shield01}
+                                                            label="Moderation Mode"
+                                                            onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
+                                                        />
+                                                    )}
                                                 </Dropdown.Menu>
                                             </Dropdown.Popover>
                                         </Dropdown.Root>
