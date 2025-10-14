@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
     Archive,
     BarChartSquare02,
@@ -27,9 +27,7 @@ import {
     Database01,
     Data,
     CodeBrowser,
-    ShieldTick,
     Settings02,
-    Brush03,
     CreditCard02,
     GraduationHat02,
     Globe01,
@@ -55,6 +53,7 @@ import { AdminStickyHeader } from "@/components/application/admin-sticky-header"
 import { useAdmin } from "@/hooks/use-admin";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FloatingProgressButton } from "@/components/application/floating-progress-button";
+import { MobileNavigationSystem } from "@/components/application/app-navigation-admin4/mobile-navigation-system";
 
 // Helper function to generate navigation items for admin4
 const generateAdmin4NavItems = (): NavItemType[] => {
@@ -104,32 +103,6 @@ const generateAdmin4NavItems = (): NavItemType[] => {
         ],
     });
     
-    // Moderation section
-    items.push({
-        label: "Moderation",
-        href: "/admin4/moderation",
-        icon: ShieldTick,
-        items: [
-            { label: "Reports", href: "/admin4/moderation/reports", icon: PieChart03, badge: 5 },
-            { label: "Spam", href: "/admin4/moderation/spam", icon: Archive },
-            { label: "Pending", href: "/admin4/moderation/pending", icon: ClockFastForward },
-            { label: "Logs", href: "/admin4/moderation/logs", icon: Rows01 },
-        ],
-    });
-    
-    // Appearance section
-    items.push({
-        label: "Appearance",
-        href: "/admin4/appearance",
-        icon: Brush03,
-        items: [
-            { label: "Themes", href: "/admin4/appearance/themes", icon: Palette },
-            { label: "Customizer", href: "/admin4/appearance/customizer", icon: Settings03 },
-            { label: "Menus", href: "/admin4/appearance/menus", icon: Grid03 },
-            { label: "Widgets", href: "/admin4/appearance/widgets", icon: Stars01 },
-            { label: "Background", href: "/admin4/appearance/background", icon: Package },
-        ],
-    });
     
     // Setting section
     items.push({
@@ -216,8 +189,17 @@ export const Admin4Layout = ({
     showAdvancedFeatures = true
 }: Admin4LayoutProps) => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     const navItems = generateAdmin4NavItems();
+
+    const handleMobileMenuToggle = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const handleMobileMenuClose = () => {
+        setIsMobileMenuOpen(false);
+    };
     
     const SidebarNavigationAdmin4 = () => (
         <SidebarNavigationDual
@@ -250,22 +232,27 @@ export const Admin4Layout = ({
                     isVisible={true} 
                     onToggleVisibility={toggleAdminHeader}
                     isAdminPage={true}
+                    onMobileMenuToggle={handleMobileMenuToggle}
                 />
             </ErrorBoundary>
 
-            {/* Main layout with enhanced sidebar and content */}
+            {/* Main layout with enhanced sidebar and content - Responsive */}
             <div className="flex flex-1 overflow-hidden">
-                <SidebarNavigationAdmin4 />
+                {/* Desktop Sidebar - Hidden on mobile/tablet */}
+                <div className="hidden lg:block">
+                    <SidebarNavigationAdmin4 />
+                </div>
                 
-                <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin">
-                    {/* Enhanced Header with admin4 branding */}
+                {/* Main Content Area - Responsive */}
+                <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin w-full lg:w-auto">
+                    {/* Enhanced Header with admin4 branding - Responsive */}
                     {!hideHeader && (
-                        <header className="flex items-center justify-between border-b border-secondary bg-primary px-6 py-4">
-                            <div>
-                                <h1 className="text-xl font-semibold text-primary">{title}</h1>
-                                <p className="text-sm text-tertiary">{description}</p>
+                        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-secondary bg-primary px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
+                            <div className="min-w-0 flex-1">
+                                <h1 className="text-lg sm:text-xl font-semibold text-primary truncate">{title}</h1>
+                                <p className="text-xs sm:text-sm text-tertiary mt-0.5 line-clamp-2 sm:line-clamp-1">{description}</p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-shrink-0">
                                 {headerActions || (
                                     <>
                                         {showAdvancedFeatures && (
@@ -273,8 +260,10 @@ export const Admin4Layout = ({
                                                 color="secondary" 
                                                 size="sm"
                                                 iconLeading={Target03}
+                                                className="hidden sm:flex"
                                             >
-                                                Quick Actions
+                                                <span className="hidden md:inline">Quick Actions</span>
+                                                <span className="md:hidden">Actions</span>
                                             </Button>
                                         )}
                                         <Button 
@@ -282,7 +271,7 @@ export const Admin4Layout = ({
                                             size="sm"
                                             iconLeading={Bell01}
                                         >
-                                            Notifications
+                                            <span className="hidden sm:inline">Notifications</span>
                                         </Button>
                                     </>
                                 )}
@@ -290,15 +279,41 @@ export const Admin4Layout = ({
                         </header>
                     )}
 
-                    {/* Main Content */}
+                    {/* Main Content - Responsive padding */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
-                        {children}
+                        <div className="min-h-full">
+                            {children}
+                        </div>
                     </main>
                 </div>
             </div>
             
-            {/* Enhanced Floating Progress Button for admin4 */}
-            {showAdvancedFeatures && <FloatingProgressButton />}
+            {/* Enhanced Floating Progress Button for admin4 - Hidden on small screens */}
+            {showAdvancedFeatures && (
+                <div className="hidden sm:block">
+                    <FloatingProgressButton />
+                </div>
+            )}
+
+            {/* Mobile Navigation System */}
+            <MobileNavigationSystem
+                isOpen={isMobileMenuOpen}
+                onClose={handleMobileMenuClose}
+                items={navItems}
+                footerItems={[
+                    {
+                        label: "Support Center",
+                        href: "/admin4/support",
+                        icon: LifeBuoy01,
+                    },
+                    {
+                        label: "Onboarding Pro",
+                        href: "/admin4/onboarding",
+                        icon: GraduationHat02,
+                    },
+                ]}
+                activeUrl={currentPath}
+            />
         </div>
     );
 };

@@ -2258,8 +2258,8 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 onComplete={tourGuide.completeTour}
             />
             
-            {/* Desktop dual sidebar navigation */}
-                <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
+            {/* Desktop dual sidebar navigation - Responsive */}
+                <div className={`z-40 hidden lg:fixed lg:left-0 lg:flex transition-all duration-300 ease-in-out ${
                     currentAdminVersion === 'admin4'
                         ? 'lg:top-12 lg:bottom-0' // Always full header height for admin4
                         : isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
@@ -2471,18 +2471,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 className="invisible hidden lg:sticky lg:top-0 lg:bottom-0 lg:left-0 lg:block"
             />
 
-            {/* Mobile header navigation */}
+            {/* Mobile header navigation - Enhanced responsive */}
             <MobileNavigationHeader>
-                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-4">
+                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-3 sm:pt-4">
                     {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
-                        <div className="px-4">
-                            <UntitledLogo className="h-8" />
+                        <div className="px-3 sm:px-4 mb-2">
+                            <UntitledLogo className="h-7 sm:h-8" />
                         </div>
                     )}
 
-                    <NavList items={items} activeUrl={activeUrl} />
+                    <div className="flex-1 overflow-y-auto">
+                        <NavList items={items} activeUrl={activeUrl} />
+                    </div>
 
-                    <div className="mt-auto flex flex-col gap-5 px-2 py-4">
+                    <div className="mt-auto flex flex-col gap-3 sm:gap-5 px-2 py-3 sm:py-4 border-t border-secondary">
                         <div className="flex flex-col gap-1">
                             {footerItems.map((item) => (
                                 <NavItemBase 
@@ -2506,10 +2508,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </NavItemBase>
                         </div>
 
-                        <div className="relative flex items-center gap-3 border-t border-secondary pt-6 pr-8 pl-2">
+                        <div className="relative flex items-center gap-2 sm:gap-3 pt-3 sm:pt-6 pr-6 sm:pr-8 pl-2">
                             <AvatarLabelGroup
                                 status="online"
-                                size="md"
+                                size="sm"
                                 src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80"
                                 title="Olivia Rhye"
                                 subtitle="olivia@untitledui.com"

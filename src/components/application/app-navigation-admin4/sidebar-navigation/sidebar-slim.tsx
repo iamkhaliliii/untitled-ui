@@ -174,9 +174,9 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
 
     return (
         <>
-                            {/* Desktop sidebar navigation */}
+                            {/* Desktop sidebar navigation - Responsive */}
                 <div
-                    className={`z-40 hidden lg:fixed lg:left-0 lg:flex ${
+                    className={`z-40 hidden lg:fixed lg:left-0 lg:flex transition-all duration-300 ease-in-out ${
                         currentAdminVersion === 'admin4'
                             ? 'lg:top-12 lg:bottom-0' // Always full header height for admin4 (like admin2)
                             : isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3'
@@ -200,31 +200,43 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
                 className="invisible hidden lg:sticky lg:top-0 lg:bottom-0 lg:left-0 lg:block"
             />
 
-            {/* Mobile header navigation */}
+            {/* Mobile header navigation - Enhanced responsive */}
             <MobileNavigationHeader>
-                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto bg-primary pt-4">
-                                            {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
-                            <div className="px-4">
-                                <UntitledLogo className="h-8" />
-                            </div>
-                        )}
+                <aside className="group flex h-full max-h-full w-full max-w-full flex-col justify-between overflow-y-auto scrollbar-thin bg-primary pt-3 sm:pt-4">
+                    {(currentAdminVersion === 'admin2' || !(isAdmin && adminHeaderVisible)) && (
+                        <div className="px-3 sm:px-4 mb-2">
+                            <UntitledLogo className="h-7 sm:h-8" />
+                        </div>
+                    )}
 
-                    <NavList items={items} />
+                    <div className="flex-1 overflow-y-auto">
+                        <NavList items={items} />
+                    </div>
 
-                    <div className="mt-auto flex flex-col gap-5 px-2 py-4">
-                        <div className="flex flex-col gap-2">
-                            <NavItemBase current={activeUrl === "/support"} type="link" href="/support" icon={LifeBuoy01}>
+                    <div className="mt-auto flex flex-col gap-3 sm:gap-5 px-2 py-3 sm:py-4 border-t border-secondary">
+                        <div className="flex flex-col gap-1 sm:gap-2">
+                            <NavItemBase 
+                                current={activeUrl === "/support"} 
+                                type="link" 
+                                href="/support" 
+                                icon={LifeBuoy01}
+                            >
                                 Support
                             </NavItemBase>
-                            <NavItemBase current={activeUrl === "/settings"} type="link" href="/settings" icon={Settings01}>
+                            <NavItemBase 
+                                current={activeUrl === "/settings"} 
+                                type="link" 
+                                href="/settings" 
+                                icon={Settings01}
+                            >
                                 Settings
                             </NavItemBase>
                         </div>
 
-                        <div className="relative flex items-center gap-3 border-t border-secondary pt-6 pr-8 pl-2">
+                        <div className="relative flex items-center gap-2 sm:gap-3 pt-3 sm:pt-6 pr-6 sm:pr-8 pl-2">
                             <AvatarLabelGroup
                                 status="online"
-                                size="md"
+                                size="sm"
                                 src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80"
                                 title="Olivia Rhye"
                                 subtitle="olivia@untitledui.com"
@@ -234,8 +246,8 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
                                 <Button
                                     size="sm"
                                     color="tertiary"
-                                    iconLeading={<LogOut01 className="size-5 text-fg-quaternary transition-inherit-all group-hover:text-fg-quaternary_hover" />}
-                                    className="p-1.5!"
+                                    iconLeading={<LogOut01 className="size-4 sm:size-5 text-fg-quaternary transition-inherit-all group-hover:text-fg-quaternary_hover" />}
+                                    className="p-1 sm:p-1.5!"
                                 />
                             </div>
                         </div>
