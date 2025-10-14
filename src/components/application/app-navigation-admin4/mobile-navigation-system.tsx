@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { X, ChevronRight, ArrowLeft, Sun, Moon01, Monitor01, GraduationHat02, ChevronSelectorVertical } from "@untitledui/icons";
+import { X, ChevronRight, ArrowLeft, Sun, Moon01, Monitor01, GraduationHat02, ChevronSelectorVertical, SearchLg, Plus, Archive } from "@untitledui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { cx } from "@/utils/cx";
 import type { NavItemType } from "./config";
@@ -41,15 +41,65 @@ export const MobileNavigationSystem = ({
     const { theme, setTheme } = useTheme();
     const [currentLevel, setCurrentLevel] = useState<NavigationLevel>('main');
     const [selectedMainItem, setSelectedMainItem] = useState<NavItemType | null>(null);
-    const [expandedIds, setExpandedIds] = useState<string[]>(["spaces", "myFolder", "myFolder2", "utilityPages", "navigation", "content-types"]);
+    const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]); // Only Collections & Spaces expanded by default in mobile
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     // Reset to main level when opening
     useEffect(() => {
         if (isOpen) {
             setCurrentLevel('main');
             setSelectedMainItem(null);
+            setSearchQuery(""); // Clear search when opening
         }
     }, [isOpen]);
+
+    // Filter TreeView data based on search query
+    const filterTreeData = (nodes: TreeNode[], query: string): TreeNode[] => {
+        if (!query.trim()) return nodes;
+
+        const filtered: TreeNode[] = [];
+        
+        for (const node of nodes) {
+            const matchesQuery = node.label.toLowerCase().includes(query.toLowerCase());
+            let filteredChildren: TreeNode[] = [];
+            
+            if (node.children) {
+                filteredChildren = filterTreeData(node.children, query);
+            }
+            
+            // Include node if it matches or has matching children
+            if (matchesQuery || filteredChildren.length > 0) {
+                filtered.push({
+                    ...node,
+                    children: filteredChildren.length > 0 ? filteredChildren : node.children
+                });
+            }
+        }
+        
+        return filtered;
+    };
+
+    // Auto-expand all nodes when searching
+    useEffect(() => {
+        if (searchQuery.trim()) {
+            const allNodeIds = getAllNodeIds(getSiteTreeData());
+            setExpandedIds(allNodeIds);
+        } else {
+            setExpandedIds(["spaces"]); // Reset to default when clearing search
+        }
+    }, [searchQuery]);
+
+    // Helper function to get all node IDs for expansion
+    const getAllNodeIds = (nodes: TreeNode[]): string[] => {
+        const ids: string[] = [];
+        for (const node of nodes) {
+            ids.push(node.id);
+            if (node.children) {
+                ids.push(...getAllNodeIds(node.children));
+            }
+        }
+        return ids;
+    };
 
     const handleMainItemClick = (item: NavItemType) => {
         // Special handling for Site item - show TreeView instead of regular subitems
@@ -335,7 +385,7 @@ export const MobileNavigationSystem = ({
     const renderSecondaryLevel = () => (
         <div className="flex flex-col h-full">
             {/* Header with back button */}
-            <div className="flex items-center gap-3 p-4 border-b border-secondary">
+            <div className="flex items-center gap-3 p-4 border-b border-secondary flex-shrink-0">
                 <button
                     onClick={handleBackToMain}
                     className="p-2 rounded-lg hover:bg-secondary transition-colors"
@@ -358,35 +408,99 @@ export const MobileNavigationSystem = ({
                 </button>
             </div>
 
-            {/* Secondary Navigation Items */}
-            <div className="flex-1 overflow-y-auto p-4">
-                {selectedMainItem?.label === "Site" ? (
-                    // Show TreeView for Site item
-                    <TreeView
-                        data={getSiteTreeData()}
-                        expandedIds={expandedIds}
-                        selectedIds={[]}
-                        onNodeClick={(node) => {
-                            console.log('Node clicked:', node);
-                            if (node.data?.href) {
-                                console.log('Navigating to:', node.data.href);
-                                navigate(node.data.href);
-                                onClose();
-                            }
-                        }}
-                        onNodeExpand={(nodeId, expanded) => {
-                            if (expanded) {
-                                setExpandedIds(prev => [...prev, nodeId]);
-                            } else {
-                                setExpandedIds(prev => prev.filter(id => id !== nodeId));
-                            }
-                        }}
-                        className="border-none bg-transparent"
-                        showLines={false}
-                        showIcons={true}
-                    />
-                ) : (
-                    // Show regular subitems for other items
+            {selectedMainItem?.label === "Site" ? (
+                <>
+                    {/* Scrollable Content - Constrained height */}
+                    <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+                        <div className="flex-1 overflow-y-auto p-4">
+                            <div className="space-y-4">
+                                {/* Search Input */}
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <SearchLg className="h-5 w-5 text-fg-quaternary" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search spaces and pages..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3 border border-secondary rounded-lg bg-primary text-primary placeholder-fg-quaternary focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-transparent text-base"
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery("")}
+                                            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                        >
+                                            <X className="h-4 w-4 text-fg-quaternary hover:text-fg-secondary transition-colors" />
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* TreeView for Site item */}
+                                <div className="pb-4">
+                                    <TreeView
+                                        data={filterTreeData(getSiteTreeData(), searchQuery)}
+                                        expandedIds={expandedIds}
+                                        selectedIds={[]}
+                                        onNodeClick={(node) => {
+                                            console.log('Node clicked:', node);
+                                            if (node.data?.href) {
+                                                console.log('Navigating to:', node.data.href);
+                                                navigate(node.data.href);
+                                                onClose();
+                                            }
+                                        }}
+                                        onNodeExpand={(nodeId, expanded) => {
+                                            if (expanded) {
+                                                setExpandedIds(prev => [...prev, nodeId]);
+                                            } else {
+                                                setExpandedIds(prev => prev.filter(id => id !== nodeId));
+                                            }
+                                        }}
+                                        className="border-none bg-transparent [&_.tree-node]:!py-3 [&_.tree-node]:!px-3 [&_.tree-node_span]:!text-base [&_.tree-node_.size-5]:!size-6"
+                                        showLines={false}
+                                        showIcons={true}
+                                        indent={24}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer with Add Buttons - Compact Design */}
+                    <div className="flex-shrink-0 border-t border-secondary bg-primary h-[100px]">
+                        <div className="flex flex-col justify-center h-full px-4">
+                            <div className="space-y-1">
+                                <button
+                                    onClick={() => {
+                                        console.log('Add Space clicked');
+                                        navigate('/admin4/site/spaces/create');
+                                        onClose();
+                                    }}
+                                    className="w-full flex items-center gap-3 px-3 py-2  hover:bg-secondary_hover text-secondary hover:text-primary transition-colors"
+                                >
+                                    <Plus className="w-4 h-4 flex-shrink-0" />
+                                    <span className="font-medium text-sm">Add Space</span>
+                                </button>
+                                
+                                <button
+                                    onClick={() => {
+                                        console.log('Add Collection clicked');
+                                        navigate('/admin4/site/collections/create');
+                                        onClose();
+                                    }}
+                                    className="w-full flex items-center gap-3 px-3 py-2  hover:bg-secondary_hover text-secondary hover:text-primary transition-colors"
+                                >
+                                    <Archive className="w-4 h-4 flex-shrink-0" />
+                                    <span className="font-medium text-sm">Add Collection</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                // Regular subitems for other items
+                <div className="flex-1 overflow-y-auto p-4">
                     <div className="space-y-1">
                         {selectedMainItem?.items?.map((item) => (
                             <button
@@ -409,8 +523,8 @@ export const MobileNavigationSystem = ({
                             </button>
                         ))}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 

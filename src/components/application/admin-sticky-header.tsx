@@ -22,6 +22,7 @@ import {
     Menu02,
     X
 } from "@untitledui/icons";
+import { AnimatePresence, motion } from "motion/react";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Button } from "@/components/base/buttons/button";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
@@ -47,6 +48,7 @@ export const AdminStickyHeader = ({
     const navigate = useNavigate();
     const location = useLocation();
     const { adminHeaderCollapsed, toggleAdminHeaderCollapse } = useAdmin();
+    const [isModeSheetOpen, setIsModeSheetOpen] = useState(false);
     
     // Check if user came from Page Customizer
     const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
@@ -397,11 +399,49 @@ export const AdminStickyHeader = ({
                                     <div className="hidden sm:flex items-center gap-1">
                                         {renderBreadcrumbs()}
                                     </div>
-                                    {/* Mobile: Show only current page */}
+                                    {/* Mobile: Show minimal breadcrumb */}
                                     <div className="sm:hidden flex items-center">
-                                        <span className="text-white dark:text-black font-medium text-sm truncate">
-                                            {getBreadcrumbsData()[getBreadcrumbsData().length - 1]?.label}
-                                        </span>
+                                        {(() => {
+                                            const path = location.pathname;
+                                            
+                                            // Generate minimal breadcrumb for mobile
+                                            if (path.includes('/admin4/content2')) {
+                                                return (
+                                                    <div className="flex items-center gap-1 text-xs">
+                                                        <span className="text-gray-300 dark:text-gray-600">Content</span>
+                                                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                                                    </div>
+                                                );
+                                            }
+                                            
+                                            if (path.includes('/admin4/site/spaces')) {
+                                                return (
+                                                    <div className="flex items-center gap-1 text-xs">
+                                                        <span className="text-gray-300 dark:text-gray-600">Site</span>
+                                                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                                                        <span className="text-gray-300 dark:text-gray-600">Spaces</span>
+                                                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                                                        <span className="text-gray-300 dark:text-gray-600">Events</span>
+                                                        <span className="text-gray-500 dark:text-gray-400">›</span>
+                                                    </div>
+                                                );
+                                            }
+                                            
+                                            if (path.includes('/admin4')) {
+                                                return (
+                                                    <div className="flex items-center gap-1 text-xs">
+                                                        <span className="text-white dark:text-black font-medium">Admin Panel</span>
+                                                    </div>
+                                                );
+                                            }
+                                            
+                                            // Fallback to current page name
+                                            return (
+                                                <span className="text-white dark:text-black font-medium text-sm truncate">
+                                                    {getBreadcrumbsData()[getBreadcrumbsData().length - 1]?.label}
+                                                </span>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                             </div>
@@ -409,44 +449,58 @@ export const AdminStickyHeader = ({
                             {/* Actions - Responsive */}
                             <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
                                 <div className="flex items-center">
-                                    {/* Mode Dropdown - Only show on admin pages, not site pages */}
+                                    {/* Mode Switcher - Desktop dropdown, Mobile top sheet */}
                                     {isAdminPage && (
                                         <div className="h-12 sm:h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
-                                            <Dropdown.Root>
-                                                <AriaButton
-                                                    aria-label="Switch Mode"
-                                                    className="flex items-center gap-1 sm:gap-2 px-3 sm:px-3 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
-                                                >
-                                                    <currentMode.icon className="w-5 h-5 sm:w-4 sm:h-4" />
-                                                    <span className="text-sm sm:text-sm font-medium hidden md:inline">{currentMode.label}</span>
-                                                    <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3" />
-                                                </AriaButton>
-                                                <Dropdown.Popover className="z-[70] !min-w-64">
-                                                    <Dropdown.Menu>
-                                                        {currentMode.label !== 'Admin Mode' && (
-                                                            <Dropdown.Item
-                                                                icon={Settings02}
-                                                                label="Admin Mode"
-                                                                onAction={() => navigate(`/${currentAdminVersion}`)}
-                                                            />
-                                                        )}
-                                                        {currentMode.label !== 'Design Mode' && (
-                                                            <Dropdown.Item
-                                                                icon={Brush02}
-                                                                label="Design Mode"
-                                                                onAction={() => navigate(`/${currentAdminVersion}/design`)}
-                                                            />
-                                                        )}
-                                                        {currentMode.label !== 'Moderation Mode' && (
-                                                            <Dropdown.Item
-                                                                icon={Shield01}
-                                                                label="Moderation Mode"
-                                                                onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
-                                                            />
-                                                        )}
-                                                    </Dropdown.Menu>
-                                                </Dropdown.Popover>
-                                            </Dropdown.Root>
+                                            {/* Desktop Dropdown */}
+                                            <div className="hidden lg:block">
+                                                <Dropdown.Root>
+                                                    <AriaButton
+                                                        aria-label="Switch Mode"
+                                                        className="flex items-center gap-1 sm:gap-2 px-3 sm:px-3 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                                    >
+                                                        <currentMode.icon className="w-5 h-5 sm:w-4 sm:h-4" />
+                                                        <span className="text-sm sm:text-sm font-medium">{currentMode.label}</span>
+                                                        <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3" />
+                                                    </AriaButton>
+                                                    <Dropdown.Popover className="z-[70] !min-w-64">
+                                                        <Dropdown.Menu>
+                                                            {currentMode.label !== 'Admin Mode' && (
+                                                                <Dropdown.Item
+                                                                    icon={Settings02}
+                                                                    label="Admin Mode"
+                                                                    onAction={() => navigate(`/${currentAdminVersion}`)}
+                                                                />
+                                                            )}
+                                                            {currentMode.label !== 'Design Mode' && (
+                                                                <Dropdown.Item
+                                                                    icon={Brush02}
+                                                                    label="Design Mode"
+                                                                    onAction={() => navigate(`/${currentAdminVersion}/design`)}
+                                                                />
+                                                            )}
+                                                            {currentMode.label !== 'Moderation Mode' && (
+                                                                <Dropdown.Item
+                                                                    icon={Shield01}
+                                                                    label="Moderation Mode"
+                                                                    onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
+                                                                />
+                                                            )}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown.Popover>
+                                                </Dropdown.Root>
+                                            </div>
+
+                                            {/* Mobile Button */}
+                                            <button
+                                                onClick={() => setIsModeSheetOpen(true)}
+                                                className="lg:hidden flex items-center gap-1 sm:gap-2 px-3 sm:px-3 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                                aria-label="Switch Mode"
+                                            >
+                                                <currentMode.icon className="w-5 h-5 sm:w-4 sm:h-4" />
+                                                <span className="text-sm sm:text-sm font-medium hidden md:inline">{currentMode.label}</span>
+                                                <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3" />
+                                            </button>
                                         </div>
                                     )}
 
@@ -506,6 +560,88 @@ export const AdminStickyHeader = ({
                     />
                 </div>
             )}
+
+            {/* Mobile Mode Top Sheet */}
+            <AnimatePresence>
+                {isModeSheetOpen && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] lg:hidden"
+                            onClick={() => setIsModeSheetOpen(false)}
+                        />
+
+                        {/* Top Sheet */}
+                        <motion.div
+                            initial={{ y: "-100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "-100%" }}
+                            transition={{ 
+                                duration: 0.3,
+                                ease: "easeOut"
+                            }}
+                            className="fixed top-0 left-0 right-0 bg-black dark:bg-white border-b border-gray-800 dark:border-gray-200 z-[81] lg:hidden"
+                        >
+                            <div className="p-4">
+                                {/* Header */}
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-semibold text-white dark:text-black">Switch Mode</h3>
+                                    <button
+                                        onClick={() => setIsModeSheetOpen(false)}
+                                        className="p-2 rounded-lg hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                        aria-label="Close mode switcher"
+                                    >
+                                        <X className="w-5 h-5" />
+                                    </button>
+                                </div>
+
+                                {/* Mode Options */}
+                                <div className="space-y-2">
+                                    {[
+                                        { icon: Settings02, label: 'Admin Mode', path: `/${currentAdminVersion}`, enabled: true },
+                                        { icon: Brush02, label: 'Design Mode', path: `/${currentAdminVersion}/design`, enabled: false },
+                                        { icon: Shield01, label: 'Moderation Mode', path: `/${currentAdminVersion}/moderation`, enabled: true }
+                                    ].map((mode) => (
+                                        <button
+                                            key={mode.label}
+                                            onClick={() => {
+                                                if (mode.enabled) {
+                                                    navigate(mode.path);
+                                                    setIsModeSheetOpen(false);
+                                                }
+                                            }}
+                                            disabled={!mode.enabled}
+                                            className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
+                                                !mode.enabled 
+                                                    ? 'text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60'
+                                                    : currentMode.label === mode.label
+                                                        ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-black'
+                                                        : 'text-gray-300 dark:text-gray-600 hover:bg-gray-900 dark:hover:bg-gray-100 hover:text-white dark:hover:text-black'
+                                            }`}
+                                        >
+                                            <mode.icon className="w-5 h-5 flex-shrink-0" />
+                                            <span className="font-medium">{mode.label}</span>
+                                            
+                                            {!mode.enabled ? (
+                                                <div className="ml-auto flex items-center gap-1">
+                                                    <Monitor01 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">Desktop only</span>
+                                                </div>
+                                            ) : currentMode.label === mode.label ? (
+                                                <div className="ml-auto w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                                            ) : null}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
             
         </div>
     );

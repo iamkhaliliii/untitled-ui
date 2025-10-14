@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Menu01, X, ChevronSelectorVertical, Settings01, Shield01, Users01, BarChartSquare02, ClipboardCheck, SearchLg, Brush02, AlertTriangle, Monitor01 } from "@untitledui/icons";
+import { Menu01, X, ChevronSelectorVertical, Settings01, Shield01, Users01, BarChartSquare02, ClipboardCheck, SearchLg, Brush02, AlertTriangle, Monitor01, MessageChatCircle, Calendar, Archive, Tag01 } from "@untitledui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { cx } from "@/utils/cx";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
@@ -38,6 +38,7 @@ export const MobileSpaceTabs = ({ basePath, tabs, currentTab, headerActions }: M
 
     const getTabIcon = (tabId: string) => {
         switch (tabId) {
+            // Space page tabs
             case "general": return Settings01;
             case "permissions": return Shield01;
             case "members": return Users01;
@@ -46,6 +47,11 @@ export const MobileSpaceTabs = ({ basePath, tabs, currentTab, headerActions }: M
             case "seo": return SearchLg;
             case "customize": return Brush02;
             case "danger": return AlertTriangle;
+            // Content page tabs
+            case "posts": return MessageChatCircle;
+            case "events": return Calendar;
+            case "spaces": return Archive;
+            case "tags": return Tag01;
             default: return Settings01;
         }
     };

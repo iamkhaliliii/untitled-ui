@@ -247,16 +247,16 @@ export const Admin4Layout = ({
                 
                 {/* Main Content Area - Responsive */}
                 <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin w-full lg:w-auto">
+                    {/* Mobile Tab Selector - Always show on mobile when available */}
+                    {mobileTabSelector && (
+                        <div className="lg:hidden border-b border-secondary bg-primary">
+                            {mobileTabSelector}
+                        </div>
+                    )}
+
                     {/* Enhanced Header with admin4 branding - Responsive */}
                     {!hideHeader && (
                         <header className="border-b border-secondary bg-primary">
-                            {/* Mobile Tab Selector - Show above title on mobile */}
-                            {mobileTabSelector && (
-                                <div className="lg:hidden ">
-                                    {mobileTabSelector}
-                                </div>
-                            )}
-                            
                             {/* Hide title/description on mobile when mobileTabSelector exists */}
                             {!mobileTabSelector && (
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
@@ -291,7 +291,7 @@ export const Admin4Layout = ({
                                 </div>
                             )}
                             
-                            {/* Show title/description on desktop when mobileTabSelector exists */}
+                            {/* Show title/description only on desktop when mobileTabSelector exists */}
                             {mobileTabSelector && (
                                 <div className="hidden lg:flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
                                     <div className="min-w-0 flex-1">

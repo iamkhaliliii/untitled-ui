@@ -38,6 +38,9 @@ import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import { Table } from "@/components/application/table/table";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
+import { MobileSpaceTabs } from "@/components/application/app-navigation-admin4/mobile-space-tabs";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { AnimatePresence, motion } from "motion/react";
 
 // Sample posts data
 const samplePosts = [
@@ -468,6 +471,8 @@ export const AdminContent2Page = () => {
     const [expandedNodes, setExpandedNodes] = useState<string[]>(['contents', 'spaces']);
     const [rsvpModalOpen, setRsvpModalOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
+    const isDesktop = useBreakpoint("lg");
 
     const handleNodeClick = (node: TreeNode) => {
         console.log("Node clicked:", node.label);
@@ -523,6 +528,84 @@ export const AdminContent2Page = () => {
         return "Organize and manage your content structure with hierarchical organization";
     };
 
+    // Determine current page type for tabs
+    const getCurrentPageType = () => {
+        if (location.pathname.includes("/events")) return "events";
+        if (location.pathname.includes("/posts")) return "posts";
+        if (location.pathname.includes("/spaces")) return "spaces";
+        if (location.pathname.includes("/tag")) return "tags";
+        return "posts"; // default
+    };
+
+    const currentPageType = getCurrentPageType();
+
+    // Define tabs for content pages - main content types
+    const contentTabs = [
+        { id: "posts", label: "Posts", path: "/posts" },
+        { id: "events", label: "Events", path: "/events" },
+        { id: "spaces", label: "Spaces", path: "/spaces" },
+        { id: "tags", label: "Tags", path: "/tag" },
+    ];
+
+    // Get base path for current content type
+    const getBasePath = () => {
+        return "/admin4/content2";
+    };
+
+    // Render header actions
+    const renderHeaderActions = () => {
+        if (!showContentTable) return null;
+        
+        return (
+            <div className="flex items-center gap-2">
+                {/* Desktop Actions */}
+                <div className="hidden lg:flex items-center gap-2">
+                    <Button 
+                        color="secondary" 
+                        size="sm"
+                        className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
+                    >
+                        Export
+                    </Button>
+                    <Button 
+                        color="primary" 
+                        size="sm"
+                        className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
+                        iconLeading={Plus}
+                    >
+                        Create
+                    </Button>
+                </div>
+                
+                {/* Mobile Actions - More Options + Add Post */}
+                <div className="lg:hidden flex items-center gap-2">
+                    <ButtonUtility
+                        size="sm"
+                        color="tertiary"
+                        icon={DotsHorizontal}
+                        className="w-8 h-8"
+                        onClick={() => setMobileOptionsOpen(true)}
+                    />
+                    <Button 
+                        color="primary" 
+                        size="sm"
+                        className="text-xs px-3 py-1.5"
+                        iconLeading={Plus}
+                        onClick={() => {
+                            if (isEventsPage) {
+                                navigate("/admin4/content2/events/create");
+                            } else {
+                                console.log("Add button clicked for:", getPageTitle());
+                            }
+                        }}
+                    >
+                        {isEventsPage ? "Add Event" : isSpacesPage ? "Add space" : isTagPage ? "Add tag" : "Add post"}
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
     if (showContentTable) {
         return (
             <Admin4Layout 
@@ -530,14 +613,23 @@ export const AdminContent2Page = () => {
                 description={getPageDescription()}
                 currentPath={location.pathname}
                 hideHeader={true}
+                headerActions={renderHeaderActions()}
+                mobileTabSelector={showContentTable ? (
+                    <MobileSpaceTabs
+                        basePath={getBasePath()}
+                        tabs={contentTabs}
+                        currentTab={currentPageType}
+                        headerActions={renderHeaderActions()}
+                    />
+                ) : undefined}
             >
                 <div className="px-4 py-6 lg:px-6">
-                    <div className="flex flex-col p-1 space-y-3 overflow-hidden">
-                        {/* Header Section */}
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-medium text-primary whitespace-nowrap">{getPageTitle()}</h3>
-                            <div className="flex items-center gap-4">
-                                <div className="w-80">
+                    <div className="flex flex-col lg:p-1 space-y-3 lg:overflow-hidden">
+                        {/* Header Section - Responsive */}
+                        <div className="hidden lg:flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                            <h3 className="text-lg font-medium text-primary">{getPageTitle()}</h3>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                                <div className="w-full sm:w-80">
                                     <div className="relative">
                                         <SearchLg className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-fg-quaternary" />
                                         <Input
@@ -546,36 +638,43 @@ export const AdminContent2Page = () => {
                                         />
                                     </div>
                                 </div>
-                                <Button 
-                                    color="secondary" 
-                                    iconLeading={FilterLines}
-                                    iconTrailing={ChevronDown}
-                                >
-                                    Fields
-                                </Button>
-                                <Button 
-                                    color="primary"
-                                    className="whitespace-nowrap"
-                                    onClick={() => {
-                                        if (isEventsPage) {
-                                            navigate("/admin4/content2/events/create");
-                                        } else {
-                                            // Handle other page types as needed
-                                            console.log("Add button clicked for:", getPageTitle());
-                                        }
-                                    }}
-                                >
-                                    {isEventsPage ? "Add Event" : isSpacesPage ? "Add space" : isTagPage ? "Add tag" : "Add post"}
-                                </Button>
+                                <div className="flex items-center gap-2 sm:gap-4">
+                                    <Button 
+                                        color="secondary" 
+                                        iconLeading={FilterLines}
+                                        iconTrailing={ChevronDown}
+                                        size={isDesktop ? "md" : "sm"}
+                                        className="flex-1 sm:flex-none"
+                                    >
+                                        Fields
+                                    </Button>
+                                    <Button 
+                                        color="primary"
+                                        size={isDesktop ? "md" : "sm"}
+                                        className="flex-1 sm:flex-none whitespace-nowrap"
+                                        onClick={() => {
+                                            if (isEventsPage) {
+                                                navigate("/admin4/content2/events/create");
+                                            } else {
+                                                // Handle other page types as needed
+                                                console.log("Add button clicked for:", getPageTitle());
+                                            }
+                                        }}
+                                    >
+                                        {isEventsPage ? "Add Event" : isSpacesPage ? "Add space" : isTagPage ? "Add tag" : "Add post"}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Filter Section - Only show for Posts */}
+
+                        {/* Filter Section - Only show for Posts - Desktop only */}
                         {isPostsPage && (
-                            <div className="flex flex-wrap gap-3 items-center">
+                            <div className="hidden lg:flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3 sm:items-center">
                                 <Button 
                                     color="secondary" 
-                                    className="whitespace-nowrap"
+                                    size={isDesktop ? "md" : "sm"}
+                                    className="w-full sm:w-auto whitespace-nowrap"
                                 >
                                     <span className="flex items-center gap-2">
                                         All post types
@@ -584,7 +683,8 @@ export const AdminContent2Page = () => {
                                 </Button>
                                 <Button 
                                     color="secondary" 
-                                    className="whitespace-nowrap"
+                                    size={isDesktop ? "md" : "sm"}
+                                    className="w-full sm:w-auto whitespace-nowrap"
                                 >
                                     <span className="flex items-center gap-2">
                                         Add filter
@@ -594,9 +694,9 @@ export const AdminContent2Page = () => {
                             </div>
                         )}
 
-                        {/* Stats and Actions */}
-                        <div className="flex items-center gap-3">
-                            <span className="font-medium text-primary whitespace-nowrap">
+                        {/* Stats and Actions - Desktop only */}
+                        <div className="hidden lg:flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                            <span className="font-medium text-primary">
                                 {isEventsPage ? `${sampleEvents.length} events` : 
                                  isPostsPage ? `${samplePosts.length} posts` :
                                  isSpacesPage ? `${sampleSpaces.length} spaces` :
@@ -605,7 +705,8 @@ export const AdminContent2Page = () => {
                             {isPostsPage && (
                                 <Button 
                                     color="secondary" 
-                                    className="whitespace-nowrap"
+                                    size={isDesktop ? "md" : "sm"}
+                                    className="w-full sm:w-auto whitespace-nowrap"
                                 >
                                     <span className="flex items-center gap-2">
                                         Actions
@@ -615,64 +716,64 @@ export const AdminContent2Page = () => {
                             )}
                         </div>
 
-                        {/* Table */}
-                        <div className="border border-secondary rounded-xl bg-primary shadow-xs overflow-hidden">
+                        {/* Mobile-Optimized Table */}
+                        <div className="-mx-4 lg:mx-0 lg:border lg:border-secondary lg:rounded-xl bg-primary lg:shadow-xs overflow-hidden">
                             <div className="relative overflow-x-auto">
                                 <table className="min-w-full divide-y divide-secondary table-fixed">
                                     <thead className="bg-primary">
                                         <tr>
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-64">
-                                                {isEventsPage ? "Event Title" : 
-                                                 isSpacesPage ? "Space Name" :
-                                                 isTagPage ? "Tag Name" : "Title"}
+                                            <th scope="col" className="pl-3 pr-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-48 lg:w-64">
+                                                {isEventsPage ? "Event" : 
+                                                 isSpacesPage ? "Space" :
+                                                 isTagPage ? "Tag" : "Title"}
                                             </th>
                                             {!isSpacesPage && !isTagPage && (
-                                                <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-32">
-                                                    <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
+                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                    <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
                                                         Status
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-48">
-                                                {isEventsPage ? "Organizer" : 
-                                                 isSpacesPage ? "Members count" :
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-32 lg:w-48">
+                                                {isEventsPage ? "Org" : 
+                                                 isSpacesPage ? "Members" :
                                                  isTagPage ? "Slug" : "Author"}
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-48">
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-24 lg:w-48">
                                                 {isEventsPage ? "Location" : 
-                                                 isSpacesPage ? "Posts count" :
-                                                 isTagPage ? "Description" : "Space"}
+                                                 isSpacesPage ? "Posts" :
+                                                 isTagPage ? "Desc" : "Space"}
                                             </th>
                                             {isEventsPage && (
-                                                <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-48">
+                                                <th scope="col" className="hidden lg:table-cell px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-48">
                                                     <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
                                                         Spaces
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-32">
-                                                <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
-                                                    {isEventsPage ? "Event Date" : 
-                                                     isSpacesPage ? "Created at" :
-                                                     isTagPage ? "" : "Published at"}
-                                                    <ChevronDown className="ml-1 w-4 h-4" />
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
+                                                    {isEventsPage ? "Date" : 
+                                                     isSpacesPage ? "Created" :
+                                                     isTagPage ? "" : "Pub"}
+                                                    <ChevronDown className="ml-0.5 lg:ml-1 w-3 h-3 lg:w-4 lg:h-4" />
                                                 </button>
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-32">
-                                                <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
-                                                    {isEventsPage ? "Attendees" : 
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
+                                                    {isEventsPage ? "Attend" : 
                                                      isSpacesPage ? "Private" :
                                                      isTagPage ? "" : "Replies"}
                                                 </button>
                                             </th>
                                             {!isSpacesPage && !isTagPage && (
-                                                <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-32">
-                                                    <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
-                                                        {isEventsPage ? "Capacity" : "Reactions"}
+                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                    <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
+                                                        {isEventsPage ? "Cap" : "React"}
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-8 sticky right-0 bg-primary">
+                                            <th scope="col" className="pl-1 pr-3 lg:px-6 py-2 lg:py-3 text-left font-medium text-tertiary whitespace-nowrap w-8 lg:w-8 sticky right-0 bg-primary">
                                                 &nbsp;
                                             </th>
                                         </tr>
@@ -683,56 +784,56 @@ export const AdminContent2Page = () => {
                                           isSpacesPage ? sampleSpaces :
                                           isTagPage ? sampleTags : []).map((item) => (
                                             <tr key={item.id} className="hover:bg-secondary/20">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="overflow-hidden truncate w-64">
-                                                        <button className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-left">
+                                                <td className="pl-3 pr-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                    <div className="overflow-hidden truncate w-48 lg:w-64">
+                                                        <button className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-left text-sm lg:text-base">
                                                             {item.title}
                                                         </button>
                                                     </div>
                                                 </td>
                                                 {!isSpacesPage && !isTagPage && (
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="overflow-hidden truncate w-32">
+                                                    <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                        <div className="overflow-hidden truncate w-20 lg:w-32">
                                                             <Badge color={(item as any).status === 'Published' ? 'success' : 'warning'} size="sm">
-                                                                {(item as any).status}
+                                                                {(item as any).status === 'Published' ? 'Pub' : 'Draft'}
                                                             </Badge>
                                                         </div>
                                                     </td>
                                                 )}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="overflow-hidden truncate w-48">
+                                                <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                    <div className="overflow-hidden truncate w-32 lg:w-48">
                                                         {isSpacesPage ? (
-                                                            <span className="text-sm text-primary">
+                                                            <span className="text-sm lg:text-sm text-primary">
                                                                 {(item as any).membersCount}
                                                             </span>
                                                         ) : isTagPage ? (
-                                                            <span className="text-sm text-tertiary font-mono">
+                                                            <span className="text-sm lg:text-sm text-tertiary font-mono">
                                                                 {(item as any).slug}
                                                             </span>
                                                         ) : (
-                                                            <div className="flex items-center gap-2 bg-secondary/40 text-tertiary px-2 py-1 rounded-md max-w-full">
+                                                            <div className="flex items-center gap-0.5 lg:gap-2 bg-secondary/40 text-tertiary px-0.5 lg:px-2 py-0.5 lg:py-1 rounded max-w-full">
                                                                 <Avatar 
                                                                     src={isEventsPage ? (item as any).organizer.avatar : (item as any).author.avatar} 
                                                                     alt={isEventsPage ? (item as any).organizer.name : (item as any).author.name}
-                                                                    size="sm"
-                                                                    className="shrink-0"
+                                                                    size="xs"
+                                                                    className="shrink-0 w-4 h-4 lg:w-6 lg:h-6"
                                                                 />
-                                                                <span className="min-w-0 truncate text-sm">
+                                                                <span className="min-w-0 truncate text-sm lg:text-sm">
                                                                     {isEventsPage ? (item as any).organizer.name : (item as any).author.name}
                                                                 </span>
                                                             </div>
                                                         )}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="overflow-hidden truncate w-48">
+                                                <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                    <div className="overflow-hidden truncate w-24 lg:w-48">
                                                         {isTagPage ? (
-                                                            <span className="text-sm text-tertiary">
+                                                            <span className="text-sm lg:text-sm text-tertiary">
                                                                 {(item as any).description}
                                                             </span>
                                                         ) : (
                                                             <button className="text-brand-secondary hover:text-brand-secondary_hover">
-                                                                <div className="truncate">
+                                                                <div className="truncate text-sm lg:text-sm">
                                                                     {isEventsPage ? (item as any).location : 
                                                                      isSpacesPage ? (item as any).postsCount :
                                                                      (item as any).space}
@@ -742,19 +843,19 @@ export const AdminContent2Page = () => {
                                                     </div>
                                                 </td>
                                                 {isEventsPage && (
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap">
                                                         <div className="overflow-hidden truncate w-48">
                                                             <button className="text-brand-secondary hover:text-brand-secondary_hover">
-                                                                <div className="truncate">{(item as any).space}</div>
+                                                                <div className="truncate text-sm">{(item as any).space}</div>
                                                             </button>
                                                         </div>
                                                     </td>
                                                 )}
 
                                                 {!isTagPage && (
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="overflow-hidden truncate w-32">
-                                                            <div title={isEventsPage ? (item as any).eventDate : 
+                                                    <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                        <div className="overflow-hidden truncate w-20 lg:w-32">
+                                                            <div className="text-sm lg:text-sm" title={isEventsPage ? (item as any).eventDate : 
                                                                        isSpacesPage ? (item as any).createdAt :
                                                                        (item as any).publishedAt}>
                                                                 {isEventsPage ? (item as any).eventDate : 
@@ -765,27 +866,29 @@ export const AdminContent2Page = () => {
                                                     </td>
                                                 )}
                                                 {!isTagPage && (
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="overflow-hidden truncate w-32">
-                                                            {isEventsPage ? (item as any).attendees : 
-                                                             isSpacesPage ? (
+                                                    <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                        <div className="overflow-hidden truncate w-20 lg:w-32">
+                                                            {isEventsPage ? (
+                                                                <span className="text-sm lg:text-sm">{(item as any).attendees}</span>
+                                                            ) : isSpacesPage ? (
                                                                 <Badge color={(item as any).isPrivate ? 'warning' : 'success'} size="sm">
-                                                                    {(item as any).isPrivate ? 'Private' : 'Public'}
+                                                                    {(item as any).isPrivate ? 'Priv' : 'Pub'}
                                                                 </Badge>
-                                                             ) :
-                                                             (item as any).replies}
+                                                             ) : (
+                                                                <span className="text-sm lg:text-sm">{(item as any).replies}</span>
+                                                             )}
                                                         </div>
                                                     </td>
                                                 )}
                                                 {!isSpacesPage && !isTagPage && (
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="overflow-hidden truncate w-32">
-                                                            {isEventsPage ? (item as any).capacity : ((item as any).reactions || 0)}
+                                                    <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
+                                                        <div className="overflow-hidden truncate w-20 lg:w-32">
+                                                            <span className="text-sm lg:text-sm">{isEventsPage ? (item as any).capacity : ((item as any).reactions || 0)}</span>
                                                         </div>
                                                     </td>
                                                 )}
-                                                <td className="px-6 py-4 whitespace-nowrap sticky right-0 bg-primary">
-                                                    <div className="w-8">
+                                                <td className="pl-1 pr-3 lg:px-6 py-2 lg:py-4 whitespace-nowrap sticky right-0 bg-primary">
+                                                    <div className="w-8 lg:w-8">
                                                         {isEventsPage ? (
                                                             <>
                                                                 <Dropdown.Root>
@@ -893,7 +996,7 @@ export const AdminContent2Page = () => {
                                                                 size="sm"
                                                                 color="tertiary"
                                                                 icon={DotsHorizontal}
-                                                                className="w-6 h-6 p-1"
+                                                                className={isDesktop ? "w-6 h-6 p-1" : "w-5 h-5 p-0.5"}
                                                             />
                                                         )}
                                                     </div>
@@ -906,6 +1009,116 @@ export const AdminContent2Page = () => {
                         </div>
                     </div>
                 </div>
+                
+                {/* Mobile Options Bottom Sheet */}
+                <AnimatePresence>
+                    {mobileOptionsOpen && (
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="fixed inset-0 bg-overlay/70 backdrop-blur-sm z-[75] lg:hidden"
+                                onClick={() => setMobileOptionsOpen(false)}
+                            />
+
+                            {/* Bottom Sheet */}
+                            <motion.div
+                                initial={{ y: "100%" }}
+                                animate={{ y: 0 }}
+                                exit={{ y: "100%" }}
+                                transition={{ 
+                                    duration: 0.25,
+                                    ease: "easeOut"
+                                }}
+                                className="fixed bottom-0 left-0 right-0 bg-primary border-t border-secondary z-[76] lg:hidden max-h-[80vh] rounded-t-xl"
+                            >
+                                <div className="flex flex-col">
+                                    {/* Drag Handle */}
+                                    <div className="flex items-center justify-center pt-3 pb-2">
+                                        <div className="w-10 h-1 bg-fg-quaternary/30 rounded-full"></div>
+                                    </div>
+
+                                    {/* Header */}
+                                    <div className="px-4 pb-4">
+                                        <h3 className="text-lg font-semibold text-primary">Options</h3>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="overflow-y-auto flex-1 px-4 pb-4 space-y-4">
+                                        {/* Search */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-tertiary mb-2">Search</label>
+                                            <div className="relative">
+                                                <SearchLg className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-fg-quaternary" />
+                                                <Input
+                                                    placeholder="Search..."
+                                                    className="w-full pl-10"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="space-y-3">
+                                            <h4 className="text-sm font-medium text-tertiary">Actions</h4>
+                                            
+                                            {/* Fields Button */}
+                                            <Button 
+                                                color="secondary" 
+                                                className="w-full justify-start"
+                                                iconLeading={FilterLines}
+                                                iconTrailing={ChevronDown}
+                                            >
+                                                Fields
+                                            </Button>
+
+                                            {/* Export Button */}
+                                            <Button 
+                                                color="secondary" 
+                                                className="w-full justify-start"
+                                                iconLeading={Download01}
+                                            >
+                                                Export
+                                            </Button>
+
+                                            {/* Post Type Filter - Only for Posts */}
+                                            {isPostsPage && (
+                                                <>
+                                                    <Button 
+                                                        color="secondary" 
+                                                        className="w-full justify-start"
+                                                        iconTrailing={ChevronDown}
+                                                    >
+                                                        All post types
+                                                    </Button>
+                                                    
+                                                    <Button 
+                                                        color="secondary" 
+                                                        className="w-full justify-start"
+                                                        iconTrailing={ChevronDown}
+                                                    >
+                                                        Add filter
+                                                    </Button>
+
+                                                    <Button 
+                                                        color="secondary" 
+                                                        className="w-full justify-start"
+                                                        iconTrailing={ChevronDown}
+                                                    >
+                                                        Actions
+                                                    </Button>
+                                                </>
+                                            )}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
                 
                 {/* RSVP Modal - Simple center modal */}
                 {rsvpModalOpen && selectedEvent && (

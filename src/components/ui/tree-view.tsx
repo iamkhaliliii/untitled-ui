@@ -155,7 +155,7 @@ export function TreeView({
           animate={node.data?.isSkeleton ? { opacity: 0.8, y: 0 } : {}}
           transition={node.data?.isSkeleton ? { duration: 0.3, delay: 0.1 } : {}}
           className={cx(
-            "group relative flex w-full items-center rounded-md outline-focus-ring transition duration-100 ease-linear select-none focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
+            "tree-node group relative flex w-full items-center rounded-md outline-focus-ring transition duration-100 ease-linear select-none focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
             node.data?.isSkeleton 
               ? "bg-primary cursor-default opacity-80"
               : (node.data?.loadMoreId || node.data?.showLessId)
