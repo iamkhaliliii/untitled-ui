@@ -195,8 +195,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                         {showOtherTimes ? (
                             /* Full Width Time Slots View */
                             <div className="w-full flex flex-col min-h-0">
-                                <div className="px-6 pb-3 pt-6 flex-shrink-0 bg-gray-50 border-b border-gray-100">
-                                    <div className="flex items-center gap-4 mb-3">
+                                <div className="p-6 flex-shrink-0 border-b border-gray-100">
+                                    <div className="flex items-center gap-3 mb-2">
                                         <Button
                                             size="sm"
                                             color="tertiary"
@@ -204,45 +204,23 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             onClick={handleBackToEvent}
                                             className="!p-2 !w-8 !h-8 rotate-180"
                                         />
-                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                                            <img
-                                                src={event.image}
-                                                alt={event.title}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-lg font-semibold text-gray-900 truncate">{event.title}</h3>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-4 h-4 rounded-full overflow-hidden">
-                                                    <img 
-                                                        src={event.organizer.avatar} 
-                                                        alt={event.organizer.name}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </div>
-                                                <span className="text-sm text-gray-600">Hosted by {event.organizer.name}</span>
-                                            </div>
-                                        </div>
+                                        <h3 className="text-xl font-semibold text-gray-900">Select Time</h3>
                                     </div>
+                                    <p className="text-sm text-gray-600 ml-11">Choose your preferred time slot for this recurring event</p>
                                 </div>
                                 
-                                <div className="flex-1 overflow-y-auto p-6 pt-4 modal-scrollbar" style={scrollbarStyles}>
+                                <div className="flex-1 overflow-y-auto p-6">
                                     <div className="max-w-2xl mx-auto">
-                                        <div className="mb-4">
-                                            <h4 className="text-sm font-semibold text-gray-900 ">Select Time:</h4>
-                                            <p className="text-xs text-gray-600">Choose your preferred time slot for this recurring event</p>
-                                        </div>
-                                        <div className="grid gap-4 grid-cols-1">
+                                        <div className="grid gap-4 sm:grid-cols-2">
                                             {recurringTimeSlots.map((timeSlot) => (
                                                 <div 
                                                     key={timeSlot.id}
-                                                    className={`cursor-pointer transition-all duration-200 rounded-xl p-4 ${
+                                                    className={`cursor-pointer transition-all duration-200 border border-gray-200 rounded-xl p-4 ${
                                                         timeSlot.status === 'Full' 
-                                                            ? 'opacity-60 cursor-not-allowed border border-gray-200'
+                                                            ? 'opacity-60 cursor-not-allowed'
                                                             : selectedTimeSlot === timeSlot.id
-                                                            ? 'border-2 border-brand-solid bg-brand-50'
-                                                            : 'border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                                            ? 'border-brand-solid bg-brand-50'
+                                                            : 'hover:bg-gray-50 hover:border-gray-300'
                                                     }`}
                                                     onClick={() => timeSlot.status !== 'Full' && handleTimeSlotSelect(timeSlot.id)}
                                                 >
@@ -259,16 +237,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <div className="font-medium text-gray-900 text-base">{timeSlot.date}</div>
                                                             <div className="text-sm text-gray-600">{timeSlot.time}</div>
                                                         </div>
-                                                        <div className="absolute top-0 right-0 flex gap-1 items-center">
-                                                            {timeSlot.id === 0 && (
-                                                                <Badge 
-                                                                    type="pill-color" 
-                                                                    color="brand" 
-                                                                    size="sm"
-                                                                >
-                                                                    Upcoming
-                                                                </Badge>
-                                                            )}
+                                                        <div className="absolute top-0 right-0">
                                                             <Badge 
                                                                 type="pill-color" 
                                                                 color={timeSlot.status === 'Full' ? 'error' : 'success'} 

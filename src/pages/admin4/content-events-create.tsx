@@ -43,6 +43,12 @@ interface FormData {
     eventDetails: string;
     additionalDetails: string;
     
+    // Recurring Event Settings
+    isRecurring: boolean;
+    recurringFrequency: 'day' | 'week' | 'month' | 'year';
+    recurringInterval: string;
+    recurringMaxEvents: string;
+    
     // Step 2: RSVP Config
     rsvpOpens: 'immediately' | 'date';
     rsvpOpensDate: string;
@@ -95,6 +101,12 @@ export const AdminContentEventsCreatePage = () => {
         coverImage: null,
         eventDetails: '',
         additionalDetails: '',
+        
+        // Recurring Event Settings
+        isRecurring: false,
+        recurringFrequency: 'week',
+        recurringInterval: '1',
+        recurringMaxEvents: '12',
         
         // Step 2: RSVP Config
         rsvpOpens: 'immediately',
@@ -217,6 +229,13 @@ export const AdminContentEventsCreatePage = () => {
     const rsvpClosesOptions = useMemo(() => [
         { id: 'capacity', label: 'After max capacity is reached', supportingText: 'Closes when full', icon: Users01 },
         { id: 'date', label: 'At specific date and time', supportingText: 'Choose when RSVP closes', icon: Calendar }
+    ], []);
+
+    const recurringFrequencyOptions = useMemo(() => [
+        { value: 'day', label: 'Day' },
+        { value: 'week', label: 'Week' },
+        { value: 'month', label: 'Month' },
+        { value: 'year', label: 'Year' }
     ], []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -502,6 +521,107 @@ export const AdminContentEventsCreatePage = () => {
                                             />
                                         </InputGroup>
                                     </div>
+
+                                    {/* Recurring Event Toggle */}
+                                    <div className="relative   space-y-4">
+                                    <div>
+                                        <Toggle
+                                            slim
+                                            size="sm"
+                                            label="Recurring Event"
+                                            hint="People can subscribe for recurring events"
+                                            isSelected={formData.isRecurring}
+                                            onChange={(isSelected) => setFormData(prev => ({ ...prev, isRecurring: isSelected }))}
+                                        />
+                                    </div>
+
+                                    {/* Recurring Event Fields - Show when toggle is enabled */}
+                                    {formData.isRecurring && (
+                                        <div className="relative pl-6  space-y-4">
+                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
+                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
+                                            
+                                            <div className="space-y-4">
+                                                <div className="flex items-end gap-2">
+                                                    <div className="flex-1">
+                                                        <Label>Repeats every</Label>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="1"
+                                                            value={formData.recurringInterval}
+                                                            onChange={(value) => setFormData(prev => ({ ...prev, recurringInterval: value }))}
+                                                            className="mt-1"
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <Select
+                                                            selectedKey={formData.recurringFrequency}
+                                                            onSelectionChange={(value) => setFormData(prev => ({ ...prev, recurringFrequency: value as 'day' | 'week' | 'month' | 'year' }))}
+                                                            items={recurringFrequencyOptions.map(option => ({ id: option.value, label: option.label }))}
+                                                        >
+                                                            {(item) => (
+                                                                <Select.Item key={item.id} id={item.id}>
+                                                                    {item.label}
+                                                                </Select.Item>
+                                                            )}
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                                
+                                                  <div>
+                                                     <Label>Maximum of events</Label>
+                                                      <div className="flex items-center gap-2 mt-1">
+                                                          <Input
+                                                              type="number"
+                                                              placeholder="12"
+                                                              value={formData.recurringMaxEvents}
+                                                              onChange={(value) => setFormData(prev => ({ ...prev, recurringMaxEvents: value }))}
+                                                              className="flex-1"
+                                                              hint={(() => {
+                                                                  if (!formData.dateFrom || !formData.recurringInterval || !formData.recurringMaxEvents) {
+                                                                      return "Set start date, interval, and max events to see the last event date";
+                                                                  }
+                                                                  
+                                                                  const startDate = new Date(formData.dateFrom);
+                                                                  const interval = parseInt(formData.recurringInterval);
+                                                                  const maxEvents = parseInt(formData.recurringMaxEvents);
+                                                                  
+                                                                  if (isNaN(interval) || isNaN(maxEvents) || interval <= 0 || maxEvents <= 0) {
+                                                                      return "Invalid values";
+                                                                  }
+                                                                  
+                                                                  const lastEventDate = new Date(startDate);
+                                                                  const eventsToAdd = maxEvents - 1; // -1 because first event is the start date
+                                                                  
+                                                                  switch (formData.recurringFrequency) {
+                                                                      case 'day':
+                                                                          lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * interval));
+                                                                          break;
+                                                                      case 'week':
+                                                                          lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * interval * 7));
+                                                                          break;
+                                                                      case 'month':
+                                                                          lastEventDate.setMonth(lastEventDate.getMonth() + (eventsToAdd * interval));
+                                                                          break;
+                                                                      case 'year':
+                                                                          lastEventDate.setFullYear(lastEventDate.getFullYear() + (eventsToAdd * interval));
+                                                                          break;
+                                                                  }
+                                                                  
+                                                                  return `Last event will be on ${lastEventDate.toLocaleDateString('en-US', { 
+                                                                      weekday: 'long', 
+                                                                      year: 'numeric', 
+                                                                      month: 'long', 
+                                                                      day: 'numeric' 
+                                                                  })}`;
+                                                              })()}
+                                                         />                                                    </div>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    </div>
+
 
                                     {/* Location Type - Dropdown */}
                                     <Select

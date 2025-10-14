@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder } from "@untitledui/icons";
+import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder, Repeat01, Repeat03, Repeat04, Repeat02 } from "@untitledui/icons";
 import { MarkerPin01 } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
-import { Badge, BadgeWithImage } from "@/components/base/badges/badges";
+import { Badge, BadgeWithIcon, BadgeWithImage } from "@/components/base/badges/badges";
 import { SiteLayout } from "@/components/layouts/site-layout";
 import { EventDetailsModal } from "@/components/application/modals/event-details-modal";
 import { useNavigate } from "react-router";
@@ -92,7 +92,17 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
                 
                 
-                <div className="absolute top-4 left-4 z-20">
+                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                {event.isRecurring && (
+                        <BadgeWithIcon  
+                            color="brand" 
+                            type="pill-color"
+                            size="md"
+                            iconLeading={Repeat02}
+                        >
+                            Recurring Event
+                        </BadgeWithIcon>
+                    )}
                     <Badge 
                         color="gray" 
                         size="sm"
@@ -100,6 +110,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                     >
                         {event.category}
                     </Badge>
+
                 </div>
 
 
@@ -154,6 +165,14 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                             <span className="flex items-center gap-1">
                                 {event.location} + <VideoRecorder className="h-3.5 w-3.5 text-warning-solid" /> Virtual
                             </span>
+                        </div>
+                    )}
+                    
+                    {/* Recurring Event Info */}
+                    {event.isRecurring && (
+                        <div className="flex items-center gap-2 text-sm text-brand-solid font-medium">
+                            <Repeat03 className="h-3.5 w-3.5" />
+                            <span>{event.recurringFrequency}</span>
                         </div>
                     )}
                 </div>
@@ -317,6 +336,8 @@ export default function SiteEventPage() {
                             locationType: "hybrid",
                             type: "in-person",
                             category: "Business",
+                            isRecurring: true,
+                            recurringFrequency: "Every 2 weeks",
                             coordinates: {
                                 latitude: 40.7589,
                                 longitude: -73.9851
