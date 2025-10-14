@@ -379,16 +379,17 @@ export const AdminStickyHeader = ({
                     </Dropdown.Root>
 
                     <div className="flex-1 flex items-center">
-                        {/* Mobile Menu Button - Replaces logo on mobile for admin pages */}
+                        {/* Mobile Menu Button - Styled like action buttons */}
                         {isAdminPage && (
-                            <div className="lg:hidden w-14 sm:w-16 h-12 sm:h-12 flex items-center justify-center border-r border-gray-800 dark:border-gray-200">
-                                <button
+                            <div className="lg:hidden h-12 sm:h-12 flex items-center justify-center border-r border-gray-800 dark:border-gray-200">
+                                <ButtonUtility 
+                                    size="sm"
+                                    color="tertiary" 
+                                    icon={Menu02}
+                                    tooltip="Menu"
                                     onClick={onMobileMenuToggle}
-                                    className="flex items-center justify-center w-10 h-10 sm:w-10 sm:h-10 rounded-lg bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-gray-300 dark:text-gray-600 transition-colors"
-                                    aria-label="Toggle mobile menu"
-                                >
-                                    <Menu02 className="w-5 h-5 sm:w-5 sm:h-5" />
-                                </button>
+                                    className="w-12 sm:w-12 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 [&>svg]:!w-5 [&>svg]:!h-5 sm:[&>svg]:!w-5 sm:[&>svg]:!h-5"
+                                />
                             </div>
                         )}
 
