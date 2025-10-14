@@ -17,6 +17,8 @@ import { useTheme } from "@/providers/theme";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Button as AriaButton } from "react-aria-components";
 import { AdminStickyHeaderAccountMenu } from "@/components/application/admin-sticky-header-account-menu";
+import { TreeView, type TreeNode } from "@/components/ui/tree-view";
+import { File05, Folder, Calendar, File01, Package, Database01, LayoutAlt01 } from "@untitledui/icons";
 
 interface MobileNavigationSystemProps {
     isOpen: boolean;
@@ -39,6 +41,7 @@ export const MobileNavigationSystem = ({
     const { theme, setTheme } = useTheme();
     const [currentLevel, setCurrentLevel] = useState<NavigationLevel>('main');
     const [selectedMainItem, setSelectedMainItem] = useState<NavItemType | null>(null);
+    const [expandedIds, setExpandedIds] = useState<string[]>(["spaces", "myFolder", "myFolder2", "utilityPages", "navigation", "content-types"]);
 
     // Reset to main level when opening
     useEffect(() => {
@@ -49,7 +52,11 @@ export const MobileNavigationSystem = ({
     }, [isOpen]);
 
     const handleMainItemClick = (item: NavItemType) => {
-        if (item.items && item.items.length > 0) {
+        // Special handling for Site item - show TreeView instead of regular subitems
+        if (item.label === "Site") {
+            setSelectedMainItem(item);
+            setCurrentLevel('secondary');
+        } else if (item.items && item.items.length > 0) {
             setSelectedMainItem(item);
             setCurrentLevel('secondary');
         } else if (item.href) {
@@ -93,6 +100,124 @@ export const MobileNavigationSystem = ({
         const currentIndex = themes.indexOf(theme);
         const nextIndex = (currentIndex + 1) % themes.length;
         setTheme(themes[nextIndex]);
+    };
+
+    // Site TreeView data - exactly matching the desktop version
+    const getSiteTreeData = (): TreeNode[] => {
+        const currentAdminVersion = 'admin4';
+        
+        // Create folder with children (matching desktop logic)
+        const createFolderWithChildren = (folderId: string, folderName: string) => ({
+            id: folderId,
+            label: folderName,
+            icon: <Folder className="size-5 text-fg-quaternary" />,
+            children: [
+                {
+                    id: `${folderId}-events`,
+                    label: "Events",
+                    icon: <File05 className="size-5 text-fg-quaternary" />,
+                    data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/events` } : 
+                          folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/events` } : undefined
+                },
+                {
+                    id: `${folderId}-blog`,
+                    label: "Blog", 
+                    icon: <File05 className="size-5 text-fg-quaternary" />,
+                    data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : 
+                          folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/blog` } : undefined
+                },
+                {
+                    id: `${folderId}-help`,
+                    label: "Help", 
+                    icon: <File05 className="size-5 text-fg-quaternary" />,
+                    data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : 
+                          folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/help` } : undefined
+                },
+                {
+                    id: `${folderId}-posts`,
+                    label: "Posts", 
+                    icon: <File05 className="size-5 text-fg-quaternary" />,
+                    data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : 
+                          folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/posts` } : undefined
+                },
+            ]
+        });
+
+        // All base items (simple spaces without children) - matching your exact list
+        const allBaseItems: TreeNode[] = [
+            { id: "feed", label: "Feed", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "explorer", label: "Explorer", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "members", label: "Members", icon: <File05 className="size-5 text-fg-quaternary" /> },
+            { id: "help", label: "Help", icon: <File05 className="size-5 text-fg-quaternary" /> },
+        ];
+
+        // Create multiple folders with children
+        const folders = [
+            createFolderWithChildren("myFolder", "MyFolder"),
+            createFolderWithChildren("myFolder2", "Growth"),
+        ];
+
+        const spacesChildren: TreeNode[] = [
+            ...allBaseItems,
+            ...folders,
+        ];
+        
+        return [
+            {
+                id: "spaces",
+                label: "Collections & Spaces",
+                showAddButton: true,
+                icon: <Folder className="size-5 text-fg-quaternary" />,
+                children: spacesChildren,
+                hasMore: false,
+                isLoading: false,
+                totalCount: allBaseItems.length + folders.length,
+                loadedCount: allBaseItems.length + folders.length,
+                data: { "data-tour-spaces-section": true }
+            },
+            {
+                id: "utilityPages",
+                label: "Utility pages",
+                icon: <File01 className="size-5 text-fg-quaternary" />,
+                children: [
+                    { id: "search", label: "Search" },
+                    { id: "404", label: "404" },
+                    { 
+                        id: "privateSpace", 
+                        label: "Private space",
+                        data: { href: `/${currentAdminVersion}/site/spaces/private-space` }
+                    },
+                    { id: "memberProfile", label: "Member profile" },
+                ]
+            },
+            {
+                id: "navigation",
+                label: "Navigation",
+                icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
+                children: [
+                    { id: "Configuration", label: "Config", icon: <Settings01 className="size-5 text-fg-quaternary" />},
+                ],
+                data: { "data-tour-navigation-item": true }
+            },
+            {
+                id: "content-types",
+                label: "Content Types",
+                icon: <Database01 className="size-5 text-fg-quaternary" />,
+                children: [
+                    { 
+                        id: "event", 
+                        label: "Event",
+                        icon: <Calendar className="size-5 text-fg-quaternary" />,
+                        data: { href: `/${currentAdminVersion}/site/cms/events` }
+                    },
+                    { 
+                        id: "blog", 
+                        label: "Blog", 
+                        icon: <File01 className="size-5 text-fg-quaternary" /> 
+                    },
+                ]
+            }
+        ];
     };
 
     const renderMainLevel = () => (
@@ -235,28 +360,56 @@ export const MobileNavigationSystem = ({
 
             {/* Secondary Navigation Items */}
             <div className="flex-1 overflow-y-auto p-4">
-                <div className="space-y-1">
-                    {selectedMainItem?.items?.map((item) => (
-                        <button
-                            key={item.label}
-                            onClick={() => handleSecondaryItemClick(item)}
-                            className={cx(
-                                "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
-                                activeUrl === item.href
-                                    ? "bg-active text-secondary_hover"
-                                    : "text-secondary hover:text-primary hover:bg-secondary"
-                            )}
-                        >
-                            {item.icon && <item.icon className="w-5 h-5" />}
-                            <span className="font-medium">{item.label}</span>
-                            {item.badge && (
-                                <span className="ml-auto px-2 py-1 text-xs bg-brand-solid text-white rounded-full">
-                                    {item.badge}
-                                </span>
-                            )}
-                        </button>
-                    ))}
-                </div>
+                {selectedMainItem?.label === "Site" ? (
+                    // Show TreeView for Site item
+                    <TreeView
+                        data={getSiteTreeData()}
+                        expandedIds={expandedIds}
+                        selectedIds={[]}
+                        onNodeClick={(node) => {
+                            console.log('Node clicked:', node);
+                            if (node.data?.href) {
+                                console.log('Navigating to:', node.data.href);
+                                navigate(node.data.href);
+                                onClose();
+                            }
+                        }}
+                        onNodeExpand={(nodeId, expanded) => {
+                            if (expanded) {
+                                setExpandedIds(prev => [...prev, nodeId]);
+                            } else {
+                                setExpandedIds(prev => prev.filter(id => id !== nodeId));
+                            }
+                        }}
+                        className="border-none bg-transparent"
+                        showLines={false}
+                        showIcons={true}
+                    />
+                ) : (
+                    // Show regular subitems for other items
+                    <div className="space-y-1">
+                        {selectedMainItem?.items?.map((item) => (
+                            <button
+                                key={item.label}
+                                onClick={() => handleSecondaryItemClick(item)}
+                                className={cx(
+                                    "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                                    activeUrl === item.href
+                                        ? "bg-active text-secondary_hover"
+                                        : "text-secondary hover:text-primary hover:bg-secondary"
+                                )}
+                            >
+                                {item.icon && <item.icon className="w-5 h-5" />}
+                                <span className="font-medium">{item.label}</span>
+                                {item.badge && (
+                                    <span className="ml-auto px-2 py-1 text-xs bg-brand-solid text-white rounded-full">
+                                        {item.badge}
+                                    </span>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

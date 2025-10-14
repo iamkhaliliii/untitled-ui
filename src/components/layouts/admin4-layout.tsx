@@ -177,6 +177,7 @@ interface Admin4LayoutProps {
     currentPath?: string;
     hideHeader?: boolean;
     showAdvancedFeatures?: boolean;
+    mobileTabSelector?: ReactNode;
 }
 
 export const Admin4Layout = ({ 
@@ -186,7 +187,8 @@ export const Admin4Layout = ({
     headerActions,
     currentPath = "/admin4",
     hideHeader = false,
-    showAdvancedFeatures = true
+    showAdvancedFeatures = true,
+    mobileTabSelector
 }: Admin4LayoutProps) => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -247,35 +249,81 @@ export const Admin4Layout = ({
                 <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin w-full lg:w-auto">
                     {/* Enhanced Header with admin4 branding - Responsive */}
                     {!hideHeader && (
-                        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-secondary bg-primary px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
-                            <div className="min-w-0 flex-1">
-                                <h1 className="text-lg sm:text-xl font-semibold text-primary truncate">{title}</h1>
-                                <p className="text-xs sm:text-sm text-tertiary mt-0.5 line-clamp-2 sm:line-clamp-1">{description}</p>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                                {headerActions || (
-                                    <>
-                                        {showAdvancedFeatures && (
-                                            <Button 
-                                                color="secondary" 
-                                                size="sm"
-                                                iconLeading={Target03}
-                                                className="hidden sm:flex"
-                                            >
-                                                <span className="hidden md:inline">Quick Actions</span>
-                                                <span className="md:hidden">Actions</span>
-                                            </Button>
+                        <header className="border-b border-secondary bg-primary">
+                            {/* Mobile Tab Selector - Show above title on mobile */}
+                            {mobileTabSelector && (
+                                <div className="lg:hidden ">
+                                    {mobileTabSelector}
+                                </div>
+                            )}
+                            
+                            {/* Hide title/description on mobile when mobileTabSelector exists */}
+                            {!mobileTabSelector && (
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
+                                    <div className="min-w-0 flex-1">
+                                        <h1 className="text-lg sm:text-xl font-semibold text-primary truncate">{title}</h1>
+                                        <p className="text-xs sm:text-sm text-tertiary mt-0.5 line-clamp-2 sm:line-clamp-1">{description}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        {headerActions || (
+                                            <>
+                                                {showAdvancedFeatures && (
+                                                    <Button 
+                                                        color="secondary" 
+                                                        size="sm"
+                                                        iconLeading={Target03}
+                                                        className="hidden sm:flex"
+                                                    >
+                                                        <span className="hidden md:inline">Quick Actions</span>
+                                                        <span className="md:hidden">Actions</span>
+                                                    </Button>
+                                                )}
+                                                <Button 
+                                                    color="secondary" 
+                                                    size="sm"
+                                                    iconLeading={Bell01}
+                                                >
+                                                    <span className="hidden sm:inline">Notifications</span>
+                                                </Button>
+                                            </>
                                         )}
-                                        <Button 
-                                            color="secondary" 
-                                            size="sm"
-                                            iconLeading={Bell01}
-                                        >
-                                            <span className="hidden sm:inline">Notifications</span>
-                                        </Button>
-                                    </>
-                                )}
-                            </div>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Show title/description on desktop when mobileTabSelector exists */}
+                            {mobileTabSelector && (
+                                <div className="hidden lg:flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-2">
+                                    <div className="min-w-0 flex-1">
+                                        <h1 className="text-lg sm:text-xl font-semibold text-primary truncate">{title}</h1>
+                                        <p className="text-xs sm:text-sm text-tertiary mt-0.5 line-clamp-2 sm:line-clamp-1">{description}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        {headerActions || (
+                                            <>
+                                                {showAdvancedFeatures && (
+                                                    <Button 
+                                                        color="secondary" 
+                                                        size="sm"
+                                                        iconLeading={Target03}
+                                                        className="hidden sm:flex"
+                                                    >
+                                                        <span className="hidden md:inline">Quick Actions</span>
+                                                        <span className="md:hidden">Actions</span>
+                                                    </Button>
+                                                )}
+                                                <Button 
+                                                    color="secondary" 
+                                                    size="sm"
+                                                    iconLeading={Bell01}
+                                                >
+                                                    <span className="hidden sm:inline">Notifications</span>
+                                                </Button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </header>
                     )}
 

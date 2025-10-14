@@ -31,6 +31,7 @@ import { EventsDangerSettings } from "@/components/application/app-navigation-ad
 import { CustomizerSection } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/customizer-section";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { Package, InfoCircle, SearchMd, Download01, UsersPlus } from "@untitledui/icons";
+import { MobileSpaceTabs } from "@/components/application/app-navigation-admin4/mobile-space-tabs";
 
 
 export const SiteSpacesEventsPage = () => {
@@ -70,6 +71,29 @@ export const SiteSpacesEventsPage = () => {
     };
     
     const currentPageType = getCurrentPageType();
+    
+    // Define tabs for mobile navigation
+    const spaceTabs = [
+        { id: "general", label: "General", path: "" },
+        { id: "permissions", label: "Permissions", path: "/permissions" },
+        { id: "members", label: "Members", path: "/members" },
+        { id: "analytics", label: "Space Analytics", path: "/analytics" },
+        { id: "audit-logs", label: "Audit Logs", path: "/audit-logs" },
+        { id: "seo", label: "SEO", path: "/seo" },
+        { id: "customize", label: "Customizer", path: "/customize" },
+        { id: "danger", label: "Danger Zone", path: "/danger" },
+    ];
+    
+    // Get base path for current space
+    const getBasePath = () => {
+        if (currentPath.includes("/admin4/site/spaces/growth/events")) {
+            return "/admin4/site/spaces/growth/events";
+        }
+        if (currentPath.includes("/admin4/site/spaces/myfolder/events")) {
+            return "/admin4/site/spaces/myfolder/events";
+        }
+        return "/admin4/site/spaces/myfolder/events"; // default
+    };
     
     // Member management handlers
     const handleSearchMembers = () => {
@@ -116,38 +140,23 @@ export const SiteSpacesEventsPage = () => {
         const viewOnlyPages = ["analytics", "audit-logs", "danger"];
         
         if (viewOnlyPages.includes(currentPageType)) {
-            return (
-                <div className="flex items-center gap-2">
-                    <Button 
-                        color="secondary" 
-                        size="sm"
-                        iconLeading={LinkExternal01}
-                    >
-                        View
-                    </Button>
-                </div>
-            );
+            return null; // Remove View button entirely
         }
         
-        // All other pages show View, Discard, and Save
+        // All other pages show only Discard and Save (no View)
         return (
             <div className="flex items-center gap-2">
                 <Button 
                     color="secondary" 
                     size="sm"
-                    iconLeading={LinkExternal01}
-                >
-                    View
-                </Button>
-                <Button 
-                    color="secondary" 
-                    size="sm"
+                    className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
                 >
                     Discard
                 </Button>
                 <Button 
                     color="primary" 
                     size="sm"
+                    className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
                 >
                     Save
                 </Button>
@@ -363,6 +372,14 @@ export const SiteSpacesEventsPage = () => {
             description={getPageTitle()}
             currentPath={currentPath}
             headerActions={renderHeaderActions()}
+            mobileTabSelector={
+                <MobileSpaceTabs
+                    basePath={getBasePath()}
+                    tabs={spaceTabs}
+                    currentTab={currentPageType}
+                    headerActions={renderHeaderActions()}
+                />
+            }
         >
             <div className="px-4 py-6 lg:px-6">
                 {renderMainContent()}
