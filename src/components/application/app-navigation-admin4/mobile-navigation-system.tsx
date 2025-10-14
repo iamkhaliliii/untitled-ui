@@ -280,7 +280,7 @@ export const MobileNavigationSystem = ({
                 {/* Bottom Action Icons */}
                 <div className="flex items-center justify-around p-3 border-b border-secondary">
                     <ButtonUtility
-                        size="md"
+                        size="sm"
                         color="tertiary"
                         icon={LifeBuoy01}
                         tooltip="Support"
@@ -291,7 +291,7 @@ export const MobileNavigationSystem = ({
                         className="flex-1 max-w-none"
                     />
                     <ButtonUtility
-                        size="md"
+                        size="sm"
                         color="tertiary"
                         icon={GraduationHat02}
                         tooltip="Onboarding"
@@ -302,7 +302,7 @@ export const MobileNavigationSystem = ({
                         className="flex-1 max-w-none"
                     />
                     <ButtonUtility
-                        size="md"
+                        size="sm"
                         color="tertiary"
                         icon={getThemeIcon()}
                         tooltip={`Theme: ${getThemeLabel()}`}
