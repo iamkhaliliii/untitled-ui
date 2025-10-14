@@ -80,17 +80,18 @@ export const HomeScreen = () => {
         
         return (
             <Link key={item.id} to={item.path} className="group">
-                <div className="rounded-xl border border-secondary bg-primary p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70 hover:shadow-lg">
+                <div className="rounded-xl border border-secondary bg-primary p-4 sm:p-5 lg:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-solid/70 hover:shadow-lg">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5">
-                                <IconComponent className="size-4 text-brand-solid dark:text-white" />
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                            <span className="inline-flex items-center justify-center rounded-md bg-brand-solid/10 p-1.5 flex-shrink-0">
+                                <IconComponent className="size-4 sm:size-5 text-brand-solid dark:text-white" />
                             </span>
-                            <span className="text-sm font-medium text-primary">{item.title}</span>
+                            <span className="text-sm sm:text-base font-medium text-primary truncate">{item.title}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Badge color={item.statusColor} size="sm">{item.status}</Badge>
-                            <ArrowRight className="size-3.5 text-tertiary group-hover:text-brand-solid dark:group-hover:text-white" />
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                            <Badge color={item.statusColor} size="sm" className="hidden sm:inline-flex">{item.status}</Badge>
+                            <Badge color={item.statusColor} size="sm" className="sm:hidden text-xs px-1.5 py-0.5">{item.status}</Badge>
+                            <ArrowRight className="size-3.5 sm:size-4 text-tertiary group-hover:text-brand-solid dark:group-hover:text-white flex-shrink-0" />
                         </div>
                     </div>
                 </div>
@@ -122,7 +123,7 @@ export const HomeScreen = () => {
     };
 
     return (
-        <div className="relative flex h-dvh flex-col overflow-hidden">
+        <div className="relative flex h-dvh flex-col overflow-auto">
             {/* Background visuals */}
             <div className="pointer-events-none absolute inset-0">
                 <BackgroundPattern pattern="grid-check" className="absolute -left-10 top-10 h-[520px] w-[520px] opacity-[0.06]" />
@@ -145,13 +146,12 @@ export const HomeScreen = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-transparent to-transparent" />
             </div>
 
-            {/* Logo in top left corner */}
-            <div className="absolute top-6 left-6 z-20">
-                <NexusLogo className="h-12 w-auto" />
-            </div>
-
-            {/* Theme toggle button in top right corner */}
-            <div className="absolute top-6 right-6 z-20">
+            {/* Header - Responsive positioning */}
+            <div className="absolute top-4 sm:top-6 left-4 sm:left-6 right-4 sm:right-6 z-20 flex items-center justify-between">
+                {/* Logo */}
+                <NexusLogo className="h-8 sm:h-10 lg:h-12 w-auto" />
+                
+                {/* Theme toggle button */}
                 <Button
                     size="sm"
                     color="secondary"
@@ -159,51 +159,82 @@ export const HomeScreen = () => {
                     onClick={toggleTheme}
                     className="shadow-lg"
                 >
-                    {getThemeLabel()}
+                    <span className="hidden sm:inline">{getThemeLabel()}</span>
+                    <span className="sm:hidden sr-only">{getThemeLabel()}</span>
                 </Button>
             </div>
 
+            {/* Main content - Responsive layout with proper scrolling */}
+            <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-32">
 
-            {/* Main content */}
-            <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4">
-
-                <div className="max-w-3xl text-center">
-                    <h1 className="text-display-sm font-semibold tracking-tight text-primary">
+                {/* Hero section - Responsive typography */}
+                <div className="max-w-3xl text-center mb-8 sm:mb-12 lg:mb-16">
+                    <h1 className="text-2xl sm:text-3xl lg:text-display-sm font-semibold tracking-tight text-primary">
                         Bettermode NΞXUS
                     </h1>
-                    <p className="mt-3 text-lg text-tertiary">
+                    <p className="mt-2 sm:mt-3 text-base sm:text-lg text-tertiary">
                         Select your path and continue.
                     </p>
                 </div>
 
-                {/* Three-column navigation: Admin / Site / Get Started */}
-                <div className="mt-16 grid w-full max-w-7xl grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16">
-                    {/* Admin column */}
-                    <div>
-                        <div className="mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Admin</div>
-                        <div className="space-y-4">
-                            {data.admin.map(item => renderNavigationItem(item))}
+                {/* Loading state */}
+                {isLoading ? (
+                    <div className="w-full max-w-7xl">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="space-y-4">
+                                    <div className="h-4 bg-secondary/20 rounded animate-pulse"></div>
+                                    <div className="space-y-3">
+                                        {[1, 2].map((j) => (
+                                            <div key={j} className="h-16 bg-secondary/10 rounded-xl animate-pulse"></div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
+                ) : (
+                    /* Navigation grid - Responsive columns */
+                    <div className="w-full max-w-7xl">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
+                            {/* Admin column */}
+                            <div className="order-1">
+                                <div className="mb-4 sm:mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Admin</div>
+                                <div className="space-y-3 sm:space-y-4">
+                                    {data.admin && data.admin.length > 0 ? (
+                                        data.admin.map(item => renderNavigationItem(item))
+                                    ) : (
+                                        <div className="text-sm text-tertiary">No admin items available</div>
+                                    )}
+                                </div>
+                            </div>
 
-                    {/* Site column */}
-                    <div>
-                        <div className="mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Site</div>
-                        <div className="space-y-4">
-                            {data.site.map(item => renderNavigationItem(item))}
+                            {/* Site column */}
+                            <div className="order-2">
+                                <div className="mb-4 sm:mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Site</div>
+                                <div className="space-y-3 sm:space-y-4">
+                                    {data.site && data.site.length > 0 ? (
+                                        data.site.map(item => renderNavigationItem(item))
+                                    ) : (
+                                        <div className="text-sm text-tertiary">No site items available</div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Get Started column - Full width on mobile, spans 2 cols on tablet */}
+                            <div className="order-3 sm:col-span-2 lg:col-span-1">
+                                <div className="mb-4 sm:mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Get Started</div>
+                                <div className="space-y-3 sm:space-y-4">
+                                    {data.getStarted && data.getStarted.length > 0 ? (
+                                        data.getStarted.map(item => renderNavigationItem(item))
+                                    ) : (
+                                        <div className="text-sm text-tertiary">No get started items available</div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    {/* Get Started column */}
-                    <div>
-                        <div className="mb-6 text-xs font-medium uppercase tracking-wide text-tertiary">Get Started</div>
-                        <div className="space-y-4">
-                            {data.getStarted.map(item => renderNavigationItem(item))}
-                        </div>
-                    </div>
-                </div>
-
-                
+                )}
             </div>
         </div>
     );
