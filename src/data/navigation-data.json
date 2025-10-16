@@ -1,22 +1,22 @@
 {
   "admin": [
     {
-      "id": "admin-3",
-      "title": "Admin",
+      "id": "admin-4",
+      "title": "Admin Mode",
       "icon": "Settings01",
       "path": "/admin4",
       "status": "Under Design",
       "statusColor": "blue"
     },
-
     {
-      "id": "site-section",
-      "title": "Site Section",
-      "icon": "Globe01",
-      "path": "/admin2/site",
-      "status": "Ready for Dev",
-      "statusColor": "success"
+      "id": "design-mode",
+      "title": "Design Mode",
+      "icon": "Settings01",
+      "path": "/admin4/design",
+      "status": "Under Design",
+      "statusColor": "blue"
     },
+
     {
       "id": "nexus-design-studio",
       "title": "Nexus Design Studio",
@@ -32,6 +32,14 @@
       "path": "/admin4/site/spaces/myfolder/events/customize",
       "status": "Under Design",
       "statusColor": "blue"
+    },
+    {
+      "id": "site-section",
+      "title": "Site Section",
+      "icon": "Globe01",
+      "path": "/admin2/site",
+      "status": "Ready for Dev",
+      "statusColor": "success"
     }
   ],
   "site": [
