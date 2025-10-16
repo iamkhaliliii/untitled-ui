@@ -6,7 +6,6 @@ import { NexusLogo } from "@/components/foundations/logo/nexus-logo";
 import { BackgroundPattern } from "@/components/shared-assets/background-patterns";
 import { Link, useNavigate } from "react-router";
 import navigationData from "@/data/navigation-data.json";
-import { loadNavigationData } from "@/api/navigation";
 import { useTheme } from "@/providers/theme";
 
 interface NavigationItem {
@@ -31,34 +30,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export const HomeScreen = () => {
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
-    const [data, setData] = useState<{ admin: NavigationItem[], site: NavigationItem[], getStarted: NavigationItem[] }>(
-        navigationData as { admin: NavigationItem[], site: NavigationItem[], getStarted: NavigationItem[] }
-    );
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Load data from localStorage on component mount
-    useEffect(() => {
-        const loadData = async () => {
-            setIsLoading(true);
-            try {
-                const storedData = await loadNavigationData();
-                if (storedData) {
-                    setData(storedData);
-                    console.log('Home: Loaded data from localStorage');
-                } else {
-                    console.log('Home: No stored data found, using default data');
-                    // Keep using the imported JSON data as fallback
-                }
-            } catch (error) {
-                console.error('Failed to load data from storage, using fallback:', error);
-                // Keep using the imported JSON data as fallback
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        loadData();
-    }, []);
+    const data = navigationData as { admin: NavigationItem[], site: NavigationItem[], getStarted: NavigationItem[] };
 
     // Keyboard shortcut listener
     useEffect(() => {
@@ -177,25 +149,8 @@ export const HomeScreen = () => {
                     </p>
                 </div>
 
-                {/* Loading state */}
-                {isLoading ? (
-                    <div className="w-full max-w-7xl">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="space-y-4">
-                                    <div className="h-4 bg-secondary/20 rounded animate-pulse"></div>
-                                    <div className="space-y-3">
-                                        {[1, 2].map((j) => (
-                                            <div key={j} className="h-16 bg-secondary/10 rounded-xl animate-pulse"></div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    /* Navigation grid - Responsive columns */
-                    <div className="w-full max-w-7xl">
+                {/* Navigation grid - Responsive columns */}
+                <div className="w-full max-w-7xl">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
                             {/* Admin column */}
                             <div className="order-1">
@@ -233,8 +188,7 @@ export const HomeScreen = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                </div>
             </div>
         </div>
     );

@@ -134,6 +134,23 @@ export const EditDashboard = () => {
     link.download = 'navigation-data.json';
     link.click();
     URL.revokeObjectURL(url);
+    
+    // Show instruction notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 max-w-md';
+    notification.innerHTML = `
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="text-sm">
+          <strong>JSON Downloaded!</strong><br/>
+          Replace the contents of <code class="bg-white/20 px-1 rounded">src/data/navigation-data.json</code> with this file to make changes permanent.
+        </div>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 8000);
   };
 
   const resetToDefault = () => {

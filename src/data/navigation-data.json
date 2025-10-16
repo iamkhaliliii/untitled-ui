@@ -2,20 +2,13 @@
   "admin": [
     {
       "id": "admin-3",
-      "title": "Admin 3.0",
+      "title": "Admin",
       "icon": "Settings01",
-      "path": "/admin3",
-      "status": "On Hold",
-      "statusColor": "gray"
-    },
-    {
-      "id": "admin-2",
-      "title": "Admin 2.0",
-      "icon": "Settings01",
-      "path": "/admin2",
+      "path": "/admin4",
       "status": "Under Design",
       "statusColor": "blue"
     },
+
     {
       "id": "site-section",
       "title": "Site Section",
@@ -25,10 +18,18 @@
       "statusColor": "success"
     },
     {
-      "id": "customize-space",
-      "title": "Simple Customize Space",
+      "id": "nexus-design-studio",
+      "title": "Nexus Design Studio",
       "icon": "Settings01",
-      "path": "/admin2/site/spaces/growth/events/customize",
+      "path": "/admin4/site/spaces/growth/events/customize",
+      "status": "Under Design",
+      "statusColor": "blue"
+    },
+    {
+      "id": "advanced-design-studio",
+      "title": "Advanced Design Studio",
+      "icon": "Settings01",
+      "path": "/admin4/site/spaces/myfolder/events/customize",
       "status": "Under Design",
       "statusColor": "blue"
     }
@@ -88,7 +89,7 @@
       "id": "onboarding",
       "title": "Onboarding",
       "icon": "CheckCircle",
-      "path": "/admin2/onboarding",
+      "path": "/admin4/onboarding",
       "status": "Under Review",
       "statusColor": "orange"
     }
