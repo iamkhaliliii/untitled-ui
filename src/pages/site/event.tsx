@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder, Repeat01, Repeat03, Repeat04, Repeat02, Check } from "@untitledui/icons";
+import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder, Repeat01, Repeat03, Repeat04, Repeat02, Check, Recording03 } from "@untitledui/icons";
 import { MarkerPin01 } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
@@ -108,6 +108,22 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                 
                 
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                {event.status === 'live' && (
+                        <BadgeWithIcon  
+                            color="error" 
+                            type="pill-color"
+                            size="md"
+                            iconLeading={Recording03}
+                        >
+                            <span className="flex items-center gap-1.5">
+                                Live Now
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                            </span>
+                        </BadgeWithIcon>
+                    )}
                 {event.isRecurring && (
                         <BadgeWithIcon  
                             color="brand" 
@@ -219,6 +235,7 @@ export default function SiteEventPage() {
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [eventRSVPStatus, setEventRSVPStatus] = useState<Record<number, 'confirmed' | 'cancelled' | null>>({});
+    const [activeTab, setActiveTab] = useState<'all' | 'live' | 'upcoming' | 'past'>('all');
 
     const handleEventClick = (event: any) => {
         setSelectedEvent(event);
@@ -232,6 +249,254 @@ export default function SiteEventPage() {
 
     const handleRSVPStatusChange = (eventId: number, status: 'confirmed' | 'cancelled' | null) => {
         setEventRSVPStatus(prev => ({ ...prev, [eventId]: status }));
+    };
+
+    // Mock events data with status
+    const allEvents = [
+        {
+            id: 1,
+            title: "React Conference 2024",
+            description: "Join us for the biggest React conference of the year. Learn from industry experts and network with fellow developers.",
+            image: "https://picsum.photos/400/200?random=1",
+            date: "March 15, 2024",
+            time: "9:00 AM - 6:00 PM",
+            location: "Moscone Center",
+            fullAddress: "747 Howard Street, San Francisco, CA 94103",
+            attendees: 150,
+            maxAttendees: 200,
+            locationType: "physical",
+            type: "in-person",
+            category: "Technology",
+            status: "upcoming",
+            coordinates: {
+                latitude: 37.7849,
+                longitude: -122.4013
+            },
+            organizer: {
+                name: "Sarah Johnson",
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 2,
+            title: "Design Thinking Workshop - Live Session",
+            description: "Hands-on workshop to master design thinking methodology. Perfect for designers and product managers.",
+            image: "https://picsum.photos/400/200?random=2",
+            date: "Today",
+            time: "2:00 PM - 5:00 PM (Happening Now)",
+            location: "Online",
+            virtualUrls: ["https://zoom.us/j/123456789"],
+            attendees: 89,
+            maxAttendees: 100,
+            locationType: "virtual",
+            type: "online",
+            category: "Design",
+            status: "live",
+            organizer: {
+                name: "Mike Chen",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 3,
+            title: "Startup Pitch Competition",
+            description: "Watch innovative startups pitch their ideas to a panel of expert judges. Great networking opportunity.",
+            image: "https://picsum.photos/400/200?random=3",
+            date: "March 22, 2024",
+            time: "7:00 PM - 10:00 PM",
+            location: "WeWork Times Square",
+            fullAddress: "1460 Broadway, New York, NY 10036",
+            virtualUrls: ["https://teams.microsoft.com/meet/abc123"],
+            attendees: 75,
+            maxAttendees: 150,
+            locationType: "hybrid",
+            type: "in-person",
+            category: "Business",
+            isRecurring: true,
+            recurringFrequency: "Every 2 weeks",
+            status: "upcoming",
+            coordinates: {
+                latitude: 40.7589,
+                longitude: -73.9851
+            },
+            organizer: {
+                name: "Alex Rodriguez",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 4,
+            title: "AI & Machine Learning Summit - Live Now!",
+            description: "Explore the latest trends in AI and ML. Expert speakers from leading tech companies.",
+            image: "https://picsum.photos/400/200?random=4",
+            date: "Today",
+            time: "10:00 AM - 4:00 PM (In Progress)",
+            location: "Online",
+            virtualUrls: ["https://zoom.us/j/987654321"],
+            attendees: 234,
+            maxAttendees: 500,
+            locationType: "virtual",
+            type: "online",
+            category: "Technology",
+            status: "live",
+            organizer: {
+                name: "Emma Davis",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 5,
+            title: "Photography Masterclass",
+            description: "Learn professional photography techniques from award-winning photographers.",
+            image: "https://picsum.photos/400/200?random=5",
+            date: "February 28, 2024",
+            time: "1:00 PM - 6:00 PM",
+            location: "Los Angeles, CA",
+            attendees: 45,
+            maxAttendees: 80,
+            locationType: "physical",
+            type: "in-person",
+            category: "Creative",
+            status: "past",
+            organizer: {
+                name: "David Kim",
+                avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 6,
+            title: "Digital Marketing Bootcamp",
+            description: "Comprehensive bootcamp covering SEO, social media, and content marketing strategies.",
+            image: "https://picsum.photos/400/200?random=6",
+            date: "April 2, 2024",
+            time: "9:00 AM - 5:00 PM",
+            location: "Online",
+            virtualUrls: ["https://meet.google.com/xyz-abc-def"],
+            attendees: 156,
+            maxAttendees: 200,
+            locationType: "virtual",
+            type: "online",
+            category: "Marketing",
+            status: "upcoming",
+            organizer: {
+                name: "Lisa Thompson",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 7,
+            title: "Web3 Developer Meetup - Happening Now",
+            description: "Join fellow Web3 developers to discuss latest blockchain technologies and dApps.",
+            image: "https://picsum.photos/400/200?random=7",
+            date: "Today",
+            time: "6:00 PM - 9:00 PM (Live)",
+            location: "Silicon Valley Hub",
+            fullAddress: "123 Tech Street, Palo Alto, CA",
+            virtualUrls: ["https://zoom.us/j/456789123"],
+            attendees: 67,
+            maxAttendees: 80,
+            locationType: "hybrid",
+            type: "in-person",
+            category: "Technology",
+            status: "live",
+            coordinates: {
+                latitude: 37.4419,
+                longitude: -122.1430
+            },
+            organizer: {
+                name: "James Wilson",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 8,
+            title: "Product Management 101",
+            description: "Complete guide to product management for beginners and intermediate practitioners.",
+            image: "https://picsum.photos/400/200?random=8",
+            date: "February 15, 2024",
+            time: "10:00 AM - 3:00 PM",
+            location: "Online",
+            virtualUrls: ["https://meet.google.com/abc-def-ghi"],
+            attendees: 123,
+            maxAttendees: 150,
+            locationType: "virtual",
+            type: "online",
+            category: "Business",
+            status: "past",
+            organizer: {
+                name: "Rachel Green",
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 9,
+            title: "UX Research Workshop",
+            description: "Learn practical UX research methods and how to apply them to your projects.",
+            image: "https://picsum.photos/400/200?random=9",
+            date: "March 30, 2024",
+            time: "11:00 AM - 4:00 PM",
+            location: "Design Studio NYC",
+            fullAddress: "456 Design Ave, New York, NY 10001",
+            attendees: 42,
+            maxAttendees: 60,
+            locationType: "physical",
+            type: "in-person",
+            category: "Design",
+            status: "upcoming",
+            isRecurring: true,
+            recurringFrequency: "Monthly",
+            coordinates: {
+                latitude: 40.7128,
+                longitude: -74.0060
+            },
+            organizer: {
+                name: "Monica Geller",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
+            }
+        },
+        {
+            id: 10,
+            title: "Startup Pitch Competition",
+            description: "Watch innovative startups pitch their ideas to a panel of expert judges. Great networking opportunity.",
+            image: "https://picsum.photos/400/200?random=10",
+            date: "February 10, 2024",
+            time: "7:00 PM - 10:00 PM",
+            location: "WeWork Downtown",
+            fullAddress: "500 Market Street, San Francisco, CA 94102",
+            attendees: 120,
+            maxAttendees: 150,
+            locationType: "hybrid",
+            type: "in-person",
+            category: "Business",
+            isRecurring: true,
+            recurringFrequency: "Every 2 weeks",
+            status: "past",
+            coordinates: {
+                latitude: 37.7749,
+                longitude: -122.4194
+            },
+            organizer: {
+                name: "Chris Evans",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face"
+            }
+        }
+    ];
+
+    // Filter events based on active tab
+    const filteredEvents = allEvents.filter(event => {
+        if (activeTab === 'all') return true;
+        if (activeTab === 'live') return event.status === 'live';
+        if (activeTab === 'upcoming') return event.status === 'upcoming';
+        if (activeTab === 'past') return event.status === 'past';
+        return true;
+    });
+
+    // Count events for each tab
+    const eventCounts = {
+        all: allEvents.length,
+        live: allEvents.filter(e => e.status === 'live').length,
+        upcoming: allEvents.filter(e => e.status === 'upcoming').length,
+        past: allEvents.filter(e => e.status === 'past').length
     };
 
     const headerActions = (
@@ -280,150 +545,91 @@ export default function SiteEventPage() {
                     <div className="flex flex-wrap items-center gap-3">
                         {/* Time Filters */}
                         <div className="flex items-center bg-secondary/30 rounded-xl p-1">
-                            <Button size="sm" color="primary" className="shadow-sm">All Events</Button>
-                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">Upcoming Events</Button>
-                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">Past Events</Button>
+                            <Button 
+                                size="sm" 
+                                color={activeTab === 'all' ? "primary" : "tertiary"} 
+                                className={activeTab === 'all' ? "shadow-sm" : "text-secondary hover:text-primary"}
+                                onClick={() => setActiveTab('all')}
+                            >
+                                <span className="flex items-center gap-2">
+                                    All Events
+                                    <Badge color="gray" size="sm" className="ml-1">{eventCounts.all}</Badge>
+                                </span>
+                            </Button>
+                            <Button 
+                                size="sm" 
+                                color={activeTab === 'live' ? "primary" : "tertiary"} 
+                                className={activeTab === 'live' ? "shadow-sm" : "text-secondary hover:text-primary"}
+                                onClick={() => setActiveTab('live')}
+                                
+                            >
+                                <span className="flex items-center gap-2">
+                                    Ongoing Events
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-solid opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-error-solid"></span>
+                                    </span>
+                                    <Badge color="error" size="sm" className="ml-1">{eventCounts.live}</Badge>
+                                </span>
+                            </Button>
+                            <Button 
+                                size="sm" 
+                                color={activeTab === 'upcoming' ? "primary" : "tertiary"} 
+                                className={activeTab === 'upcoming' ? "shadow-sm" : "text-secondary hover:text-primary"}
+                                onClick={() => setActiveTab('upcoming')}
+                            >
+                                <span className="flex items-center gap-2">
+                                    Upcoming Events
+                                    <Badge color="brand" size="sm" className="ml-1">{eventCounts.upcoming}</Badge>
+                                </span>
+                            </Button>
+                            <Button 
+                                size="sm" 
+                                color={activeTab === 'past' ? "primary" : "tertiary"} 
+                                className={activeTab === 'past' ? "shadow-sm" : "text-secondary hover:text-primary"}
+                                onClick={() => setActiveTab('past')}
+                            >
+                                <span className="flex items-center gap-2">
+                                    Past Events
+                                    <Badge color="gray" size="sm" className="ml-1">{eventCounts.past}</Badge>
+                                </span>
+                            </Button>
                         </div>
 
                     </div>
                 </div>
 
                 {/* Events Grid */}
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
-                    {[
-                        {
-                            id: 1,
-                            title: "React Conference 2024",
-                            description: "Join us for the biggest React conference of the year. Learn from industry experts and network with fellow developers.",
-                            image: "https://picsum.photos/400/200?random=1",
-                            date: "March 15, 2024",
-                            time: "9:00 AM - 6:00 PM",
-                            location: "Moscone Center",
-                            fullAddress: "747 Howard Street, San Francisco, CA 94103",
-                            attendees: 150,
-                            maxAttendees: 200,
-                            locationType: "physical",
-                            type: "in-person",
-                            category: "Technology",
-                            coordinates: {
-                                latitude: 37.7849,
-                                longitude: -122.4013
-                            },
-                            organizer: {
-                                name: "Sarah Johnson",
-                                avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
-                            }
-                        },
-                        {
-                            id: 2,
-                            title: "Design Thinking Workshop",
-                            description: "Hands-on workshop to master design thinking methodology. Perfect for designers and product managers.",
-                            image: "https://picsum.photos/400/200?random=2",
-                            date: "March 18, 2024",
-                            time: "2:00 PM - 5:00 PM",
-                            location: "Online",
-                            virtualUrls: ["https://zoom.us/j/123456789"],
-                            attendees: 89,
-                            maxAttendees: 100,
-                            locationType: "virtual",
-                            type: "online",
-                            category: "Design",
-                            organizer: {
-                                name: "Mike Chen",
-                                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
-                            }
-                        },
-                        {
-                            id: 3,
-                            title: "Startup Pitch Competition",
-                            description: "Watch innovative startups pitch their ideas to a panel of expert judges. Great networking opportunity.",
-                            image: "https://picsum.photos/400/200?random=3",
-                            date: "March 22, 2024",
-                            time: "7:00 PM - 10:00 PM",
-                            location: "WeWork Times Square",
-                            fullAddress: "1460 Broadway, New York, NY 10036",
-                            virtualUrls: ["https://teams.microsoft.com/meet/abc123"],
-                            attendees: 75,
-                            maxAttendees: 150,
-                            locationType: "hybrid",
-                            type: "in-person",
-                            category: "Business",
-                            isRecurring: true,
-                            recurringFrequency: "Every 2 weeks",
-                            coordinates: {
-                                latitude: 40.7589,
-                                longitude: -73.9851
-                            },
-                            organizer: {
-                                name: "Alex Rodriguez",
-                                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face"
-                            }
-                        },
-                        {
-                            id: 4,
-                            title: "AI & Machine Learning Summit",
-                            description: "Explore the latest trends in AI and ML. Expert speakers from leading tech companies.",
-                            image: "https://picsum.photos/400/200?random=4",
-                            date: "March 25, 2024",
-                            time: "10:00 AM - 4:00 PM",
-                            location: "Online",
-                            virtualUrls: ["https://zoom.us/j/987654321"],
-                            attendees: 234,
-                            maxAttendees: 500,
-                            locationType: "virtual",
-                            type: "online",
-                            category: "Technology",
-                            organizer: {
-                                name: "Emma Davis",
-                                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
-                            }
-                        },
-                        {
-                            id: 5,
-                            title: "Photography Masterclass",
-                            description: "Learn professional photography techniques from award-winning photographers.",
-                            image: "https://picsum.photos/400/200?random=5",
-                            date: "March 28, 2024",
-                            time: "1:00 PM - 6:00 PM",
-                            location: "Los Angeles, CA",
-                            attendees: 45,
-                            maxAttendees: 80,
-                            locationType: "physical",
-                            type: "in-person",
-                            category: "Creative",
-                            organizer: {
-                                name: "David Kim",
-                                avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=32&h=32&fit=crop&crop=face"
-                            }
-                        },
-                        {
-                            id: 6,
-                            title: "Digital Marketing Bootcamp",
-                            description: "Comprehensive bootcamp covering SEO, social media, and content marketing strategies.",
-                            image: "https://picsum.photos/400/200?random=6",
-                            date: "April 2, 2024",
-                            time: "9:00 AM - 5:00 PM",
-                            location: "Online",
-                            virtualUrls: ["https://meet.google.com/xyz-abc-def"],
-                            attendees: 156,
-                            maxAttendees: 200,
-                            locationType: "virtual",
-                            type: "online",
-                            category: "Marketing",
-                            organizer: {
-                                name: "Lisa Thompson",
-                                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face"
-                            }
-                        }
-                    ].map((event) => (
-                        <EventCard 
-                            key={event.id} 
-                            event={event} 
-                            onClick={() => handleEventClick(event)}
-                            rsvpStatus={eventRSVPStatus[event.id]}
-                        />
-                    ))}
-                </div>
+                {filteredEvents.length === 0 ? (
+                    <div className="text-center py-16">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/30 mb-4">
+                            <Calendar className="h-8 w-8 text-tertiary" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-primary mb-2">
+                            {activeTab === 'live' && 'No Live Events'}
+                            {activeTab === 'upcoming' && 'No Upcoming Events'}
+                            {activeTab === 'past' && 'No Past Events'}
+                            {activeTab === 'all' && 'No Events Found'}
+                        </h3>
+                        <p className="text-sm text-tertiary max-w-md mx-auto">
+                            {activeTab === 'live' && 'There are no events happening right now. Check back later or explore upcoming events.'}
+                            {activeTab === 'upcoming' && 'There are no upcoming events scheduled at the moment. Check back soon for new events!'}
+                            {activeTab === 'past' && 'No past events to display.'}
+                            {activeTab === 'all' && 'No events available at the moment.'}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
+                        {filteredEvents.map((event) => (
+                            <EventCard 
+                                key={event.id} 
+                                event={event} 
+                                onClick={() => handleEventClick(event)}
+                                rsvpStatus={eventRSVPStatus[event.id]}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {/* Event Details Modal */}
                 <EventDetailsModal 
