@@ -17,6 +17,10 @@ import { Avatar } from '@/components/base/avatar/avatar';
 import EventMap from '@/components/base/map/event-map';
 import { UntitledLogo } from '@/components/foundations/logo/untitledui-logo';
 import { NavItemButton } from '@/components/application/app-navigation/base-components/nav-item-button';
+import { DatePicker } from "@/components/application/date-picker/date-picker";
+import { TimePicker } from "@/components/application/date-picker/time-picker";
+import { parseDate } from "@internationalized/date";
+import type { DateValue, TimeValue } from "react-aria-components";
 
 import { cx } from "@/utils/cx";
 
@@ -32,8 +36,10 @@ interface FormData {
     title: string;
     aboutEvent: string;
     space: string;
-    dateFrom: string;
-    dateTo: string;
+    dateFrom: DateValue | null;
+    timeFrom: TimeValue | null;
+    dateTo: DateValue | null;
+    timeTo: TimeValue | null;
     timezone: string;
     locationType: 'physical' | 'virtual' | 'hybrid' | 'tbd';
     address: string;
@@ -45,9 +51,11 @@ interface FormData {
     
     // Recurring Event Settings
     isRecurring: boolean;
-    recurringFrequency: 'day' | 'week' | 'month' | 'year';
-    recurringInterval: string;
+    recurringFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    recurringEndType: 'number_of_runs' | 'specific_date' | 'never';
     recurringMaxEvents: string;
+    recurringEndDate: DateValue | null;
+    customWeeklyDays: string[]; // For custom weekly selection
     
     // Step 2: RSVP Config
     rsvpOpens: 'immediately' | 'date';
@@ -91,8 +99,10 @@ export const AdminContentEventsCreatePage = () => {
         title: '',
         aboutEvent: '',
         space: '',
-        dateFrom: '',
-        dateTo: '',
+        dateFrom: null,
+        timeFrom: null,
+        dateTo: null,
+        timeTo: null,
         timezone: 'UTC',
         locationType: 'physical',
         address: '',
@@ -104,9 +114,11 @@ export const AdminContentEventsCreatePage = () => {
         
         // Recurring Event Settings
         isRecurring: false,
-        recurringFrequency: 'week',
-        recurringInterval: '1',
+        recurringFrequency: 'weekly',
+        recurringEndType: 'number_of_runs',
         recurringMaxEvents: '12',
+        recurringEndDate: null,
+        customWeeklyDays: [],
         
         // Step 2: RSVP Config
         rsvpOpens: 'immediately',
@@ -213,12 +225,21 @@ export const AdminContentEventsCreatePage = () => {
     ], []);
     
     const timezones = useMemo(() => [
-        { value: 'UTC', label: 'UTC' },
-        { value: 'EST', label: 'EST' },
-        { value: 'PST', label: 'PST' },
-        { value: 'CET', label: 'CET' },
-        { value: 'JST', label: 'JST' },
-        { value: 'AEST', label: 'AEST' }
+        { id: 'UTC', value: 'UTC', label: 'UTC', supportingText: 'GMT+00:00', shortLabel: 'UTC', offset: 'GMT+00:00' },
+        { id: 'America/New_York', value: 'America/New_York', label: 'ET', supportingText: 'GMT-05:00', shortLabel: 'ET', offset: 'GMT-05:00' },
+        { id: 'America/Chicago', value: 'America/Chicago', label: 'CT', supportingText: 'GMT-06:00', shortLabel: 'CT', offset: 'GMT-06:00' },
+        { id: 'America/Denver', value: 'America/Denver', label: 'MT', supportingText: 'GMT-07:00', shortLabel: 'MT', offset: 'GMT-07:00' },
+        { id: 'America/Los_Angeles', value: 'America/Los_Angeles', label: 'PT', supportingText: 'GMT-08:00', shortLabel: 'PT', offset: 'GMT-08:00' },
+        { id: 'Europe/London', value: 'Europe/London', label: 'GMT', supportingText: 'GMT+00:00', shortLabel: 'GMT', offset: 'GMT+00:00' },
+        { id: 'Europe/Paris', value: 'Europe/Paris', label: 'CET', supportingText: 'GMT+01:00', shortLabel: 'CET', offset: 'GMT+01:00' },
+        { id: 'Europe/Istanbul', value: 'Europe/Istanbul', label: 'EET', supportingText: 'GMT+03:00', shortLabel: 'EET', offset: 'GMT+03:00' },
+        { id: 'Asia/Dubai', value: 'Asia/Dubai', label: 'GST', supportingText: 'GMT+04:00', shortLabel: 'GST', offset: 'GMT+04:00' },
+        { id: 'Asia/Tehran', value: 'Asia/Tehran', label: 'IRST', supportingText: 'GMT+03:30', shortLabel: 'IRST', offset: 'GMT+03:30' },
+        { id: 'Asia/Kolkata', value: 'Asia/Kolkata', label: 'IST', supportingText: 'GMT+05:30', shortLabel: 'IST', offset: 'GMT+05:30' },
+        { id: 'Asia/Shanghai', value: 'Asia/Shanghai', label: 'CST', supportingText: 'GMT+08:00', shortLabel: 'CST', offset: 'GMT+08:00' },
+        { id: 'Asia/Tokyo', value: 'Asia/Tokyo', label: 'JST', supportingText: 'GMT+09:00', shortLabel: 'JST', offset: 'GMT+09:00' },
+        { id: 'Australia/Sydney', value: 'Australia/Sydney', label: 'AEST', supportingText: 'GMT+10:00', shortLabel: 'AEST', offset: 'GMT+10:00' },
+        { id: 'Pacific/Auckland', value: 'Pacific/Auckland', label: 'NZST', supportingText: 'GMT+12:00', shortLabel: 'NZST', offset: 'GMT+12:00' }
     ], []);
 
     const rsvpOpensOptions = useMemo(() => [
@@ -232,10 +253,26 @@ export const AdminContentEventsCreatePage = () => {
     ], []);
 
     const recurringFrequencyOptions = useMemo(() => [
-        { value: 'day', label: 'Day' },
-        { value: 'week', label: 'Week' },
-        { value: 'month', label: 'Month' },
-        { value: 'year', label: 'Year' }
+        { value: 'daily', label: 'Daily' },
+        { value: 'weekly', label: 'Weekly' },
+        { value: 'monthly', label: 'Monthly' },
+        { value: 'yearly', label: 'Yearly' }
+    ], []);
+
+    const weekDays = useMemo(() => [
+        { value: 'monday', label: 'Monday' },
+        { value: 'tuesday', label: 'Tuesday' },
+        { value: 'wednesday', label: 'Wednesday' },
+        { value: 'thursday', label: 'Thursday' },
+        { value: 'friday', label: 'Friday' },
+        { value: 'saturday', label: 'Saturday' },
+        { value: 'sunday', label: 'Sunday' }
+    ], []);
+
+    const recurringEndOptions = useMemo(() => [
+        { value: 'number_of_runs', label: 'Number of runs' },
+        { value: 'specific_date', label: 'Specific date' },
+        { value: 'never', label: 'Never' }
     ], []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -496,34 +533,60 @@ export const AdminContentEventsCreatePage = () => {
                                     </MultiSelect>
 
                                     {/* Date & Time - All in one row */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <Input
-                                            type="datetime-local"
-                                            label="Start Date & Time"
-                                            value={formData.dateFrom}
-                                            onChange={(value) => setFormData(prev => ({ ...prev, dateFrom: value }))}
-                                        />
-                                        
-                                        <InputGroup
-                                            label="End Date & Time"
-                                            trailingAddon={
-                                                <NativeSelect
-                                                    options={timezones}
-                                                    value={formData.timezone}
-                                                    onChange={(e) => setFormData(prev => ({ ...prev, timezone: e.target.value }))}
+                                    <div className="grid grid-cols-1 lg:grid-cols-[35%_35%_30%]">
+                                        <div>
+                                            <Label>Start Date & Time</Label>
+                                            <div className="flex gap-1 mt-1">
+                                                <DatePicker
+                                                    value={formData.dateFrom}
+                                                    onChange={(value) => setFormData(prev => ({ ...prev, dateFrom: value }))}
                                                 />
-                                            }
-                                        >
-                                            <InputBase
-                                                type="datetime-local"
-                                                value={formData.dateTo}
-                                                onChange={(value) => setFormData(prev => ({ ...prev, dateTo: value }))}
-                                            />
-                                        </InputGroup>
+                                                <TimePicker
+                                                    value={formData.timeFrom}
+                                                    onChange={(value) => setFormData(prev => ({ ...prev, timeFrom: value }))}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <Label>End Date & Time</Label>
+                                            <div className="flex gap-1 mt-1">
+                                                <DatePicker
+                                                    value={formData.dateTo}
+                                                    onChange={(value) => setFormData(prev => ({ ...prev, dateTo: value }))}
+                                                />
+                                                <TimePicker
+                                                    value={formData.timeTo}
+                                                    onChange={(value) => setFormData(prev => ({ ...prev, timeTo: value }))}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <Label>Timezone</Label>
+                                            <div className="mt-1">
+                                                <Select
+                                                    selectedKey={formData.timezone}
+                                                    onSelectionChange={(value) => setFormData(prev => ({ ...prev, timezone: value as string }))}
+                                                    items={timezones}
+                                                    placeholder="Select timezone"
+                                                >
+                                                    {(item) => (
+                                                        <Select.Item 
+                                                            key={item.id} 
+                                                            id={item.id}
+                                                            supportingText={item.supportingText}
+                                                        >
+                                                            {item.label}
+                                                        </Select.Item>
+                                                    )}
+                                                </Select>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/* Recurring Event Toggle */}
-                                    <div className="relative   space-y-4">
+                                    <div className="relative space-y-4">
                                     <div>
                                         <Toggle
                                             slim
@@ -537,86 +600,140 @@ export const AdminContentEventsCreatePage = () => {
 
                                     {/* Recurring Event Fields - Show when toggle is enabled */}
                                     {formData.isRecurring && (
-                                        <div className="relative pl-6  space-y-4">
+                                        <div className="relative pl-6 space-y-4">
                                             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
                                             <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
                                             
                                             <div className="space-y-4">
-                                                <div className="flex items-end gap-2">
-                                                    <div className="flex-1">
-                                                        <Label>Repeats every</Label>
-                                                        <Input
-                                                            type="number"
-                                                            placeholder="1"
-                                                            value={formData.recurringInterval}
-                                                            onChange={(value) => setFormData(prev => ({ ...prev, recurringInterval: value }))}
-                                                            className="mt-1"
-                                                        />
+                                                {/* Frequency Dropdown */}
+                                                <Select
+                                                    label="Frequency"
+                                                    selectedKey={formData.recurringFrequency}
+                                                    onSelectionChange={(value) => setFormData(prev => ({ 
+                                                        ...prev, 
+                                                        recurringFrequency: value as 'daily' | 'weekly' | 'monthly' | 'yearly',
+                                                        customWeeklyDays: value !== 'weekly' ? [] : prev.customWeeklyDays
+                                                    }))}
+                                                    items={recurringFrequencyOptions.map(option => ({ id: option.value, label: option.label }))}
+                                                >
+                                                    {(item) => (
+                                                        <Select.Item key={item.id} id={item.id}>
+                                                            {item.label}
+                                                        </Select.Item>
+                                                    )}
+                                                </Select>
+
+                                                {/* Custom Weekly Days Selection */}
+                                                {formData.recurringFrequency === 'weekly' && (
+                                                    <div className="space-y-2">
+                                                        <Label>Custom weekly schedule</Label>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            {weekDays.map((day) => {
+                                                                const isSelected = formData.customWeeklyDays.includes(day.value);
+                                                                const abbreviation = day.label.substring(0, 2);
+                                                                return (
+                                                                    <button
+                                                                        key={day.value}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setFormData(prev => ({
+                                                                                ...prev,
+                                                                                customWeeklyDays: isSelected
+                                                                                    ? prev.customWeeklyDays.filter(d => d !== day.value)
+                                                                                    : [...prev.customWeeklyDays, day.value]
+                                                                            }));
+                                                                        }}
+                                                                        className={cx(
+                                                                            "w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200",
+                                                                            isSelected
+                                                                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                                                        )}
+                                                                        aria-label={day.label}
+                                                                        title={day.label}
+                                                                    >
+                                                                        {abbreviation}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <Select
-                                                            selectedKey={formData.recurringFrequency}
-                                                            onSelectionChange={(value) => setFormData(prev => ({ ...prev, recurringFrequency: value as 'day' | 'week' | 'month' | 'year' }))}
-                                                            items={recurringFrequencyOptions.map(option => ({ id: option.value, label: option.label }))}
-                                                        >
-                                                            {(item) => (
-                                                                <Select.Item key={item.id} id={item.id}>
-                                                                    {item.label}
-                                                                </Select.Item>
-                                                            )}
-                                                        </Select>
-                                                    </div>
-                                                </div>
+                                                )}
                                                 
-                                                  <div>
-                                                     <Label>Maximum of events</Label>
-                                                      <div className="flex items-center gap-2 mt-1">
-                                                          <Input
-                                                              type="number"
-                                                              placeholder="12"
-                                                              value={formData.recurringMaxEvents}
-                                                              onChange={(value) => setFormData(prev => ({ ...prev, recurringMaxEvents: value }))}
-                                                              className="flex-1"
-                                                              hint={(() => {
-                                                                  if (!formData.dateFrom || !formData.recurringInterval || !formData.recurringMaxEvents) {
-                                                                      return "Set start date, interval, and max events to see the last event date";
-                                                                  }
-                                                                  
-                                                                  const startDate = new Date(formData.dateFrom);
-                                                                  const interval = parseInt(formData.recurringInterval);
-                                                                  const maxEvents = parseInt(formData.recurringMaxEvents);
-                                                                  
-                                                                  if (isNaN(interval) || isNaN(maxEvents) || interval <= 0 || maxEvents <= 0) {
-                                                                      return "Invalid values";
-                                                                  }
-                                                                  
-                                                                  const lastEventDate = new Date(startDate);
-                                                                  const eventsToAdd = maxEvents - 1; // -1 because first event is the start date
-                                                                  
-                                                                  switch (formData.recurringFrequency) {
-                                                                      case 'day':
-                                                                          lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * interval));
-                                                                          break;
-                                                                      case 'week':
-                                                                          lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * interval * 7));
-                                                                          break;
-                                                                      case 'month':
-                                                                          lastEventDate.setMonth(lastEventDate.getMonth() + (eventsToAdd * interval));
-                                                                          break;
-                                                                      case 'year':
-                                                                          lastEventDate.setFullYear(lastEventDate.getFullYear() + (eventsToAdd * interval));
-                                                                          break;
-                                                                  }
-                                                                  
-                                                                  return `Last event will be on ${lastEventDate.toLocaleDateString('en-US', { 
-                                                                      weekday: 'long', 
-                                                                      year: 'numeric', 
-                                                                      month: 'long', 
-                                                                      day: 'numeric' 
-                                                                  })}`;
-                                                              })()}
-                                                         />                                                    </div>
-                                                  </div>
+                                                <div>
+                                                    <Label>Ending</Label>
+                                                    <div className="flex items-start gap-2 mt-1">
+                                                        <div className="flex-1">
+                                                            <Select
+                                                                selectedKey={formData.recurringEndType}
+                                                                onSelectionChange={(value) => setFormData(prev => ({ ...prev, recurringEndType: value as 'number_of_runs' | 'specific_date' | 'never' }))}
+                                                                items={recurringEndOptions.map(option => ({ id: option.value, label: option.label }))}
+                                                            >
+                                                                {(item) => (
+                                                                    <Select.Item key={item.id} id={item.id}>
+                                                                        {item.label}
+                                                                    </Select.Item>
+                                                                )}
+                                                            </Select>
+                                                        </div>
+                                                        {formData.recurringEndType === 'number_of_runs' && (
+                                                            <div className="flex-1">
+                                                                <Input
+                                                                    type="number"
+                                                                    placeholder="12"
+                                                                    value={formData.recurringMaxEvents}
+                                                                    onChange={(value) => setFormData(prev => ({ ...prev, recurringMaxEvents: value }))}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {formData.recurringEndType === 'specific_date' && (
+                                                            <div className="flex-1">
+                                                                <DatePicker
+                                                                    value={formData.recurringEndDate}
+                                                                    onChange={(value) => setFormData(prev => ({ ...prev, recurringEndDate: value }))}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {formData.recurringEndType === 'number_of_runs' && formData.dateFrom && formData.recurringMaxEvents && (
+                                                        <p className="mt-1.5 text-xs text-gray-500">
+                                                            {(() => {
+                                                                const maxEvents = parseInt(formData.recurringMaxEvents);
+                                                                
+                                                                if (isNaN(maxEvents) || maxEvents <= 0) {
+                                                                    return "Invalid value";
+                                                                }
+                                                                
+                                                                // Convert DateValue to JavaScript Date
+                                                                const startDate = formData.dateFrom.toDate('UTC');
+                                                                const lastEventDate = new Date(startDate);
+                                                                const eventsToAdd = maxEvents - 1; // -1 because first event is the start date
+                                                                
+                                                                switch (formData.recurringFrequency) {
+                                                                    case 'daily':
+                                                                        lastEventDate.setDate(lastEventDate.getDate() + eventsToAdd);
+                                                                        break;
+                                                                    case 'weekly':
+                                                                        lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * 7));
+                                                                        break;
+                                                                    case 'monthly':
+                                                                        lastEventDate.setMonth(lastEventDate.getMonth() + eventsToAdd);
+                                                                        break;
+                                                                    case 'yearly':
+                                                                        lastEventDate.setFullYear(lastEventDate.getFullYear() + eventsToAdd);
+                                                                        break;
+                                                                }
+                                                                
+                                                                return `Last event will be on ${lastEventDate.toLocaleDateString('en-US', { 
+                                                                    weekday: 'long', 
+                                                                    year: 'numeric', 
+                                                                    month: 'long', 
+                                                                    day: 'numeric' 
+                                                                })}`;
+                                                            })()}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     )}

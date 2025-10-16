@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder, Repeat01, Repeat03, Repeat04, Repeat02 } from "@untitledui/icons";
+import { SearchLg, Plus, ImageX, Calendar, Clock, Users01, X, VideoRecorder, Repeat01, Repeat03, Repeat04, Repeat02, Check } from "@untitledui/icons";
 import { MarkerPin01 } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
@@ -48,12 +48,27 @@ const getRandomRSVPState = (eventId: number): RSVPState => {
 };
 
 // Enhanced Event Card Component
-const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
+const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => void; rsvpStatus?: 'confirmed' | 'cancelled' | null }) => {
     const [imageError, setImageError] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     const rsvpState = getRandomRSVPState(event.id);
     const rsvpConfig = rsvpStateConfig[rsvpState];
+    
+    // Override button display based on user's RSVP status
+    const getButtonDisplay = () => {
+        if (rsvpStatus === 'confirmed') {
+            return { label: 'Registered', disabled: false, icon: Check, color: 'secondary' as const };
+        } else if (rsvpStatus === 'cancelled') {
+            return { label: 'RSVP Now →', disabled: false, icon: null, color: 'secondary' as const };
+        }
+        // Add arrow to RSVP Now in default state
+        const label = rsvpConfig.label === 'RSVP Now' ? 'RSVP Now →' : rsvpConfig.label;
+        const disabled = rsvpState !== 'open'; // Disable if not open
+        return { label, disabled, icon: null, color: 'secondary' as const };
+    };
+    
+    const buttonDisplay = getButtonDisplay();
 
     const handleImageError = () => {
         setImageError(true);
@@ -138,11 +153,22 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                     <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                         <Calendar className="h-3.5 w-3.5 text-brand-solid" />
                         <span className="font-medium">{event.date}</span>
+                        {event.isRecurring && (
+                            <span className="text-xs text-gray-500">+ 5 more sessions</span>
+                        )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                         <Clock className="h-3.5 w-3.5 text-success-solid" />
                         <span>{event.time}</span>
                     </div>
+                    
+                    {/* Recurring Event Info */}
+                    {event.isRecurring && (
+                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
+                            <Repeat03 className="h-3.5 w-3.5 text-brand-solid" />
+                            <span className="text-brand-solid font-medium">Repeats {event.recurringFrequency.toLowerCase()}</span>
+                        </div>
+                    )}
                     
                     {/* Location Display Logic */}
                     {event.locationType === 'physical' && (
@@ -167,40 +193,21 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
                             </span>
                         </div>
                     )}
-                    
-                    {/* Recurring Event Info */}
-                    {event.isRecurring && (
-                        <div className="flex items-center gap-2 text-sm text-brand-solid font-medium">
-                            <Repeat03 className="h-3.5 w-3.5" />
-                            <span>{event.recurringFrequency}</span>
-                        </div>
-                    )}
                 </div>
 
                 {/* Actions Footer */}
                 <div className="pt-3 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
                     <div className="flex items-center justify-end">
-                        {rsvpState === 'open' ? (
-                            <Button
-                                color="secondary"
-                                size="sm"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                className="px-4 py-2"
-                                disabled={rsvpConfig.disabled}
-                                title={rsvpConfig.description}
-                            >
-                                {rsvpConfig.label}
-                            </Button>
-                        ) : (
-                            <Button
-                                color="secondary"
-                                size="sm"
-                                className="px-4 py-2 opacity-60 cursor-not-allowed"
-                                disabled={true}
-                            >
-                                {rsvpConfig.label}
-                            </Button>
-                        )}
+                        <Button
+                            color={buttonDisplay.color}
+                            size="sm"
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            className={`px-4 py-2 ${buttonDisplay.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={buttonDisplay.disabled}
+                            iconLeading={buttonDisplay.icon}
+                        >
+                            {buttonDisplay.label}
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -211,6 +218,7 @@ const EventCard = ({ event, onClick }: { event: any; onClick: () => void }) => {
 export default function SiteEventPage() {
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [eventRSVPStatus, setEventRSVPStatus] = useState<Record<number, 'confirmed' | 'cancelled' | null>>({});
 
     const handleEventClick = (event: any) => {
         setSelectedEvent(event);
@@ -220,6 +228,10 @@ export default function SiteEventPage() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedEvent(null);
+    };
+
+    const handleRSVPStatusChange = (eventId: number, status: 'confirmed' | 'cancelled' | null) => {
+        setEventRSVPStatus(prev => ({ ...prev, [eventId]: status }));
     };
 
     const headerActions = (
@@ -269,8 +281,8 @@ export default function SiteEventPage() {
                         {/* Time Filters */}
                         <div className="flex items-center bg-secondary/30 rounded-xl p-1">
                             <Button size="sm" color="primary" className="shadow-sm">All Events</Button>
-                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">This Week</Button>
-                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">This Month</Button>
+                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">Upcoming Events</Button>
+                            <Button size="sm" color="tertiary" className="text-secondary hover:text-primary">Past Events</Button>
                         </div>
 
                     </div>
@@ -404,7 +416,12 @@ export default function SiteEventPage() {
                             }
                         }
                     ].map((event) => (
-                        <EventCard key={event.id} event={event} onClick={() => handleEventClick(event)} />
+                        <EventCard 
+                            key={event.id} 
+                            event={event} 
+                            onClick={() => handleEventClick(event)}
+                            rsvpStatus={eventRSVPStatus[event.id]}
+                        />
                     ))}
                 </div>
 
@@ -413,6 +430,7 @@ export default function SiteEventPage() {
                     event={selectedEvent} 
                     isOpen={isModalOpen} 
                     onClose={handleCloseModal}
+                    onRSVPStatusChange={selectedEvent ? (status) => handleRSVPStatusChange(selectedEvent.id, status) : undefined}
                 />
 
                 {/* Enhanced Load More */}

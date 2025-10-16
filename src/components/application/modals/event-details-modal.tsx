@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
-import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01, Link01, Share04 } from '@untitledui/icons';
+import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01, Link01, Share04, Repeat03, Share07, LinkExternal01, DotsHorizontal, Eye, Edit01, Trash01, TrendUp02, BarChartSquare02, MinusCircle, ClockRefresh } from '@untitledui/icons';
 import EventMap from '../../base/map/event-map';
 import { ModalOverlay, Modal, Dialog } from './modal';
 import { Button } from '../../base/buttons/button';
-import { Badge } from '../../base/badges/badges';
+import { Badge, BadgeWithIcon } from '../../base/badges/badges';
+import { Dropdown } from '../../base/dropdown/dropdown';
 
 // RSVP States
 type RSVPState = 'open' | 'closed' | 'completed';
@@ -21,19 +22,19 @@ const rsvpStateConfig: Record<RSVPState, RSVPStateConfig> = {
         label: 'RSVP Now',
         color: 'primary',
         disabled: false,
-        description: 'Registration is open'
+    
     },
     closed: {
         label: 'RSVP Closed',
         color: 'secondary',
         disabled: true,
-        description: 'Registration has closed'
+        
     },
     completed: {
         label: 'Event Completed',
         color: 'tertiary',
         disabled: true,
-        description: 'This event has finished'
+        
     }
 };
 
@@ -93,12 +94,14 @@ interface EventDetailsModalProps {
     event: any;
     isOpen: boolean;
     onClose: () => void;
+    onRSVPStatusChange?: (status: 'confirmed' | 'cancelled' | null) => void;
 }
 
-export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isOpen, onClose }) => {
-    const [rsvpStage, setRsvpStage] = useState<'initial' | 'processing' | 'confirmed'>('initial');
+export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isOpen, onClose, onRSVPStatusChange }) => {
+    const [rsvpStage, setRsvpStage] = useState<'initial' | 'processing' | 'confirmed' | 'cancelled'>('initial');
     const [showOtherTimes, setShowOtherTimes] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(0);
+    const [showCancelAlert, setShowCancelAlert] = useState(false);
     
     // Reset RSVP stage when modal opens
     useEffect(() => {
@@ -106,6 +109,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
             setRsvpStage('initial');
             setShowOtherTimes(false);
             setSelectedTimeSlot(0);
+            setShowCancelAlert(false);
         }
     }, [isOpen]);
     
@@ -152,6 +156,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
             // Simulate processing time
             setTimeout(() => {
                 setRsvpStage('confirmed');
+                onRSVPStatusChange?.('confirmed');
             }, 2500);
         }
     };
@@ -159,6 +164,16 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
     const handleEventPageClick = () => {
         window.open(`/site/event/${event.id}`, '_blank');
         // Keep modal open - don't call onClose()
+    };
+
+    const handleCancelRSVP = () => {
+        setRsvpStage('cancelled');
+        setShowCancelAlert(false);
+        onRSVPStatusChange?.('cancelled');
+    };
+
+    const handleKeepSpot = () => {
+        setShowCancelAlert(false);
     };
 
     if (!isOpen) return null;
@@ -170,7 +185,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                 onClick={onClose}
             >
                 <div 
-                    className="w-[50vw] h-[80vh] max-xl:w-[70vw] max-xl:h-[85vh] max-lg:w-[80vw] max-lg:h-[90vh] max-md:w-[calc(100vw-2rem)] max-md:h-[calc(100vh-2rem)] relative"
+                    className="w-[60vw] h-[80vh] max-xl:w-[75vw] max-xl:h-[85vh] max-lg:w-[85vw] max-lg:h-[90vh] max-md:w-[calc(100vw-2rem)] max-md:h-[calc(100vh-2rem)] relative"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <style dangerouslySetInnerHTML={{
@@ -229,10 +244,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                 
                                 <div className="flex-1 overflow-y-auto p-6 pt-4 modal-scrollbar" style={scrollbarStyles}>
                                     <div className="max-w-2xl mx-auto">
-                                        <div className="mb-4">
-                                            <h4 className="text-sm font-semibold text-gray-900 ">Select Time:</h4>
-                                            <p className="text-xs text-gray-600">Choose your preferred time slot for this recurring event</p>
-                                        </div>
+                                        <div className="mb-2">
+                                            <h4 className="text-sm font-medium text-gray-900 ">Pick your session date:</h4>                                        </div>
                                         <div className="grid gap-4 grid-cols-1">
                                             {recurringTimeSlots.map((timeSlot) => (
                                                 <div 
@@ -260,22 +273,50 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <div className="text-sm text-gray-600">{timeSlot.time}</div>
                                                         </div>
                                                         <div className="absolute top-0 right-0 flex gap-1 items-center">
-                                                            {timeSlot.id === 0 && (
-                                                                <Badge 
-                                                                    type="pill-color" 
-                                                                    color="brand" 
-                                                                    size="sm"
-                                                                >
-                                                                    Upcoming
-                                                                </Badge>
-                                                            )}
-                                                            <Badge 
-                                                                type="pill-color" 
-                                                                color={timeSlot.status === 'Full' ? 'error' : 'success'} 
-                                                                size="sm"
-                                                            >
-                                                                {timeSlot.status}
-                                                            </Badge>
+                                                            <div className="flex gap-1 items-center">
+                                                                {timeSlot.id === 0 && (
+                                                                    <Badge 
+                                                                        type="pill-color" 
+                                                                        color="brand" 
+                                                                        size="sm"
+                                                                    >
+                                                                        Next session
+                                                                    </Badge>
+                                                                )}
+                                                                {selectedTimeSlot === timeSlot.id && (
+                                                                    <Badge 
+                                                                        type="pill-color" 
+                                                                        color="blue" 
+                                                                        size="sm"
+                                                                    >
+                                                                        Your choice
+                                                                    </Badge>
+                                                                )}
+                                                                {timeSlot.status === 'Full' && (
+                                                                    <Badge 
+                                                                        type="pill-color" 
+                                                                        color="gray" 
+                                                                        size="sm"
+                                                                    >
+                                                                        Full
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                            <div onClick={(e) => e.stopPropagation()}>
+                                                                <Dropdown.Root>
+                                                                    <Dropdown.DotsButton className="!w-6 !h-6 !p-1" />
+                                                                    <Dropdown.Popover>
+                                                                        <Dropdown.Menu>
+                                                                            <Dropdown.Item key="disable" icon={MinusCircle}>
+                                                                                Disable this session
+                                                                            </Dropdown.Item>
+                                                                            <Dropdown.Item key="share" icon={Share07}>
+                                                                                Share this session
+                                                                            </Dropdown.Item>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown.Popover>
+                                                                </Dropdown.Root>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -289,8 +330,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                 {/* Desktop: Left Column - Image + Basic Info */}
                                 <div className="w-3/8 max-lg:w-2/5 md:flex max-md:hidden bg-gray-50 relative flex-col min-h-0">
                                     <div className="flex flex-col h-full">
-                                        <div className="p-4 max-lg:p-3 flex-shrink-0">
-                                            <div className="w-full aspect-square">
+                                        <div className="p-6 max-lg:p-4 flex-shrink-0 flex justify-center">
+                                            <div className="w-[75%] aspect-square shadow-3xl rounded-3xl ring-1 ring-secondary_alt p-1">
                                                 <img
                                                     src={event.image}
                                                     alt={event.title}
@@ -301,10 +342,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         
                                         {/* Basic Event Info */}
                                         <div 
-                                            className="px-5 max-lg:px-4 max-md:px-4 space-y-6 max-lg:space-y-4 max-md:space-y-3 flex-1 overflow-y-auto min-h-0 modal-scrollbar pb-2 max-md:pb-1" 
+                                            className="px-5 max-lg:px-4 max-md:px-4 space-y-4 max-lg:space-y-4 max-md:space-y-3 flex-1 overflow-y-auto min-h-0 modal-scrollbar pb-2 max-md:pb-1" 
                                             style={scrollbarStyles}
                                         >
-                                            <div className="space-y-2">
+                                            <div className="space-y-1">
                                                 {/* Event Title */}
                                                 <h1 className="text-2xl max-lg:text-xl max-md:text-lg font-bold leading-tight text-gray-900">
                                                     {currentEventData.title}
@@ -312,7 +353,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             
                                                 {/* Host */}
                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                    <div className="w-5 h-5 max-md:w-6 max-md:h-6 rounded-full overflow-hidden">
+                                                    <div className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full overflow-hidden">
                                                         <img 
                                                             src={currentEventData.organizer.avatar} 
                                                             alt={currentEventData.organizer.name}
@@ -326,12 +367,15 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             {/* Date & Time and Location Cards - Only show before RSVP and not in time selection */}
                                             {rsvpStage === 'initial' && !showOtherTimes && (
                                                 <div className="space-y-3">
-                                                    {/* Next Event Info - Only show for recurring events */}
+                                                    {/* Recurring Event Badge - Only show for recurring events */}
                                                     {event.isRecurring && !showOtherTimes && (
-                                                        <div className="text-[0.8rem] text-brand-solid font-semibold">
-                                                            Upcoming Event: 
+                                                        <div>
+                                                            <BadgeWithIcon type="pill-color" color="brand" size="sm" iconLeading={Repeat03}>
+                                                                Repeats {event.recurringFrequency}
+                                                            </BadgeWithIcon>
                                                         </div>
                                                     )}
+                                                    
                                                     {/* Date & Time Card */}
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
@@ -343,20 +387,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
+                                                                {event.isRecurring && !showOtherTimes && (
+                                                                    <button 
+                                                                        onClick={handleOtherTimesClick}
+                                                                        className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                                                    >
+                                                                        <ClockRefresh className="w-3 h-3" />
+                                                                        Change date 
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                             <div className="text-xs text-gray-600">{currentEventData.time}</div>
                                                         </div>
-                                                        {/* Other Times Button - Only show for recurring events */}
-                                                        {event.isRecurring && (
-                                                            <Button
-                                                                size="sm"
-                                                                color="secondary"
-                                                                className="text-xs px-2 py-1"
-                                                                onClick={handleOtherTimesClick}
-                                                            >
-                                                                Other times
-                                                            </Button>
-                                                        )}
                                                     </div>
 
                                                     {/* Location Card */}
@@ -394,22 +438,12 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 </div>
                                             )}
                                             
-                                            {/* Confirmation Message (when RSVP confirmed) */}
-                                            {rsvpStage === 'confirmed' && (
-                                                <div className="bg-success-50 border border-success-200 rounded-xl p-4">
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <CheckCircle className="w-5 h-5 text-success-600" />
-                                                        <span className="text-sm font-medium text-success-700">You're All Set!</span>
-                                                    </div>
-                                                    <p className="text-xs text-success-600">Your RSVP has been confirmed. Event details will be sent to your email.</p>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                     
                                     {/* Action Buttons - Sticky Footer - Hide during time selection */}
                                     {!showOtherTimes && (
-                                        <div className="px-4 max-lg:px-3 max-md:px-4 py-4 max-lg:py-3 max-md:py-4 border-t border-gray-200 flex-shrink-0">
+                                        <div className="border-t border-gray-200 flex-shrink-0">
                                             <div className="">
                                                 {/* RSVP Section */}
                                                 <div className="bg-gray-50 rounded-xl p-3 max-lg:p-3 max-md:p-4">
@@ -422,21 +456,48 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <p className="text-xs text-gray-500">Please wait while we confirm your attendance</p>
                                                         </div>
                                                     ) : rsvpStage === 'confirmed' ? (
-                                                        <div className="text-center">
-                                                            <Button 
-                                                                size="md" 
-                                                                color="secondary" 
-                                                                className="w-full max-md:text-base max-md:py-3"
-                                                                iconLeading={Download01}
-                                                            >
-                                                                Download ICS file
-                                                            </Button>
+                                                        <div className="bg-success-50 border border-success-200 rounded-xl p-4">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <CheckCircle className="w-4 h-4 text-success-600" />
+                                                                <span className="text-sm font-medium text-success-700">You're All Set!</span>
+                                                            </div>
+                                                            <p className="text-xs text-success-600 mb-3">Your RSVP has been confirmed. Event details will be sent to your email.</p>
+                                                            <div className="space-y-2">
+                                                                <Button 
+                                                                    size="sm" 
+                                                                    color="secondary" 
+                                                                    className="w-full"
+                                                                    iconLeading={Calendar}
+                                                                >
+                                                                    Add to calendar
+                                                                </Button>
+                                                                <button
+                                                                    className="w-full text-sm text-gray-500 hover:text-gray-700 underline transition-colors"
+                                                                    onClick={() => setShowCancelAlert(true)}
+                                                                >
+                                                                    Not going?
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ) : rsvpStage === 'cancelled' ? (
+                                                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                            <div className="text-center">
+                                                                <p className="text-sm font-medium text-gray-900 mb-1">Registration cancelled</p>
+                                                                <p className="text-xs text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
+                                                                <Button 
+                                                                    size="sm" 
+                                                                    color="secondary" 
+                                                                    className="w-full"
+                                                                    onClick={() => setRsvpStage('initial')}
+                                                                >
+                                                                    RSVP Again
+                                                                </Button>
+                                                            </div>
                                                         </div>
                                                     ) : rsvpState === 'open' ? (
                                                         <div className="text-center">
-                                                            <div className="mb-3">
-                                                                <h4 className="text-sm max-lg:text-sm max-md:text-base font-medium text-gray-900 mb-1">Ready to join?</h4>
-                                                                <p className="text-xs max-lg:text-xs max-md:text-sm text-gray-600">Secure your spot at this event</p>
+                                                            <div className="mb-2">
+                                                                <h4 className="text-sm max-lg:text-sm max-md:text-base text-gray-900">Ready to join?</h4>
                                                             </div>
                                                             <Button 
                                                                 size="md" 
@@ -448,19 +509,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </Button>
                                                         </div>
                                                     ) : (
-                                                        <div className="text-center">
-                                                            <div className="mb-3">
-                                                                <h4 className="text-sm max-md:text-base font-medium text-gray-900 mb-1">Event Status</h4>
-                                                                <p className="text-xs max-md:text-sm text-gray-600">{rsvpConfig.description}</p>
+                                                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                            <div className="text-center">
+                                                                <p className="text-sm font-medium text-gray-900 mb-1">{rsvpConfig.label}</p>
+                                                                <p className="text-xs text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
                                                             </div>
-                                                            <Button
-                                                                size="md"
-                                                                color="secondary"
-                                                                className="w-full max-md:text-base max-md:py-3 opacity-60 cursor-not-allowed"
-                                                                disabled={true}
-                                                            >
-                                                                {rsvpConfig.label}
-                                                            </Button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -474,13 +527,49 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                     <div className="w-5/8 max-lg:w-3/5 md:flex max-md:hidden flex-col min-h-0">
                                         {/* Sticky Header with Action Buttons */}
                                         <div className="sticky top-0 bg-white border-b border-gray-100 px-4 max-lg:px-3 max-md:px-4 py-3 max-md:py-4 z-10 flex justify-end max-md:justify-between items-center">
-                                            <div className="flex items-center gap-2 max-md:gap-1 flex-shrink-0">
+                                            <div className="flex items-center gap-1 flex-shrink-0">
+                                                <button
+                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                    title="Share Event"
+                                                >
+                                                    <Share07 className="h-4 w-4 text-gray-500" />
+                                                </button>
+                                                <button
+                                                    onClick={handleEventPageClick}
+                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                    title="Open in new tab"
+                                                >
+                                                    <LinkExternal01 className="h-4 w-4 text-gray-500" />
+                                                </button>
+                                                <Dropdown.Root>
+                                                    <Dropdown.DotsButton />
+                                                    <Dropdown.Popover>
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item key="view-rsvp" icon={Users01}>
+                                                                View RSVP
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item key="view-event" icon={Eye}>
+                                                                View Event
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item key="edit-event" icon={Edit01}>
+                                                                Edit Event
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item key="analytics" icon={TrendUp02}>
+                                                                Event Analytics
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Separator />
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-red-600">
+                                                                Delete Event
+                                                            </Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown.Popover>
+                                                </Dropdown.Root>
                                                 <button
                                                     onClick={onClose}
-                                                    className="hover:bg-gray-100 rounded-lg p-2 max-md:p-3 transition-colors"
+                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
                                                     title="Close"
                                                 >
-                                                    <X className="h-4 w-4 max-md:h-5 max-md:w-5 text-gray-500" />
+                                                    <X className="h-4 w-4 text-gray-500" />
                                                 </button>
                                             </div>
                                         </div>
@@ -752,7 +841,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         <div className="space-y-3">
                                             {/* Title & Host */}
                                             <div className="space-y-2">
-                                                <h1 className="text-xl font-bold leading-tight text-gray-900">
+                                                <h1 className="text-2xl font-bold leading-tight text-gray-900">
                                                     {event.title}
                                                 </h1>
                                                 <div className="flex items-center gap-2 text-gray-600">
@@ -776,9 +865,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                             {/* Date & Time and Location Cards - Only show before RSVP and not in time selection */}
                                             {rsvpStage === 'initial' && !showOtherTimes && (
-                                                <div className="space-y-3">
+                                                <div className="space-y-4">
                                                     {/* Date & Time Card */}
-                                                    <div className="flex items-center gap-3">
+                                                    <div className="flex items-center gap-4">
                                                         <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
                                                             <div className="text-xs text-gray-500 leading-none">
                                                                 {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
@@ -788,20 +877,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base">{event.date}</div>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="font-medium text-gray-900 text-base">{event.date}</div>
+                                                                {event.isRecurring && !showOtherTimes && (
+                                                                    <button 
+                                                                        onClick={handleOtherTimesClick}
+                                                                        className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-sm font-medium flex items-center gap-1 cursor-pointer"
+                                                                    >
+                                                                        <ClockRefresh className="w-3.5 h-3.5" />
+                                                                        Change date 
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                             <div className="text-sm text-gray-600">{event.time}</div>
                                                         </div>
-                                                        {/* Other Times Button - Only show for recurring events */}
-                                                        {event.isRecurring && (
-                                                            <Button
-                                                                size="sm"
-                                                                color="secondary"
-                                                                className="text-sm px-3 py-1.5"
-                                                                onClick={handleOtherTimesClick}
-                                                            >
-                                                                Other times
-                                                            </Button>
-                                                        )}
                                                     </div>
 
                                                     {/* Location Card */}
@@ -1029,15 +1118,43 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     <p className="text-sm text-gray-500">Please wait while we confirm your attendance</p>
                                                 </div>
                                             ) : rsvpStage === 'confirmed' ? (
-                                                <div className="text-center">
-                                                    <Button 
-                                                        size="md" 
-                                                        color="secondary" 
-                                                        className="w-full text-base py-3"
-                                                        iconLeading={Download01}
-                                                    >
-                                                        Download ICS file
-                                                    </Button>
+                                                <div className="bg-success-50 border border-success-200 rounded-xl p-4">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <CheckCircle className="w-5 h-5 text-success-600" />
+                                                        <span className="text-base font-medium text-success-700">You're All Set!</span>
+                                                    </div>
+                                                    <p className="text-sm text-success-600 mb-3">Your RSVP has been confirmed. Event details will be sent to your email.</p>
+                                                    <div className="space-y-2">
+                                                        <Button 
+                                                            size="sm" 
+                                                            color="secondary" 
+                                                            className="w-full text-base py-3"
+                                                            iconLeading={Calendar}
+                                                        >
+                                                            Add to calendar
+                                                        </Button>
+                                                        <button
+                                                            className="w-full text-sm text-gray-500 hover:text-gray-700 underline transition-colors"
+                                                            onClick={() => setShowCancelAlert(true)}
+                                                        >
+                                                            Not going?
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : rsvpStage === 'cancelled' ? (
+                                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                    <div className="text-center">
+                                                        <p className="text-base font-medium text-gray-900 mb-1">Registration cancelled</p>
+                                                        <p className="text-sm text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
+                                                        <Button 
+                                                            size="sm" 
+                                                            color="secondary" 
+                                                            className="w-full text-base py-3"
+                                                            onClick={() => setRsvpStage('initial')}
+                                                        >
+                                                            RSVP Again
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             ) : rsvpState === 'open' ? (
                                                 <div className="text-center">
@@ -1055,19 +1172,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     </Button>
                                                 </div>
                                             ) : (
-                                                <div className="text-center">
-                                                    <div className="mb-3">
-                                                        <h4 className="text-base font-medium text-gray-900 mb-1">Event Status</h4>
-                                                        <p className="text-sm text-gray-600">{rsvpConfig.description}</p>
+                                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                    <div className="text-center">
+                                                        <p className="text-base font-medium text-gray-900 mb-1">{rsvpConfig.label}</p>
+                                                        <p className="text-sm text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
                                                     </div>
-                                                    <Button
-                                                        size="md"
-                                                        color="secondary"
-                                                        className="w-full text-base py-3 opacity-60 cursor-not-allowed"
-                                                        disabled={true}
-                                                    >
-                                                        {rsvpConfig.label}
-                                                    </Button>
                                                 </div>
                                             )}
                                         </div>
@@ -1078,6 +1187,43 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                     </div>
                 </div>
             </div>
+            
+            {/* Cancel Confirmation Alert Modal */}
+            {showCancelAlert && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+                    <div 
+                        className="absolute inset-0 bg-black/40"
+                        onClick={() => setShowCancelAlert(false)}
+                    />
+                    <div 
+                        className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            Are you sure you don't want to attend this event?
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-6">
+                            This will cancel your registration and free up your spot for others.
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <Button
+                                size="md"
+                                color="secondary"
+                                onClick={handleCancelRSVP}
+                            >
+                                Yes, cancel
+                            </Button>
+                            <Button
+                                size="md"
+                                color="primary"
+                                onClick={handleKeepSpot}
+                            >
+                                Keep my spot
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
