@@ -646,7 +646,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                         className={cx(
                                                                             "w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200",
                                                                             isSelected
-                                                                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                                                ? "bg-brand-solid text-white hover:bg-brand-solid_hover"
                                                                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                                                                         )}
                                                                         aria-label={day.label}
@@ -662,77 +662,12 @@ export const AdminContentEventsCreatePage = () => {
                                                 
                                                 <div>
                                                     <Label>Ending</Label>
-                                                    <div className="flex items-start gap-2 mt-1">
-                                                        <div className="flex-1">
-                                                            <Select
-                                                                selectedKey={formData.recurringEndType}
-                                                                onSelectionChange={(value) => setFormData(prev => ({ ...prev, recurringEndType: value as 'number_of_runs' | 'specific_date' | 'never' }))}
-                                                                items={recurringEndOptions.map(option => ({ id: option.value, label: option.label }))}
-                                                            >
-                                                                {(item) => (
-                                                                    <Select.Item key={item.id} id={item.id}>
-                                                                        {item.label}
-                                                                    </Select.Item>
-                                                                )}
-                                                            </Select>
-                                                        </div>
-                                                        {formData.recurringEndType === 'number_of_runs' && (
-                                                            <div className="flex-1">
-                                                                <Input
-                                                                    type="number"
-                                                                    placeholder="12"
-                                                                    value={formData.recurringMaxEvents}
-                                                                    onChange={(value) => setFormData(prev => ({ ...prev, recurringMaxEvents: value }))}
-                                                                />
-                                                            </div>
-                                                        )}
-                                                        {formData.recurringEndType === 'specific_date' && (
-                                                            <div className="flex-1">
-                                                                <DatePicker
-                                                                    value={formData.recurringEndDate}
-                                                                    onChange={(value) => setFormData(prev => ({ ...prev, recurringEndDate: value }))}
-                                                                />
-                                                            </div>
-                                                        )}
+                                                    <div className="mt-1">
+                                                        <DatePicker
+                                                            value={formData.recurringEndDate}
+                                                            onChange={(value) => setFormData(prev => ({ ...prev, recurringEndDate: value }))}
+                                                        />
                                                     </div>
-                                                    {formData.recurringEndType === 'number_of_runs' && formData.dateFrom && formData.recurringMaxEvents && (
-                                                        <p className="mt-1.5 text-xs text-gray-500">
-                                                            {(() => {
-                                                                const maxEvents = parseInt(formData.recurringMaxEvents);
-                                                                
-                                                                if (isNaN(maxEvents) || maxEvents <= 0) {
-                                                                    return "Invalid value";
-                                                                }
-                                                                
-                                                                // Convert DateValue to JavaScript Date
-                                                                const startDate = formData.dateFrom.toDate('UTC');
-                                                                const lastEventDate = new Date(startDate);
-                                                                const eventsToAdd = maxEvents - 1; // -1 because first event is the start date
-                                                                
-                                                                switch (formData.recurringFrequency) {
-                                                                    case 'daily':
-                                                                        lastEventDate.setDate(lastEventDate.getDate() + eventsToAdd);
-                                                                        break;
-                                                                    case 'weekly':
-                                                                        lastEventDate.setDate(lastEventDate.getDate() + (eventsToAdd * 7));
-                                                                        break;
-                                                                    case 'monthly':
-                                                                        lastEventDate.setMonth(lastEventDate.getMonth() + eventsToAdd);
-                                                                        break;
-                                                                    case 'yearly':
-                                                                        lastEventDate.setFullYear(lastEventDate.getFullYear() + eventsToAdd);
-                                                                        break;
-                                                                }
-                                                                
-                                                                return `Last event will be on ${lastEventDate.toLocaleDateString('en-US', { 
-                                                                    weekday: 'long', 
-                                                                    year: 'numeric', 
-                                                                    month: 'long', 
-                                                                    day: 'numeric' 
-                                                                })}`;
-                                                            })()}
-                                                        </p>
-                                                    )}
                                                 </div>
                                             </div>
                                         </div>

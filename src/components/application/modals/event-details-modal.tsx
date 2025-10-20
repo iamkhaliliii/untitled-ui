@@ -207,11 +207,23 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                     }} />
                     <div className="bg-white rounded-3xl max-md:rounded-2xl shadow-2xl flex h-full max-md:flex-col relative overflow-hidden">
 
-                        {showOtherTimes ? (
-                            /* Full Width Time Slots View */
+                        {rsvpStage === 'processing' ? (
+                            /* Processing State - Full Modal Loading */
+                            <div className="w-full h-full flex items-center justify-center">
+                                <div className="text-center">
+                                    <div className="flex items-center justify-center gap-2 mb-3">
+                                        <div className="w-8 h-8 border-3 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                                        <span className="text-lg font-semibold text-brand-600">Processing RSVP...</span>
+                                    </div>
+                                    <p className="text-sm text-gray-500">Please wait while we confirm your attendance</p>
+                                </div>
+                            </div>
+                        ) : showOtherTimes || rsvpStage === 'confirmed' ? (
+                            /* Full Width Single Column View - for time slots or after RSVP */
                             <div className="w-full flex flex-col min-h-0">
-                                <div className="px-6 pb-3 pt-6 flex-shrink-0 bg-gray-50 border-b border-gray-100">
-                                    <div className="flex items-center gap-4 mb-3">
+                                <div className="px-6 py-4 flex-shrink-0 bg-white border-b border-gray-100">
+                                    <div className="flex items-center justify-between">
+                                        {showOtherTimes && (
                                         <Button
                                             size="sm"
                                             color="tertiary"
@@ -219,33 +231,40 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             onClick={handleBackToEvent}
                                             className="!p-2 !w-8 !h-8 rotate-180"
                                         />
-                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                                            <img
-                                                src={event.image}
-                                                alt={event.title}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-lg font-semibold text-gray-900 truncate">{event.title}</h3>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-4 h-4 rounded-full overflow-hidden">
-                                                    <img 
-                                                        src={event.organizer.avatar} 
-                                                        alt={event.organizer.name}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </div>
-                                                <span className="text-sm text-gray-600">Hosted by {event.organizer.name}</span>
-                                            </div>
+                                        )}
+                                        <div className="flex-1"></div>
+                                        <div className="flex items-center gap-1 flex-shrink-0">
+                                            <button
+                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                title="Share Event"
+                                            >
+                                                <Share07 className="h-4 w-4 text-gray-500" />
+                                            </button>
+                                            <button
+                                                onClick={handleEventPageClick}
+                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                title="Open in new tab"
+                                            >
+                                                <LinkExternal01 className="h-4 w-4 text-gray-500" />
+                                            </button>
+                                            <button
+                                                onClick={onClose}
+                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                title="Close"
+                                            >
+                                                <X className="h-4 w-4 text-gray-500" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div className="flex-1 overflow-y-auto p-6 pt-4 modal-scrollbar" style={scrollbarStyles}>
                                     <div className="max-w-2xl mx-auto">
+                                        {showOtherTimes ? (
+                                            <>
                                         <div className="mb-2">
-                                            <h4 className="text-sm font-medium text-gray-900 ">Pick your session date:</h4>                                        </div>
+                                                    <h4 className="text-sm font-medium text-gray-900 ">Pick your session date:</h4>
+                                                </div>
                                         <div className="grid gap-4 grid-cols-1">
                                             {recurringTimeSlots.map((timeSlot) => (
                                                 <div 
@@ -322,6 +341,277 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 </div>
                                             ))}
                                         </div>
+                                            </>
+                                        ) : (
+                                            /* After RSVP Confirmed - Single Column View */
+                                            <>
+                                                {/* Welcome Message */}
+                                                <div className="mb-10">
+                                                    <h3 className="text-base font-semibold text-gray-900 mb-1">Dear John Smith,</h3>
+                                                    <p className="text-sm text-gray-600">Thank you for registering! We're excited to have you join us at this event.</p>
+                                                </div>
+
+                                                {/* Event Title & Cover */}
+                                                <div className="mb-10">
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="w-48 h-48 rounded-xl overflow-hidden flex-shrink-0">
+                                                            <img
+                                                                src={event.image}
+                                                                alt={event.title}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0 space-y-3">
+                                                            {/* Success Message */}
+                                                            <div className="bg-success-50 border border-success-200 rounded-xl p-3">
+                                                                <div className="flex items-center gap-2 mb-1">
+                                                                    <CheckCircle className="w-4 h-4 text-success-600" />
+                                                                    <span className="text-sm font-semibold text-success-700">Registration confirmed</span>
+                                                                </div>
+                                                                <p className="text-xs text-success-600">Your RSVP has been confirmed. Event details have been sent to your email.</p>
+                                                            </div>
+
+                                                            <div>
+                                                                <div className="font-semibold text-gray-900 text-base mb-2 leading-snug">{event.title}</div>
+                                                                <div className="flex items-center gap-2 text-gray-600">
+                                                                    <div className="w-4 h-4 rounded-full overflow-hidden">
+                                                                        <img 
+                                                                            src={event.organizer.avatar} 
+                                                                            alt={event.organizer.name}
+                                                                            className="w-full h-full object-cover"
+                                                                        />
+                                                                    </div>
+                                                                    <span className="text-sm">Hosted by {event.organizer.name}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Quick Actions */}
+                                                            <div className="flex gap-2">
+                                                                <Button 
+                                                                    size="sm" 
+                                                                    color="secondary" 
+                                                                    className="flex-1"
+                                                                    iconLeading={Calendar}
+                                                                >
+                                                                    Add to calendar
+                                                                </Button>
+                                                                <button
+                                                                    className="flex-1 text-xs text-gray-500 hover:text-gray-700 underline transition-colors"
+                                                                    onClick={() => setShowCancelAlert(true)}
+                                                                >
+                                                                    Can't make it? Cancel registration
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Event Information Section */}
+                                                <div className="mb-6">
+                                                    <h4 className="text-sm font-medium text-gray-500 mb-4">Event Information</h4>
+                                                    <div className="space-y-4">
+
+                                                        {/* Date & Time Card */}
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
+                                                                <div className="text-xs text-gray-500 leading-none">
+                                                                    {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                                </div>
+                                                                <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                    {new Date(currentEventData.date).getDate()}
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
+                                                                <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Physical Location Card (for physical and hybrid) */}
+                                                        {(event.locationType === "physical" || event.locationType === "hybrid") && (
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                    <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="font-medium text-gray-900 text-sm">
+                                                                        {event.location}
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-600 mt-0.5">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Virtual Location Card (for virtual and hybrid) */}
+                                                        {(event.locationType === "virtual" || event.locationType === "hybrid") && (
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                    <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="font-medium text-gray-900 text-sm mb-2">
+                                                                        Virtual links
+                                                                    </div>
+                                                                    <div className="space-y-2">
+                                                                        {/* Zoom Link */}
+                                                                        <a 
+                                                                            href="https://zoom.us/j/123456789" 
+                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <img 
+                                                                                src="https://zoom.us/favicon.ico" 
+                                                                                alt="Zoom" 
+                                                                                className="w-4 h-4"
+                                                                                onError={(e) => {
+                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                }}
+                                                                            />
+                                                                            <span className="text-xs truncate">zoom.us/j/123456789</span>
+                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                        </a>
+                                                                        
+                                                                        {/* Google Meet Link */}
+                                                                        <a 
+                                                                            href="https://meet.google.com/abc-defg-hij" 
+                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <img 
+                                                                                src="https://meet.google.com/favicon.ico" 
+                                                                                alt="Google Meet" 
+                                                                                className="w-4 h-4"
+                                                                                onError={(e) => {
+                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+                                                                                }}
+                                                                            />
+                                                                            <span className="text-xs truncate">meet.google.com/abc-defg-hij</span>
+                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                        </a>
+
+                                                                        {/* Microsoft Teams Link */}
+                                                                        <a 
+                                                                            href="https://teams.microsoft.com/meet/abc123" 
+                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <img 
+                                                                                src="https://teams.microsoft.com/favicon.ico" 
+                                                                                alt="Microsoft Teams" 
+                                                                                className="w-4 h-4"
+                                                                                onError={(e) => {
+                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzUwNTlDOSIvPgo8cGF0aCBkPSJNNCw0aDRWOEg0VjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                }}
+                                                                            />
+                                                                            <span className="text-xs truncate">teams.microsoft.com/meet/abc123</span>
+                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                        </a>
+
+                                                                        {/* YouTube Stream Link */}
+                                                                        <a 
+                                                                            href="https://youtube.com/watch?v=dQw4w9WgXcQ" 
+                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <img 
+                                                                                src="https://youtube.com/favicon.ico" 
+                                                                                alt="YouTube" 
+                                                                                className="w-4 h-4"
+                                                                                onError={(e) => {
+                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNNSw0VjhMOCw2TDUsNFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
+                                                                                }}
+                                                                            />
+                                                                            <span className="text-xs truncate">youtube.com/watch?v=dQw4w9WgXcQ</span>
+                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                        </a>
+
+                                                                        {/* Discord Link */}
+                                                                        <a 
+                                                                            href="https://discord.gg/xyz123" 
+                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <img 
+                                                                                src="https://discord.com/favicon.ico" 
+                                                                                alt="Discord" 
+                                                                                className="w-4 h-4"
+                                                                                onError={(e) => {
+                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNNCw1aDRWN0g0VjVaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                }}
+                                                                            />
+                                                                            <span className="text-xs truncate">discord.gg/xyz123</span>
+                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                        {/* Interactive Map */}
+                        {event.type !== "online" && event.coordinates && (
+                                                    <div className="mb-10">
+                                                        <EventMap
+                                                            location={event.location}
+                                                            latitude={event.coordinates.latitude}
+                                                            longitude={event.coordinates.longitude}
+                                                        />
+                                                    </div>
+                                                )}
+                                                {/* Event Details Section - Moved before About Event */}
+                                                <div className="mb-6">
+                                                    <h4 className="text-sm font-medium text-gray-500 mb-3">Event Details</h4>
+                                                    <div className="space-y-2 text-sm text-gray-700">
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Free snacks and drinks will be provided throughout the event</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Networking opportunities with fellow enthusiasts and industry professionals</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Live showcases and demonstrations from industry experts</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Interactive Q&A sessions with speakers and panelists</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Complimentary event materials and resource guides</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Professional photography and video recording available</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Access to exclusive online community and resources post-event</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Please arrive 15 minutes early for check-in and setup</p>
+                                                        </div>
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                            <p>Accessible facilities and accommodations available upon request</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                        
+
+                                                {/* About Event Section with Read More */}
+                                                <CollapsibleAboutEvent description={event.description} />
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -447,39 +737,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             <div className="">
                                                 {/* RSVP Section */}
                                                 <div className="bg-gray-50 rounded-xl p-3 max-lg:p-3 max-md:p-4">
-                                                    {rsvpStage === 'processing' ? (
-                                                        <div className="text-center">
-                                                            <div className="flex items-center justify-center gap-1 mb-1">
-                                                                <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
-                                                                <span className="text-sm font-medium text-brand-600">Processing RSVP...</span>
-                                                            </div>
-                                                            <p className="text-xs text-gray-500">Please wait while we confirm your attendance</p>
-                                                        </div>
-                                                    ) : rsvpStage === 'confirmed' ? (
-                                                        <div className="bg-success-50 border border-success-200 rounded-xl p-4">
-                                                            <div className="flex items-center gap-2 mb-2">
-                                                                <CheckCircle className="w-4 h-4 text-success-600" />
-                                                                <span className="text-sm font-medium text-success-700">You're All Set!</span>
-                                                            </div>
-                                                            <p className="text-xs text-success-600 mb-3">Your RSVP has been confirmed. Event details will be sent to your email.</p>
-                                                            <div className="space-y-2">
-                                                                <Button 
-                                                                    size="sm" 
-                                                                    color="secondary" 
-                                                                    className="w-full"
-                                                                    iconLeading={Calendar}
-                                                                >
-                                                                    Add to calendar
-                                                                </Button>
-                                                                <button
-                                                                    className="w-full text-sm text-gray-500 hover:text-gray-700 underline transition-colors"
-                                                                    onClick={() => setShowCancelAlert(true)}
-                                                                >
-                                                                    Not going?
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    ) : rsvpStage === 'cancelled' ? (
+                                                    {rsvpStage === 'cancelled' ? (
                                                         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                                                             <div className="text-center">
                                                                 <p className="text-sm font-medium text-gray-900 mb-1">Registration cancelled</p>
@@ -579,179 +837,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             className="p-4 max-lg:p-3 max-md:p-4 flex-1 overflow-y-auto space-y-4 max-lg:space-y-3 max-md:space-y-4 min-h-0 modal-scrollbar" 
                                             style={scrollbarStyles}
                                         >
-                                            {rsvpStage === 'confirmed' ? (
-                                                /* After RSVP - New Structured Layout */
-                                                <>
-                                                    {/* Success Message */}
-                                                    <div className="p-3 max-md:p-3 pb-2">
-                                                        <h3 className="text-lg max-md:text-xl font-medium text-gray-900">Registration confirmed</h3>
-                                                    </div>
-                                                    
-                                                    {/* Event Information Title */}
-                                                    <div className="p-3 max-md:p-3 pb-0 pt-0">
-                                                        <div className="text-sm max-md:text-base text-gray-500 mb-3 max-md:mb-4">Event Information</div>
-                                                    </div>
-                                                    
-                                                    {/* Event Data Cards */}
-                                                    <div className="space-y-4 p-3 max-md:p-3 pt-0">
-                                                        {/* Event Title & Host Card */}
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                                <Calendar className="h-4 w-4 text-gray-500" />
-                                                            </div>
-                                                            <div className="flex-1">
-                                                                <div className="font-medium text-gray-900 text-sm max-md:text-base">{event.title}</div>
-                                                                <div className="text-xs max-md:text-sm text-gray-600">Hosted by {event.organizer.name}</div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Date & Time Card */}
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                                <div className="text-xs text-gray-500 leading-none">
-                                                                    {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
-                                                                </div>
-                                                                <div className="text-xs font-semibold text-gray-900 leading-none">
-                                                                    {new Date(event.date).getDate()}
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex-1">
-                                                                <div className="font-medium text-gray-900 text-sm">{event.date}</div>
-                                                                <div className="text-xs text-gray-600">{event.time}</div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Physical Location Card (for physical and hybrid) */}
-                                                        {(event.locationType === "physical" || event.locationType === "hybrid") && (
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                                    <MarkerPin01 className="h-4 w-4 text-gray-500" />
-                                                                </div>
-                                                                <div className="flex-1">
-                                                                    <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
-                                                                        {event.location}
-                                                                    </div>
-                                                                    <div className="text-xs text-gray-600">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        {/* Virtual Location Card (for virtual and hybrid) */}
-                                                        {(event.locationType === "virtual" || event.locationType === "hybrid") && (
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                                    <VideoRecorder className="h-4 w-4 text-gray-500" />
-                                                                </div>
-                                                                <div className="flex-1">
-                                                                    <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
-                                                                        Virtual links
-                                                                    </div>
-                                                                    <div className="text-xs text-gray-600 space-y-0">
-                                                                        {/* Zoom Link */}
-                                                                        <a 
-                                                                            href="https://zoom.us/j/123456789" 
-                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                        >
-                                                                            <img 
-                                                                                src="https://zoom.us/favicon.ico" 
-                                                                                alt="Zoom" 
-                                                                                className="w-3 h-3"
-                                                                                onError={(e) => {
-                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
-                                                                                }}
-                                                                            />
-                                                                            <span className="text-xs">https://zoom.us/j/123456789</span>
-                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                                                                        </a>
-                                                                        
-                                                                        {/* Google Meet Link */}
-                                                                        <a 
-                                                                            href="https://meet.google.com/abc-defg-hij" 
-                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                        >
-                                                                            <img 
-                                                                                src="https://meet.google.com/favicon.ico" 
-                                                                                alt="Google Meet" 
-                                                                                className="w-3 h-3"
-                                                                                onError={(e) => {
-                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
-                                                                                }}
-                                                                            />
-                                                                            <span className="text-xs">https://meet.google.com/abc-defg-hij</span>
-                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                                                                        </a>
-                                                                        
-                                                                        {/* YouTube Link */}
-                                                                        <a 
-                                                                            href="https://youtube.com/watch?v=dQw4w9WgXcQ" 
-                                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                        >
-                                                                            <img 
-                                                                                src="https://youtube.com/favicon.ico" 
-                                                                                alt="YouTube" 
-                                                                                className="w-3 h-3"
-                                                                                onError={(e) => {
-                                                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNNSw0VjhMOCw2TDUsNFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
-                                                                                }}
-                                                                            />
-                                                                            <span className="text-xs">https://youtube.com/watch?v=dQw4w9WgXcQ</span>
-                                                                            <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    
-                                                    {/* Interactive Map */}
-                                                    {event.type !== "online" && event.coordinates && (
-                                                        <div className="px-3 max-md:px-2">
-                                                            <EventMap
-                                                                location={event.location}
-                                                                latitude={event.coordinates.latitude}
-                                                                longitude={event.coordinates.longitude}
-                                                            />
-                                                        </div>
-                                                    )}
-
-                                                    {/* Event Details Section */}
-                                                    <div className="p-3 max-md:p-2">
-                                                        <div className="text-sm text-gray-500 mb-3">Event Details</div>
-                                                        <div className="space-y-3 text-sm text-gray-700">
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                                                                <p>Free snacks and drinks will be provided throughout the event</p>
-                                                            </div>
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                                                                <p>Networking opportunities with fellow music enthusiasts and industry professionals</p>
-                                                            </div>
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                                                                <p>Live showcases from new and emerging artists</p>
-                                                            </div>
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                                                                <p>Discussion panels on latest music trends and industry insights</p>
-                                                            </div>
-                                                            <div className="flex items-start gap-2">
-                                                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                                                                <p>Please arrive 15 minutes early for check-in and setup</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* About Event Section (Collapsible) */}
-                                                    <CollapsibleAboutEvent description={event.description} />
-                                                </>
-                                            ) : (
-                                                /* Before RSVP - Original Layout */
+                                            {/* Before RSVP - Original Layout */}
                                                 <>
                                                     {/* About Event Card */}
                                                     <div className="p-3 max-md:p-2">
@@ -772,7 +858,6 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </div>
                                                     </div>
                                                 </>
-                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -1109,39 +1194,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                 {!showOtherTimes && (
                                     <div className="flex-shrink-0 border-t border-gray-200">
                                         <div className="bg-gray-50 rounded-xl p-4">
-                                            {rsvpStage === 'processing' ? (
-                                                <div className="text-center">
-                                                    <div className="flex items-center justify-center gap-1 mb-1">
-                                                        <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
-                                                        <span className="text-base font-medium text-brand-600">Processing RSVP...</span>
-                                                    </div>
-                                                    <p className="text-sm text-gray-500">Please wait while we confirm your attendance</p>
-                                                </div>
-                                            ) : rsvpStage === 'confirmed' ? (
-                                                <div className="bg-success-50 border border-success-200 rounded-xl p-4">
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <CheckCircle className="w-5 h-5 text-success-600" />
-                                                        <span className="text-base font-medium text-success-700">You're All Set!</span>
-                                                    </div>
-                                                    <p className="text-sm text-success-600 mb-3">Your RSVP has been confirmed. Event details will be sent to your email.</p>
-                                                    <div className="space-y-2">
-                                                        <Button 
-                                                            size="sm" 
-                                                            color="secondary" 
-                                                            className="w-full text-base py-3"
-                                                            iconLeading={Calendar}
-                                                        >
-                                                            Add to calendar
-                                                        </Button>
-                                                        <button
-                                                            className="w-full text-sm text-gray-500 hover:text-gray-700 underline transition-colors"
-                                                            onClick={() => setShowCancelAlert(true)}
-                                                        >
-                                                            Not going?
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ) : rsvpStage === 'cancelled' ? (
+                                            {rsvpStage === 'cancelled' ? (
                                                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                                                     <div className="text-center">
                                                         <p className="text-base font-medium text-gray-900 mb-1">Registration cancelled</p>

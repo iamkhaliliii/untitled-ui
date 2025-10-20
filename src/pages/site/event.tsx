@@ -109,20 +109,19 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                 
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
                 {event.status === 'live' && (
-                        <BadgeWithIcon  
+                        <Badge  
                             color="error" 
                             type="pill-color"
                             size="md"
-                            iconLeading={Recording03}
                         >
                             <span className="flex items-center gap-1.5">
-                                Live Now
                                 <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-600 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-error-600"></span>
                                 </span>
+                                Live Now
                             </span>
-                        </BadgeWithIcon>
+                        </Badge>
                     )}
                 {event.isRecurring && (
                         <BadgeWithIcon  
@@ -134,14 +133,6 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                             Recurring Event
                         </BadgeWithIcon>
                     )}
-                    <Badge 
-                        color="gray" 
-                        size="sm"
-                        className="backdrop-blur-sm bg-white/95 shadow-sm border border-white/20"
-                    >
-                        {event.category}
-                    </Badge>
-
                 </div>
 
 
@@ -182,7 +173,7 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                     {event.isRecurring && (
                         <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                             <Repeat03 className="h-3.5 w-3.5 text-brand-solid" />
-                            <span className="text-brand-solid font-medium">Repeats {event.recurringFrequency.toLowerCase()}</span>
+                            <span className="text-brand-solid font-medium">Repeats {event.recurringFrequency}</span>
                         </div>
                     )}
                     
@@ -313,7 +304,7 @@ export default function SiteEventPage() {
             type: "in-person",
             category: "Business",
             isRecurring: true,
-            recurringFrequency: "Every 2 weeks",
+            recurringFrequency: "Weekly on Mon & Tue",
             status: "upcoming",
             coordinates: {
                 latitude: 40.7589,
@@ -469,7 +460,7 @@ export default function SiteEventPage() {
             type: "in-person",
             category: "Business",
             isRecurring: true,
-            recurringFrequency: "Every 2 weeks",
+            recurringFrequency: "Weekly on Mon & Tue",
             status: "past",
             coordinates: {
                 latitude: 37.7749,
