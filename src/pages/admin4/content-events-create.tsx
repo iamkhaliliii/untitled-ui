@@ -832,13 +832,20 @@ export const AdminContentEventsCreatePage = () => {
                                     </div>
 
                                     {/* Capacity */}
-                                    <Input
-                                        type="number"
-                                        label="Capacity"
-                                        placeholder="Maximum number of attendees"
-                                        value={formData.capacity}
-                                        onChange={(value) => setFormData(prev => ({ ...prev, capacity: value }))}
-                                    />
+                                    <div>
+                                        <Input
+                                            type="number"
+                                            label="Capacity"
+                                            placeholder="Unlimited"
+                                            value={formData.capacity}
+                                            onChange={(value) => setFormData(prev => ({ ...prev, capacity: value }))}
+                                            hint={
+                                                !formData.capacity 
+                                                    ? "Capacity is set to unlimited. Enter a number to set a limit." 
+                                                    : `Maximum ${formData.capacity} attendees. Registration will close when capacity is reached.`
+                                            }
+                                        />
+                                    </div>
 
                                     {/* SEO options - Collapsible */}
                                     <div className="border border-gray-200 rounded-lg">

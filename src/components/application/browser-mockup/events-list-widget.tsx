@@ -49,6 +49,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       type: "In-Person",
       category: "Technology",
       organizer: "Tech Events Inc.",
+      attendees: 42,
       image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
     {
@@ -60,6 +61,17 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       type: "Online",
       category: "Design",
       organizer: "Design Academy",
+      organizers: [
+        {
+          name: "Emily Chertow",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
+        },
+        {
+          name: "MacKenzie Huneke",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
+        }
+      ],
+      attendees: 1,
       image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
     {
@@ -70,6 +82,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       location: "New York, NY",
       type: "In-Person",
       category: "Business",
+      attendees: 0,
       organizer: "Startup Hub",
       image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
@@ -176,22 +189,6 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
 
           {/* Event Content */}
           <div className="p-3 flex flex-col flex-1">
-            {/* Organizer Badge */}
-            {eventsListConfig.hostInfo && (
-              <div className="mb-2">
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
-                  <div className="w-4 h-4 rounded-full overflow-hidden">
-                    <img 
-                      src="https://i.pravatar.cc/150?img=1" 
-                      alt={event.organizer} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span>{event.organizer}</span>
-                </div>
-              </div>
-            )}
-
             {/* Event Title */}
             <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
               {event.title}
@@ -210,6 +207,50 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                     <span>{event.time}</span>
                   </div>
                 </>
+              )}
+              
+              {/* Host Info - Moved here after date/time */}
+              {eventsListConfig.hostInfo && (
+                <div className="flex items-center gap-2 text-sm">
+                  {event.organizers && event.organizers.length > 1 ? (
+                    <>
+                      {/* Avatar Group */}
+                      <div className="flex -space-x-1.5">
+                        {event.organizers.map((org: any, index: number) => (
+                          <div
+                            key={index}
+                            className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
+                            style={{ zIndex: event.organizers.length - index }}
+                          >
+                            <img
+                              src={org.avatar}
+                              alt={org.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <span className="text-xs text-secondary">By {event.organizers.map((org: any) => org.name).join(' & ')}</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
+                        <img 
+                          src="https://i.pravatar.cc/150?img=1" 
+                          alt={event.organizer} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-secondary">By {event.organizer}</span>
+                    </>
+                  )}
+                </div>
               )}
               
               {/* Location - Always visible */}
@@ -425,6 +466,51 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 <Clock className="w-3 h-3" />
                 <span>{event.time}</span>
               </div>
+              
+              {/* Host Info - Inline with date/time */}
+              {eventsListConfig.hostInfo && (
+                <>
+                  <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
+                  {event.organizers && event.organizers.length > 1 ? (
+                    <>
+                      {/* Avatar Group */}
+                      <div className="flex -space-x-1.5">
+                        {event.organizers.map((org: any, index: number) => (
+                          <div
+                            key={index}
+                            className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
+                            style={{ zIndex: event.organizers.length - index }}
+                          >
+                            <img
+                              src={org.avatar}
+                              alt={org.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <span className="text-xs">By {event.organizers.map((org: any) => org.name).join(' & ')}</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
+                        <img 
+                          src="https://i.pravatar.cc/150?img=1" 
+                          alt={event.organizer} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs">By {event.organizer}</span>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           )}
           
@@ -441,34 +527,43 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
           
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* Avatar Group */}
+              {/* Avatar Group - Attendees */}
               {eventsListConfig.attended && (
-                <div className="flex items-center">
-                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
-                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                  </span>
-                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                  </span>
-                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                  </span>
-                  <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
-                    +2
-                  </span>
-                </div>
-              )}
-              
-              {eventsListConfig.hostInfo && (
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
-                  <div className="w-4 h-4 rounded-full overflow-hidden">
-                    <img 
-                      src="https://i.pravatar.cc/150?img=1" 
-                      alt={event.organizer} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span>{event.organizer}</span>
+                <div className="flex items-center gap-2">
+                  {event.attendees === 0 ? (
+                    // No attendees - just label
+                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                      0 attending
+                    </span>
+                  ) : event.attendees === 1 ? (
+                    // Single attendee
+                    <>
+                      <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px'}}>
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                      </span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        1 attending
+                      </span>
+                    </>
+                  ) : (
+                    // Multiple attendees
+                    <>
+                      <div className="flex items-center">
+                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 3}}>
+                          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                        </span>
+                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
+                          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                        </span>
+                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 1}}>
+                          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        {event.attendees} attending
+                      </span>
+                    </>
+                  )}
                 </div>
               )}
             </div>

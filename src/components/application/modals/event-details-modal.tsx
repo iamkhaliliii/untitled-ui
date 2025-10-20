@@ -392,14 +392,44 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <div>
                                                                 <div className="font-semibold text-gray-900 text-base mb-2 leading-snug">{event.title}</div>
                                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                                    <div className="w-4 h-4 rounded-full overflow-hidden">
-                                                                        <img 
-                                                                            src={event.organizer.avatar} 
-                                                                            alt={event.organizer.name}
-                                                                            className="w-full h-full object-cover"
-                                                                        />
-                                                                    </div>
-                                                                    <span className="text-sm">Hosted by {event.organizer.name}</span>
+                                                                    {event.organizers && event.organizers.length > 1 ? (
+                                                                        <>
+                                                                            {/* Avatar Group */}
+                                                                            <div className="flex -space-x-1.5">
+                                                                                {event.organizers.map((org: any, index: number) => (
+                                                                                    <div
+                                                                                        key={index}
+                                                                                        className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
+                                                                                        style={{ zIndex: event.organizers.length - index }}
+                                                                                    >
+                                                                                        <img
+                                                                                            src={org.avatar}
+                                                                                            alt={org.name}
+                                                                                            className="w-full h-full object-cover"
+                                                                                            onError={(e) => {
+                                                                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                            <span className="text-sm">Hosted by {event.organizers.map((org: any) => org.name).join(' & ')}</span>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
+                                                                                <img 
+                                                                                    src={event.organizer.avatar} 
+                                                                                    alt={event.organizer.name}
+                                                                                    className="w-full h-full object-cover"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer.name)}&background=667eea&color=fff&size=128`;
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                            <span className="text-sm">Hosted by {event.organizer.name}</span>
+                                                                        </>
+                                                                    )}
                                                                 </div>
                                                             </div>
 
@@ -680,14 +710,44 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             
                                                 {/* Host */}
                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                    <div className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full overflow-hidden">
-                                                        <img 
-                                                            src={currentEventData.organizer.avatar} 
-                                                            alt={currentEventData.organizer.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <span className="text-sm max-md:text-base">Hosted by {currentEventData.organizer.name}</span>
+                                                    {event.organizers && event.organizers.length > 1 ? (
+                                                        <>
+                                                            {/* Avatar Group */}
+                                                            <div className="flex -space-x-1">
+                                                                {event.organizers.map((org: any, index: number) => (
+                                                                    <div
+                                                                        key={index}
+                                                                        className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
+                                                                        style={{ zIndex: event.organizers.length - index }}
+                                                                    >
+                                                                        <img
+                                                                            src={org.avatar}
+                                                                            alt={org.name}
+                                                                            className="w-full h-full object-cover"
+                                                                            onError={(e) => {
+                                                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <span className="text-sm max-md:text-base">Hosted by {event.organizers.map((org: any) => org.name).join(' & ')}</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full overflow-hidden ring-1 ring-gray-200">
+                                                                <img 
+                                                                    src={currentEventData.organizer.avatar} 
+                                                                    alt={currentEventData.organizer.name}
+                                                                    className="w-full h-full object-cover"
+                                                                    onError={(e) => {
+                                                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentEventData.organizer.name)}&background=667eea&color=fff&size=128`;
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <span className="text-sm max-md:text-base">Hosted by {currentEventData.organizer.name}</span>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                             
@@ -1030,14 +1090,44 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     {event.title}
                                                 </h1>
                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                    <div className="w-6 h-6 rounded-full overflow-hidden">
-                                                        <img 
-                                                            src={event.organizer.avatar} 
-                                                            alt={event.organizer.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <span className="text-base">Hosted by {event.organizer.name}</span>
+                                                    {event.organizers && event.organizers.length > 1 ? (
+                                                        <>
+                                                            {/* Avatar Group */}
+                                                            <div className="flex -space-x-2">
+                                                                {event.organizers.map((org: any, index: number) => (
+                                                                    <div
+                                                                        key={index}
+                                                                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                                                        style={{ zIndex: event.organizers.length - index }}
+                                                                    >
+                                                                        <img
+                                                                            src={org.avatar}
+                                                                            alt={org.name}
+                                                                            className="w-full h-full object-cover"
+                                                                            onError={(e) => {
+                                                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <span className="text-base">Hosted by {event.organizers.map((org: any) => org.name).join(' & ')}</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="w-6 h-6 rounded-full overflow-hidden ring-1 ring-gray-200">
+                                                                <img 
+                                                                    src={event.organizer.avatar} 
+                                                                    alt={event.organizer.name}
+                                                                    className="w-full h-full object-cover"
+                                                                    onError={(e) => {
+                                                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer.name)}&background=667eea&color=fff&size=128`;
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <span className="text-base">Hosted by {event.organizer.name}</span>
+                                                        </>
+                                                    )}
                                                 </div>
                                                 
                                                 {/* Next Event Info - Only show for recurring events */}

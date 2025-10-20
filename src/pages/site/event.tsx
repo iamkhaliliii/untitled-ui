@@ -140,15 +140,48 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
 
             {/* Event Content */}
             <div className="p-3 flex flex-col flex-1">
-                {/* Organizer */}
+                {/* Organizer(s) */}
                 <div className="mb-2">
-                    <BadgeWithImage
-                        imgSrc={event.organizer.avatar}
-                        size="sm"
-                        color="gray"
-                    >
-                        {event.organizer.name}
-                    </BadgeWithImage>
+                    <div className="flex items-center gap-2">
+                        {/* Avatar Group */}
+                        {event.organizers && event.organizers.length > 1 ? (
+                            <div className="flex -space-x-2">
+                                {event.organizers.map((org: any, index: number) => (
+                                    <div
+                                        key={index}
+                                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                        style={{ zIndex: event.organizers.length - index }}
+                                    >
+                                        <img
+                                            src={org.avatar}
+                                            alt={org.name}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                                <img
+                                    src={event.organizer.avatar}
+                                    alt={event.organizer.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer.name)}&background=667eea&color=fff&size=128`;
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <span className="text-xs text-secondary">
+                            By {event.organizers && event.organizers.length > 1 
+                                ? event.organizers.map((org: any) => org.name).join(' & ')
+                                : event.organizer.name
+                            }
+                        </span>
+                    </div>
                 </div>
 
                 <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
@@ -263,8 +296,18 @@ export default function SiteEventPage() {
                 latitude: 37.7849,
                 longitude: -122.4013
             },
+            organizers: [
+                {
+                    name: "Emily Chertow",
+                    avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
+                },
+                {
+                    name: "MacKenzie Huneke",
+                    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
+                }
+            ],
             organizer: {
-                name: "Sarah Johnson",
+                name: "Emily Chertow",
                 avatar: "https://images.unsplash.com/photo-1494790108755-2616c9ad0096?w=32&h=32&fit=crop&crop=face"
             }
         },
