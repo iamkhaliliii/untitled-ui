@@ -53,8 +53,18 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
                                 <tr>
                                     <td style="padding:30px 0px 20px 0px">
                                         <p style="font-size:0.875rem;line-height:1.25rem;margin:0px 0px 16px 0px!important;color:rgb(83,83,83)">Dear ${eventData.attendeeName || 'Attendee'},</p>
-                                        <h1 style="color:rgb(6,6,6);font-weight:700;font-size:1.125rem;line-height:1.75rem;margin:0px!important">Registration Confirmed</h1>
-                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:8px 0 0 0!important;color:rgb(83,83,83)">Thank you for registering! We're excited to have you join us at this event.</p>
+                                        
+                                        <!-- Success Alert Box -->
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid rgb(34,197,94);background-color:rgb(240,253,244);padding:16px;margin-bottom:8px">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p style="font-size:14px;line-height:20px;margin:0px 0px 4px 0px!important;color:rgb(21,128,61);font-weight:700">✓  Registration Confirmed</p>
+                                                        <p style="font-size:13px;line-height:18px;margin:0px!important;color:rgb(22,101,52)">Thank you for registering! We're excited to have you join us at this event.</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </td>
                                 </tr>
 
@@ -65,142 +75,30 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
                                     </td>
                                 </tr>
 
-                                <!-- Two Column Layout -->
+                                <!-- Single Column Layout -->
                                 <tr>
-                                    <td style="padding-bottom:30px">
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important">
+                                    <td style="padding-bottom:20px">
+                                        <!-- Event Cover, Title, Host -->
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:20px">
                                             <tbody>
                                                 <tr>
-                                                    <!-- Left Column: Image, Title, Host (30%) -->
-                                                    <td valign="top" style="width:30%;padding-right:15px">
+                                                    <td valign="top" style="width:120px;padding-right:15px">
                                                         <!-- Event Cover Image -->
-                                                        <img src="${eventData.image}" alt="${eventData.title}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block;margin-bottom:15px">
-                                                        
+                                                        <img src="${eventData.image}" alt="${eventData.title}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;display:block">
+                                                    </td>
+                                                    <td valign="top">
                                                         <!-- Event Title -->
-                                                        <p style="font-size:14px;line-height:20px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
+                                                        <p style="font-size:16px;line-height:22px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
                                                         
                                                         <!-- Host -->
-                                                        <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:15px">
+                                                        <table cellpadding="0" cellspacing="0" border="0">
                                                             <tbody>
                                                                 <tr>
                                                                     <td valign="middle" style="padding-right:8px">
-                                                                        <img src="${eventData.organizer.avatar}" alt="${eventData.organizer.name}" style="width:20px;height:20px;border-radius:50%;display:block">
+                                                                        <img src="${eventData.organizer.avatar}" alt="${eventData.organizer.name}" style="width:16px;height:16px;border-radius:50%;display:block">
                                                                     </td>
                                                                     <td valign="middle">
-                                                                        <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">by ${eventData.organizer.name}</p>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-
-                                                        <!-- Add to Calendar Button -->
-                                                        <a href="#" style="line-height:18px;text-decoration:none;display:block;color:rgb(255,255,255);background-color:rgb(0,132,59);border-radius:0.25rem;font-size:14px;padding:8px 12px;text-align:center;margin-bottom:12px">
-                                                            <span style="display:inline-block;line-height:120%">Add to Calendar</span>
-                                                        </a>
-
-                                                        <!-- Cancel Link -->
-                                                        <div style="text-align:center">
-                                                            <p style="font-size:0.75rem;line-height:1.25rem;margin:0px 0px 4px 0px!important;color:rgb(83,83,83)">Can't make it?</p>
-                                                            <a href="#" style="color:rgb(6,6,6);text-decoration:underline;font-size:0.75rem;line-height:1.25rem">Cancel your registration</a>
-                                                        </div>
-                                                    </td>
-
-                                                    <!-- Right Column: Date, Location, Virtual Links (70%) -->
-                                                    <td valign="top" style="width:70%">
-                                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid;border-color:rgb(231,231,231)">
-                                                            <tbody>
-                                                                <!-- Date & Time -->
-                                                                <tr>
-                                                                    <td style="padding:15px;border-bottom:1px solid;border-color:rgb(231,231,231)">
-                                                                        <table cellpadding="0" cellspacing="0" border="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-right:10px">
-                                                                                        <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;text-align:center;padding-top:8px">
-                                                                                            <div style="color:rgb(153,153,153);font-size:11px;line-height:1">MAR</div>
-                                                                                            <div style="color:rgb(6,6,6);font-size:16px;font-weight:700;line-height:1">22</div>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td valign="top">
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:700">${eventData.date}</p>
-                                                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">${eventData.time}</p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <!-- Location -->
-                                                                <tr>
-                                                                    <td style="padding:15px;border-bottom:1px solid;border-color:rgb(231,231,231)">
-                                                                        <table cellpadding="0" cellspacing="0" border="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-right:10px">
-                                                                                        <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;text-align:center;line-height:40px;font-size:20px">
-                                                                                            📍
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td valign="top">
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:700">${eventData.location}</p>
-                                                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">${eventData.fullAddress}</p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <!-- Virtual Links -->
-                                                                <tr>
-                                                                    <td style="padding:15px;border-bottom:1px solid;border-color:rgb(231,231,231)">
-                                                                        <table cellpadding="0" cellspacing="0" border="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-right:10px">
-                                                                                        <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;text-align:center;line-height:40px;font-size:20px">
-                                                                                            🔗
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td valign="top">
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">Virtual links</p>
-                                                                                        
-                                                                                        <!-- Zoom -->
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">Zoom</p>
-                                                                                        <a href="https://zoom.us/j/123456789" style="font-size:14px;line-height:24px;color:rgb(6,103,247);text-decoration:none;display:block;margin-bottom:8px" target="_blank">
-                                                                                            https://zoom.us/j/123456789
-                                                                                        </a>
-                                                                                        
-                                                                                        <!-- Google Meet -->
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">Google Meet</p>
-                                                                                        <a href="https://meet.google.com/abc-defg-hij" style="font-size:14px;line-height:24px;color:rgb(6,103,247);text-decoration:none;display:block;margin-bottom:8px" target="_blank">
-                                                                                            https://meet.google.com/abc-defg-hij
-                                                                                        </a>
-                                                                                        
-                                                                                        <!-- YouTube -->
-                                                                                        <p style="font-size:14px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">YouTube</p>
-                                                                                        <a href="https://youtube.com/watch?v=dQw4w9WgXcQ" style="font-size:14px;line-height:24px;color:rgb(6,103,247);text-decoration:none;display:block" target="_blank">
-                                                                                            https://youtube.com/watch?v=dQw4w9WgXcQ
-                                                                                        </a>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <!-- Event Details -->
-                                                                <tr>
-                                                                    <td style="padding:15px">
-                                                                        <p style="font-size:14px;line-height:24px;margin:0px 0px 12px 0px!important;color:rgb(6,6,6);font-weight:700">Event Details</p>
-                                                                        <div style="color:rgb(83,83,83);font-size:0.875rem;line-height:1.8">
-                                                                            <p style="margin:5px 0">• Free snacks and drinks will be provided throughout the event</p>
-                                                                            <p style="margin:5px 0">• Networking opportunities with fellow music enthusiasts and industry professionals</p>
-                                                                            <p style="margin:5px 0">• Live showcases from new and emerging artists</p>
-                                                                            <p style="margin:5px 0">• Discussion panels on latest music trends and industry insights</p>
-                                                                            <p style="margin:5px 0">• Please arrive 15 minutes early for check-in and setup</p>
-                                                                        </div>
+                                                                        <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">Hosted by ${eventData.organizer.name}</p>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -209,6 +107,112 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
                                                 </tr>
                                             </tbody>
                                         </table>
+
+                                        <!-- Event Details - No Borders -->
+                                        <div style="margin-bottom:20px">
+                                            <!-- Date & Time -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;padding-top:8px">
+                                                                <div style="color:rgb(153,153,153);font-size:11px;line-height:1">MAR</div>
+                                                                <div style="color:rgb(6,6,6);font-size:16px;font-weight:700;line-height:1">22</div>
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.date}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.time}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Location -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;line-height:40px;font-size:18px">
+                                                                📍
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.location}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.fullAddress}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Virtual Links -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;line-height:40px;font-size:18px">
+                                                                🔗
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:600">Virtual links</p>
+                                                            
+                                                            <!-- Zoom -->
+                                                            <p style="font-size:13px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">Zoom</p>
+                                                            <a href="https://zoom.us/j/123456789" style="font-size:13px;line-height:22px;color:rgb(6,103,247);text-decoration:none;display:block;margin-bottom:6px" target="_blank">
+                                                                https://zoom.us/j/123456789
+                                                            </a>
+                                                            
+                                                            <!-- Google Meet -->
+                                                            <p style="font-size:13px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">Google Meet</p>
+                                                            <a href="https://meet.google.com/abc-defg-hij" style="font-size:13px;line-height:22px;color:rgb(6,103,247);text-decoration:none;display:block;margin-bottom:6px" target="_blank">
+                                                                https://meet.google.com/abc-defg-hij
+                                                            </a>
+                                                            
+                                                            <!-- YouTube -->
+                                                            <p style="font-size:13px;line-height:16px;margin:0px!important;color:rgb(6,6,6);font-weight:600">YouTube</p>
+                                                            <a href="https://youtube.com/watch?v=dQw4w9WgXcQ" style="font-size:13px;line-height:22px;color:rgb(6,103,247);text-decoration:none;display:block" target="_blank">
+                                                                https://youtube.com/watch?v=dQw4w9WgXcQ
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Event Details -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding-top:8px">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:600">Event Details</p>
+                                                            <div style="color:rgb(83,83,83);font-size:0.875rem;line-height:1.6">
+                                                                <p style="margin:4px 0">• Free snacks and drinks will be provided throughout the event</p>
+                                                                <p style="margin:4px 0">• Networking opportunities with fellow music enthusiasts and industry professionals</p>
+                                                                <p style="margin:4px 0">• Live showcases from new and emerging artists</p>
+                                                                <p style="margin:4px 0">• Discussion panels on latest music trends and industry insights</p>
+                                                                <p style="margin:4px 0">• Please arrive 15 minutes early for check-in and setup</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Actions: Add to Calendar & Cancel -->
+                                <tr>
+                                    <td style="padding:20px 0px 30px 0px">
+                                        <!-- Add to Calendar Button -->
+                                        <a href="#" style="line-height:18px;text-decoration:none;display:block;color:rgb(255,255,255);background-color:rgb(0,132,59);border-radius:0.375rem;font-size:14px;padding:10px 16px;text-align:center;margin-bottom:16px">
+                                            <span style="display:inline-block;line-height:120%">📅 Add to Calendar</span>
+                                        </a>
+
+                                        <!-- Cancel Link -->
+                                        <div style="text-align:center">
+                                            <p style="font-size:0.75rem;line-height:1.25rem;margin:0px 0px 4px 0px!important;color:rgb(83,83,83)">Can't make it?</p>
+                                            <a href="#" style="color:rgb(6,6,6);text-decoration:underline;font-size:0.75rem;line-height:1.25rem">Cancel your registration</a>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -291,28 +295,88 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
 
                                 <!-- Title Section -->
                                 <tr>
-                                    <td style="padding:30px 0px">
-                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0;color:rgb(83,83,83);margin-top:0px!important;margin-bottom:0.5rem">Tomorrow</p>
-                                        <h1 style="color:rgb(6,6,6);font-weight:700;font-size:1.125rem;line-height:1.75rem;margin-top:0px!important">Event Reminder ⏰</h1>
-                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0;color:rgb(83,83,83);margin-top:0px!important;margin-bottom:0px!important">Don't forget about your upcoming event</p>
-                                    </td>
-                                </tr>
-
-                                <!-- Event Card -->
-                                <tr>
-                                    <td style="padding-bottom:30px">
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid;border-color:rgb(255,228,181);background-color:rgb(255,248,235)">
+                                    <td style="padding:30px 0px 20px 0px">
+                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:0px 0px 16px 0px!important;color:rgb(83,83,83)">Dear ${eventData.attendeeName || 'Attendee'},</p>
+                                        
+                                        <!-- Reminder Alert Box -->
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid rgb(251,191,36);background-color:rgb(254,252,232);padding:16px;margin-bottom:8px">
                                             <tbody>
                                                 <tr>
-                                                    <td style="padding:20px">
-                                                        <p style="font-size:14px;line-height:24px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📅 ${eventData.date}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">🕐 ${eventData.time}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📍 ${eventData.location}</p>
+                                                    <td>
+                                                        <p style="font-size:14px;line-height:20px;margin:0px 0px 4px 0px!important;color:rgb(146,64,14);font-weight:700">⏰  Event Reminder - Tomorrow</p>
+                                                        <p style="font-size:13px;line-height:18px;margin:0px!important;color:rgb(120,53,15)">Don't forget about your upcoming event</p>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Event Cover, Title, Host -->
+                                <tr>
+                                    <td style="padding-bottom:20px">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:20px">
+                                            <tbody>
+                                                <tr>
+                                                    <td valign="top" style="width:100px;padding-right:15px">
+                                                        <img src="${eventData.image}" alt="${eventData.title}" style="width:100px;height:100px;object-fit:cover;border-radius:12px;display:block">
+                                                    </td>
+                                                    <td valign="top">
+                                                        <p style="font-size:16px;line-height:22px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
+                                                        <table cellpadding="0" cellspacing="0" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="middle" style="padding-right:8px">
+                                                                        <img src="${eventData.organizer.avatar}" alt="${eventData.organizer.name}" style="width:16px;height:16px;border-radius:50%;display:block">
+                                                                    </td>
+                                                                    <td valign="middle">
+                                                                        <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">Hosted by ${eventData.organizer.name}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <!-- Event Details -->
+                                        <div style="margin-bottom:20px">
+                                            <!-- Date & Time -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;padding-top:8px">
+                                                                <div style="color:rgb(153,153,153);font-size:11px;line-height:1">MAR</div>
+                                                                <div style="color:rgb(6,6,6);font-size:16px;font-weight:700;line-height:1">15</div>
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.date}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.time}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Location -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;line-height:40px;font-size:18px">
+                                                                📍
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.location}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.fullAddress}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -413,26 +477,88 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
 
                                 <!-- Title Section -->
                                 <tr>
-                                    <td style="padding:30px 0px">
-                                        <h1 style="color:rgb(6,6,6);font-weight:700;font-size:1.125rem;line-height:1.75rem;margin-top:0px!important">Registration Cancelled</h1>
-                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0;color:rgb(83,83,83);margin-top:0px!important;margin-bottom:0px!important">We've cancelled your registration for ${eventData.title}</p>
-                                    </td>
-                                </tr>
-
-                                <!-- Event Details -->
-                                <tr>
-                                    <td style="padding-bottom:30px">
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;background-color:rgb(245,245,245);padding:20px">
+                                    <td style="padding:30px 0px 20px 0px">
+                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:0px 0px 16px 0px!important;color:rgb(83,83,83)">Dear ${eventData.attendeeName || 'Attendee'},</p>
+                                        
+                                        <!-- Cancellation Alert Box -->
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid rgb(156,163,175);background-color:rgb(249,250,251);padding:16px;margin-bottom:8px">
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📅 ${eventData.date}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📍 ${eventData.location}</p>
+                                                        <p style="font-size:14px;line-height:20px;margin:0px 0px 4px 0px!important;color:rgb(55,65,81);font-weight:700">✕  Registration Cancelled</p>
+                                                        <p style="font-size:13px;line-height:18px;margin:0px!important;color:rgb(75,85,99)">We've cancelled your registration for ${eventData.title}</p>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Event Cover, Title, Host -->
+                                <tr>
+                                    <td style="padding-bottom:20px">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:20px">
+                                            <tbody>
+                                                <tr>
+                                                    <td valign="top" style="width:100px;padding-right:15px">
+                                                        <img src="${eventData.image}" alt="${eventData.title}" style="width:100px;height:100px;object-fit:cover;border-radius:12px;display:block">
+                                                    </td>
+                                                    <td valign="top">
+                                                        <p style="font-size:16px;line-height:22px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
+                                                        <table cellpadding="0" cellspacing="0" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="middle" style="padding-right:8px">
+                                                                        <img src="${eventData.organizer.avatar}" alt="${eventData.organizer.name}" style="width:16px;height:16px;border-radius:50%;display:block">
+                                                                    </td>
+                                                                    <td valign="middle">
+                                                                        <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">Hosted by ${eventData.organizer.name}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <!-- Event Details -->
+                                        <div style="margin-bottom:20px">
+                                            <!-- Date & Time -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;padding-top:8px">
+                                                                <div style="color:rgb(153,153,153);font-size:11px;line-height:1">MAR</div>
+                                                                <div style="color:rgb(6,6,6);font-size:16px;font-weight:700;line-height:1">15</div>
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.date}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.time}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Location -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;line-height:40px;font-size:18px">
+                                                                📍
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.location}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.fullAddress}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -533,23 +659,18 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
 
                                 <!-- Title Section -->
                                 <tr>
-                                    <td style="padding:30px 0px">
-                                        <h1 style="color:rgb(6,6,6);font-weight:700;font-size:1.125rem;line-height:1.75rem;margin-top:0px!important">Event Update 📢</h1>
-                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0;color:rgb(83,83,83);margin-top:0px!important;margin-bottom:0px!important">Important changes to ${eventData.title}</p>
-                                    </td>
-                                </tr>
-
-                                <!-- What Changed -->
-                                <tr>
-                                    <td style="padding-bottom:30px">
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border-left:4px solid rgb(251,146,60);background-color:rgb(255,247,237);padding:20px">
+                                    <td style="padding:30px 0px 20px 0px">
+                                        <p style="font-size:0.875rem;line-height:1.25rem;margin:0px 0px 16px 0px!important;color:rgb(83,83,83)">Dear ${eventData.attendeeName || 'Attendee'},</p>
+                                        
+                                        <!-- Update Alert Box -->
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;border:1px solid rgb(251,146,60);background-color:rgb(255,247,237);padding:16px;margin-bottom:8px">
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px 0px 12px 0px!important;color:rgb(6,6,6);font-weight:700">What Changed</p>
-                                                        <div style="color:rgb(83,83,83);font-size:0.875rem;line-height:1.8">
-                                                            <p style="margin:5px 0">• Event time has been moved to 10:00 AM (was 9:00 AM)</p>
-                                                            <p style="margin:5px 0">• New venue: Main Conference Hall</p>
+                                                        <p style="font-size:14px;line-height:20px;margin:0px 0px 8px 0px!important;color:rgb(154,52,18);font-weight:700">📢  Important Changes</p>
+                                                        <div style="color:rgb(124,45,18);font-size:13px;line-height:1.6">
+                                                            <p style="margin:3px 0">• Event time moved to 10:00 AM (was 9:00 AM)</p>
+                                                            <p style="margin:3px 0">• New venue: Main Conference Hall</p>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -558,21 +679,71 @@ const getEmailHTML = (template: EmailTemplate, eventData: any): string => {
                                     </td>
                                 </tr>
 
-                                <!-- Updated Details -->
+                                <!-- Event Cover, Title, Host -->
                                 <tr>
-                                    <td style="padding-bottom:30px">
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;border-radius:10px;background-color:rgb(245,245,245);padding:20px">
+                                    <td style="padding-bottom:20px">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:20px">
                                             <tbody>
                                                 <tr>
-                                                    <td>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📅 ${eventData.date}</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">🕐 10:00 AM - 6:00 PM</p>
-                                                        <p style="font-size:14px;line-height:24px;margin:0px!important;color:rgb(83,83,83)">📍 Main Conference Hall</p>
+                                                    <td valign="top" style="width:100px;padding-right:15px">
+                                                        <img src="${eventData.image}" alt="${eventData.title}" style="width:100px;height:100px;object-fit:cover;border-radius:12px;display:block">
+                                                    </td>
+                                                    <td valign="top">
+                                                        <p style="font-size:16px;line-height:22px;margin:0px 0px 8px 0px!important;color:rgb(6,6,6);font-weight:700">${eventData.title}</p>
+                                                        <table cellpadding="0" cellspacing="0" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="middle" style="padding-right:8px">
+                                                                        <img src="${eventData.organizer.avatar}" alt="${eventData.organizer.name}" style="width:16px;height:16px;border-radius:50%;display:block">
+                                                                    </td>
+                                                                    <td valign="middle">
+                                                                        <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">Hosted by ${eventData.organizer.name}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+
+                                        <!-- Event Details -->
+                                        <div style="margin-bottom:20px">
+                                            <!-- Date & Time (Updated) -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;padding-top:8px">
+                                                                <div style="color:rgb(153,153,153);font-size:11px;line-height:1">MAR</div>
+                                                                <div style="color:rgb(6,6,6);font-size:16px;font-weight:700;line-height:1">15</div>
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">${eventData.date}</p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">10:00 AM - 6:00 PM <span style="color:rgb(251,146,60);font-weight:600">(Updated)</span></p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Location (Updated) -->
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%!important;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="width:40px;padding-right:10px">
+                                                            <div style="width:40px;height:40px;background-color:rgb(245,245,245);border-radius:8px;border:1px solid rgb(229,229,229);text-align:center;line-height:40px;font-size:18px">
+                                                                📍
+                                                            </div>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <p style="font-size:14px;line-height:20px;margin:0px!important;color:rgb(6,6,6);font-weight:600">Main Conference Hall <span style="color:rgb(251,146,60);font-weight:600;font-size:12px">(Updated)</span></p>
+                                                            <p style="font-size:13px;line-height:20px;margin:0px!important;color:rgb(83,83,83)">${eventData.fullAddress}</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </td>
                                 </tr>
 

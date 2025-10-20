@@ -102,6 +102,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
     const [showOtherTimes, setShowOtherTimes] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(0);
     const [showCancelAlert, setShowCancelAlert] = useState(false);
+    const [showRecurringOptions, setShowRecurringOptions] = useState(false);
+    const [rsvpType, setRsvpType] = useState<'single' | 'all' | null>(null);
     
     // Reset RSVP stage when modal opens
     useEffect(() => {
@@ -110,6 +112,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
             setShowOtherTimes(false);
             setSelectedTimeSlot(0);
             setShowCancelAlert(false);
+            setShowRecurringOptions(false);
+            setRsvpType(null);
         }
     }, [isOpen]);
     
@@ -150,7 +154,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
     };
 
     const handleRSVPClick = () => {
-        if (rsvpState === 'open') {
+        if (rsvpState === 'open' && !event.isRecurring) {
+            // Non-recurring event - proceed with RSVP directly
             setRsvpStage('processing');
             
             // Simulate processing time
@@ -159,6 +164,19 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                 onRSVPStatusChange?.('confirmed');
             }, 2500);
         }
+        // For recurring events, dropdown opens automatically via Dropdown.Root
+    };
+
+    const handleRecurringRSVP = (type: 'single' | 'all') => {
+        setShowRecurringOptions(false);
+        setRsvpType(type);
+        setRsvpStage('processing');
+        
+        // Simulate processing time
+        setTimeout(() => {
+            setRsvpStage('confirmed');
+            onRSVPStatusChange?.('confirmed');
+        }, 2500);
     };
 
     const handleEventPageClick = () => {
@@ -414,16 +432,35 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         {/* Date & Time Card */}
                                                         <div className="flex items-center gap-3">
                                                             <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
-                                                                <div className="text-xs text-gray-500 leading-none">
-                                                                    {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
-                                                                </div>
-                                                                <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
-                                                                    {new Date(currentEventData.date).getDate()}
-                                                                </div>
+                                                                {rsvpType === 'all' && event.isRecurring ? (
+                                                                    <Repeat03 className="h-5 w-5 text-brand-solid" />
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="text-xs text-gray-500 leading-none">
+                                                                            {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                                        </div>
+                                                                        <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                            {new Date(currentEventData.date).getDate()}
+                                                                        </div>
+                                                                    </>
+                                                                )}
                                                             </div>
                                                             <div className="flex-1">
-                                                                <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
-                                                                <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                                {rsvpType === 'all' && event.isRecurring ? (
+                                                                    <>
+                                                                        <div className="font-medium text-gray-900 text-sm">All following events</div>
+                                                                        <div className="text-xs text-gray-600 leading-relaxed">
+                                                                            {event.recurringFrequency} at {currentEventData.time}
+                                                                            <br />
+                                                                            6 sessions starting {currentEventData.date} until May 31, 2024
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
+                                                                        <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                                    </>
+                                                                )}
                                                             </div>
                                                         </div>
 
@@ -666,6 +703,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </div>
                                                     )}
                                                     
+                                                    {/* Selected Time Label - Only for recurring events */}
+                                                    {event.isRecurring && !showOtherTimes && (
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="text-xs font-medium text-gray-500">Selected time:</div>
+                                                            <button 
+                                                                onClick={handleOtherTimesClick}
+                                                                className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                                            >
+                                                                <ClockRefresh className="w-3 h-3" />
+                                                                Change date 
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                    
                                                     {/* Date & Time Card */}
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
@@ -677,18 +728,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
-                                                                {event.isRecurring && !showOtherTimes && (
-                                                                    <button 
-                                                                        onClick={handleOtherTimesClick}
-                                                                        className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
-                                                                    >
-                                                                        <ClockRefresh className="w-3 h-3" />
-                                                                        Change date 
-                                                                    </button>
-                                                                )}
-                                                            </div>
+                                                            <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
                                                             <div className="text-xs text-gray-600">{currentEventData.time}</div>
                                                         </div>
                                                     </div>
@@ -753,7 +793,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </div>
                                                         </div>
                                                     ) : rsvpState === 'open' ? (
-                                                        <div className="text-center">
+                                                        <div className="text-center relative">
                                                             <div className="mb-2">
                                                                 <h4 className="text-sm max-lg:text-sm max-md:text-base text-gray-900">Ready to join?</h4>
                                                             </div>
@@ -761,10 +801,70 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 size="md" 
                                                                 color="primary" 
                                                                 className="w-full max-lg:text-sm max-md:text-base max-md:py-3"
-                                                                onClick={handleRSVPClick}
+                                                                onClick={event.isRecurring ? () => setShowRecurringOptions(true) : handleRSVPClick}
                                                             >
                                                                 {rsvpConfig.label}
                                                             </Button>
+                                                            
+                                                            {/* Recurring Event Options Popover */}
+                                                            {showRecurringOptions && event.isRecurring && (
+                                                                <>
+                                                                    {/* Backdrop */}
+                                                                    <div 
+                                                                        className="fixed inset-0 z-50" 
+                                                                        onClick={() => setShowRecurringOptions(false)}
+                                                                    />
+                                                                    {/* Popover */}
+                                                                    <div className="absolute bottom-3 left-0 right-0  z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
+                                                                        <div className="mb-3 pb-3 border-b border-gray-100">
+                                                                            <div className="flex items-center gap-2 mb-1">
+                                                                                <h4 className="text-sm font-semibold text-gray-900">Recurring Event</h4>
+                                                                            </div>
+                                                                            <p className="text-xs text-gray-600 text-left">Choose how you'd like to register</p>
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            {/* RSVP for selected date */}
+                                                                            <div 
+                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                                onClick={() => handleRecurringRSVP('single')}
+                                                                            >
+                                                                                <Calendar className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                                <div className="flex-1 text-left">
+                                                                                    <div className="text-sm font-medium text-gray-900">RSVP for this date only</div>
+                                                                                    <div className="text-xs text-gray-600">{currentEventData.date}</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                            {/* Change selected date */}
+                                                                            <div 
+                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                                onClick={() => {
+                                                                                    setShowRecurringOptions(false);
+                                                                                    handleOtherTimesClick();
+                                                                                }}
+                                                                            >
+                                                                                <ClockRefresh className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                                <div className="flex-1 text-left">
+                                                                                    <div className="text-sm font-medium text-gray-900">Change selected date</div>
+                                                                                    <div className="text-xs text-gray-600">5 other dates available</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                            {/* RSVP for all */}
+                                                                            <div 
+                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                                onClick={() => handleRecurringRSVP('all')}
+                                                                            >
+                                                                                <Repeat03 className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                                <div className="flex-1 text-left">
+                                                                                    <div className="text-sm font-medium text-gray-900">RSVP for all following events</div>
+                                                                                    <div className="text-xs text-gray-600">6 events until May 31, 2024</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
@@ -1210,7 +1310,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     </div>
                                                 </div>
                                             ) : rsvpState === 'open' ? (
-                                                <div className="text-center">
+                                                <div className="text-center relative">
                                                     <div className="mb-3">
                                                         <h4 className="text-base font-medium text-gray-900 mb-1">Ready to join?</h4>
                                                         <p className="text-sm text-gray-600">Secure your spot at this event</p>
@@ -1219,10 +1319,71 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         size="md" 
                                                         color="primary" 
                                                         className="w-full text-base py-3"
-                                                        onClick={handleRSVPClick}
+                                                        onClick={event.isRecurring ? () => setShowRecurringOptions(true) : handleRSVPClick}
                                                     >
                                                         {rsvpConfig.label}
                                                     </Button>
+                                                    
+                                                    {/* Recurring Event Options Popover */}
+                                                    {showRecurringOptions && event.isRecurring && (
+                                                        <>
+                                                            {/* Backdrop */}
+                                                            <div 
+                                                                className="fixed inset-0 z-50" 
+                                                                onClick={() => setShowRecurringOptions(false)}
+                                                            />
+                                                            {/* Popover */}
+                                                            <div className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
+                                                                <div className="mb-3 pb-3 border-b border-gray-100">
+                                                                    <div className="flex items-center gap-2 mb-1">
+                                                                        <Repeat03 className="h-5 w-5 text-brand-solid" />
+                                                                        <h4 className="text-base font-semibold text-gray-900">Recurring Event</h4>
+                                                                    </div>
+                                                                    <p className="text-sm text-gray-600 text-left">Choose how you'd like to register</p>
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    {/* RSVP for selected date */}
+                                                                    <div 
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        onClick={() => handleRecurringRSVP('single')}
+                                                                    >
+                                                                        <Calendar className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <div className="flex-1 text-left">
+                                                                            <div className="text-sm font-medium text-gray-900">RSVP for this date only</div>
+                                                                            <div className="text-xs text-gray-600">{currentEventData.date}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    {/* Change selected date */}
+                                                                    <div 
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        onClick={() => {
+                                                                            setShowRecurringOptions(false);
+                                                                            handleOtherTimesClick();
+                                                                        }}
+                                                                    >
+                                                                        <ClockRefresh className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <div className="flex-1 text-left">
+                                                                            <div className="text-sm font-medium text-gray-900">Change selected date</div>
+                                                                            <div className="text-xs text-gray-600">5 other dates available</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    {/* RSVP for all */}
+                                                                    <div 
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        onClick={() => handleRecurringRSVP('all')}
+                                                                    >
+                                                                        <Repeat03 className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <div className="flex-1 text-left">
+                                                                            <div className="text-sm font-medium text-gray-900">RSVP for all following events</div>
+                                                                            <div className="text-xs text-gray-600">6 events until May 31, 2024</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
