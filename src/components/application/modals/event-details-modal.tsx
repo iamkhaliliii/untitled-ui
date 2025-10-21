@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
-import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01, Link01, Share04, Repeat03, Share07, LinkExternal01, DotsHorizontal, Eye, Edit01, Trash01, TrendUp02, BarChartSquare02, MinusCircle, ClockRefresh } from '@untitledui/icons';
+import { Calendar, Clock, VideoRecorder, MarkerPin01, Check, Users01, X, Plus, ArrowRight, ChevronDown, ChevronUp, Download01, Link01, Share04, Repeat03, Share07, LinkExternal01, DotsHorizontal, Eye, Edit01, Trash01, TrendUp02, BarChartSquare02, MinusCircle, ClockRefresh, MessageChatCircle, User01 } from '@untitledui/icons';
 import EventMap from '../../base/map/event-map';
 import { ModalOverlay, Modal, Dialog } from './modal';
 import { Button } from '../../base/buttons/button';
@@ -69,7 +69,7 @@ Don't miss this opportunity to be part of a dynamic community that's driving pos
     const needsExpansion = fullDescription.length > 100;
     
     return (
-        <div className="p-3">
+        <div className="">
             <div className="text-sm text-gray-500 mb-3">About Event</div>
             <div className="prose prose-gray max-w-none">
                 <div className="text-gray-700 leading-relaxed text-sm whitespace-pre-line">
@@ -98,7 +98,8 @@ interface EventDetailsModalProps {
 }
 
 export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isOpen, onClose, onRSVPStatusChange }) => {
-    const [rsvpStage, setRsvpStage] = useState<'initial' | 'processing' | 'confirmed' | 'cancelled'>('initial');
+    type RsvpStage = 'initial' | 'processing' | 'confirmed' | 'cancelled';
+    const [rsvpStage, setRsvpStage] = useState<RsvpStage>('initial');
     const [showOtherTimes, setShowOtherTimes] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(0);
     const [showCancelAlert, setShowCancelAlert] = useState(false);
@@ -185,7 +186,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
     };
 
     const handleCancelRSVP = () => {
-        setRsvpStage('cancelled');
+        setRsvpStage('initial');
         setShowCancelAlert(false);
         onRSVPStatusChange?.('cancelled');
     };
@@ -225,19 +226,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                     }} />
                     <div className="bg-white rounded-3xl max-md:rounded-2xl shadow-2xl flex h-full max-md:flex-col relative overflow-hidden">
 
-                        {rsvpStage === 'processing' ? (
-                            /* Processing State - Full Modal Loading */
-                            <div className="w-full h-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="flex items-center justify-center gap-2 mb-3">
-                                        <div className="w-8 h-8 border-3 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
-                                        <span className="text-lg font-semibold text-brand-600">Processing RSVP...</span>
-                                    </div>
-                                    <p className="text-sm text-gray-500">Please wait while we confirm your attendance</p>
-                                </div>
-                            </div>
-                        ) : showOtherTimes || rsvpStage === 'confirmed' ? (
-                            /* Full Width Single Column View - for time slots or after RSVP */
+                        {showOtherTimes ? (
+                            /* Full Width Single Column View - for time slots */
                             <div className="w-full flex flex-col min-h-0">
                                 <div className="px-6 py-4 flex-shrink-0 bg-white border-b border-gray-100">
                                     <div className="flex items-center justify-between">
@@ -280,8 +270,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                     <div className="max-w-2xl mx-auto">
                                         {showOtherTimes ? (
                                             <>
-                                        <div className="mb-2">
-                                                    <h4 className="text-sm font-medium text-gray-900 ">Pick your session date:</h4>
+                                                <div className="mb-4">
+                                                    <h4 className="text-lg font-semibold text-gray-900 mb-1">Choose another date</h4>
+                                                    <p className="text-sm text-gray-600">Your current selection: {recurringTimeSlots[selectedTimeSlot].date}</p>
                                                 </div>
                                         <div className="grid gap-4 grid-cols-1">
                                             {recurringTimeSlots.map((timeSlot) => (
@@ -311,13 +302,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </div>
                                                         <div className="absolute top-0 right-0 flex gap-1 items-center">
                                                             <div className="flex gap-1 items-center">
-                                                                {timeSlot.id === 0 && (
+                                                                {timeSlot.id === 0 && timeSlot.status !== 'Full' && (
                                                                     <Badge 
                                                                         type="pill-color" 
                                                                         color="brand" 
                                                                         size="sm"
                                                                     >
-                                                                        Next session
+                                                                        Next available
                                                                     </Badge>
                                                                 )}
                                                                 {selectedTimeSlot === timeSlot.id && (
@@ -326,7 +317,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         color="blue" 
                                                                         size="sm"
                                                                     >
-                                                                        Your choice
+                                                                        Your current choice
                                                                     </Badge>
                                                                 )}
                                                                 {timeSlot.status === 'Full' && (
@@ -335,7 +326,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         color="gray" 
                                                                         size="sm"
                                                                     >
-                                                                        Full
+                                                                        Fully registered
                                                                     </Badge>
                                                                 )}
                                                             </div>
@@ -684,186 +675,86 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                             </div>
                         ) : (
                             <>
-                                {/* Desktop: Left Column - Image + Basic Info */}
-                                <div className="w-3/8 max-lg:w-2/5 md:flex max-md:hidden bg-gray-50 relative flex-col min-h-0">
-                                    <div className="flex flex-col h-full">
-                                        <div className="p-6 max-lg:p-4 flex-shrink-0 flex justify-center">
-                                            <div className="w-[75%] aspect-square shadow-3xl rounded-3xl ring-1 ring-secondary_alt p-1">
+                                {/* Desktop: Left Column - Cover + Host + Registration */}
+                                <div className="w-2/5 max-lg:w-2/5 md:flex max-md:hidden bg-gray-50 relative flex-col min-h-0">
+                                    <div className="flex flex-col h-full p-6 max-lg:p-4">
+                                        {/* Cover Image */}
+                                        <div className="flex-shrink-0 mb-4">
+                                            <div className="w-full aspect-square shadow-3xl rounded-3xl ring-1 ring-secondary_alt overflow-hidden">
                                                 <img
                                                     src={event.image}
                                                     alt={event.title}
-                                                    className="w-full h-full object-cover rounded-3xl"
-                                                />
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Basic Event Info */}
-                                        <div 
-                                            className="px-5 max-lg:px-4 max-md:px-4 space-y-4 max-lg:space-y-4 max-md:space-y-3 flex-1 overflow-y-auto min-h-0 modal-scrollbar pb-2 max-md:pb-1" 
-                                            style={scrollbarStyles}
-                                        >
-                                            <div className="space-y-1">
-                                                {/* Event Title */}
-                                                <h1 className="text-2xl max-lg:text-xl max-md:text-lg font-bold leading-tight text-gray-900">
-                                                    {currentEventData.title}
-                                                </h1>
-                                            
-                                                {/* Host */}
-                                                <div className="flex items-center gap-2 text-gray-600">
-                                                    {event.organizers && event.organizers.length > 1 ? (
-                                                        <>
-                                                            {/* Avatar Group */}
-                                                            <div className="flex -space-x-1">
-                                                                {event.organizers.map((org: any, index: number) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
-                                                                        style={{ zIndex: event.organizers.length - index }}
-                                                                    >
-                                                                        <img
-                                                                            src={org.avatar}
-                                                                            alt={org.name}
                                                                             className="w-full h-full object-cover"
-                                                                            onError={(e) => {
-                                                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
-                                                                            }}
-                                                                        />
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                            <span className="text-sm max-md:text-base">Hosted by {event.organizers.map((org: any) => org.name).join(' & ')}</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <div className="w-4 h-4 max-md:w-6 max-md:h-6 rounded-full overflow-hidden ring-1 ring-gray-200">
-                                                                <img 
-                                                                    src={currentEventData.organizer.avatar} 
-                                                                    alt={currentEventData.organizer.name}
-                                                                    className="w-full h-full object-cover"
-                                                                    onError={(e) => {
-                                                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentEventData.organizer.name)}&background=667eea&color=fff&size=128`;
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <span className="text-sm max-md:text-base">Hosted by {currentEventData.organizer.name}</span>
-                                                        </>
-                                                    )}
+                                                />
                                                 </div>
                                             </div>
                                             
-                                            {/* Date & Time and Location Cards - Only show before RSVP and not in time selection */}
-                                            {rsvpStage === 'initial' && !showOtherTimes && (
-                                                <div className="space-y-3">
-                                                    {/* Recurring Event Badge - Only show for recurring events */}
-                                                    {event.isRecurring && !showOtherTimes && (
-                                                        <div>
-                                                            <BadgeWithIcon type="pill-color" color="brand" size="sm" iconLeading={Repeat03}>
-                                                                Repeats {event.recurringFrequency}
-                                                            </BadgeWithIcon>
-                                                        </div>
-                                                    )}
-                                                    
-                                                    {/* Selected Time Label - Only for recurring events */}
-                                                    {event.isRecurring && !showOtherTimes && (
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="text-xs font-medium text-gray-500">Selected time:</div>
-                                                            <button 
-                                                                onClick={handleOtherTimesClick}
-                                                                className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                        {/* Registration Section */}
+                                    {!showOtherTimes && (
+                                            <div className="flex-shrink-0">
+                                                {rsvpStage === 'cancelled' && (
+                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                        <div className="text-center">
+                                                            <p className="text-sm text-gray-900 mb-3">Registration cancelled</p>
+                                                            <p className="text-xs text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
+                                                            <Button 
+                                                                size="md" 
+                                                                color="secondary" 
+                                                                className="w-full"
+                                                                onClick={() => setRsvpStage('initial')}
                                                             >
-                                                                <ClockRefresh className="w-3 h-3" />
-                                                                Change date 
+                                                                RSVP Again
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {rsvpStage === 'processing' && (
+                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                        <div className="text-center">
+                                                            <div className="flex items-center justify-center gap-2 mb-2">
+                                                                <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                                                                <span className="text-sm text-brand-600">Processing...</span>
+                                                            </div>
+                                                            <p className="text-xs text-gray-500">Please wait</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {(rsvpStage as RsvpStage) === 'confirmed' && (
+                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                        <div className="text-center">
+                                                            <div className="mb-3">
+                                                                <h4 className="text-sm text-gray-900">Registered</h4>
+                                                            </div>
+                                                            <Button 
+                                                                size="md" 
+                                                                color="secondary" 
+                                                                className="w-full mb-3"
+                                                                iconLeading={Calendar}
+                                                            >
+                                                                Add to calendar
+                                                            </Button>
+                                                            <button
+                                                                className="w-full text-xs text-gray-500 hover:text-gray-700 underline transition-colors text-center"
+                                                                onClick={() => setShowCancelAlert(true)}
+                                                            >
+                                                                Can't make it? Cancel registration
                                                             </button>
                                                         </div>
-                                                    )}
-                                                    
-                                                    {/* Date & Time Card */}
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                            <div className="text-xs text-gray-500 leading-none">
-                                                                {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
-                                                            </div>
-                                                            <div className="text-xs font-semibold text-gray-900 leading-none">
-                                                                {new Date(currentEventData.date).getDate()}
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
-                                                            <div className="text-xs text-gray-600">{currentEventData.time}</div>
-                                                        </div>
                                                     </div>
-
-                                                    {/* Location Card */}
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-10 h-10 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                            {event.locationType === "virtual" ? (
-                                                                <VideoRecorder className="h-4 w-4 text-gray-500" />
-                                                            ) : event.locationType === "hybrid" ? (
-                                                                <div className="flex items-center -space-x-1">
-                                                                    <MarkerPin01 className="h-3.5 w-3.5 bg-white text-gray-500" />
-                                                                    <VideoRecorder className="h-3.5 w-3.5 bg-white text-gray-500" />
-                                                                </div>
-                                                            ) : (
-                                                                <MarkerPin01 className="h-4 w-4 text-gray-500" />
-                                                            )}
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-sm flex items-center gap-1">
-                                                                {event.locationType === "virtual" ? "Virtual" : 
-                                                                 event.locationType === "hybrid" ? (
-                                                                    <span>{event.location} <span className="text-[0.7rem]">+ Virtual</span></span>
-                                                                 ) :
-                                                                 event.location}
-                                                            </div>
-                                                            <div className="text-xs text-gray-600">
-                                                                {event.locationType === "virtual"
-                                                                    ? "Event join link available after RSVP"
-                                                                    : event.locationType === "hybrid" 
-                                                                    ? "Details and links shown after RSVP"
-                                                                    : "Full details available after RSVP"
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Action Buttons - Sticky Footer - Hide during time selection */}
-                                    {!showOtherTimes && (
-                                        <div className="border-t border-gray-200 flex-shrink-0">
-                                            <div className="">
-                                                {/* RSVP Section */}
-                                                <div className="bg-gray-50 rounded-xl p-3 max-lg:p-3 max-md:p-4">
-                                                    {rsvpStage === 'cancelled' ? (
-                                                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                                                            <div className="text-center">
-                                                                <p className="text-sm font-medium text-gray-900 mb-1">Registration cancelled</p>
-                                                                <p className="text-xs text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
-                                                                <Button 
-                                                                    size="sm" 
-                                                                    color="secondary" 
-                                                                    className="w-full"
-                                                                    onClick={() => setRsvpStage('initial')}
-                                                                >
-                                                                    RSVP Again
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    ) : rsvpState === 'open' ? (
-                                                        <div className="text-center relative">
-                                                            <div className="mb-2">
-                                                                <h4 className="text-sm max-lg:text-sm max-md:text-base text-gray-900">Ready to join?</h4>
+                                                )}
+                                                {rsvpStage === 'initial' && rsvpState === 'open' && (
+                                                    <div className="border border-gray-200 rounded-xl p-4 relative">
+                                                        <div className="text-center">
+                                                            <div className="mb-3">
+                                                                <h4 className="text-sm text-gray-900">Ready to join?</h4>
                                                             </div>
                                                             <Button 
                                                                 size="md" 
                                                                 color="primary" 
-                                                                className="w-full max-lg:text-sm max-md:text-base max-md:py-3"
+                                                                className="w-full"
                                                                 onClick={event.isRecurring ? () => setShowRecurringOptions(true) : handleRSVPClick}
                                                             >
-                                                                {rsvpConfig.label}
+                                                                Register Now
                                                             </Button>
                                                             
                                                             {/* Recurring Event Options Popover */}
@@ -871,11 +762,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 <>
                                                                     {/* Backdrop */}
                                                                     <div 
-                                                                        className="fixed inset-0 z-50" 
+                                                                        className="fixed inset-0 z-40" 
                                                                         onClick={() => setShowRecurringOptions(false)}
                                                                     />
                                                                     {/* Popover */}
-                                                                    <div className="absolute bottom-3 left-0 right-0  z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
+                                                                <div className="absolute bottom-4 left-0 right-0 mb-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
                                                                         <div className="mb-3 pb-3 border-b border-gray-100">
                                                                             <div className="flex items-center gap-2 mb-1">
                                                                                 <h4 className="text-sm font-semibold text-gray-900">Recurring Event</h4>
@@ -890,23 +781,21 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                             >
                                                                                 <Calendar className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
                                                                                 <div className="flex-1 text-left">
-                                                                                    <div className="text-sm font-medium text-gray-900">RSVP for this date only</div>
-                                                                                    <div className="text-xs text-gray-600">{currentEventData.date}</div>
-                                                                                </div>
-                                                                            </div>
-                                                                            
-                                                                            {/* Change selected date */}
-                                                                            <div 
-                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                                                                                onClick={() => {
-                                                                                    setShowRecurringOptions(false);
-                                                                                    handleOtherTimesClick();
-                                                                                }}
-                                                                            >
-                                                                                <ClockRefresh className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
-                                                                                <div className="flex-1 text-left">
-                                                                                    <div className="text-sm font-medium text-gray-900">Change selected date</div>
-                                                                                    <div className="text-xs text-gray-600">5 other dates available</div>
+                                                                                    <div className="text-sm font-medium text-gray-900">This session only</div>
+                                                                                    <div className="text-xs text-gray-600 flex items-center gap-1">
+                                                                                        <span>{currentEventData.date}</span>
+                                                                                        <button
+                                                                                            onClick={(e) => {
+                                                                                                e.stopPropagation();
+                                                                                                setShowRecurringOptions(false);
+                                                                                                handleOtherTimesClick();
+                                                                                            }}
+                                                                                            className="text-brand-secondary hover:text-brand-secondary_hover hover:underline flex items-center gap-0.5"
+                                                                                        >
+                                                                                            <ClockRefresh className="w-3 h-3" />
+                                                                                            Change session
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                             
@@ -917,8 +806,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                             >
                                                                                 <Repeat03 className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
                                                                                 <div className="flex-1 text-left">
-                                                                                    <div className="text-sm font-medium text-gray-900">RSVP for all following events</div>
-                                                                                    <div className="text-xs text-gray-600">6 events until May 31, 2024</div>
+                                                                                    <div className="text-sm font-medium text-gray-900">All upcoming sessions</div>
+                                                                                    <div className="text-xs text-gray-600">6 more until May 31, 2024</div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -926,25 +815,96 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 </>
                                                             )}
                                                         </div>
-                                                    ) : (
-                                                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                                                            <div className="text-center">
-                                                                <p className="text-sm font-medium text-gray-900 mb-1">{rsvpConfig.label}</p>
-                                                                <p className="text-xs text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
+                                                    </div>
+                                                )}
+                                                {rsvpStage === 'initial' && rsvpState !== 'open' && (
+                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                        <div className="text-center">
+                                                            <p className="text-sm text-gray-900 mb-2">{rsvpConfig.label}</p>
+                                                            <p className="text-xs text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                </div>
+                                        )}
+                                        
+                                        {/* Host */}
+                                        <div className="flex-shrink-0 mt-6 min-h-0">
+                                            <div className="text-xs font-medium text-gray-500 mb-2">Hosted by</div>
+                                            {event.organizers && event.organizers.length > 1 ? (
+                                                <div className="space-y-1 pb-8 max-h-40 overflow-y-auto  overflow-x-hidden modal-scrollbar pr-1" style={scrollbarStyles}>
+                                                    {event.organizers.map((org: any, index: number) => (
+                                                        <div key={index} className="group flex items-center justify-between gap-2 hover:bg-gray-50 -mx-2 px-2 py-1 rounded-lg transition-colors">
+                                                            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                                                <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 flex-shrink-0">
+                                                                    <img
+                                                                        src={org.avatar}
+                                                                        alt={org.name}
+                                                                        className="w-full h-full object-cover"
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <span className="text-xs font-medium text-gray-900 truncate">{org.name}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <button
+                                                                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                                    title="Message"
+                                                                >
+                                                                    <MessageChatCircle className="w-3.5 h-3.5 text-gray-600" />
+                                                                </button>
+                                                                <button
+                                                                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                                    title="View Profile"
+                                                                >
+                                                                    <User01 className="w-3.5 h-3.5 text-gray-600" />
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                    )}
+                                                    ))}
                                                 </div>
-                                            </div>
+                                            ) : (
+                                                <div className="group flex items-center justify-between gap-2 hover:bg-gray-50 -mx-2 px-2 py-1 rounded-lg transition-colors">
+                                                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                                        <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 flex-shrink-0">
+                                                            <img 
+                                                                src={currentEventData.organizer.avatar} 
+                                                                alt={currentEventData.organizer.name}
+                                                                className="w-full h-full object-cover"
+                                                                onError={(e) => {
+                                                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentEventData.organizer.name)}&background=667eea&color=fff&size=128`;
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <span className="text-xs font-medium text-gray-900 truncate">{currentEventData.organizer.name}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button
+                                                            className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                            title="Message"
+                                                        >
+                                                            <MessageChatCircle className="w-3.5 h-3.5 text-gray-600" />
+                                                        </button>
+                                                        <button
+                                                            className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                            title="View Profile"
+                                                        >
+                                                            <User01 className="w-3.5 h-3.5 text-gray-600" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
 
-                                {/* Desktop: Right Column - Content Cards - Only show when not selecting times */}
+                                {/* Desktop: Right Column - Title, Time/Location, About */}
                                 {!showOtherTimes && (
-                                    <div className="w-5/8 max-lg:w-3/5 md:flex max-md:hidden flex-col min-h-0">
+                                    <div className="w-3/5 max-lg:w-3/5 md:flex max-md:hidden flex-col min-h-0">
                                         {/* Sticky Header with Action Buttons */}
-                                        <div className="sticky top-0 bg-white border-b border-gray-100 px-4 max-lg:px-3 max-md:px-4 py-3 max-md:py-4 z-10 flex justify-end max-md:justify-between items-center">
+                                        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 z-10 flex justify-end items-center">
                                             <div className="flex items-center gap-1 flex-shrink-0">
                                                 <button
                                                     className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
@@ -994,14 +954,329 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         
                                         {/* Scrollable Content */}
                                         <div 
-                                            className="p-4 max-lg:p-3 max-md:p-4 flex-1 overflow-y-auto space-y-4 max-lg:space-y-3 max-md:space-y-4 min-h-0 modal-scrollbar" 
+                                            className="px-6 py-4 flex-1 overflow-y-auto space-y-6 min-h-0 modal-scrollbar" 
                                             style={scrollbarStyles}
                                         >
-                                            {/* Before RSVP - Original Layout */}
+                                            {(rsvpStage as RsvpStage) === 'confirmed' ? (
+                                                /* After RSVP Confirmed */
                                                 <>
-                                                    {/* About Event Card */}
-                                                    <div className="p-3 max-md:p-2">
-                                                        <div className="text-sm text-gray-500 mb-3">About Event</div>
+                                                    {/* Event Title */}
+                                                    <div>
+                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 mb-2">
+                                                            {currentEventData.title}
+                                                        </h1>
+                                                    </div>
+
+                                                    {/* Success Message */}
+                                                    <div className="bg-success-50 border border-success-200 rounded-xl p-3">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <CheckCircle className="w-4 h-4 text-success-600" />
+                                                            <span className="text-sm font-semibold text-success-700">Registration confirmed</span>
+                                                        </div>
+                                                        <p className="text-xs text-success-600">Your RSVP has been confirmed. Event details have been sent to your email.</p>
+                                                    </div>
+
+                                                    {/* Event Information Section */}
+                                                    <div>
+                                                        <h4 className="text-sm font-medium text-gray-500 mb-4">Event Information</h4>
+                                                        <div className="space-y-4">
+                                                            {/* Date & Time Card */}
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
+                                                                    {rsvpType === 'all' && event.isRecurring ? (
+                                                                        <Repeat03 className="h-5 w-5 text-brand-solid" />
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className="text-xs text-gray-500 leading-none">
+                                                                                {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                                            </div>
+                                                                            <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                                {new Date(currentEventData.date).getDate()}
+                                                                            </div>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1">
+                                                                    {rsvpType === 'all' && event.isRecurring ? (
+                                                                        <>
+                                                                            <div className="font-medium text-gray-900 text-sm">All following events</div>
+                                                                            <div className="text-xs text-gray-600 leading-relaxed">
+                                                                                {event.recurringFrequency} at {currentEventData.time}
+                                                                                <br />
+                                                                                6 sessions starting {currentEventData.date} until May 31, 2024
+                                                                            </div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
+                                                                            <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Physical Location Card (for physical and hybrid) */}
+                                                            {(event.locationType === "physical" || event.locationType === "hybrid") && (
+                                                                <div className="flex items-start gap-3">
+                                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium text-gray-900 text-sm">
+                                                                            {event.location}
+                                                                        </div>
+                                                                        <div className="text-xs text-gray-600 mt-0.5">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Virtual Location Card (for virtual and hybrid) */}
+                                                            {(event.locationType === "virtual" || event.locationType === "hybrid") && (
+                                                                <div className="flex items-start gap-3">
+                                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                        <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium text-gray-900 text-sm mb-2">
+                                                                            Virtual links
+                                                                        </div>
+                                                                        <div className="space-y-2">
+                                                                            {/* Zoom Link */}
+                                                                            <a 
+                                                                                href="https://zoom.us/j/123456789" 
+                                                                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <img 
+                                                                                    src="https://zoom.us/favicon.ico" 
+                                                                                    alt="Zoom" 
+                                                                                    className="w-4 h-4"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzAwNzNFNiIvPgo8cGF0aCBkPSJNMyw0aDZWOEgzVjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                    }}
+                                                                                />
+                                                                                <span className="text-xs truncate">zoom.us/j/123456789</span>
+                                                                                <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                            </a>
+                                                                            
+                                                                            {/* Google Meet Link */}
+                                                                            <a 
+                                                                                href="https://meet.google.com/abc-defg-hij" 
+                                                                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <img 
+                                                                                    src="https://meet.google.com/favicon.ico" 
+                                                                                    alt="Google Meet" 
+                                                                                    className="w-4 h-4"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNCw2aDhWMTBINFY2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
+                                                                                    }}
+                                                                                />
+                                                                                <span className="text-xs truncate">meet.google.com/abc-defg-hij</span>
+                                                                                <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                            </a>
+
+                                                                            {/* Microsoft Teams Link */}
+                                                                            <a 
+                                                                                href="https://teams.microsoft.com/meet/abc123" 
+                                                                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <img 
+                                                                                    src="https://teams.microsoft.com/favicon.ico" 
+                                                                                    alt="Microsoft Teams" 
+                                                                                    className="w-4 h-4"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzUwNTlDOSIvPgo8cGF0aCBkPSJNNCw0aDRWOEg0VjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                    }}
+                                                                                />
+                                                                                <span className="text-xs truncate">teams.microsoft.com/meet/abc123</span>
+                                                                                <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                            </a>
+
+                                                                            {/* YouTube Stream Link */}
+                                                                            <a 
+                                                                                href="https://youtube.com/watch?v=dQw4w9WgXcQ" 
+                                                                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <img 
+                                                                                    src="https://youtube.com/favicon.ico" 
+                                                                                    alt="YouTube" 
+                                                                                    className="w-4 h-4"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNNSw0VjhMOCw2TDUsNFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
+                                                                                    }}
+                                                                                />
+                                                                                <span className="text-xs truncate">youtube.com/watch?v=dQw4w9WgXcQ</span>
+                                                                                <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                            </a>
+
+                                                                            {/* Discord Link */}
+                                                                            <a 
+                                                                                href="https://discord.gg/xyz123" 
+                                                                                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <img 
+                                                                                    src="https://discord.com/favicon.ico" 
+                                                                                    alt="Discord" 
+                                                                                    className="w-4 h-4"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiByeD0iMiIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNNCw1aDRWN0g0VjVaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=';
+                                                                                    }}
+                                                                                />
+                                                                                <span className="text-xs truncate">discord.gg/xyz123</span>
+                                                                                <Share04 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Interactive Map */}
+                                                    {event.type !== "online" && event.coordinates && (
+                                                        <div className="mb-6">
+                                                            <EventMap
+                                                                location={event.location}
+                                                                latitude={event.coordinates.latitude}
+                                                                longitude={event.coordinates.longitude}
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Event Details Section */}
+                                                    <div>
+                                                        <h4 className="text-sm font-medium text-gray-500 mb-3">Event Details</h4>
+                                                        <div className="space-y-2 text-sm text-gray-700">
+                                                            <div className="flex items-start gap-2">
+                                                                <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                                <p>Free snacks and drinks will be provided throughout the event</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-2">
+                                                                <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                                <p>Networking opportunities with fellow enthusiasts and industry professionals</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-2">
+                                                                <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                                <p>Live showcases and demonstrations from industry experts</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-2">
+                                                                <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                                <p>Interactive Q&A sessions with speakers and panelists</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-2">
+                                                                <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
+                                                                <p>Complimentary event materials and resource guides</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* About Event Section with Read More */}
+                                                    <CollapsibleAboutEvent description={event.description} />
+                                                </>
+                                            ) : (
+                                                /* Before RSVP */
+                                                <>
+                                                    {/* Title */}
+                                                    <div>
+                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 mb-2">
+                                                            {currentEventData.title}
+                                                        </h1>
+                                                        {/* Recurring Event Badge - Only show for recurring events */}
+                                                        {event.isRecurring && !showOtherTimes && (
+                                                            <div className="flex items-center gap-2">
+                                                                <BadgeWithIcon type="pill-color" color="brand" size="sm" iconLeading={Repeat03}>
+                                                                    Repeats {event.recurringFrequency}
+                                                                </BadgeWithIcon>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Date & Time and Location Cards */}
+                                                    {(rsvpStage === 'initial' || rsvpStage === 'processing') && !showOtherTimes && (
+                                                        <div className="space-y-4">
+                                                            {/* Selected Session Label - Only for recurring events */}
+                                                            {event.isRecurring && (
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="text-xs font-medium text-gray-500">Your selected session</div>
+                                                                    <button 
+                                                                        onClick={handleOtherTimesClick}
+                                                                        className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                                                    >
+                                                                        <ClockRefresh className="w-3 h-3" />
+                                                                        Change session 
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                            
+                                                            {/* Date & Time Card */}
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                                                    <div className="text-xs text-gray-500 leading-none">
+                                                                        {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                                    </div>
+                                                                    <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                        {new Date(currentEventData.date).getDate()}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex-1">
+                                                                    <div className="font-medium text-gray-900 text-base">
+                                                                        {currentEventData.date}
+                                                                        {event.isRecurring && selectedTimeSlot !== 0 && (
+                                                                            <span className="text-xs text-brand-secondary ml-1">(updated)</span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-600">{currentEventData.time}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Location Card */}
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                                    {event.locationType === "virtual" ? (
+                                                                        <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                    ) : event.locationType === "hybrid" ? (
+                                                                        <div className="flex items-center -space-x-1">
+                                                                            <MarkerPin01 className="h-4 w-4 bg-white text-gray-500" />
+                                                                            <VideoRecorder className="h-4 w-4 bg-white text-gray-500" />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1">
+                                                                    <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                                        {event.locationType === "virtual" ? "Virtual" : 
+                                                                         event.locationType === "hybrid" ? (
+                                                                            <span>{event.location} <span className="text-xs text-gray-500">+ Virtual</span></span>
+                                                                         ) :
+                                                                         event.location}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-600">
+                                                                        {event.locationType === "virtual"
+                                                                            ? "Event join link available after RSVP"
+                                                                            : event.locationType === "hybrid" 
+                                                                            ? "Details and links shown after RSVP"
+                                                                            : "Full details available after RSVP"
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* About Event */}
+                                                    <div>
+                                                        <div className="text-sm font-medium text-gray-500 mb-3">About Event</div>
                                                         <div className="prose prose-gray max-w-none">
                                                             <p className="text-gray-700 leading-relaxed text-sm mb-4">
                                                                 {event.description}
@@ -1018,6 +1293,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </div>
                                                     </div>
                                                 </>
+                                            )}
                                         </div>
                                     </div>
                                 )}

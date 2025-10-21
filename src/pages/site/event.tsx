@@ -145,42 +145,51 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                     <div className="flex items-center gap-2">
                         {/* Avatar Group */}
                         {event.organizers && event.organizers.length > 1 ? (
-                            <div className="flex -space-x-2">
-                                {event.organizers.map((org: any, index: number) => (
-                                    <div
-                                        key={index}
-                                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
-                                        style={{ zIndex: event.organizers.length - index }}
-                                    >
-                                        <img
-                                            src={org.avatar}
-                                            alt={org.name}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                            <>
+                                <div className="flex -space-x-2">
+                                    {event.organizers.slice(0, 4).map((org: any, index: number) => (
+                                        <div
+                                            key={index}
+                                            className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                            style={{ zIndex: event.organizers.length - index }}
+                                        >
+                                            <img
+                                                src={org.avatar}
+                                                alt={org.name}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                    {event.organizers.length > 4 && (
+                                        <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center">
+                                            <span className="text-[10px] font-semibold text-gray-600">+{event.organizers.length - 4}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <span className="text-xs text-secondary">
+                                    By {event.organizers.length} hosts
+                                </span>
+                            </>
                         ) : (
-                            <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
-                                <img
-                                    src={event.organizer.avatar}
-                                    alt={event.organizer.name}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer.name)}&background=667eea&color=fff&size=128`;
-                                    }}
-                                />
-                            </div>
+                            <>
+                                <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                                    <img
+                                        src={event.organizer.avatar}
+                                        alt={event.organizer.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer.name)}&background=667eea&color=fff&size=128`;
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-xs text-secondary">
+                                    By {event.organizer.name}
+                                </span>
+                            </>
                         )}
-                        <span className="text-xs text-secondary">
-                            By {event.organizers && event.organizers.length > 1 
-                                ? event.organizers.map((org: any) => org.name).join(' & ')
-                                : event.organizer.name
-                            }
-                        </span>
                     </div>
                 </div>
 
@@ -304,6 +313,22 @@ export default function SiteEventPage() {
                 {
                     name: "MacKenzie Huneke",
                     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face"
+                },
+                {
+                    name: "Alex Rodriguez",
+                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face"
+                },
+                {
+                    name: "Sarah Johnson",
+                    avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=32&h=32&fit=crop&crop=face"
+                },
+                {
+                    name: "Michael Brown",
+                    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face"
+                },
+                {
+                    name: "Jessica Lee",
+                    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face"
                 }
             ],
             organizer: {
