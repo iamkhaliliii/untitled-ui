@@ -572,6 +572,15 @@ export const AdminContent2Page = () => {
                         size="sm"
                         className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
                         iconLeading={Plus}
+                        onClick={() => {
+                            if (isEventsPage) {
+                                navigate("/admin4/content2/events/create");
+                            } else if (isPostsPage) {
+                                navigate("/admin4/content2/posts/create");
+                            } else {
+                                console.log("Add button clicked for:", getPageTitle());
+                            }
+                        }}
                     >
                         Create
                     </Button>
@@ -594,6 +603,8 @@ export const AdminContent2Page = () => {
                         onClick={() => {
                             if (isEventsPage) {
                                 navigate("/admin4/content2/events/create");
+                            } else if (isPostsPage) {
+                                navigate("/admin4/content2/posts/create");
                             } else {
                                 console.log("Add button clicked for:", getPageTitle());
                             }
@@ -655,6 +666,8 @@ export const AdminContent2Page = () => {
                                         onClick={() => {
                                             if (isEventsPage) {
                                                 navigate("/admin4/content2/events/create");
+                                            } else if (isPostsPage) {
+                                                navigate("/admin4/content2/posts/create");
                                             } else {
                                                 // Handle other page types as needed
                                                 console.log("Add button clicked for:", getPageTitle());

@@ -57,6 +57,33 @@ export const SiteSpacesBlogPage = () => {
         anyoneInvite: false,
     });
     
+    // State for danger zone confirmation
+    const [dangerConfirmationText, setDangerConfirmationText] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+    
+    const spaceName = "Event"; // This would come from props or context in real implementation
+    const isDangerConfirmationValid = dangerConfirmationText === spaceName;
+    
+    const handleDelete = async () => {
+        if (!isDangerConfirmationValid) return;
+        
+        setIsDeleting(true);
+        try {
+            // Here you would make the API call to delete the event
+            console.log("Deleting event...");
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Handle success (redirect, show success message, etc.)
+            console.log("Event deleted successfully");
+        } catch (error) {
+            console.error("Error deleting event:", error);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+    
     // Determine current page type based on URL
     const getCurrentPageType = () => {
         if (currentPath.includes("/customize")) return "customize";
@@ -112,21 +139,29 @@ export const SiteSpacesBlogPage = () => {
             return null; // No custom actions for customize page
         }
         
-        // Pages that only show View button (no Discard/Save)
-        const viewOnlyPages = ["analytics", "audit-logs", "danger"];
-        
-        if (viewOnlyPages.includes(currentPageType)) {
+        // Danger page shows Delete button
+        if (currentPageType === "danger") {
             return (
                 <div className="flex items-center gap-2">
                     <Button 
-                        color="secondary" 
+                        color="primary-destructive" 
                         size="sm"
-                        iconLeading={LinkExternal01}
+                        className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
+                        iconLeading={Trash01}
+                        isDisabled={!isDangerConfirmationValid || isDeleting}
+                        onClick={handleDelete}
                     >
-                        View
+                        {isDeleting ? "Deleting..." : "Delete"}
                     </Button>
                 </div>
             );
+        }
+        
+        // Pages that show no actions
+        const viewOnlyPages = ["analytics", "audit-logs"];
+        
+        if (viewOnlyPages.includes(currentPageType)) {
+            return null;
         }
         
         // All other pages show View, Discard, and Save
@@ -348,7 +383,10 @@ export const SiteSpacesBlogPage = () => {
             case "danger":
                 return (
                     <div className="max-w-2xl">
-                        <EventsDangerSettings />
+                        <EventsDangerSettings 
+                            confirmationText={dangerConfirmationText}
+                            onConfirmationTextChange={setDangerConfirmationText}
+                        />
                     </div>
                 );
             default:

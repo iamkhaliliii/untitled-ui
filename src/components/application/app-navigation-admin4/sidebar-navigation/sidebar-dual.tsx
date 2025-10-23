@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp, Heart, Shield01 } from "@untitledui/icons";
+import { LogOut01, Palette, Settings01, Sun, Moon01, Monitor01, Grid03, Package, Folder, LayoutAlt01, Rows01, Settings02, Archive, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, File02, FileX02, File04, File05, ArrowLeft, Globe01, Users01, SearchLg, AlertTriangle, Check, X, BarChart03, ClipboardCheck, MessageChatCircle, Lightbulb01, BookOpen01, Edit03, MessageSquare01, Plus, FilePlus01, AlertCircle, Tag01, Placeholder, Data, Database01, Link01, FolderCode, InfoCircle, ChevronDown, ChevronUp, Heart, Shield01, ArrowUpRight } from "@untitledui/icons";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover, Menu } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -715,15 +715,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 { id: "memberProfile", label: "Member profile" },
             ]
         },
-        {
-            id: "navigation",
-            label: "Navigation",
-            icon: <LayoutAlt01 className="size-5 text-fg-quaternary" />,
-            children: [
-                { id: "Configuration", label: "Config" , icon: <Settings01 className="size-5 text-fg-quaternary" />},
-            ],
-            data: { "data-tour-navigation-item": true }
-        },
+ 
         {
             id: "content-types",
             label: "Content Types",
@@ -1958,50 +1950,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("analytics", 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/analytics` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/analytics` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/analytics` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/analytics` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/analytics` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/analytics` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/analytics` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/analytics`
-                                            )}
-                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                                selectedSecondaryItem === "analytics"
-                                                    ? "bg-active text-secondary_hover"
-                                                    : "text-secondary hover:text-primary hover:bg-secondary"
-                                            }`}
-                                        >
-                                            <BarChart03 className="h-4 w-4" />
-                                            Space Analytics
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => handleSecondaryItemClick("audit-logs", 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/audit-logs` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/audit-logs` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/audit-logs` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/audit-logs` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/audit-logs` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/audit-logs` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/audit-logs` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/audit-logs`
-                                            )}
-                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                                selectedSecondaryItem === "audit-logs"
-                                                    ? "bg-active text-secondary_hover"
-                                                    : "text-secondary hover:text-primary hover:bg-secondary"
-                                            }`}
-                                        >
-                                            <ClipboardCheck className="h-4 w-4" />
-                                            Audit Logs
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
                                             onClick={() => handleSecondaryItemClick("seo", 
                                                 activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
                                                 activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
@@ -2043,14 +1991,17 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                                 isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
                                                 `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
                                             )}
-                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "customize"
                                                     ? "bg-active text-secondary_hover"
                                                     : "text-secondary hover:text-primary hover:bg-secondary"
                                             }`}
                                         >
-                                            <Palette className="h-4 w-4" />
-                                            Customizer
+                                            <div className="flex items-center gap-2">
+                                                <Palette className="h-4 w-4" />
+                                                Customizer
+                                            </div>
+                                            <ArrowUpRight className="h-4 w-4 text-quaternary" />
                                         </button>
                                     </li>
                                     
@@ -2085,22 +2036,51 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             )}
                             {/* Show Settings tab only for CMS pages */}
                             {isCmsEventsPage && (
-                                <li>
-                                    <button
-                                        onClick={() => handleSecondaryItemClick("general", `/${currentAdminVersion}/site/cms/events/settings`)}
-                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                            selectedSecondaryItem === "general"
-                                                ? "bg-active text-secondary_hover"
-                                                : "text-secondary hover:text-primary hover:bg-secondary"
-                                        }`}
-                                    >
-                                        <Settings01 className="h-4 w-4" />
-                                        Settings
-                                    </button>
-                                </li>
+                                <>
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("general", `/${currentAdminVersion}/site/cms/events/settings`)}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "general"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <Settings01 className="h-4 w-4" />
+                                            Settings
+                                        </button>
+                                    </li>
+                                    
+                                    {/* Divider */}
+                                    <li className="py-2">
+                                        <div className="border-t border-secondary"></div>
+                                    </li>
+                                    
+                                    <li>
+                                        <button
+                                            onClick={() => handleSecondaryItemClick("customize", `/${currentAdminVersion}/site/cms/events/customize`)}
+                                            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                                selectedSecondaryItem === "customize"
+                                                    ? "bg-active text-secondary_hover"
+                                                    : "text-secondary hover:text-primary hover:bg-secondary"
+                                            }`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <Palette className="h-4 w-4" />
+                                                Customizer
+                                            </div>
+                                            <ArrowUpRight className="h-4 w-4 text-quaternary" />
+                                        </button>
+                                    </li>
+                                    
+                                    {/* Divider */}
+                                    <li className="py-2">
+                                        <div className="border-t border-secondary"></div>
+                                    </li>
+                                </>
                             )}
                             {/* Show Customize tab for both CMS and regular pages - for non-space pages */}
-                            {!(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && (
+                            {!(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && !isCmsEventsPage && (
                                 <li>
                                     <button
                                         onClick={() => handleSecondaryItemClick("customize", 
@@ -2115,14 +2095,17 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
                                             `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
                                         )}
-                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                        className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                             selectedSecondaryItem === "customize"
                                                 ? "bg-active text-secondary_hover"
                                                 : "text-secondary hover:text-primary hover:bg-secondary"
                                         }`}
                                     >
-                                        <Palette className="h-4 w-4" />
-                                        Customize
+                                        <div className="flex items-center gap-2">
+                                            <Palette className="h-4 w-4" />
+                                            Customize
+                                        </div>
+                                        <ArrowUpRight className="h-4 w-4 text-quaternary" />
                                     </button>
                                 </li>
                             )}

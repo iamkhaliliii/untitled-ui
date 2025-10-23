@@ -30,6 +30,7 @@ import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { WidgetConfigProvider, useWidgetConfig } from "@/providers/widget-config-provider";
 
 // Design tools navigation - minimal sidebar
 const designTools = [
@@ -1025,14 +1026,33 @@ export const AdminDesignPage = () => {
         </aside>
     );
 
+    // Inner component to access context
+    const NavigationContent = () => {
+        const widgetConfig = useWidgetConfig();
+        
+        // Sync local state with context when it changes (only for navigation page)
+        useEffect(() => {
+            if (isNavigationPage && widgetConfig) {
+                widgetConfig.updateToggleStates(navToggleStates);
+            }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [navToggleStates.header, navToggleStates.leftSidebar, isNavigationPage]);
+        
+        return (
+            <DesignLayout
+                title="" // Empty since we handle title in sidebar content
+                description="" // Empty since we handle description in sidebar content
+                sidebarContent={sidebarContent}
+                currentPath={location.pathname}
+            >
+                {renderMainContent()}
+            </DesignLayout>
+        );
+    };
+    
     return (
-        <DesignLayout
-            title="" // Empty since we handle title in sidebar content
-            description="" // Empty since we handle description in sidebar content
-            sidebarContent={sidebarContent}
-            currentPath={location.pathname}
-        >
-            {renderMainContent()}
-        </DesignLayout>
+        <WidgetConfigProvider>
+            <NavigationContent />
+        </WidgetConfigProvider>
     );
 };

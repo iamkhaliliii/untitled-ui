@@ -2,13 +2,37 @@ import { Admin4Layout } from "@/components/layouts/admin4-layout";
 import { useLocation } from "react-router";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
 import { CmsEventsSettings } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/cms-events-settings";
+import { Button } from "@/components/base/buttons/button";
+import { Archive, X, AlertTriangle } from "@untitledui/icons";
+import { useState } from "react";
 
 export const SiteCmsEventsPage = () => {
     const location = useLocation();
+    const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+    const [isArchiving, setIsArchiving] = useState(false);
     
     // Determine which content to show based on the current path
     const isSettingsTab = location.pathname.includes('/settings');
     const isCustomizeTab = location.pathname.includes('/customize');
+    
+    const handleArchive = async () => {
+        setIsArchiving(true);
+        try {
+            // Here you would make the API call to archive the model
+            console.log("Archiving model...");
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Handle success
+            console.log("Model archived successfully");
+            setIsArchiveModalOpen(false);
+        } catch (error) {
+            console.error("Error archiving model:", error);
+        } finally {
+            setIsArchiving(false);
+        }
+    };
     
     const renderSettingsContent = () => (
         <div className="h-full overflow-y-auto p-6">
@@ -252,21 +276,100 @@ export const SiteCmsEventsPage = () => {
         </div>
     );
     
+    // Render header actions - only for settings tab
+    const renderHeaderActions = () => {
+        if (!isSettingsTab) return null;
+        
+        return (
+            <div className="flex items-center gap-2">
+                <Button 
+                    color="secondary" 
+                    size="sm"
+                    className="text-xs px-3 py-1.5 lg:text-sm lg:px-4 lg:py-2"
+                    iconLeading={Archive}
+                    onClick={() => setIsArchiveModalOpen(true)}
+                >
+                    Archive
+                </Button>
+            </div>
+        );
+    };
+    
     return (
-        <Admin4Layout title="CMS Events"
-        hideHeader={false}
-         currentPath={location.pathname}>
-            <div className="flex h-full">
-                <div className="flex-1 p-1">
-                    <div className="h-full flex flex-col">
-                        
-                        {/* Main content area */}
-                        <div className="flex-1 bg-primary ">
-                            {isSettingsTab ? renderSettingsContent() : isCustomizeTab ? renderCustomizeContent() : renderCustomizeContent()}
+        <>
+            <Admin4Layout 
+                title="CMS Events"
+                hideHeader={false}
+                currentPath={location.pathname}
+                headerActions={renderHeaderActions()}
+            >
+                <div className="flex h-full">
+                    <div className="flex-1 p-1">
+                        <div className="h-full flex flex-col">
+                            
+                            {/* Main content area */}
+                            <div className="flex-1 bg-primary ">
+                                {isSettingsTab ? renderSettingsContent() : isCustomizeTab ? renderCustomizeContent() : renderCustomizeContent()}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </Admin4Layout>
+            </Admin4Layout>
+            
+            {/* Archive Confirmation Modal */}
+            {isArchiveModalOpen && (
+                <div className="fixed inset-0 z-50 flex min-h-dvh w-full items-center justify-center overflow-y-auto bg-overlay/70 px-4 pt-4 pb-[clamp(16px,8vh,64px)] outline-hidden backdrop-blur-[6px] sm:p-8">
+                    <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-primary shadow-xl border border-secondary">
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setIsArchiveModalOpen(false)}
+                            className="absolute right-4 top-4 z-20 rounded-md p-1.5 text-tertiary hover:text-primary hover:bg-secondary transition-colors"
+                        >
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                        </button>
+
+                        {/* Modal Content */}
+                        <div className="p-6">
+                            {/* Icon */}
+                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning/10">
+                                <AlertTriangle className="h-6 w-6 text-warning" />
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-lg font-semibold text-primary mb-2">
+                                Are you sure you want to archive this model?
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-sm text-tertiary mb-6">
+                                Archiving this model will prevent any future posts or replies from being created using this model. You can unarchive this model later.
+                            </p>
+
+                            {/* Actions */}
+                            <div className="flex items-center justify-end gap-3">
+                                <Button
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => setIsArchiveModalOpen(false)}
+                                    isDisabled={isArchiving}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    color="primary-destructive"
+                                    size="sm"
+                                    onClick={handleArchive}
+                                    isDisabled={isArchiving}
+                                    iconLeading={Archive}
+                                >
+                                    {isArchiving ? "Archiving..." : "Archive"}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };

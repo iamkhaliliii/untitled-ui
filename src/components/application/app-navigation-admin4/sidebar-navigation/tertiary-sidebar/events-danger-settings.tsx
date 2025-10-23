@@ -6,41 +6,27 @@ import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
 
 interface EventsDangerSettingsProps {
-    // Add any props if needed
+    confirmationText?: string;
+    onConfirmationTextChange?: (value: string) => void;
 }
 
-export const EventsDangerSettings = ({}: EventsDangerSettingsProps) => {
+export const EventsDangerSettings = ({ 
+    confirmationText: externalConfirmationText, 
+    onConfirmationTextChange 
+}: EventsDangerSettingsProps) => {
     const theme = useResolvedTheme();
-    const [confirmationText, setConfirmationText] = useState("");
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [internalConfirmationText, setInternalConfirmationText] = useState("");
+    
+    // Use external state if provided, otherwise use internal state
+    const confirmationText = externalConfirmationText !== undefined ? externalConfirmationText : internalConfirmationText;
+    const setConfirmationText = onConfirmationTextChange || setInternalConfirmationText;
     
     const spaceName = "Event"; // This would come from props or context in real implementation
-    const isConfirmationValid = confirmationText === spaceName;
-
-    const handleDelete = async () => {
-        if (!isConfirmationValid) return;
-        
-        setIsDeleting(true);
-        try {
-            // Here you would make the API call to delete the event
-            console.log("Deleting event...");
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Handle success (redirect, show success message, etc.)
-            console.log("Event deleted successfully");
-        } catch (error) {
-            console.error("Error deleting event:", error);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
 
     return (
         <div className="space-y-6">
+            {/* Delete Event Section */}
             <div className="space-y-6 pb-6">
-                {/* Delete Event Section */}
                 <div className="">
                     <div className="items-start gap-3">
                         <div className={cx(
@@ -79,16 +65,6 @@ export const EventsDangerSettings = ({}: EventsDangerSettingsProps) => {
                                     <p className="text-sm text-tertiary">
                                         Type <span className="font-medium text-secondary">"{spaceName}"</span> to confirm
                                     </p>
-                                    <Button
-                                        size="sm"
-                                        color="primary-destructive"
-                                        iconLeading={Trash01}
-                                        disabled={!isConfirmationValid || isDeleting}
-                                        onClick={handleDelete}
-                                        className="min-w-24"
-                                    >
-                                        {isDeleting ? "Deleting..." : "Delete"}
-                                    </Button>
                                 </div>
                             </div>
                         </div>
