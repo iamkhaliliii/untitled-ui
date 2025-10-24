@@ -402,6 +402,12 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/site/spaces/myfolder/events/permissions")) return "permissions";
         if (activeUrl?.includes("/site/spaces/myfolder/events/members")) return "members";
         if (activeUrl?.includes("/site/spaces/myfolder/events/analytics")) return "analytics";
+        // Generic space settings
+        if (activeUrl?.includes("/settings/permissions")) return "permissions";
+        if (activeUrl?.includes("/settings/members")) return "members";
+        if (activeUrl?.includes("/settings/seo")) return "seo";
+        if (activeUrl?.includes("/settings/danger")) return "danger";
+        if (activeUrl?.includes("/settings")) return "general";
         if (activeUrl?.includes("/site/spaces/myfolder/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/myfolder/events/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/myfolder/events/danger")) return "danger";
@@ -1105,7 +1111,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
     const isGrowthPage = activeUrl?.includes("/site/spaces/growth/");
-    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage;
+    // Check for generic space settings (discussions, questions, articles, etc.)
+    const isGenericSpaceSettings = activeUrl?.includes("/site/spaces/") && activeUrl?.includes("/settings");
+    const isSpacePage = isEventsPage || isBlogPage || isHelpPage || isPostsPage || isPrivateSpacePage || isCmsEventsPage || isGenericSpaceSettings;
 
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -1517,7 +1525,23 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 {/* Title - Large */}
                 <div className="mb-2">
                     <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
-                        {isEventsPage ? 
+                        {isGenericSpaceSettings ? 
+                            // Extract space name from history state or URL
+                            (() => {
+                                // Try to get from window.history.state first
+                                const historyState = window.history.state;
+                                if (historyState?.spaceName) {
+                                    return historyState.spaceName;
+                                }
+                                // Otherwise generate from URL
+                                const match = activeUrl?.match(/\/spaces\/([^/]+)\/settings/);
+                                if (match && match[1]) {
+                                    const spaceType = match[1];
+                                    return `New ${spaceType.charAt(0).toUpperCase() + spaceType.slice(1)} Template`;
+                                }
+                                return "Space Settings";
+                            })() :
+                         isEventsPage ? 
                             (activeUrl?.includes("/site/spaces/growth/events") ? "Growth Events" : "Events") : 
                          isBlogPage ? 
                             (activeUrl?.includes("/site/spaces/growth/blog") ? "Growth Blog" : "Blog") : 
@@ -1875,17 +1899,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             {!isCmsEventsPage && (
                                 <li>
                                     <button
-                                        onClick={() => handleSecondaryItemClick("general", 
-                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
-                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
-                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
-                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
-                                            activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
-                                            isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
-                                            isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
-                                            isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts` :
-                                            `/${currentAdminVersion}/site/spaces/myfolder/events`
-                                        )}
+                                        onClick={() => {
+                                            const generalUrl = isGenericSpaceSettings ?
+                                                (activeUrl?.replace(/\/(settings.*)?$/, '/settings') || '') :
+                                                isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events`;
+                                            handleSecondaryItemClick("general", generalUrl);
+                                        }}
                                         className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                             selectedSecondaryItem === "general"
                                                 ? "bg-active text-secondary_hover"
@@ -1901,17 +1928,20 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             {!isCmsEventsPage && (
                                 <li>
                                     <button
-                                        onClick={() => handleSecondaryItemClick("permissions", 
-                                            isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
-                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/permissions` :
-                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/permissions` :
-                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/permissions` :
-                                            activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/permissions` :
-                                            isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/permissions` :
-                                            isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/permissions` :
-                                            isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/permissions` :
-                                            `/${currentAdminVersion}/site/spaces/myfolder/events/permissions`
-                                        )}
+                                        onClick={() => {
+                                            const permissionsUrl = isGenericSpaceSettings ?
+                                                (activeUrl?.replace(/\/(settings.*)?$/, '/settings/permissions') || '') :
+                                                isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
+                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/permissions` :
+                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/permissions` :
+                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/permissions` :
+                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/permissions` :
+                                                `/${currentAdminVersion}/site/spaces/myfolder/events/permissions`;
+                                            handleSecondaryItemClick("permissions", permissionsUrl);
+                                        }}
                                         className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                             selectedSecondaryItem === "permissions"
                                                 ? "bg-active text-secondary_hover"
@@ -1923,21 +1953,24 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </button>
                                 </li>
                             )}
-                            {/* Only show these items for Events, Blog, Help, and Posts, not for Private Space */}
-                            {(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && (
+                            {/* Only show these items for Events, Blog, Help, Posts, and Generic Space Settings */}
+                            {(isEventsPage || isBlogPage || isHelpPage || isPostsPage || isGenericSpaceSettings) && (
                                 <>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("members", 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/members` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/members` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/members` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/members` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/members` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/members` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/members` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/members`
-                                            )}
+                                            onClick={() => {
+                                                const membersUrl = isGenericSpaceSettings ? 
+                                                    (activeUrl?.replace(/\/(settings.*)?$/, '/settings/members') || '') :
+                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/members` :
+                                                    isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/members` :
+                                                    isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/members` :
+                                                    isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/members` :
+                                                    `/${currentAdminVersion}/site/spaces/myfolder/events/members`;
+                                                handleSecondaryItemClick("members", membersUrl);
+                                            }}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "members"
                                                     ? "bg-active text-secondary_hover"
@@ -1950,16 +1983,19 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("seo", 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/seo` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/seo` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/seo` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/seo` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/seo` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/seo`
-                                            )}
+                                            onClick={() => {
+                                                const seoUrl = isGenericSpaceSettings ?
+                                                    (activeUrl?.replace(/\/(settings.*)?$/, '/settings/seo') || '') :
+                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/seo` :
+                                                    isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/seo` :
+                                                    isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/seo` :
+                                                    isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/seo` :
+                                                    `/${currentAdminVersion}/site/spaces/myfolder/events/seo`;
+                                                handleSecondaryItemClick("seo", seoUrl);
+                                            }}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "seo"
                                                     ? "bg-active text-secondary_hover"
@@ -1972,16 +2008,19 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => handleSecondaryItemClick("danger", 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/danger` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/danger` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/danger` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/danger` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/danger` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/danger` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/danger` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/danger`
-                                            )}
+                                            onClick={() => {
+                                                const dangerUrl = isGenericSpaceSettings ?
+                                                    (activeUrl?.replace(/\/(settings.*)?$/, '/settings/danger') || '') :
+                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/danger` :
+                                                    isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/danger` :
+                                                    isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/danger` :
+                                                    isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/danger` :
+                                                    `/${currentAdminVersion}/site/spaces/myfolder/events/danger`;
+                                                handleSecondaryItemClick("danger", dangerUrl);
+                                            }}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                                 selectedSecondaryItem === "danger"
                                                     ? "bg-active text-secondary_hover"
@@ -2013,7 +2052,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 </>
                             )}
                             {/* Show Customize tab for both CMS and regular pages - for non-space pages */}
-                            {!(isEventsPage || isBlogPage || isHelpPage || isPostsPage) && !isCmsEventsPage && (
+                            {!(isEventsPage || isBlogPage || isHelpPage || isPostsPage || isGenericSpaceSettings) && !isCmsEventsPage && (
                                 <li>
                                     <button
                                         onClick={() => handleSecondaryItemClick("customize", 

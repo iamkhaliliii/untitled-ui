@@ -346,6 +346,13 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/design/spaces/podcast/customize" element={<Admin4DesignSpacesCustomizePage />} />
                         <Route path="/admin4/design/spaces/blank/customize" element={<Admin4DesignSpacesCustomizePage />} />
                         
+                        {/* Site - Generic Space settings routes */}
+                        <Route path="/admin4/site/spaces/:spaceType/settings" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/:spaceType/settings/permissions" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/:spaceType/settings/members" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/:spaceType/settings/seo" element={<Admin4SiteSpacesEventsPage />} />
+                        <Route path="/admin4/site/spaces/:spaceType/settings/danger" element={<Admin4SiteSpacesEventsPage />} />
+                        
                         {/* Legacy design space routes (keep for backward compatibility) */}
                         <Route path="/admin4/design/spaces/growth/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/design/spaces/myfolder/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />

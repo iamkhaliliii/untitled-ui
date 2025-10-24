@@ -144,9 +144,15 @@ export const DesignSpacesCustomizePage = () => {
         setTabConfigLabel("");
     };
 
-    // Space Settings button handler (currently unused in design mode but kept for consistency)
+    // Space Settings button handler
     const handleSpaceSettings = () => {
-        console.log("Space settings clicked");
+        // Navigate to settings page with space type and name (site path, not design)
+        navigate(`/admin4/site/spaces/${spaceType}/settings`, {
+            state: {
+                spaceType: spaceType,
+                spaceName: spaceName
+            }
+        });
     };
     
     // Back to Space Creation handler

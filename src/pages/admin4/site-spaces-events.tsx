@@ -18,7 +18,7 @@ import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Badge } from "@/components/base/badges/badges";
 import { Input } from "@/components/base/input/input";
 import { Admin4Layout } from "@/components/layouts/admin4-layout";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
 import { useState } from "react";
 import { EventsGeneralSettings } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/events-general-settings";
@@ -37,10 +37,12 @@ import { MobileSpaceTabs } from "@/components/application/app-navigation-admin4/
 export const SiteSpacesEventsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const params = useParams();
     const currentPath = location.pathname;
     const isEventsPage = currentPath.includes("/admin4/site/spaces/myfolder/events") || currentPath.includes("/admin4/site/spaces/growth/events");
     const isPrivateSpacePage = currentPath.includes("/admin4/site/spaces/private-space");
-    const isSpacePage = isEventsPage || isPrivateSpacePage;
+    const isGenericSpaceSettings = currentPath.includes("/admin4/site/spaces/") && currentPath.includes("/settings");
+    const isSpacePage = isEventsPage || isPrivateSpacePage || isGenericSpaceSettings;
     
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -62,7 +64,9 @@ export const SiteSpacesEventsPage = () => {
     const [dangerConfirmationText, setDangerConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
-    const spaceName = "Event"; // This would come from props or context in real implementation
+    // Get space name from location state or generate from params
+    const spaceName = location.state?.spaceName || 
+                     (params.spaceType ? `New ${params.spaceType.charAt(0).toUpperCase() + params.spaceType.slice(1)} Template` : "Event");
     const isDangerConfirmationValid = dangerConfirmationText === spaceName;
     
     const handleDelete = async () => {
@@ -115,6 +119,10 @@ export const SiteSpacesEventsPage = () => {
         }
         if (currentPath.includes("/admin4/site/spaces/myfolder/events")) {
             return "/admin4/site/spaces/myfolder/events";
+        }
+        // For generic space settings
+        if (isGenericSpaceSettings && params.spaceType) {
+            return `/admin4/site/spaces/${params.spaceType}/settings`;
         }
         return "/admin4/site/spaces/myfolder/events"; // default
     };
