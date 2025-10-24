@@ -27,10 +27,11 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
-import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01, FilePlus01, AlertCircle } from "@untitledui/icons";
+import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01, FilePlus01, AlertCircle, Star01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { WidgetConfigProvider, useWidgetConfig } from "@/providers/widget-config-provider";
+import AddSpaceTemplateModal from "@/components/application/modals/add-space-template-modal";
 
 // Design tools navigation - minimal sidebar
 const designTools = [
@@ -111,6 +112,25 @@ export const AdminDesignPage = () => {
     // Dropdown state for widget settings
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
     
+    // State for Add Space Template Modal
+    const [isAddSpaceModalOpen, setIsAddSpaceModalOpen] = useState(false);
+    
+    // Keyboard shortcut for modal (N key)
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            // Check if 'N' or 'n' is pressed (not in an input field)
+            if ((event.key === 'N' || event.key === 'n') && 
+                event.target instanceof HTMLElement && 
+                !['INPUT', 'TEXTAREA'].includes(event.target.tagName) &&
+                isPageCustomizerPage) {
+                setIsAddSpaceModalOpen(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [isPageCustomizerPage]);
+    
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -141,6 +161,18 @@ export const AdminDesignPage = () => {
     const handleAddSidebarWidget = () => {
         console.log("Add sidebar widget clicked");
         // Add logic to show widget selection for sidebar
+    };
+    
+    // Handler for template selection
+    const handleTemplateSelect = (template: any) => {
+        console.log("Selected template:", template);
+        // Navigate to customize page for the selected template
+        navigate(`/${currentAdminVersion}/design/spaces/${template.id}/customize`, {
+            state: {
+                from: 'space-creation',
+                spaceType: template.id
+            }
+        });
     };
     
     // Tree data for page customizer (exact copy from site tree but with customize links)
@@ -1070,6 +1102,13 @@ export const AdminDesignPage = () => {
     return (
         <WidgetConfigProvider>
             <NavigationContent />
+            
+            {/* Add Space Template Modal */}
+            <AddSpaceTemplateModal
+                isOpen={isAddSpaceModalOpen}
+                onClose={() => setIsAddSpaceModalOpen(false)}
+                onSelectTemplate={handleTemplateSelect}
+            />
         </WidgetConfigProvider>
     );
 };

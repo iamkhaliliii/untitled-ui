@@ -48,6 +48,7 @@ export const SpacePreviews: React.FC<SpacePreviewsProps> = ({ previewType, theme
       return <DiscussionsPreview theme={theme} />;
       
     case 'questions':
+    case 'questions & answers':
       return <QuestionsPreview theme={theme} />;
       
     case 'articles':
