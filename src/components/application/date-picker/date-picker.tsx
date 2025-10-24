@@ -28,7 +28,13 @@ export const DatePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
     return (
         <AriaDatePicker shouldCloseOnSelect={false} {...props} value={value} onChange={setValue}>
             <AriaGroup>
-                <Button size="md" color="secondary" iconLeading={CalendarIcon}>
+                <Button 
+                    size="md" 
+                    color="secondary" 
+                    iconLeading={CalendarIcon} 
+                    className="[box-shadow:none!important] [border:none!important] !ring-0 !rounded-none !py-2 !px-3 !h-10"
+                    style={{ boxShadow: 'none', border: 'none' } as React.CSSProperties}
+                >
                     {formattedDate}
                 </Button>
             </AriaGroup>

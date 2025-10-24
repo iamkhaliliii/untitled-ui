@@ -3,11 +3,9 @@ import { Clock } from "@untitledui/icons";
 import type { TimeValue } from "react-aria-components";
 import { DialogTrigger as AriaDialogTrigger, Dialog as AriaDialog, Popover as AriaPopover } from "react-aria-components";
 import { Button } from "@/components/base/buttons/button";
-import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { cx } from "@/utils/cx";
 import { useState, useEffect } from "react";
 import { parseTime } from "@internationalized/date";
-import type { Key } from "react-aria";
 
 interface TimePickerProps {
     value?: TimeValue | null;
@@ -21,16 +19,11 @@ export const TimePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
     const [value, setValue] = useControlledState(valueProp, defaultValue || null, onChange);
     const [hour, setHour] = useState('00');
     const [minute, setMinute] = useState('00');
-    const [selectedPeriod, setSelectedPeriod] = useState<Set<Key>>(new Set(['AM']));
 
     useEffect(() => {
         if (value) {
-            const hour24 = value.hour;
-            const isPM = hour24 >= 12;
-            const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
-            setHour(hour12.toString().padStart(2, '0'));
+            setHour(value.hour.toString().padStart(2, '0'));
             setMinute(value.minute.toString().padStart(2, '0'));
-            setSelectedPeriod(new Set([isPM ? 'PM' : 'AM']));
         }
     }, [value]);
 
@@ -39,21 +32,7 @@ export const TimePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
         : "00:00";
 
     const handleApply = (close: () => void) => {
-        const period = Array.from(selectedPeriod)[0] as string;
-        let hour24 = parseInt(hour);
-        
-        // Convert 12-hour format to 24-hour format
-        if (period === 'AM') {
-            if (hour24 === 12) {
-                hour24 = 0;
-            }
-        } else { // PM
-            if (hour24 !== 12) {
-                hour24 += 12;
-            }
-        }
-        
-        const timeString = `${hour24.toString().padStart(2, '0')}:${minute}`;
+        const timeString = `${hour}:${minute}`;
         const newValue = parseTime(timeString);
         setValue(newValue);
         onApply?.();
@@ -66,6 +45,8 @@ export const TimePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
                 size="md" 
                 color="secondary" 
                 iconLeading={Clock}
+                className="[box-shadow:none!important] [border:none!important] !ring-0 !rounded-none !py-2 !px-3 !h-10"
+                style={{ boxShadow: 'none', border: 'none' } as React.CSSProperties}
             >
                 {formattedTime}
             </Button>
@@ -90,12 +71,12 @@ export const TimePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
                                     <input
                                         type="number"
                                         min="0"
-                                        max="12"
+                                        max="23"
                                         value={hour}
                                         onChange={(e) => {
                                             let val = parseInt(e.target.value);
                                             if (isNaN(val) || val < 0) val = 0;
-                                            if (val > 12) val = 12;
+                                            if (val > 23) val = 23;
                                             setHour(val.toString().padStart(2, '0'));
                                         }}
                                         placeholder="HH"
@@ -116,11 +97,6 @@ export const TimePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
                                         placeholder="MM"
                                         className="w-16 h-10 text-center text-md font-semibold bg-transparent rounded-lg shadow-xs ring-1 ring-primary ring-inset focus:ring-2 focus:ring-brand outline-none transition-all text-primary"
                                     />
-                                    
-                                    <ButtonGroup selectedKeys={selectedPeriod} onSelectionChange={setSelectedPeriod}>
-                                        <ButtonGroupItem id="AM">AM</ButtonGroupItem>
-                                        <ButtonGroupItem id="PM">PM</ButtonGroupItem>
-                                    </ButtonGroup>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3 border-t border-secondary p-4">

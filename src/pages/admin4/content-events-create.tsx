@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router";
 import { useListData } from 'react-stately';
 import { ArrowLeft, Plus, Bell01, MessageChatCircle, Moon01, SearchLg, Zap, Edit03, FaceSmile, Image01, Paperclip, ChevronDown, Eye, EyeOff, X, Calendar, Clock, MarkerPin01, Users01, Tag01, Settings01, Globe01, Globe06, VideoRecorder, ChevronUp, HelpCircle } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Input, InputBase } from '@/components/base/input/input';
 import { InputGroup } from '@/components/base/input/input-group';
 import { Label } from '@/components/base/input/label';
@@ -19,7 +20,7 @@ import { UntitledLogo } from '@/components/foundations/logo/untitledui-logo';
 import { NavItemButton } from '@/components/application/app-navigation/base-components/nav-item-button';
 import { DatePicker } from "@/components/application/date-picker/date-picker";
 import { TimePicker } from "@/components/application/date-picker/time-picker";
-import { parseDate } from "@internationalized/date";
+import { parseDate, today, getLocalTimeZone, Time } from "@internationalized/date";
 import type { DateValue, TimeValue } from "react-aria-components";
 
 import { cx } from "@/utils/cx";
@@ -99,10 +100,10 @@ export const AdminContentEventsCreatePage = () => {
         title: '',
         aboutEvent: '',
         space: '',
-        dateFrom: null,
-        timeFrom: null,
-        dateTo: null,
-        timeTo: null,
+        dateFrom: today(getLocalTimeZone()),
+        timeFrom: new Time(16, 0),
+        dateTo: today(getLocalTimeZone()),
+        timeTo: new Time(17, 0),
         timezone: 'UTC',
         locationType: 'physical',
         address: '',
@@ -274,6 +275,187 @@ export const AdminContentEventsCreatePage = () => {
         { value: 'specific_date', label: 'Specific date' },
         { value: 'never', label: 'Never' }
     ], []);
+
+    // Calculate date range in days
+    const dateRangeInDays = useMemo(() => {
+        if (!formData.dateFrom || !formData.dateTo) return 0;
+        
+        const startDate = new Date(formData.dateFrom.year, formData.dateFrom.month - 1, formData.dateFrom.day);
+        const endDate = new Date(formData.dateTo.year, formData.dateTo.month - 1, formData.dateTo.day);
+        
+        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        return diffDays;
+    }, [formData.dateFrom, formData.dateTo]);
+
+    // Determine which recurring options should be disabled
+    const recurringOptionsDisabled = useMemo(() => {
+        return {
+            daily: dateRangeInDays > 0, // Disabled if range is longer than one day
+            weekly: dateRangeInDays > 7, // Disabled if range exceeds 7 days
+            monthly: dateRangeInDays > 31, // Disabled if range exceeds 31 days
+            yearly: dateRangeInDays > 365, // Disabled if range exceeds 365 days
+            customWeeklyDays: dateRangeInDays > 0 // Custom weekly days disabled if range > 0
+        };
+    }, [dateRangeInDays]);
+
+    // Update available recurring frequency options based on date range
+    const availableRecurringFrequencyOptions = useMemo(() => {
+        return recurringFrequencyOptions.map(option => ({
+            ...option,
+            isDisabled: recurringOptionsDisabled[option.value as keyof typeof recurringOptionsDisabled]
+        }));
+    }, [recurringFrequencyOptions, recurringOptionsDisabled]);
+
+    // Auto-adjust recurring frequency if current selection becomes disabled
+    useEffect(() => {
+        if (formData.isRecurring && recurringOptionsDisabled[formData.recurringFrequency]) {
+            // Find the first non-disabled option
+            const firstAvailableOption = recurringFrequencyOptions.find(
+                option => !recurringOptionsDisabled[option.value as keyof typeof recurringOptionsDisabled]
+            );
+            
+            if (firstAvailableOption) {
+                setFormData(prev => ({ 
+                    ...prev, 
+                    recurringFrequency: firstAvailableOption.value as 'daily' | 'weekly' | 'monthly' | 'yearly',
+                    customWeeklyDays: [] // Clear custom weekly days when switching
+                }));
+            }
+        }
+    }, [dateRangeInDays, formData.isRecurring, formData.recurringFrequency, recurringFrequencyOptions, recurringOptionsDisabled]);
+
+    // Generate dynamic recurring pattern description
+    const recurringPatternDescription = useMemo(() => {
+        if (!formData.isRecurring || !formData.dateFrom || !formData.dateTo) return null;
+
+        const formatTime = (timeValue: TimeValue | null) => {
+            if (!timeValue) return '';
+            const hour = timeValue.hour.toString().padStart(2, '0');
+            const minute = timeValue.minute.toString().padStart(2, '0');
+            return `${hour}:${minute}`;
+        };
+
+        const getDayName = (date: DateValue) => {
+            const jsDate = new Date(date.year, date.month - 1, date.day);
+            return jsDate.toLocaleDateString('en-US', { weekday: 'long' });
+        };
+
+        const startDay = getDayName(formData.dateFrom);
+        const endDay = getDayName(formData.dateTo);
+        const startDate = formData.dateFrom.day;
+        const endDate = formData.dateTo.day;
+        const startTime = formatTime(formData.timeFrom);
+        const endTime = formatTime(formData.timeTo);
+
+        let description = '';
+
+        switch (formData.recurringFrequency) {
+            case 'daily':
+                if (startTime && endTime) {
+                    description = `This event repeats daily from ${startTime} to ${endTime}`;
+                } else {
+                    description = `This event repeats daily`;
+                }
+                break;
+
+            case 'weekly':
+                if (formData.customWeeklyDays.length > 0) {
+                    const selectedDays = formData.customWeeklyDays
+                        .map(dayValue => weekDays.find(d => d.value === dayValue)?.label)
+                        .filter(Boolean)
+                        .join(', ');
+                    
+                    if (startTime && endTime) {
+                        description = `This event repeats every ${selectedDays} from ${startTime} to ${endTime}`;
+                    } else {
+                        description = `This event repeats every ${selectedDays}`;
+                    }
+                } else {
+                    if (dateRangeInDays > 0) {
+                        if (startTime && endTime) {
+                            description = `This event repeats weekly from ${startDay} at ${startTime} to ${endDay} at ${endTime}`;
+                        } else {
+                            description = `This event repeats weekly from ${startDay} to ${endDay}`;
+                        }
+                    } else {
+                        if (startTime && endTime) {
+                            description = `This event repeats every ${startDay} from ${startTime} to ${endTime}`;
+                        } else {
+                            description = `This event repeats every ${startDay}`;
+                        }
+                    }
+                }
+                break;
+
+            case 'monthly':
+                if (dateRangeInDays > 0) {
+                    if (startTime && endTime) {
+                        description = `This event repeats monthly from day ${startDate} at ${startTime} to day ${endDate} at ${endTime}`;
+                    } else {
+                        description = `This event repeats monthly from day ${startDate} to day ${endDate}`;
+                    }
+                } else {
+                    if (startTime && endTime) {
+                        description = `This event repeats monthly on day ${startDate} from ${startTime} to ${endTime}`;
+                    } else {
+                        description = `This event repeats monthly on day ${startDate}`;
+                    }
+                }
+                break;
+
+            case 'yearly':
+                const startMonth = formData.dateFrom.toDate?.('UTC')?.toLocaleDateString('en-US', { month: 'long' }) || 
+                                   new Date(formData.dateFrom.year, formData.dateFrom.month - 1).toLocaleDateString('en-US', { month: 'long' });
+                const endMonth = formData.dateTo.toDate?.('UTC')?.toLocaleDateString('en-US', { month: 'long' }) || 
+                                 new Date(formData.dateTo.year, formData.dateTo.month - 1).toLocaleDateString('en-US', { month: 'long' });
+                
+                if (dateRangeInDays > 0) {
+                    if (startMonth === endMonth) {
+                        if (startTime && endTime) {
+                            description = `This event repeats annually from ${startMonth} ${startDate} at ${startTime} to ${endDate} at ${endTime}`;
+                        } else {
+                            description = `This event repeats annually from ${startMonth} ${startDate} to ${endDate}`;
+                        }
+                    } else {
+                        if (startTime && endTime) {
+                            description = `This event repeats annually from ${startMonth} ${startDate} at ${startTime} to ${endMonth} ${endDate} at ${endTime}`;
+                        } else {
+                            description = `This event repeats annually from ${startMonth} ${startDate} to ${endMonth} ${endDate}`;
+                        }
+                    }
+                } else {
+                    if (startTime && endTime) {
+                        description = `This event repeats annually on ${startMonth} ${startDate} from ${startTime} to ${endTime}`;
+                    } else {
+                        description = `This event repeats annually on ${startMonth} ${startDate}`;
+                    }
+                }
+                break;
+        }
+
+        // Add ending information if available
+        if (formData.recurringEndDate) {
+            const endYear = formData.recurringEndDate.year;
+            const endMonth = new Date(formData.recurringEndDate.year, formData.recurringEndDate.month - 1).toLocaleDateString('en-US', { month: 'long' });
+            const endDay = formData.recurringEndDate.day;
+            description += ` until ${endMonth} ${endDay}, ${endYear}`;
+        }
+
+        return description;
+    }, [
+        formData.isRecurring, 
+        formData.dateFrom, 
+        formData.dateTo, 
+        formData.timeFrom, 
+        formData.timeTo, 
+        formData.recurringFrequency, 
+        formData.customWeeklyDays,
+        formData.recurringEndDate,
+        dateRangeInDays,
+        weekDays
+    ]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -532,11 +714,11 @@ export const AdminContentEventsCreatePage = () => {
                                         )}
                                     </MultiSelect>
 
-                                    {/* Date & Time - All in one row */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-[35%_35%_30%]">
+                                    {/* Date & Time */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                         <div>
                                             <Label>Start Date & Time</Label>
-                                            <div className="flex gap-1 mt-1">
+                                            <div className="flex gap-0 mt-1 border border-gray-300 rounded-lg overflow-hidden dark:border-gray-700">
                                                 <DatePicker
                                                     value={formData.dateFrom}
                                                     onChange={(value) => setFormData(prev => ({ ...prev, dateFrom: value }))}
@@ -550,7 +732,7 @@ export const AdminContentEventsCreatePage = () => {
 
                                         <div>
                                             <Label>End Date & Time</Label>
-                                            <div className="flex gap-1 mt-1">
+                                            <div className="flex gap-0 mt-1 border border-gray-300 rounded-lg overflow-hidden dark:border-gray-700">
                                                 <DatePicker
                                                     value={formData.dateTo}
                                                     onChange={(value) => setFormData(prev => ({ ...prev, dateTo: value }))}
@@ -614,7 +796,12 @@ export const AdminContentEventsCreatePage = () => {
                                                         recurringFrequency: value as 'daily' | 'weekly' | 'monthly' | 'yearly',
                                                         customWeeklyDays: value !== 'weekly' ? [] : prev.customWeeklyDays
                                                     }))}
-                                                    items={recurringFrequencyOptions.map(option => ({ id: option.value, label: option.label }))}
+                                                    items={availableRecurringFrequencyOptions.map(option => ({ 
+                                                        id: option.value, 
+                                                        label: option.label,
+                                                        isDisabled: option.isDisabled 
+                                                    }))}
+                                                    disabledKeys={availableRecurringFrequencyOptions.filter(opt => opt.isDisabled).map(opt => opt.value)}
                                                 >
                                                     {(item) => (
                                                         <Select.Item key={item.id} id={item.id}>
@@ -624,51 +811,51 @@ export const AdminContentEventsCreatePage = () => {
                                                 </Select>
 
                                                 {/* Custom Weekly Days Selection */}
-                                                {formData.recurringFrequency === 'weekly' && (
+                                                {formData.recurringFrequency === 'weekly' && !recurringOptionsDisabled.customWeeklyDays && (
                                                     <div className="space-y-2">
                                                         <Label>Custom weekly schedule</Label>
-                                                        <div className="flex gap-2 flex-wrap">
-                                                            {weekDays.map((day) => {
-                                                                const isSelected = formData.customWeeklyDays.includes(day.value);
-                                                                const abbreviation = day.label.substring(0, 2);
-                                                                return (
-                                                                    <button
-                                                                        key={day.value}
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            setFormData(prev => ({
-                                                                                ...prev,
-                                                                                customWeeklyDays: isSelected
-                                                                                    ? prev.customWeeklyDays.filter(d => d !== day.value)
-                                                                                    : [...prev.customWeeklyDays, day.value]
-                                                                            }));
-                                                                        }}
-                                                                        className={cx(
-                                                                            "w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200",
-                                                                            isSelected
-                                                                                ? "bg-brand-solid text-white hover:bg-brand-solid_hover"
-                                                                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                                                        )}
-                                                                        aria-label={day.label}
-                                                                        title={day.label}
-                                                                    >
-                                                                        {abbreviation}
-                                                                    </button>
-                                                                );
-                                                            })}
-                                                        </div>
+                                                        <ButtonGroup
+                                                            selectionMode="multiple"
+                                                            selectedKeys={new Set(formData.customWeeklyDays)}
+                                                            onSelectionChange={(keys) => {
+                                                                setFormData(prev => ({
+                                                                    ...prev,
+                                                                    customWeeklyDays: Array.from(keys) as string[]
+                                                                }));
+                                                            }}
+                                                            className="w-full"
+                                                        >
+                                                            {weekDays.map((day) => (
+                                                                <ButtonGroupItem 
+                                                                    key={day.value} 
+                                                                    id={day.value} 
+                                                                    className="flex-1 justify-center selected:!bg-brand-solid selected:!text-white"
+                                                                >
+                                                                    {day.label.substring(0, 3)}
+                                                                </ButtonGroupItem>
+                                                            ))}
+                                                        </ButtonGroup>
                                                     </div>
                                                 )}
                                                 
                                                 <div>
                                                     <Label>Ending</Label>
-                                                    <div className="mt-1">
+                                                    <div className="mt-1 h-10 border border-gray-300 rounded-lg overflow-hidden dark:border-gray-700">
                                                         <DatePicker
                                                             value={formData.recurringEndDate}
                                                             onChange={(value) => setFormData(prev => ({ ...prev, recurringEndDate: value }))}
                                                         />
                                                     </div>
                                                 </div>
+
+                                                {/* Dynamic Helper Note - Minimal Style */}
+                                                {recurringPatternDescription && (
+                                                    <div className="pt-2 border-t border-gray-100">
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                                            {recurringPatternDescription}
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )}
