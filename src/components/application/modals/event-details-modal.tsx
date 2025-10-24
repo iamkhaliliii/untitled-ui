@@ -452,7 +452,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                         {/* Date & Time Card */}
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
+                                                            <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
                                                                 {rsvpType === 'all' && event.isRecurring ? (
                                                                     <Repeat03 className="h-5 w-5 text-brand-solid" />
                                                                 ) : (
@@ -469,8 +469,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <div className="flex-1">
                                                                 {rsvpType === 'all' && event.isRecurring ? (
                                                                     <>
-                                                                        <div className="font-medium text-gray-900 text-sm">All following events</div>
-                                                                        <div className="text-xs text-gray-600 leading-relaxed">
+                                                                        <div className="font-medium text-gray-900 text-base">All following events</div>
+                                                                        <div className="text-sm text-gray-600 leading-relaxed">
                                                                             {event.recurringFrequency} at {currentEventData.time}
                                                                             <br />
                                                                             6 sessions starting {currentEventData.date} until May 31, 2024
@@ -478,8 +478,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
-                                                                        <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                                        <div className="font-medium text-gray-900 text-base">{currentEventData.date}</div>
+                                                                        <div className="text-sm text-gray-600">{currentEventData.time}</div>
                                                                     </>
                                                                 )}
                                                             </div>
@@ -488,14 +488,14 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         {/* Physical Location Card (for physical and hybrid) */}
                                                         {(event.locationType === "physical" || event.locationType === "hybrid") && (
                                                             <div className="flex items-start gap-3">
-                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
                                                                     <MarkerPin01 className="h-5 w-5 text-gray-500" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="font-medium text-gray-900 text-sm">
+                                                                    <div className="font-medium text-gray-900 text-base">
                                                                         {event.location}
                                                                     </div>
-                                                                    <div className="text-xs text-gray-600 mt-0.5">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                    <div className="text-sm text-gray-600">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
                                                                 </div>
                                                             </div>
                                                         )}
@@ -503,11 +503,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         {/* Virtual Location Card (for virtual and hybrid) */}
                                                         {(event.locationType === "virtual" || event.locationType === "hybrid") && (
                                                             <div className="flex items-start gap-3">
-                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
                                                                     <VideoRecorder className="h-5 w-5 text-gray-500" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="font-medium text-gray-900 text-sm mb-2">
+                                                                    <div className="font-medium text-gray-900 text-base mb-2">
                                                                         Virtual links
                                                                     </div>
                                                                     <div className="space-y-2">
@@ -982,7 +982,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         <div className="space-y-4">
                                                             {/* Date & Time Card */}
                                                             <div className="flex items-center gap-3">
-                                                                <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
+                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
                                                                     {rsvpType === 'all' && event.isRecurring ? (
                                                                         <Repeat03 className="h-5 w-5 text-brand-solid" />
                                                                     ) : (
@@ -999,8 +999,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 <div className="flex-1">
                                                                     {rsvpType === 'all' && event.isRecurring ? (
                                                                         <>
-                                                                            <div className="font-medium text-gray-900 text-sm">All following events</div>
-                                                                            <div className="text-xs text-gray-600 leading-relaxed">
+                                                                            <div className="font-medium text-gray-900 text-base">All following events</div>
+                                                                            <div className="text-sm text-gray-600 leading-relaxed">
                                                                                 {event.recurringFrequency} at {currentEventData.time}
                                                                                 <br />
                                                                                 6 sessions starting {currentEventData.date} until May 31, 2024
@@ -1008,8 +1008,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         </>
                                                                     ) : (
                                                                         <>
-                                                                            <div className="font-medium text-gray-900 text-sm">{currentEventData.date}</div>
-                                                                            <div className="text-xs text-gray-600">{currentEventData.time}</div>
+                                                                            <div className="font-medium text-gray-900 text-base">{currentEventData.date}</div>
+                                                                            <div className="text-sm text-gray-600">{currentEventData.time}</div>
                                                                         </>
                                                                     )}
                                                                 </div>
@@ -1017,15 +1017,15 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                             {/* Physical Location Card (for physical and hybrid) */}
                                                             {(event.locationType === "physical" || event.locationType === "hybrid") && (
-                                                                <div className="flex items-start gap-3">
-                                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
                                                                         <MarkerPin01 className="h-5 w-5 text-gray-500" />
                                                                     </div>
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className="font-medium text-gray-900 text-sm">
+                                                                    <div className="flex-1">
+                                                                        <div className="font-medium text-gray-900 text-base">
                                                                             {event.location}
                                                                         </div>
-                                                                        <div className="text-xs text-gray-600 mt-0.5">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                        <div className="text-sm text-gray-600">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -1033,11 +1033,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             {/* Virtual Location Card (for virtual and hybrid) */}
                                                             {(event.locationType === "virtual" || event.locationType === "hybrid") && (
                                                                 <div className="flex items-start gap-3">
-                                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                                                    <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm flex-shrink-0">
                                                                         <VideoRecorder className="h-5 w-5 text-gray-500" />
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
-                                                                        <div className="font-medium text-gray-900 text-sm mb-2">
+                                                                        <div className="font-medium text-gray-900 text-base mb-2">
                                                                             Virtual links
                                                                         </div>
                                                                         <div className="space-y-2">
@@ -1207,7 +1207,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             {/* Selected Session Label - Only for recurring events */}
                                                             {event.isRecurring && (
                                                                 <div className="flex items-center justify-between">
-                                                                    <div className="text-xs font-medium text-gray-500">Your selected session</div>
+                                                                    <div className="text-sm font-medium text-gray-500">Your selected session</div>
                                                                     <button 
                                                                         onClick={handleOtherTimesClick}
                                                                         className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"

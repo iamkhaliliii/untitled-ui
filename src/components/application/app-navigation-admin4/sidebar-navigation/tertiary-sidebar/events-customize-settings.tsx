@@ -506,7 +506,7 @@ export const EventsCustomizeSettings = ({
   };
 
   return (
-    <div className="space-y-2 p-4">
+    <div className="space-y-2">
       
       {/* Global Widgets Section */}
       <CustomizerSection

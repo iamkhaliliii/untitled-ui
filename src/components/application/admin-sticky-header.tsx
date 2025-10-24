@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     File04,
     Database01,
@@ -26,6 +26,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Button } from "@/components/base/buttons/button";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
+import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Button as AriaButton } from "react-aria-components";
 import { AdminStickyHeaderAccountMenu } from "@/components/application/admin-sticky-header-account-menu";
 import { AdminStickyHeaderDropdown } from "@/components/application/admin-sticky-header-dropdown";
@@ -37,18 +38,38 @@ export interface AdminStickyHeaderProps {
     onToggleVisibility?: () => void;
     isAdminPage?: boolean; // Whether we're in admin panel or site
     onMobileMenuToggle?: () => void;
+    modeSwitcherType?: 'dropdown' | 'buttonGroup'; // Type of mode switcher to display
 }
 
 export const AdminStickyHeader = ({ 
     isVisible = true, 
     onToggleVisibility,
     isAdminPage = false,
-    onMobileMenuToggle
+    onMobileMenuToggle,
+    modeSwitcherType = 'buttonGroup'
 }: AdminStickyHeaderProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { adminHeaderCollapsed, toggleAdminHeaderCollapse } = useAdmin();
     const [isModeSheetOpen, setIsModeSheetOpen] = useState(false);
+    
+    // Determine selected mode based on current URL
+    const getSelectedMode = () => {
+        const path = location.pathname;
+        if (path.includes('/design') || path.includes('/customize')) {
+            return 'design';
+        } else if (path.includes('/moderation')) {
+            return 'moderation';
+        }
+        return 'admin';
+    };
+    
+    const [selectedMode, setSelectedMode] = useState<string>(getSelectedMode());
+    
+    // Update selected mode when location changes
+    useEffect(() => {
+        setSelectedMode(getSelectedMode());
+    }, [location.pathname]);
     
     // Check if user came from Page Customizer
     const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
@@ -65,12 +86,36 @@ export const AdminStickyHeader = ({
         
         if (segments.length === 0) return [{ label: 'Home', path: '/' }];
         
+        // If path is /admin4/design/spaces/.../customize, show Design breadcrumb
+        if (path.includes('/admin4/design/spaces/') && path.includes('/customize')) {
+            const breadcrumbs = [];
+            
+            // Add Design
+            breadcrumbs.push({ label: 'Design', path: '/admin4/design' });
+            
+            // Add Page Customizer
+            breadcrumbs.push({ label: 'Page Customizer', path: '/admin4/design/page-customizer' });
+            
+            // Add current page name
+            const pathParts = path.split('/');
+            const spaceName = pathParts[pathParts.indexOf('spaces') + 1]; // e.g., 'myfolder' or 'growth'
+            const pageType = pathParts[pathParts.indexOf('spaces') + 2]; // e.g., 'events', 'blog'
+            
+            let displayName = pageType.charAt(0).toUpperCase() + pageType.slice(1);
+            if (spaceName === 'growth') {
+                displayName = `Growth ${displayName}`;
+            } else if (spaceName !== 'myfolder') {
+                displayName = `${spaceName.charAt(0).toUpperCase() + spaceName.slice(1)} ${displayName}`;
+            }
+            
+            breadcrumbs.push({ label: `${displayName} Customize`, path: path });
+            
+            return breadcrumbs;
+        }
+        
         // If user came from Page Customizer and is on a customize page, show Page Customizer in breadcrumb
         if (cameFromPageCustomizer && path.includes('/customize')) {
             const breadcrumbs = [];
-            
-            // Add Admin Panel
-            breadcrumbs.push({ label: 'Admin Panel', path: '/admin4' });
             
             // Add Design
             breadcrumbs.push({ label: 'Design', path: '/admin4/design' });
@@ -105,9 +150,8 @@ export const AdminStickyHeader = ({
             
             let label = segment;
             if (segment.startsWith('admin')) {
-                label = segment === 'admin4' ? 'Admin Panel' : 
-                       segment === 'admin3' ? 'Admin3' : 
-                       segment === 'admin2' ? 'Admin2' : 'Admin';
+                // Skip admin segments from breadcrumbs
+                continue;
             } else {
                 label = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/[-_]/g, ' ');
             }
@@ -450,34 +494,61 @@ export const AdminStickyHeader = ({
                             {/* Actions - Responsive */}
                             <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
                                 <div className="flex items-center">
-                                    {/* Mode Switcher - Desktop dropdown, Mobile top sheet */}
+                                    {/* Mode Switcher - Desktop dropdown or ButtonGroup, Mobile top sheet */}
                                     {isAdminPage && (
                                         <div className="h-12 sm:h-12 flex items-center justify-center border-r border-l border-gray-800 dark:border-gray-200">
-                                            {/* Desktop Dropdown */}
+                                            {/* Desktop - Dropdown or ButtonGroup based on type */}
                                             <div className="hidden lg:block">
-                                                <Dropdown.Root>
-                                                    <AriaButton
-                                                        aria-label="Switch Mode"
-                                                        className="flex items-center gap-1 sm:gap-2 px-3 sm:px-3 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
-                                                    >
-                                                        <currentMode.icon className="w-5 h-5 sm:w-4 sm:h-4" />
-                                                        <span className="text-sm sm:text-sm font-medium">{currentMode.label}</span>
-                                                        <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3" />
-                                                    </AriaButton>
-                                                    <Dropdown.Popover className="z-[70] !min-w-64">
+                                                {modeSwitcherType === 'dropdown' ? (
+                                                    <Dropdown.Root>
+                                                        <AriaButton
+                                                            aria-label="Switch Mode"
+                                                            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-3 h-12 sm:h-12 bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-gray-300 dark:text-gray-600 transition-colors"
+                                                        >
+                                                            <currentMode.icon className="w-5 h-5 sm:w-4 sm:h-4" />
+                                                            <span className="text-sm sm:text-sm font-medium">{currentMode.label}</span>
+                                                            <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3" />
+                                                        </AriaButton>
+                                                        <Dropdown.Popover className="z-[70] !min-w-64">
                                                         <Dropdown.Menu>
                                                             {currentMode.label !== 'Admin Mode' && (
                                                                 <Dropdown.Item
                                                                     icon={Settings02}
                                                                     label="Admin Mode"
-                                                                    onAction={() => navigate(`/${currentAdminVersion}`)}
+                                                                    onAction={() => {
+                                                                        const path = location.pathname;
+                                                                        // If on a customize page, go back to the space page
+                                                                        if (path.includes('/customize') && path.includes('/site/spaces/')) {
+                                                                            // Remove /customize from the path
+                                                                            const basePath = path.replace('/customize', '');
+                                                                            navigate(basePath);
+                                                                        } else {
+                                                                            navigate(`/${currentAdminVersion}`);
+                                                                        }
+                                                                    }}
                                                                 />
                                                             )}
                                                             {currentMode.label !== 'Design Mode' && (
                                                                 <Dropdown.Item
                                                                     icon={Brush02}
                                                                     label="Design Mode"
-                                                                    onAction={() => navigate(`/${currentAdminVersion}/design`)}
+                                                                    onAction={() => {
+                                                                        const path = location.pathname;
+                                                                        // If on a space page (events, blog, help, posts), go to its customize page
+                                                                        if (path.includes('/site/spaces/') && (path.includes('/events') || path.includes('/blog') || path.includes('/help') || path.includes('/posts'))) {
+                                                                            // Extract the base path and add /customize
+                                                                            // Remove any trailing segments like /general, /permissions, /members, /seo, /danger
+                                                                            let basePath = path;
+                                                                            const segments = ['general', 'permissions', 'members', 'seo', 'danger', 'analytics', 'audit-logs'];
+                                                                            const lastSegment = path.split('/').pop();
+                                                                            if (segments.includes(lastSegment || '')) {
+                                                                                basePath = path.split('/').slice(0, -1).join('/');
+                                                                            }
+                                                                            navigate(`${basePath}/customize`);
+                                                                        } else {
+                                                                            navigate(`/${currentAdminVersion}/design`);
+                                                                        }
+                                                                    }}
                                                                 />
                                                             )}
                                                             {currentMode.label !== 'Moderation Mode' && (
@@ -490,6 +561,56 @@ export const AdminStickyHeader = ({
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
+                                                ) : (
+                                                    <div className="flex items-center gap-1 px-2 h-12">
+                                                        <ButtonGroup 
+                                                            size="sm"
+                                                            selectedKeys={[selectedMode]}
+                                                            onSelectionChange={(keys) => {
+                                                                const selected = Array.from(keys)[0] as string;
+                                                                setSelectedMode(selected);
+                                                                
+                                                                const path = location.pathname;
+                                                                
+                                                                if (selected === 'admin') {
+                                                                    // If on a customize page, go back to the space page
+                                                                    if (path.includes('/customize') && path.includes('/site/spaces/')) {
+                                                                        const basePath = path.replace('/customize', '');
+                                                                        navigate(basePath);
+                                                                    } else {
+                                                                        navigate(`/${currentAdminVersion}`);
+                                                                    }
+                                                                } else if (selected === 'design') {
+                                                                    // If on a space page, go to its customize page
+                                                                    if (path.includes('/site/spaces/') && (path.includes('/events') || path.includes('/blog') || path.includes('/help') || path.includes('/posts'))) {
+                                                                        let basePath = path;
+                                                                        const segments = ['general', 'permissions', 'members', 'seo', 'danger', 'analytics', 'audit-logs'];
+                                                                        const lastSegment = path.split('/').pop();
+                                                                        if (segments.includes(lastSegment || '')) {
+                                                                            basePath = path.split('/').slice(0, -1).join('/');
+                                                                        }
+                                                                        navigate(`${basePath}/customize`);
+                                                                    } else {
+                                                                        navigate(`/${currentAdminVersion}/design`);
+                                                                    }
+                                                                } else if (selected === 'moderation') {
+                                                                    navigate(`/${currentAdminVersion}/moderation`);
+                                                                }
+                                                            }}
+                                                            className="[&_button]:!bg-black dark:[&_button]:!bg-white [&_button]:!text-gray-400 dark:[&_button]:!text-gray-600 [&_button]:!ring-gray-800 dark:[&_button]:!ring-gray-300 [&_button[data-selected=true]]:!bg-gray-600/80 [&_button[data-selected=true]]:!text-white dark:[&_button[data-selected=true]]:!bg-black/50 dark:[&_button[data-selected=true]]:!text-black [&_button[data-selected=true]]:!ring-0 [&_button[data-selected=true]]:!rounded-md [&_button]:hover:!bg-gray-900 dark:[&_button]:hover:!bg-gray-100 [&_button]:hover:!text-gray-200 dark:[&_button]:hover:!text-gray-700 [&_button]:!text-xs [&_button]:!px-2  [&_button]:!py-1.5 [&_button_svg]:!size-4.5"
+                                                        >
+                                                            <ButtonGroupItem id="admin" iconLeading={Settings02}>
+                                                                {selectedMode === 'admin' && 'Admin Mode'}
+                                                            </ButtonGroupItem>
+                                                            <ButtonGroupItem id="design" iconLeading={Brush02}>
+                                                                {selectedMode === 'design' && 'Design Mode'}
+                                                            </ButtonGroupItem>
+                                                            <ButtonGroupItem id="moderation" iconLeading={Shield01}>
+                                                                {selectedMode === 'moderation' && 'Moderation Mode'}
+                                                            </ButtonGroupItem>
+                                                        </ButtonGroup>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Mobile Button */}
@@ -604,14 +725,42 @@ export const AdminStickyHeader = ({
                                 <div className="space-y-2">
                                     {[
                                         { icon: Settings02, label: 'Admin Mode', path: `/${currentAdminVersion}`, enabled: true },
-                                        { icon: Brush02, label: 'Design Mode', path: `/${currentAdminVersion}/design`, enabled: false },
+                                        { icon: Brush02, label: 'Design Mode', path: `/${currentAdminVersion}/design`, enabled: true },
                                         { icon: Shield01, label: 'Moderation Mode', path: `/${currentAdminVersion}/moderation`, enabled: true }
                                     ].map((mode) => (
                                         <button
                                             key={mode.label}
                                             onClick={() => {
                                                 if (mode.enabled) {
-                                                    navigate(mode.path);
+                                                    const path = location.pathname;
+                                                    
+                                                    if (mode.label === 'Admin Mode') {
+                                                        // If on a customize page, go back to the space page
+                                                        if (path.includes('/customize') && path.includes('/site/spaces/')) {
+                                                            // Remove /customize from the path
+                                                            const basePath = path.replace('/customize', '');
+                                                            navigate(basePath);
+                                                        } else {
+                                                            navigate(mode.path);
+                                                        }
+                                                    } else if (mode.label === 'Design Mode') {
+                                                        // If on a space page (events, blog, help, posts), go to its customize page
+                                                        if (path.includes('/site/spaces/') && (path.includes('/events') || path.includes('/blog') || path.includes('/help') || path.includes('/posts'))) {
+                                                            // Extract the base path and add /customize
+                                                            // Remove any trailing segments like /general, /permissions, /members, /seo, /danger
+                                                            let basePath = path;
+                                                            const segments = ['general', 'permissions', 'members', 'seo', 'danger', 'analytics', 'audit-logs'];
+                                                            const lastSegment = path.split('/').pop();
+                                                            if (segments.includes(lastSegment || '')) {
+                                                                basePath = path.split('/').slice(0, -1).join('/');
+                                                            }
+                                                            navigate(`${basePath}/customize`);
+                                                        } else {
+                                                            navigate(mode.path);
+                                                        }
+                                                    } else {
+                                                        navigate(mode.path);
+                                                    }
                                                     setIsModeSheetOpen(false);
                                                 }
                                             }}

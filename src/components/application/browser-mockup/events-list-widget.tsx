@@ -1,17 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { DotsHorizontal, ArrowRight, Calendar, Users01, Ticket01, Clock, MarkerPin01, Heart, SearchLg, Home01, Rss01, Bookmark, User01, MessageChatCircle, MessageCircle01, Check, X, HelpCircle, Share02, Star01, Globe01, CheckCircle } from "@untitledui/icons";
+import { DotsHorizontal, ArrowRight, Calendar, Users01, Ticket01, Clock, MarkerPin01, Heart, SearchLg, Home01, Rss01, Bookmark, User01, MessageChatCircle, MessageCircle01, Check, X, HelpCircle, Share02, Star01, Globe01, CheckCircle, Repeat02 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import type { Key } from "react-aria-components";
 import { Tabs } from "@/components/application/tabs/tabs";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { Button } from '@/components/base/buttons/button';
+import { Badge, BadgeWithIcon } from '@/components/base/badges/badges';
 
 
 interface EventsListWidgetProps {
   className?: string;
   theme?: 'light' | 'dark';
 }
+
+// RSVP States for Event Cards
+type RSVPState = 'open' | 'closed' | 'completed';
+
+interface RSVPStateConfig {
+  label: string;
+  color: 'primary' | 'secondary' | 'tertiary';
+  disabled: boolean;
+}
+
+const rsvpStateConfig: Record<RSVPState, RSVPStateConfig> = {
+  open: {
+    label: 'RSVP Now',
+    color: 'primary',
+    disabled: false,
+  },
+  closed: {
+    label: 'RSVP Closed',
+    color: 'secondary',
+    disabled: true,
+  },
+  completed: {
+    label: 'Event Completed',
+    color: 'tertiary',
+    disabled: true,
+  }
+};
+
+// Function to randomly assign RSVP state to events
+const getRandomRSVPState = (eventId: number): RSVPState => {
+  const states: RSVPState[] = ['open', 'closed', 'completed'];
+  // Use event ID as seed for consistent random state per event
+  const index = eventId % states.length;
+  return states[index];
+};
 
 export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, theme: propTheme }) => {
   const { eventsListConfig } = useWidgetConfig();
@@ -41,6 +77,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
   // Sample events data
   const eventsData = [
     {
+      id: 1,
       title: "React Conference 2024",
       description: "Join us for the biggest React conference of the year with industry experts.",
       date: "March 15, 2024",
@@ -50,9 +87,11 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       category: "Technology",
       organizer: "Tech Events Inc.",
       attendees: 42,
+      status: "live",
       image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
     {
+      id: 2,
       title: "Design Thinking Workshop",
       description: "Hands-on workshop to master design thinking methodology.",
       date: "March 18, 2024",
@@ -72,9 +111,11 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
         }
       ],
       attendees: 1,
+      isRecurring: true,
       image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
     {
+      id: 3,
       title: "Startup Pitch Competition",
       description: "Watch innovative startups pitch their ideas to expert judges.",
       date: "March 22, 2024",
@@ -87,6 +128,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     },
     {
+      id: 4,
       title: "AI & Machine Learning Summit",
       description: "Explore the latest trends in AI and ML with leading experts.",
       date: "March 25, 2024",
@@ -95,6 +137,8 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
       type: "Online",
       category: "Technology",
       organizer: "AI Institute",
+      status: "live",
+      isRecurring: true,
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop&crop=center&auto=format&q=80"
     }
   ];
@@ -184,11 +228,89 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
               
+              {/* Overlay badges */}
+              <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                {event.status === 'live' && (
+                  <Badge  
+                    color="error" 
+                    type="pill-color"
+                    size="md"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-600 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-error-600"></span>
+                      </span>
+                      Live Now
+                    </span>
+                  </Badge>
+                )}
+                {event.isRecurring && (
+                  <BadgeWithIcon  
+                    color="brand" 
+                    type="pill-color"
+                    size="md"
+                    iconLeading={Repeat02}
+                  >
+                    Recurring Event
+                  </BadgeWithIcon>
+                )}
+              </div>
             </div>
           )}
 
           {/* Event Content */}
           <div className="p-3 flex flex-col flex-1">
+            {/* Organizer(s) - Moved to top */}
+            {eventsListConfig.hostInfo && (
+              <div className="mb-2">
+                <div className="flex items-center gap-2">
+                  {event.organizers && event.organizers.length > 1 ? (
+                    <>
+                      <div className="flex -space-x-2">
+                        {event.organizers.slice(0, 4).map((org: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                            style={{ zIndex: event.organizers.length - idx }}
+                          >
+                            <img
+                              src={org.avatar}
+                              alt={org.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                              }}
+                            />
+                          </div>
+                        ))}
+                        {event.organizers.length > 4 && (
+                          <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center">
+                            <span className="text-[10px] font-semibold text-gray-600">+{event.organizers.length - 4}</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-secondary">By {event.organizers.length} hosts</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                        <img 
+                          src="https://i.pravatar.cc/150?img=1" 
+                          alt={event.organizer} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-secondary">By {event.organizer}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Event Title */}
             <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
               {event.title}
@@ -209,50 +331,6 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 </>
               )}
               
-              {/* Host Info - Moved here after date/time */}
-              {eventsListConfig.hostInfo && (
-                <div className="flex items-center gap-2 text-sm">
-                  {event.organizers && event.organizers.length > 1 ? (
-                    <>
-                      {/* Avatar Group */}
-                      <div className="flex -space-x-1.5">
-                        {event.organizers.map((org: any, index: number) => (
-                          <div
-                            key={index}
-                            className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
-                            style={{ zIndex: event.organizers.length - index }}
-                          >
-                            <img
-                              src={org.avatar}
-                              alt={org.name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <span className="text-xs text-secondary">By {event.organizers.map((org: any) => org.name).join(' & ')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
-                        <img 
-                          src="https://i.pravatar.cc/150?img=1" 
-                          alt={event.organizer} 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
-                          }}
-                        />
-                      </div>
-                      <span className="text-xs text-secondary">By {event.organizer}</span>
-                    </>
-                  )}
-                </div>
-              )}
-              
               {/* Location - Always visible */}
               <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
                 <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
@@ -262,36 +340,26 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
 
             {/* Actions Footer */}
             <div className="pt-3 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
-              <div className="flex items-center justify-between">
-                {/* Avatar Group - Left Side */}
-                {eventsListConfig.attended ? (
-                  <div className="flex items-center">
-                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
-                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                    </span>
-                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
-                      <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                    </span>
-                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
-                      <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                    </span>
-                    <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
-                      +2
-                    </span>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-                
-                {/* RSVP Button - Right Side */}
-                <Button
-                  color="secondary"
-                  size="sm"
-                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                  className="px-4 py-2"
-                >
-                  RSVP Now
-                </Button>
+              <div className="flex items-center justify-end">
+                {/* RSVP Button - Right Side only */}
+                {(() => {
+                  const rsvpState = getRandomRSVPState(event.id);
+                  const rsvpConfig = rsvpStateConfig[rsvpState];
+                  const label = rsvpConfig.label === 'RSVP Now' ? 'RSVP Now →' : rsvpConfig.label;
+                  const disabled = rsvpState !== 'open';
+                  
+                  return (
+                    <Button
+                      color="secondary"
+                      size="sm"
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      className={`px-4 py-2 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={disabled}
+                    >
+                      {label}
+                    </Button>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -332,6 +400,34 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10"></div>
             
+            {/* Overlay badges - Top Left */}
+            <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
+              {event.status === 'live' && (
+                <Badge  
+                  color="error" 
+                  type="pill-color"
+                  size="md"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-600 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-error-600"></span>
+                    </span>
+                    Live Now
+                  </span>
+                </Badge>
+              )}
+              {event.isRecurring && (
+                <BadgeWithIcon  
+                  color="brand" 
+                  type="pill-color"
+                  size="md"
+                  iconLeading={Repeat02}
+                >
+                  Recurring Event
+                </BadgeWithIcon>
+              )}
+            </div>
             
             {/* Date badge */}
             {eventsListConfig.eventDetails && (
@@ -431,11 +527,40 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
   };
 
   const renderEventList = (event: any, index: number) => (
-    <div key={index} className="group bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer"
+    <div key={index} className="group bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer relative"
     style={{
       animationDelay: `${index * 80}ms`,
       animation: 'slideInLeft 0.5s ease-out forwards'
     }}>
+      {/* Badges - Top Right */}
+      <div className="absolute top-4 right-4 flex gap-2 items-center z-10">
+        {event.status === 'live' && (
+          <Badge  
+            color="error" 
+            type="pill-color"
+            size="md"
+          >
+            <span className="flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-600 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-error-600"></span>
+              </span>
+              Live Now
+            </span>
+          </Badge>
+        )}
+        {event.isRecurring && (
+          <BadgeWithIcon  
+            color="brand" 
+            type="pill-color"
+            size="md"
+            iconLeading={Repeat02}
+          >
+            Recurring Event
+          </BadgeWithIcon>
+        )}
+      </div>
+
       <div className="flex gap-4">
         {/* Cover Image - Left Side */}
         {eventsListConfig.coverImage && (
@@ -466,51 +591,6 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                 <Clock className="w-3 h-3" />
                 <span>{event.time}</span>
               </div>
-              
-              {/* Host Info - Inline with date/time */}
-              {eventsListConfig.hostInfo && (
-                <>
-                  <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
-                  {event.organizers && event.organizers.length > 1 ? (
-                    <>
-                      {/* Avatar Group */}
-                      <div className="flex -space-x-1.5">
-                        {event.organizers.map((org: any, index: number) => (
-                          <div
-                            key={index}
-                            className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
-                            style={{ zIndex: event.organizers.length - index }}
-                          >
-                            <img
-                              src={org.avatar}
-                              alt={org.name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <span className="text-xs">By {event.organizers.map((org: any) => org.name).join(' & ')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
-                        <img 
-                          src="https://i.pravatar.cc/150?img=1" 
-                          alt={event.organizer} 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
-                          }}
-                        />
-                      </div>
-                      <span className="text-xs">By {event.organizer}</span>
-                    </>
-                  )}
-                </>
-              )}
             </div>
           )}
           
@@ -538,9 +618,9 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                   ) : event.attendees === 1 ? (
                     // Single attendee
                     <>
-                      <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px'}}>
+                      <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
                         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                      </span>
+                      </div>
                       <span className="text-xs text-gray-600 dark:text-gray-400">
                         1 attending
                       </span>
@@ -548,20 +628,68 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                   ) : (
                     // Multiple attendees
                     <>
-                      <div className="flex items-center">
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 3}}>
+                      <div className="flex -space-x-2">
+                        <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 3 }}>
                           <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
+                        </div>
+                        <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 2 }}>
                           <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
-                        <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 1}}>
+                        </div>
+                        <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 1 }}>
                           <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                        </span>
+                        </div>
                       </div>
                       <span className="text-xs text-gray-600 dark:text-gray-400">
                         {event.attendees} attending
                       </span>
+                    </>
+                  )}
+                </div>
+              )}
+              
+              {/* Host Info - Moved here next to attending */}
+              {eventsListConfig.hostInfo && (
+                <div className="flex items-center gap-2">
+                  {event.organizers && event.organizers.length > 1 ? (
+                    <>
+                      <div className="flex -space-x-2">
+                        {event.organizers.slice(0, 4).map((org: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                            style={{ zIndex: event.organizers.length - idx }}
+                          >
+                            <img
+                              src={org.avatar}
+                              alt={org.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                              }}
+                            />
+                          </div>
+                        ))}
+                        {event.organizers.length > 4 && (
+                          <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center">
+                            <span className="text-[10px] font-semibold text-gray-600">+{event.organizers.length - 4}</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">By {event.organizers.length} hosts</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                        <img 
+                          src="https://i.pravatar.cc/150?img=1" 
+                          alt={event.organizer} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">By {event.organizer}</span>
                     </>
                   )}
                 </div>
@@ -584,7 +712,7 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
   );
 
   const renderEventFeed = (event: any, index: number) => (
-    <div key={index} className="w-full max-w-2xl mx-auto cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+    <div key={index} className="w-full cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
     style={{
       animationDelay: `${index * 120}ms`,
       animation: 'fadeInRight 0.6s ease-out forwards'
@@ -624,7 +752,36 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
 
           {/* Event Card */}
           <div className="space-y-4">
-            <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/30 hover:bg-gray-50 dark:hover:bg-gray-800/70">
+            <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/30 hover:bg-gray-50 dark:hover:bg-gray-800/70 relative">
+              {/* Badges - Top Right of inner card */}
+              <div className="absolute top-4 right-4 flex gap-2 items-center z-10">
+                {event.status === 'live' && (
+                  <Badge  
+                    color="error" 
+                    type="pill-color"
+                    size="md"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error-600 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-error-600"></span>
+                      </span>
+                      Live Now
+                    </span>
+                  </Badge>
+                )}
+                {event.isRecurring && (
+                  <BadgeWithIcon  
+                    color="brand" 
+                    type="pill-color"
+                    size="md"
+                    iconLeading={Repeat02}
+                  >
+                    Recurring Event
+                  </BadgeWithIcon>
+                )}
+              </div>
+
               <div className="p-5">
                 <div className="flex items-center mb-6">
                   <div className="flex items-center gap-1.5">
@@ -680,34 +837,69 @@ export const EventsListWidget: React.FC<EventsListWidgetProps> = ({ className, t
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        {/* Avatar Group */}
+                        {/* Avatar Group - Attendees */}
                         {eventsListConfig.attended && (
-                          <div className="flex items-center">
-                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900" style={{width: '24px', height: '24px', zIndex: 1}}>
-                              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                            </span>
-                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 2}}>
-                              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                            </span>
-                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 -ml-2" style={{width: '24px', height: '24px', zIndex: 3}}>
-                              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
-                            </span>
-                            <span className="inline-flex items-center rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 -ml-2 justify-center text-gray-700 dark:text-gray-300 text-[0.625rem] font-semibold" style={{width: '24px', height: '24px', zIndex: 4}}>
-                              +2
-                            </span>
+                          <div className="flex items-center gap-2">
+                            <div className="flex -space-x-2">
+                              <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 3 }}>
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                              </div>
+                              <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 2 }}>
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                              </div>
+                              <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200" style={{ zIndex: 1 }}>
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=32&h=32&fit=crop&crop=face" alt="Avatar" className="w-full h-full object-cover" />
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-600 dark:text-gray-400">42 attending</span>
                           </div>
                         )}
                         
+                        {/* Host Info */}
                         {eventsListConfig.hostInfo && (
-                          <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-full text-xs font-medium text-secondary">
-                            <div className="w-4 h-4 rounded-full overflow-hidden">
-                              <img 
-                                src="https://i.pravatar.cc/150?img=1" 
-                                alt={event.organizer} 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <span>{event.organizer}</span>
+                          <div className="flex items-center gap-2">
+                            {event.organizers && event.organizers.length > 1 ? (
+                              <>
+                                <div className="flex -space-x-2">
+                                  {event.organizers.slice(0, 4).map((org: any, idx: number) => (
+                                    <div
+                                      key={idx}
+                                      className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                      style={{ zIndex: event.organizers.length - idx }}
+                                    >
+                                      <img
+                                        src={org.avatar}
+                                        alt={org.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(org.name)}&background=667eea&color=fff&size=128`;
+                                        }}
+                                      />
+                                    </div>
+                                  ))}
+                                  {event.organizers.length > 4 && (
+                                    <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center">
+                                      <span className="text-[10px] font-semibold text-gray-600">+{event.organizers.length - 4}</span>
+                                    </div>
+                                  )}
+                                </div>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">By {event.organizers.length} hosts</span>
+                              </>
+                            ) : (
+                              <>
+                                <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                                  <img 
+                                    src="https://i.pravatar.cc/150?img=1" 
+                                    alt={event.organizer} 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(event.organizer)}&background=667eea&color=fff&size=128`;
+                                    }}
+                                  />
+                                </div>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">By {event.organizer}</span>
+                              </>
+                            )}
                           </div>
                         )}
                       </div>

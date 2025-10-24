@@ -1890,7 +1890,7 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
       ) : isFilterView ? (
         renderFilterView()
       ) : (
-        <div className="p-4 transition-all duration-300 ease-in-out">
+        <div className="transition-all duration-300 ease-in-out">
           {selectedWidget.label === 'Events List' 
             ? renderEventsListConfig() 
             : selectedWidget.label === 'Custom Events List'

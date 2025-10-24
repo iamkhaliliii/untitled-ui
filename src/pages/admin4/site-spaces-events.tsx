@@ -105,7 +105,6 @@ export const SiteSpacesEventsPage = () => {
         { id: "permissions", label: "Permissions", path: "/permissions" },
         { id: "members", label: "Members", path: "/members" },
         { id: "seo", label: "SEO", path: "/seo" },
-        { id: "customize", label: "Customizer", path: "/customize" },
         { id: "danger", label: "Danger Zone", path: "/danger" },
     ];
     

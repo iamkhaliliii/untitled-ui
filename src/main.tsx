@@ -64,6 +64,8 @@ import { SiteSpacesPostsCustomizePage as Admin4SiteSpacesPostsCustomizePage } fr
 import { SiteCmsEventsPage as Admin4SiteCmsEventsPage } from "@/pages/admin4/site-cms-events";
 import { SiteCmsEventsCustomizePage as Admin4SiteCmsEventsCustomizePage } from "@/pages/admin4/site-cms-events-customize";
 import { AdminDesignPage as Admin4DesignPage } from "@/pages/admin4/design";
+import { DesignSpacesCreatePage as Admin4DesignSpacesCreatePage } from "@/pages/admin4/design-spaces-create";
+import { DesignSpacesCustomizePage as Admin4DesignSpacesCustomizePage } from "@/pages/admin4/design-spaces-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
@@ -328,6 +330,25 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/design/site-appearance/typographies" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/site-appearance/styles" element={<Admin4DesignPage />} />
                         <Route path="/admin4/design/site-appearance/navigation" element={<Admin4DesignPage />} />
+                        <Route path="/admin4/design/spaces/create" element={<Admin4DesignSpacesCreatePage />} />
+                        
+                        {/* Design mode - Space type customization routes */}
+                        <Route path="/admin4/design/spaces/:spaceType/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/explore/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/discussions/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/questions/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/articles/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/events/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/guidelines/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/changelogs/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/jobs/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/wishlist/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/podcast/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        <Route path="/admin4/design/spaces/blank/customize" element={<Admin4DesignSpacesCustomizePage />} />
+                        
+                        {/* Legacy design space routes (keep for backward compatibility) */}
+                        <Route path="/admin4/design/spaces/growth/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
+                        <Route path="/admin4/design/spaces/myfolder/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         
                         {/* Legacy Admin Routes - redirect to Admin 3.0 */}
                         <Route path="/admin" element={<Navigate to="/admin3" replace />} />

@@ -1,29 +1,48 @@
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router";
 import { DesignLayout } from "@/components/layouts/design-layout";
 import { BrowserMockup } from "@/components/application/browser-mockup/browser-mockup";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { EventsCustomizeSettings } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/events-customize-settings";
 import { WidgetSelection } from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/widget-selection";
 import WidgetConfig from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/widget-config";
 import { Button } from "@/components/base/buttons/button";
-import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
-import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01 } from "@untitledui/icons";
+import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01, Edit02 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 
-export const SiteSpacesEventsCustomizePage = () => {
+export const DesignSpacesCustomizePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const params = useParams();
     
-    // Check if user came from Page Customizer
-    const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
-                                   document.referrer.includes('/admin4/design/page-customizer');
+    // Get space type from URL path or state
+    const spaceType = params.spaceType || location.state?.spaceType || 'discussions';
+    
+    // Check if user came from space creation
+    const cameFromSpaceCreation = location.state?.from === 'space-creation' || 
+                                   document.referrer.includes('/admin4/design/spaces/create');
     const currentPath = location.pathname;
     
     // Use widget config context for toggle states
     const { toggleStates, updateToggleStates: contextUpdateToggleStates } = useWidgetConfig();
     
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
+    
+    // Space name editing state
+    const [spaceName, setSpaceName] = useState<string>(() => {
+        const typeLabel = spaceType.charAt(0).toUpperCase() + spaceType.slice(1);
+        return `New ${typeLabel} Template`;
+    });
+    const [isEditingSpaceName, setIsEditingSpaceName] = useState<boolean>(true); // Start in edit mode
+    const spaceNameInputRef = useRef<HTMLInputElement>(null);
+    
+    // Auto-focus on space name input when page loads
+    useEffect(() => {
+        if (isEditingSpaceName && spaceNameInputRef.current) {
+            spaceNameInputRef.current.focus();
+            spaceNameInputRef.current.select();
+        }
+    }, [isEditingSpaceName]);
     
     // Device and navigation state
     const [selectedDevice, setSelectedDevice] = useState<string>("desktop");
@@ -38,15 +57,10 @@ export const SiteSpacesEventsCustomizePage = () => {
     const [tabConfigLabel, setTabConfigLabel] = useState<string>("");
     const [showNavigationInTertiary, setShowNavigationInTertiary] = useState<boolean>(false);
     
-    // Get page title and description
+    // Get page title and description based on space type
     const getPageTitle = () => {
-        if (currentPath.includes("/admin4/site/spaces/private-space")) {
-            return "Customize your private space layout and appearance";
-        }
-        if (currentPath.includes("/admin4/site/spaces/growth/events")) {
-            return "Customize your events page layout and appearance";
-        }
-        return "Customize your events page layout and appearance";
+        const typeLabel = spaceType.charAt(0).toUpperCase() + spaceType.slice(1);
+        return `Customize your ${typeLabel.toLowerCase()} space layout and appearance`;
     };
 
     const getMainTitle = () => {
@@ -130,16 +144,18 @@ export const SiteSpacesEventsCustomizePage = () => {
         setTabConfigLabel("");
     };
 
-    // Space Settings button handler
+    // Space Settings button handler (currently unused in design mode but kept for consistency)
     const handleSpaceSettings = () => {
-        // Navigate back to the main events page (without /customize)
-        const basePath = currentPath.replace('/customize', '');
-        navigate(basePath);
+        console.log("Space settings clicked");
     };
     
-    // Back to Page Customizer handler
-    const handleBackToPageCustomizer = () => {
-        navigate('/admin4/design/page-customizer');
+    // Back to Space Creation handler
+    const handleBackToSpaceCreation = () => {
+        navigate('/admin4/design/spaces/create', {
+            state: {
+                selectedSpaceType: spaceType
+            }
+        });
     };
 
     // Device selection handler
@@ -156,6 +172,29 @@ export const SiteSpacesEventsCustomizePage = () => {
     const handleSaveChanges = () => {
         console.log("Save changes clicked");
         // Add save functionality here
+    };
+    
+    // Space name editing handlers
+    const handleSpaceNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            setIsEditingSpaceName(false);
+        } else if (e.key === 'Escape') {
+            // Reset to original name and exit edit mode
+            const typeLabel = spaceType.charAt(0).toUpperCase() + spaceType.slice(1);
+            setSpaceName(`New ${typeLabel} Template`);
+            setIsEditingSpaceName(false);
+        }
+    };
+
+    const handleSpaceNameBlur = () => {
+        setIsEditingSpaceName(false);
+    };
+
+    const handleSpaceNameClick = () => {
+        if (!isEditingSpaceName) {
+            setIsEditingSpaceName(true);
+        }
     };
     
     // Get sidebar title based on current state
@@ -192,7 +231,8 @@ export const SiteSpacesEventsCustomizePage = () => {
             return "Configure navigation settings";
         }
         
-        return "Customize your events page layout and appearance";
+        const typeLabel = spaceType.charAt(0).toUpperCase() + spaceType.slice(1);
+        return `Customize your ${typeLabel.toLowerCase()} space layout and appearance`;
     };
 
     // Render sidebar content based on current state
@@ -251,7 +291,7 @@ export const SiteSpacesEventsCustomizePage = () => {
                 {/* Header Section - Match Page Customizer styling */}
                 <div className="px-4 mt-6 lg:px-5 flex-shrink-0">
                     <div className="flex items-center justify-between mb-2">
-                        {/* Left: Back button - show widget back button OR page customizer back button */}
+                        {/* Left: Back button - show widget back button OR space creation back button */}
                         {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) ? (
                             <button
                                 onClick={handleBackToCustomizer}
@@ -259,9 +299,9 @@ export const SiteSpacesEventsCustomizePage = () => {
                             >
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
                             </button>
-                        ) : cameFromPageCustomizer ? (
+                        ) : cameFromSpaceCreation ? (
                             <button
-                                onClick={handleBackToPageCustomizer}
+                                onClick={handleBackToSpaceCreation}
                                 className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
                             >
                                 <ArrowLeft className="size-4 text-fg-quaternary" />
@@ -283,7 +323,35 @@ export const SiteSpacesEventsCustomizePage = () => {
                     
                     {/* Title and Description */}
                     <div className="mb-3">
-                        <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">{getSidebarTitle()}</h3>
+                        {/* Show editable space name only in main customizer state (not in widget selection/config) */}
+                        {!(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) ? (
+                            <>
+                                {isEditingSpaceName ? (
+                                    <input
+                                        ref={spaceNameInputRef}
+                                        type="text"
+                                        value={spaceName}
+                                        onChange={(e) => setSpaceName(e.target.value)}
+                                        onKeyDown={handleSpaceNameKeyDown}
+                                        onBlur={handleSpaceNameBlur}
+                                        className="w-full text-[1.35rem] font-semibold text-primary tracking-tight bg-primary border border-brand-solid rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-transparent transition-all shadow-sm"
+                                        placeholder="Enter space name"
+                                    />
+                                ) : (
+                                    <div 
+                                        onClick={handleSpaceNameClick}
+                                        className="group flex items-center gap-2 cursor-text px-1 hover:opacity-70 transition-opacity"
+                                    >
+                                        <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">
+                                            {spaceName}
+                                        </h3>
+                                        <Edit02 className="size-4 text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">{getSidebarTitle()}</h3>
+                        )}
                         <p className="text-sm text-tertiary mt-1">{getSidebarDescription()}</p>
                     </div>
                 </div>
@@ -346,9 +414,10 @@ export const SiteSpacesEventsCustomizePage = () => {
                     </Button>
                 </div>
                 
-                {/* Browser Mockup */}
-                <BrowserMockup />
+                {/* Browser Mockup with selected space type preview */}
+                <BrowserMockup previewType={spaceType} />
             </div>
         </DesignLayout>
     );
 };
+

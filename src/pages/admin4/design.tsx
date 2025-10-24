@@ -27,7 +27,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
-import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01 } from "@untitledui/icons";
+import { File05, Folder, Calendar, File01, Package, Database01, SearchLg, Phone01, Tablet01, Monitor01, FlipBackward, FlipForward, LayoutTop, DotsGrid, DotsHorizontal, Plus, Home01, FilePlus01, AlertCircle } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { WidgetConfigProvider, useWidgetConfig } from "@/providers/widget-config-provider";
@@ -91,7 +91,7 @@ export const AdminDesignPage = () => {
     const returnToUrl = location.state?.returnTo;
     
     // State for TreeView
-    const [expandedIds, setExpandedIds] = useState<string[]>(["spaces"]);
+    const [expandedIds, setExpandedIds] = useState<string[]>([]);
     
     // State for Navigation config
     const [headerSidebarExpanded, setHeaderSidebarExpanded] = useState(true);
@@ -387,9 +387,9 @@ export const AdminDesignPage = () => {
     
     const renderPageCustomizerContent = () => {
         return (
-            <div>
+            <div className="flex h-full flex-col mt-2">
                 {/* Header Section */}
-                <div className="px-4 lg:px-5">
+                <div className="flex-shrink-0 px-4 lg:px-5">
                     {/* Back Button */}
                     <div className="mb-2">
                         <button
@@ -412,7 +412,7 @@ export const AdminDesignPage = () => {
                 </div>
 
                 {/* Search Field */}
-                <div className="mt-2 px-4">
+                <div className="flex-shrink-0 mt-2 px-4 mb-4">
                     <Input 
                         size="sm" 
                         aria-label="Search" 
@@ -421,24 +421,52 @@ export const AdminDesignPage = () => {
                     />
                 </div>
 
-                {/* TreeView Content */}
-                <div className="mt-4 px-4">
-                    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none">
-                        <TreeView
-                            data={pageCustomizerTreeData}
-                            expandedIds={expandedIds}
-                            selectedIds={["spaces"]}
-                            onNodeClick={handleNodeClick}
-                            onNodeExpand={handleNodeExpand}
-                            className="border-none bg-transparent"
-                            showLines={false}
-                            showIcons={true}
-                        />
-                    </div>
+                {/* Scrollable Content Area */}
+                <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none px-4">
+                    <TreeView
+                        data={pageCustomizerTreeData}
+                        expandedIds={expandedIds}
+                        selectedIds={[]}
+                        onNodeClick={handleNodeClick}
+                        onNodeExpand={handleNodeExpand}
+                        className="border-none bg-transparent"
+                        showLines={false}
+                        showIcons={true}
+                    />
                 </div>
 
-                {/* Footer spacer */}
-                <div className="mt-auto py-4"></div>
+                {/* Fixed Footer Actions */}
+                <div className="flex-shrink-0 bg-primary">
+                    <div className="h-px bg-secondary/40 my-2"></div>
+                    <button 
+                        onClick={() => navigate(`/${currentAdminVersion}/design/spaces/create`)}
+                        className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
+                    >
+                        <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                            <Package className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                        </div>
+                        <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                            Add space
+                        </span>
+                        <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                            <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                        </div>
+                    </button>
+                    <button 
+                        onClick={() => console.log('Add collection clicked')}
+                        className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5 mt-0.5"
+                    >
+                        <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
+                            <FilePlus01 className="size-4 text-fg-quaternary transition-inherit-all group-hover:text-secondary_hover" />
+                        </div>
+                        <span className="flex-1 text-sm font-medium text-secondary transition-inherit-all group-hover:text-secondary_hover truncate text-left">
+                            Add collection
+                        </span>
+                        <div className="ml-1 size-3 shrink-0 flex items-center justify-center">
+                            <AlertCircle className="size-3 text-fg-quaternary/60 opacity-60" />
+                        </div>
+                    </button>
+                </div>
             </div>
         );
     };
@@ -918,18 +946,7 @@ export const AdminDesignPage = () => {
                             <ButtonGroupItem id="desktop" iconLeading={Monitor01} />
                         </ButtonGroup>
                         
-                        {/* Navigation ButtonGroup */}
-                        <ButtonGroup
-                            size="sm"
-                            selectedKeys={["forward"]}
-                            onSelectionChange={(keys) => {
-                                const selected = Array.from(keys)[0] as string;
-                                console.log('Navigation changed:', selected);
-                            }}
-                        >
-                            <ButtonGroupItem id="back" iconLeading={FlipBackward} />
-                            <ButtonGroupItem id="forward" iconLeading={FlipForward} />
-                        </ButtonGroup>
+
                     </div>
                     
                     {/* Right side: Save button */}

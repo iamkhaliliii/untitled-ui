@@ -15,6 +15,7 @@ interface DesignLayoutProps {
     title?: string;
     description?: string;
     currentPath?: string;
+    modeSwitcherType?: 'dropdown' | 'buttonGroup';
 }
 
 export const DesignLayout = ({ 
@@ -24,7 +25,8 @@ export const DesignLayout = ({
     sidebarWidth = "w-93",
     title = "Design Studio",
     description = "Customize your community's appearance",
-    currentPath = "/admin4/design"
+    currentPath = "/admin4/design",
+    modeSwitcherType = 'buttonGroup'
 }: DesignLayoutProps) => {
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const isLg = useBreakpoint("lg");
@@ -90,6 +92,7 @@ export const DesignLayout = ({
                     isVisible={true} 
                     onToggleVisibility={toggleAdminHeader}
                     isAdminPage={true}
+                    modeSwitcherType={modeSwitcherType}
                 />
             </ErrorBoundary>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { DotsHorizontal, ArrowLeft, ArrowRight, RefreshCw02,Menu01, Globe01, Star01, Shield01, Calendar, SearchLg, Home01, Rss01, Lock01, UserPlus01, HelpCircle } from "@untitledui/icons";
+import { DotsHorizontal, ArrowLeft, ArrowRight, RefreshCw02,Menu01, Globe01, Star01, Shield01, Calendar, SearchLg, Home01, Rss01, Lock01, UserPlus01, HelpCircle, Users01, File01, File05, FolderCode, Image01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
@@ -10,6 +10,7 @@ import { AnnouncementBannerWidget } from "./announcement-banner-widget";
 import { LeaderboardWidget } from "./leaderboard-widget";
 import { HtmlScriptWidget } from "./html-script-widget";
 import { RichTextWidget } from "./rich-text-widget";
+import { SpacePreviews } from "./space-previews";
 
 
 
@@ -31,6 +32,52 @@ const customStyles = `
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background: rgba(156, 163, 175, 0.5);
   }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideOutLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      max-height: 40px;
+      margin-bottom: 4px;
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px) scale(0.95);
+      max-height: 0;
+      margin-bottom: 0;
+    }
+  }
 `;
 
 interface BrowserMockupProps {
@@ -38,6 +85,7 @@ interface BrowserMockupProps {
   url?: string;
   title?: string;
   theme?: 'light' | 'dark';
+  previewType?: string;
 }
 
 
@@ -45,7 +93,8 @@ export const BrowserMockup = ({
   className, 
   url = "/site/event", 
   title = "Events",
-  theme: propTheme
+  theme: propTheme,
+  previewType
 }: BrowserMockupProps) => {
   const theme = useResolvedTheme(propTheme);
   const { toggleStates, spaceWidgetStates, layoutStates, sidebarWidgetStates } = useWidgetConfig();
@@ -53,6 +102,8 @@ export const BrowserMockup = ({
   // Detect if we're on a private space page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
+  const isSpacesCreatePage = currentPath.includes('/design/spaces/create');
+  const isSpaceCustomizePage = currentPath.includes('/design/spaces/') && currentPath.includes('/customize');
 
   return (
     <div className="w-full h-full">
@@ -202,10 +253,6 @@ export const BrowserMockup = ({
                       <Rss01 className="h-3.5 w-3.5" />
                       Feed
                     </div>
-                    <div className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium bg-blue-600 text-white">
-                      <Calendar className="h-3.5 w-3.5" />
-                      Events
-                    </div>
                     <div className={cx(
                       "flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors",
                       theme === 'dark' ? "text-gray-400 hover:bg-gray-800 hover:text-gray-200" : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
@@ -213,6 +260,35 @@ export const BrowserMockup = ({
                       <SearchLg className="h-3.5 w-3.5" />
                       Explore
                     </div>
+                    
+                    {/* Dynamic Space Item - appears on hover after Explore */}
+                    {previewType && (
+                      <div 
+                        key={previewType}
+                        className={cx(
+                          "flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition-all duration-200 ease-out",
+                          theme === 'dark' 
+                            ? "bg-gray-800/60 text-gray-200 border border-gray-700/50" 
+                            : "bg-gray-100/80 text-gray-900 border border-gray-200/60"
+                        )}
+                        style={{
+                          animation: 'slideInLeft 0.25s ease-out'
+                        }}
+                      >
+                        {previewType.toLowerCase() === 'explore' && <Globe01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'discussions' && <Users01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'questions' && <HelpCircle className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'articles' && <File01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'events' && <Calendar className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'guidelines' && <File01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'changelogs' && <File01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'jobs' && <FolderCode className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'wishlist' && <Star01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'podcast' && <Image01 className="h-3.5 w-3.5" />}
+                        {previewType.toLowerCase() === 'blank' && <File05 className="h-3.5 w-3.5" />}
+                        {previewType}
+                      </div>
+                    )}
                   </nav>
                 </div>
               </div>
@@ -223,11 +299,18 @@ export const BrowserMockup = ({
               theme === 'dark' ? "bg-gray-800" : "bg-gray-50"
             )}>
               <div className="h-full overflow-y-auto scrollbar-thin">
-                <div className={cx(
-                  "mx-auto p-6 transition-all duration-200 ease-out",
-                  layoutStates?.layoutStyle === 'with-sidebar' ? "max-w-3xl" : "max-w-4xl"
-                )}>
-                                    {isPrivateSpacePage ? (
+                <div 
+                  className="p-6 transition-all duration-300 ease-in-out"
+                  style={{ zoom: 0.75 }}
+                >
+                  <div 
+                    key={previewType || 'default'}
+                    className="transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-bottom-4"
+                  >
+                    {(isSpacesCreatePage || isSpaceCustomizePage) ? (
+                    /* Preview Content for Space Types on Create/Customize Page */
+                    <SpacePreviews previewType={previewType || null} theme={theme} />
+                  ) : isPrivateSpacePage ? (
                     /* Private Space Empty State */
                     <>
                       <div className="mx-auto bg-white overflow-hidden rounded-xl shadow-md flex w-full  flex-col items-center justify-center py-20">
@@ -422,6 +505,7 @@ export const BrowserMockup = ({
                       )}
                     </div>
                   )}
+                  </div>
                 </div>
               </div>
             </div>

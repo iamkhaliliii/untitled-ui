@@ -71,7 +71,7 @@ export interface RichTextConfig {
 
 export const defaultEventsListConfig: EventsListConfig = {
   style: 'card',
-  cardSize: 'large',
+  cardSize: 'medium',
   cardStyle: 'simple',
   groupView: false,
   groupBy: 'date',

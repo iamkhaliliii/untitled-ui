@@ -1702,7 +1702,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             <div className="h-px bg-secondary/40 my-2"></div>
                             <button 
                                 data-tour-add-space
-                                onClick={handleAddSpaceClick}
+                                onClick={() => navigate(`/${currentAdminVersion}/design/spaces/create`)}
                                 className="cursor-pointer rounded-md group flex items-center w-full transition duration-100 ease-linear bg-primary text-secondary hover:bg-primary_hover hover:text-secondary_hover focus:outline-none px-3 py-1.5"
                             >
                                 <div className="mr-2 size-4 shrink-0 flex items-center justify-center">
@@ -1970,46 +1970,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             SEO
                                         </button>
                                     </li>
-                                    
-                                    {/* Divider */}
-                                    <li className="py-2">
-                                        <div className="border-t border-secondary"></div>
-                                    </li>
-                                    
-                                    {/* Show Customize tab for both CMS and regular pages */}
-                                    <li>
-                                        <button
-                                            onClick={() => handleSecondaryItemClick("customize", 
-                                                isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
-                                                isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
-                                                activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
-                                                isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
-                                                isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
-                                                isPostsPage ? `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` :
-                                                `/${currentAdminVersion}/site/spaces/myfolder/events/customize`
-                                            )}
-                                            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                                selectedSecondaryItem === "customize"
-                                                    ? "bg-active text-secondary_hover"
-                                                    : "text-secondary hover:text-primary hover:bg-secondary"
-                                            }`}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Palette className="h-4 w-4" />
-                                                Customizer
-                                            </div>
-                                            <ArrowUpRight className="h-4 w-4 text-quaternary" />
-                                        </button>
-                                    </li>
-                                    
-                                    {/* Divider */}
-                                    <li className="py-2">
-                                        <div className="border-t border-secondary"></div>
-                                    </li>
-                                    
                                     <li>
                                         <button
                                             onClick={() => handleSecondaryItemClick("danger", 
@@ -2049,33 +2009,6 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             <Settings01 className="h-4 w-4" />
                                             Settings
                                         </button>
-                                    </li>
-                                    
-                                    {/* Divider */}
-                                    <li className="py-2">
-                                        <div className="border-t border-secondary"></div>
-                                    </li>
-                                    
-                                    <li>
-                                        <button
-                                            onClick={() => handleSecondaryItemClick("customize", `/${currentAdminVersion}/site/cms/events/customize`)}
-                                            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                                selectedSecondaryItem === "customize"
-                                                    ? "bg-active text-secondary_hover"
-                                                    : "text-secondary hover:text-primary hover:bg-secondary"
-                                            }`}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Palette className="h-4 w-4" />
-                                                Customizer
-                                            </div>
-                                            <ArrowUpRight className="h-4 w-4 text-quaternary" />
-                                        </button>
-                                    </li>
-                                    
-                                    {/* Divider */}
-                                    <li className="py-2">
-                                        <div className="border-t border-secondary"></div>
                                     </li>
                                 </>
                             )}
