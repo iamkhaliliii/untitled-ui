@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, Grid01, Rows02, Dotpoints02, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Image01 } from '@untitledui/icons';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Grid01, Rows02, Dotpoints02, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Image01, DotsGrid } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Select } from '@/components/base/select/select';
@@ -20,15 +20,67 @@ export const QuestionsListConfig: React.FC = () => {
     authorInfo,
     answersCounter,
     votesCounter,
-    viewsCounter,
+    questionSummary,
+    tags,
     title,
-    description
+    description,
+    tabView,
+    latestTab,
+    trendingTab,
+    answeredTab,
+    unresolvedTab
   } = questionsListConfig;
   
   // Section collapse/expand states
   const [infoExpanded, setInfoExpanded] = useState(true);
+  const [tabViewsExpanded, setTabViewsExpanded] = useState(true);
   const [layoutExpanded, setLayoutExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
+  
+  // Tab views state
+  const [tabViews, setTabViews] = useState([
+    { id: 'latest', label: 'Latest', enabled: latestTab },
+    { id: 'trending', label: 'Trending', enabled: trendingTab },
+    { id: 'answered', label: 'Answered', enabled: answeredTab },
+    { id: 'unresolved', label: 'Unresolved', enabled: unresolvedTab }
+  ]);
+  const [editingTabId, setEditingTabId] = useState<string | null>(null);
+  
+  // Update tabView and individual tab configs whenever tabViews change
+  useEffect(() => {
+    const enabledTabsCount = tabViews.filter(tab => tab.enabled).length;
+    const latestTabItem = tabViews.find(tab => tab.id === 'latest');
+    const trendingTabItem = tabViews.find(tab => tab.id === 'trending');
+    const answeredTabItem = tabViews.find(tab => tab.id === 'answered');
+    const unresolvedTabItem = tabViews.find(tab => tab.id === 'unresolved');
+    
+    updateQuestionsListConfig({ 
+      tabView: enabledTabsCount > 1,
+      latestTab: latestTabItem?.enabled || false,
+      trendingTab: trendingTabItem?.enabled || false,
+      answeredTab: answeredTabItem?.enabled || false,
+      unresolvedTab: unresolvedTabItem?.enabled || false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabViews]);
+  
+  // Tab views handlers
+  const handleToggleTab = (tabId: string) => {
+    if (tabId === 'latest') return;
+    
+    setTabViews(prev => {
+      const updatedTabs = prev.map(tab => 
+        tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
+      );
+      return updatedTabs;
+    });
+  };
+  
+  const handleRenameTab = (tabId: string, newLabel: string) => {
+    setTabViews(prev => prev.map(tab => 
+      tab.id === tabId ? { ...tab, label: newLabel } : tab
+    ));
+  };
 
   const styleOptions = [
     { id: 'card', label: 'Card', icon: Grid01 },
@@ -82,6 +134,84 @@ export const QuestionsListConfig: React.FC = () => {
       </div>
     </div>
   );
+
+  const TabViewItem = ({ tab, onToggle, onRename }: {
+    tab: { id: string; label: string; enabled: boolean };
+    onToggle: (tabId: string) => void;
+    onRename: (tabId: string, newLabel: string) => void;
+  }) => {
+    const isEditing = editingTabId === tab.id;
+    const [editLabel, setEditLabel] = useState(tab.label);
+
+    useEffect(() => {
+      setEditLabel(tab.label);
+    }, [tab.label]);
+
+    const handleRename = () => {
+      onRename(tab.id, editLabel);
+      setEditingTabId(null);
+    };
+
+    const handleStartEdit = () => {
+      setEditingTabId(tab.id);
+      setEditLabel(tab.label);
+    };
+
+    const handleCancelEdit = () => {
+      setEditLabel(tab.label);
+      setEditingTabId(null);
+    };
+
+    return (
+      <div className={cx(
+        "flex items-center px-2 py-2 border rounded-lg transition-all duration-200",
+        theme === 'dark' 
+          ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+          : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+      )}>
+        <DotsGrid className={cx(
+          "size-4 mr-3 cursor-grab",
+          theme === 'dark' ? "text-gray-500" : "text-gray-400"
+        )} />
+
+        <div className="flex-1">
+          {isEditing ? (
+            <Input
+              value={editLabel}
+              onChange={(value) => setEditLabel(value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') handleCancelEdit();
+              }}
+              size="sm"
+              autoFocus
+            />
+          ) : (
+            <span 
+              className={cx(
+                "text-sm font-medium cursor-pointer",
+                theme === 'dark' ? "text-gray-100" : "text-gray-900"
+              )}
+              onDoubleClick={handleStartEdit}
+            >
+              {tab.label}
+            </span>
+          )}
+        </div>
+
+        <div className="mr-2">
+          <Toggle
+            isSelected={tab.enabled}
+            onChange={() => onToggle(tab.id)}
+            size="sm"
+            slim
+            isDisabled={tab.id === 'latest'}
+          />
+        </div>
+      </div>
+    );
+  };
 
   const StyleTile = ({ option, isSelected, onClick }: {
     option: { id: string; label: string; icon: React.ComponentType<any> };
@@ -153,10 +283,28 @@ export const QuestionsListConfig: React.FC = () => {
       </CustomizerSection>
 
       {/* Divider */}
-      <div className={cx(
-        "border-t",
-        theme === 'dark' ? "border-gray-700" : "border-secondary"
-      )}></div>
+      <div className="border-t border-secondary"></div>
+
+      {/* Tab Views Section */}
+      <CustomizerSection
+        title="Tab views"
+        isExpanded={tabViewsExpanded}
+        onExpandedChange={setTabViewsExpanded}
+      >
+        <div className="space-y-1.5">
+          {tabViews.map((tab) => (
+            <TabViewItem
+              key={tab.id}
+              tab={tab}
+              onToggle={handleToggleTab}
+              onRename={handleRenameTab}
+            />
+          ))}
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Layout Section */}
       <CustomizerSection
@@ -245,10 +393,18 @@ export const QuestionsListConfig: React.FC = () => {
           
           <PropertyToggle
             icon={Image01}
-            label="Views counter"
-            isSelected={viewsCounter}
-            onChange={(value) => updateQuestionsListConfig({ viewsCounter: value })}
-            id="views-counter"
+            label="Question summary"
+            isSelected={questionSummary}
+            onChange={(value) => updateQuestionsListConfig({ questionSummary: value })}
+            id="question-summary"
+          />
+          
+          <PropertyToggle
+            icon={Image01}
+            label="Tags"
+            isSelected={tags}
+            onChange={(value) => updateQuestionsListConfig({ tags: value })}
+            id="tags"
           />
         </div>
       </CustomizerSection>

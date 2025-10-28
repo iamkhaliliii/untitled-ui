@@ -157,8 +157,62 @@ export const QuestionsListWidget: React.FC<QuestionsListWidgetProps> = ({ classN
     </div>
   );
 
+  // Get enabled tabs for display
+  const getEnabledTabs = () => {
+    const tabs = [];
+    if (questionsListConfig.latestTab) tabs.push({ id: 'latest', label: 'Latest' });
+    if (questionsListConfig.trendingTab) tabs.push({ id: 'trending', label: 'Trending' });
+    if (questionsListConfig.answeredTab) tabs.push({ id: 'answered', label: 'Answered' });
+    if (questionsListConfig.unresolvedTab) tabs.push({ id: 'unresolved', label: 'Unresolved' });
+    return tabs;
+  };
+
+  const enabledTabs = getEnabledTabs();
+  const showTabs = questionsListConfig.tabView && enabledTabs.length > 1;
+
   return (
     <div className={cx("space-y-4", className)}>
+      {/* Title and Description */}
+      <div className={cx("space-y-0", showTabs && "mb-4")}>
+        <h2 className={cx(
+          "text-base font-semibold",
+          theme === 'dark' ? "text-gray-100" : "text-primary"
+        )}>
+          {questionsListConfig.title}
+        </h2>
+        <p className={cx(
+          "text-xs",
+          theme === 'dark' ? "text-gray-400" : "text-secondary"
+        )}>
+          {questionsListConfig.description}
+        </p>
+      </div>
+
+      {/* Tab Navigation */}
+      {showTabs && (
+        <div className="mb-4">
+          <div className="flex gap-1">
+            {enabledTabs.map((tab, index) => (
+              <button
+                key={tab.id}
+                className={cx(
+                  "px-3 py-2 text-sm font-semibold rounded-md transition-colors",
+                  index === 0
+                    ? theme === 'dark'
+                      ? "bg-gray-700 text-gray-100"
+                      : "bg-active text-secondary"
+                    : theme === 'dark'
+                      ? "text-gray-400 hover:text-gray-200"
+                      : "text-quaternary hover:text-secondary"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className={cx(
         questionsListConfig.style === 'card' && "grid gap-4",
         questionsListConfig.style === 'card' && questionsListConfig.cardSize === 'small' && "grid-cols-4",

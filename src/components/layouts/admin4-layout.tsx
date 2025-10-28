@@ -5,6 +5,7 @@ import {
     CheckDone01,
     ClockFastForward,
     CurrencyDollarCircle,
+    CreditCard01,
     Grid03,
     HomeLine,
     Inbox01,
@@ -33,6 +34,8 @@ import {
     Globe01,
     Key01,
     Mail01,
+    Grid01,
+    Zap,
     SearchLg,
     MessageSquare01,
     Shield01,
@@ -43,7 +46,6 @@ import {
     Calendar,
     MessageChatCircle,
     Tag01,
-    Zap,
     Target03,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
@@ -103,6 +105,44 @@ const generateAdmin4NavItems = (): NavItemType[] => {
         ],
     });
     
+    // Billing section
+    items.push({
+        label: "Billing",
+        href: "/admin4/billing",
+        icon: CreditCard01,
+        items: [
+            { label: "Summary", href: "/admin4/billing", icon: CreditCard01 },
+            { label: "Subscription plans", href: "/admin4/billing/plans", icon: Package },
+            { label: "Service usage", href: "/admin4/billing/usage", icon: BarChartSquare02 },
+        ],
+    });
+    
+    // Reports section
+    items.push({
+        label: "Reports",
+        href: "/admin4/report",
+        icon: BarChartSquare02,
+        items: [
+            { label: "Overview", href: "/admin4/report", icon: BarChartSquare02 },
+            { label: "Reach & engagement", href: "/admin4/report/reach", icon: LineChartUp03 },
+            { label: "People", href: "/admin4/report/people", icon: Users01 },
+            { label: "Posts", href: "/admin4/report/posts", icon: Package },
+            { label: "Spaces", href: "/admin4/report/spaces", icon: Archive },
+            { label: "Audit logs", href: "/admin4/report/audit-logs", icon: CheckDone01 },
+            { label: "Email logs", href: "/admin4/report/email-logs", icon: Inbox01 },
+        ],
+    });
+    
+    // App Store section
+    items.push({
+        label: "App Store",
+        href: "/admin4/appstore",
+        icon: Grid01,
+        items: [
+            { label: "Apps & Integrations", href: "/admin4/appstore", icon: Grid01 },
+            { label: "Add-ons", href: "/admin4/appstore/addons", icon: Zap },
+        ],
+    });
     
     // Setting section
     items.push({
@@ -121,48 +161,6 @@ const generateAdmin4NavItems = (): NavItemType[] => {
             { label: "SEO settings", href: "/admin4/setting/seo-settings", icon: SearchMd },
             { label: "Security & Privacy", href: "/admin4/setting/security-privacy", icon: Lock01 },
             { label: "Gamification", href: "/admin4/setting/gamification", icon: Trophy01 },
-        ],
-    });
-    
-    // Billing section
-    items.push({
-        label: "Billing",
-        href: "/admin4/billing",
-        icon: CreditCard02,
-        items: [
-            { label: "Overview", href: "/admin4/billing/overview", icon: BarChartSquare02 },
-            { label: "Invoices", href: "/admin4/billing/invoices", icon: Package },
-            { label: "Payments", href: "/admin4/billing/payments", icon: CurrencyDollarCircle },
-            { label: "Subscriptions", href: "/admin4/billing/subscriptions", icon: Stars01 },
-            { label: "History", href: "/admin4/billing/history", icon: Archive },
-        ],
-    });
-    
-    // Report section
-    items.push({
-        label: "Report",
-        href: "/admin4/report",
-        icon: BarChartSquare02,
-        items: [
-            { label: "Analytics", href: "/admin4/report/analytics", icon: LineChartUp03 },
-            { label: "Traffic", href: "/admin4/report/traffic", icon: BarChartSquare02 },
-            { label: "Users", href: "/admin4/report/users", icon: Users01 },
-            { label: "Content", href: "/admin4/report/content", icon: Package },
-            { label: "Performance", href: "/admin4/report/performance", icon: Star01 },
-        ],
-    });
-    
-    // AppStore section
-    items.push({
-        label: "AppStore",
-        href: "/admin4/appstore",
-        icon: Data,
-        items: [
-            { label: "Browse", href: "/admin4/appstore/browse", icon: Grid03 },
-            { label: "Installed", href: "/admin4/appstore/installed", icon: CheckDone01 },
-            { label: "Updates", href: "/admin4/appstore/updates", icon: ClockFastForward },
-            { label: "Favorites", href: "/admin4/appstore/favorites", icon: Star01 },
-            { label: "Settings", href: "/admin4/appstore/settings", icon: Settings01 },
         ],
     });
     

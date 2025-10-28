@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, Grid01, Rows02, Dotpoints02, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Image01 } from '@untitledui/icons';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Grid01, Rows02, Dotpoints02, User02, Monitor01, Square, Maximize01, Minimize01, CheckCircle, Image01, DotsGrid } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Select } from '@/components/base/select/select';
@@ -17,18 +17,75 @@ export const WishlistsListConfig: React.FC = () => {
     style, 
     cardSize, 
     cardStyle, 
-    creatorInfo,
+    authorInfo,
     votesCounter,
     commentsCounter,
     statusBadge,
+    reactionAndReply,
+    tags,
     title,
-    description
+    description,
+    tabView,
+    allTab,
+    trendingTab,
+    newTab,
+    mostPopularTab,
+    deliveredTab
   } = wishlistsListConfig;
   
   // Section collapse/expand states
   const [infoExpanded, setInfoExpanded] = useState(true);
+  const [tabViewsExpanded, setTabViewsExpanded] = useState(true);
   const [layoutExpanded, setLayoutExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
+  
+  // Tab views state
+  const [tabViews, setTabViews] = useState([
+    { id: 'all', label: 'All', enabled: allTab },
+    { id: 'trending', label: 'Trending', enabled: trendingTab },
+    { id: 'new', label: 'New', enabled: newTab },
+    { id: 'most-popular', label: 'Most Popular', enabled: mostPopularTab },
+    { id: 'delivered', label: 'Delivered', enabled: deliveredTab }
+  ]);
+  const [editingTabId, setEditingTabId] = useState<string | null>(null);
+  
+  // Update tabView and individual tab configs whenever tabViews change
+  useEffect(() => {
+    const enabledTabsCount = tabViews.filter(tab => tab.enabled).length;
+    const allTabItem = tabViews.find(tab => tab.id === 'all');
+    const trendingTabItem = tabViews.find(tab => tab.id === 'trending');
+    const newTabItem = tabViews.find(tab => tab.id === 'new');
+    const mostPopularTabItem = tabViews.find(tab => tab.id === 'most-popular');
+    const deliveredTabItem = tabViews.find(tab => tab.id === 'delivered');
+    
+    updateWishlistsListConfig({ 
+      tabView: enabledTabsCount > 1,
+      allTab: allTabItem?.enabled || false,
+      trendingTab: trendingTabItem?.enabled || false,
+      newTab: newTabItem?.enabled || false,
+      mostPopularTab: mostPopularTabItem?.enabled || false,
+      deliveredTab: deliveredTabItem?.enabled || false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabViews]);
+  
+  // Tab views handlers
+  const handleToggleTab = (tabId: string) => {
+    if (tabId === 'all') return;
+    
+    setTabViews(prev => {
+      const updatedTabs = prev.map(tab => 
+        tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
+      );
+      return updatedTabs;
+    });
+  };
+  
+  const handleRenameTab = (tabId: string, newLabel: string) => {
+    setTabViews(prev => prev.map(tab => 
+      tab.id === tabId ? { ...tab, label: newLabel } : tab
+    ));
+  };
 
   const styleOptions = [
     { id: 'card', label: 'Card', icon: Grid01 },
@@ -82,6 +139,84 @@ export const WishlistsListConfig: React.FC = () => {
       </div>
     </div>
   );
+
+  const TabViewItem = ({ tab, onToggle, onRename }: {
+    tab: { id: string; label: string; enabled: boolean };
+    onToggle: (tabId: string) => void;
+    onRename: (tabId: string, newLabel: string) => void;
+  }) => {
+    const isEditing = editingTabId === tab.id;
+    const [editLabel, setEditLabel] = useState(tab.label);
+
+    useEffect(() => {
+      setEditLabel(tab.label);
+    }, [tab.label]);
+
+    const handleRename = () => {
+      onRename(tab.id, editLabel);
+      setEditingTabId(null);
+    };
+
+    const handleStartEdit = () => {
+      setEditingTabId(tab.id);
+      setEditLabel(tab.label);
+    };
+
+    const handleCancelEdit = () => {
+      setEditLabel(tab.label);
+      setEditingTabId(null);
+    };
+
+    return (
+      <div className={cx(
+        "flex items-center px-2 py-2 border rounded-lg transition-all duration-200",
+        theme === 'dark' 
+          ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+          : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+      )}>
+        <DotsGrid className={cx(
+          "size-4 mr-3 cursor-grab",
+          theme === 'dark' ? "text-gray-500" : "text-gray-400"
+        )} />
+
+        <div className="flex-1">
+          {isEditing ? (
+            <Input
+              value={editLabel}
+              onChange={(value) => setEditLabel(value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') handleCancelEdit();
+              }}
+              size="sm"
+              autoFocus
+            />
+          ) : (
+            <span 
+              className={cx(
+                "text-sm font-medium cursor-pointer",
+                theme === 'dark' ? "text-gray-100" : "text-gray-900"
+              )}
+              onDoubleClick={handleStartEdit}
+            >
+              {tab.label}
+            </span>
+          )}
+        </div>
+
+        <div className="mr-2">
+          <Toggle
+            isSelected={tab.enabled}
+            onChange={() => onToggle(tab.id)}
+            size="sm"
+            slim
+            isDisabled={tab.id === 'all'}
+          />
+        </div>
+      </div>
+    );
+  };
 
   const StyleTile = ({ option, isSelected, onClick }: {
     option: { id: string; label: string; icon: React.ComponentType<any> };
@@ -153,10 +288,28 @@ export const WishlistsListConfig: React.FC = () => {
       </CustomizerSection>
 
       {/* Divider */}
-      <div className={cx(
-        "border-t",
-        theme === 'dark' ? "border-gray-700" : "border-secondary"
-      )}></div>
+      <div className="border-t border-secondary"></div>
+
+      {/* Tab Views Section */}
+      <CustomizerSection
+        title="Tab views"
+        isExpanded={tabViewsExpanded}
+        onExpandedChange={setTabViewsExpanded}
+      >
+        <div className="space-y-1.5">
+          {tabViews.map((tab) => (
+            <TabViewItem
+              key={tab.id}
+              tab={tab}
+              onToggle={handleToggleTab}
+              onRename={handleRenameTab}
+            />
+          ))}
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className="border-t border-secondary"></div>
 
       {/* Layout Section */}
       <CustomizerSection
@@ -221,10 +374,10 @@ export const WishlistsListConfig: React.FC = () => {
         <div className="space-y-2">
           <PropertyToggle
             icon={User02}
-            label="Creator info"
-            isSelected={creatorInfo}
-            onChange={(value) => updateWishlistsListConfig({ creatorInfo: value })}
-            id="creator-info"
+            label="Author info"
+            isSelected={authorInfo}
+            onChange={(value) => updateWishlistsListConfig({ authorInfo: value })}
+            id="author-info"
           />
 
           <PropertyToggle
@@ -236,19 +389,35 @@ export const WishlistsListConfig: React.FC = () => {
           />
           
           <PropertyToggle
-            icon={Calendar}
-            label="Comments counter"
-            isSelected={commentsCounter}
-            onChange={(value) => updateWishlistsListConfig({ commentsCounter: value })}
-            id="comments-counter"
-          />
-          
-          <PropertyToggle
             icon={Image01}
             label="Status badge"
             isSelected={statusBadge}
             onChange={(value) => updateWishlistsListConfig({ statusBadge: value })}
             id="status-badge"
+          />
+          
+          <PropertyToggle
+            icon={Calendar}
+            label="Comments"
+            isSelected={commentsCounter}
+            onChange={(value) => updateWishlistsListConfig({ commentsCounter: value })}
+            id="comments"
+          />
+          
+          <PropertyToggle
+            icon={CheckCircle}
+            label="Reaction & reply"
+            isSelected={reactionAndReply}
+            onChange={(value) => updateWishlistsListConfig({ reactionAndReply: value })}
+            id="reaction-and-reply"
+          />
+          
+          <PropertyToggle
+            icon={Image01}
+            label="Tags"
+            isSelected={tags}
+            onChange={(value) => updateWishlistsListConfig({ tags: value })}
+            id="tags"
           />
         </div>
       </CustomizerSection>

@@ -730,73 +730,73 @@ export const AdminContent2Page = () => {
                         </div>
 
                         {/* Mobile-Optimized Table */}
-                        <div className="-mx-4 lg:mx-0 lg:border lg:border-secondary lg:rounded-xl bg-primary lg:shadow-xs overflow-hidden">
+                        <div className="-mx-4 lg:mx-0 lg:border lg:border-secondary dark:border-gray-700 lg:rounded-xl bg-primary dark:bg-gray-900 lg:shadow-xs overflow-hidden">
                             <div className="relative overflow-x-auto">
-                                <table className="min-w-full divide-y divide-secondary table-fixed">
-                                    <thead className="bg-primary">
+                                <table className="min-w-full divide-y divide-secondary dark:divide-gray-700 table-fixed">
+                                    <thead className="bg-primary dark:bg-gray-900">
                                         <tr>
-                                            <th scope="col" className="pl-3 pr-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-48 lg:w-64">
+                                            <th scope="col" className="pl-3 pr-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-48 lg:w-64">
                                                 {isEventsPage ? "Event" : 
                                                  isSpacesPage ? "Space" :
                                                  isTagPage ? "Tag" : "Title"}
                                             </th>
                                             {!isSpacesPage && !isTagPage && (
-                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-20 lg:w-32">
                                                     <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
                                                         Status
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-32 lg:w-48">
-                                                {isEventsPage ? "Org" : 
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-32 lg:w-48">
+                                                {isEventsPage ? "Organizer" : 
                                                  isSpacesPage ? "Members" :
                                                  isTagPage ? "Slug" : "Author"}
                                             </th>
-                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-24 lg:w-48">
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-24 lg:w-48">
                                                 {isEventsPage ? "Location" : 
                                                  isSpacesPage ? "Posts" :
-                                                 isTagPage ? "Desc" : "Space"}
+                                                 isTagPage ? "Description" : "Space"}
                                             </th>
                                             {isEventsPage && (
-                                                <th scope="col" className="hidden lg:table-cell px-6 py-3 text-left font-medium text-tertiary whitespace-nowrap w-48">
+                                                <th scope="col" className="hidden lg:table-cell px-6 py-3 text-left font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-48">
                                                     <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover">
                                                         Spaces
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-20 lg:w-32">
                                                 <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
                                                     {isEventsPage ? "Date" : 
                                                      isSpacesPage ? "Created" :
-                                                     isTagPage ? "" : "Pub"}
+                                                     isTagPage ? "" : "Published"}
                                                     <ChevronDown className="ml-0.5 lg:ml-1 w-3 h-3 lg:w-4 lg:h-4" />
                                                 </button>
                                             </th>
-                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                            <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-20 lg:w-32">
                                                 <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
-                                                    {isEventsPage ? "Attend" : 
+                                                    {isEventsPage ? "Attendees" : 
                                                      isSpacesPage ? "Private" :
                                                      isTagPage ? "" : "Replies"}
                                                 </button>
                                             </th>
                                             {!isSpacesPage && !isTagPage && (
-                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary whitespace-nowrap w-20 lg:w-32">
+                                                <th scope="col" className="px-1 lg:px-6 py-2 lg:py-3 text-left text-sm lg:text-sm font-medium text-tertiary dark:text-gray-400 whitespace-nowrap w-20 lg:w-32">
                                                     <button className="flex items-center text-brand-secondary hover:text-brand-secondary_hover text-sm lg:text-sm">
-                                                        {isEventsPage ? "Cap" : "React"}
+                                                        {isEventsPage ? "Capacity" : "Reactions"}
                                                     </button>
                                                 </th>
                                             )}
-                                            <th scope="col" className="pl-1 pr-3 lg:px-6 py-2 lg:py-3 text-left font-medium text-tertiary whitespace-nowrap w-8 lg:w-8 sticky right-0 bg-primary">
+                                            <th scope="col" className="pl-1 pr-3 lg:px-6 py-2 lg:py-3 text-left font-medium text-tertiary whitespace-nowrap w-8 lg:w-8 sticky right-0 bg-primary dark:bg-gray-900">
                                                 &nbsp;
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-secondary bg-primary">
+                                    <tbody className="divide-y divide-secondary dark:divide-gray-700 bg-primary dark:bg-gray-900">
                                         {(isEventsPage ? sampleEvents : 
                                           isPostsPage ? samplePosts :
                                           isSpacesPage ? sampleSpaces :
                                           isTagPage ? sampleTags : []).map((item) => (
-                                            <tr key={item.id} className="hover:bg-secondary/20">
+                                            <tr key={item.id} className="hover:bg-secondary/20 dark:hover:bg-gray-800/50">
                                                 <td className="pl-3 pr-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                     <div className="overflow-hidden truncate w-48 lg:w-64">
                                                         <button className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-left text-sm lg:text-base">
@@ -808,7 +808,7 @@ export const AdminContent2Page = () => {
                                                     <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                         <div className="overflow-hidden truncate w-20 lg:w-32">
                                                             <Badge color={(item as any).status === 'Published' ? 'success' : 'warning'} size="sm">
-                                                                {(item as any).status === 'Published' ? 'Pub' : 'Draft'}
+                                                                {(item as any).status === 'Published' ? 'Published' : 'Draft'}
                                                             </Badge>
                                                         </div>
                                                     </td>
@@ -816,15 +816,15 @@ export const AdminContent2Page = () => {
                                                 <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                     <div className="overflow-hidden truncate w-32 lg:w-48">
                                                         {isSpacesPage ? (
-                                                            <span className="text-sm lg:text-sm text-primary">
+                                                            <span className="text-sm lg:text-sm text-primary dark:text-gray-300">
                                                                 {(item as any).membersCount}
                                                             </span>
                                                         ) : isTagPage ? (
-                                                            <span className="text-sm lg:text-sm text-tertiary font-mono">
+                                                            <span className="text-sm lg:text-sm text-tertiary dark:text-gray-400 font-mono">
                                                                 {(item as any).slug}
                                                             </span>
                                                         ) : (
-                                                            <div className="flex items-center gap-0.5 lg:gap-2 bg-secondary/40 text-tertiary px-0.5 lg:px-2 py-0.5 lg:py-1 rounded max-w-full">
+                                                            <div className="flex items-center gap-0.5 lg:gap-2 bg-secondary/40 dark:bg-gray-700/40 text-tertiary dark:text-gray-300 px-0.5 lg:px-2 py-0.5 lg:py-1 rounded max-w-full">
                                                                 <Avatar 
                                                                     src={isEventsPage ? (item as any).organizer.avatar : (item as any).author.avatar} 
                                                                     alt={isEventsPage ? (item as any).organizer.name : (item as any).author.name}
@@ -841,7 +841,7 @@ export const AdminContent2Page = () => {
                                                 <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                     <div className="overflow-hidden truncate w-24 lg:w-48">
                                                         {isTagPage ? (
-                                                            <span className="text-sm lg:text-sm text-tertiary">
+                                                            <span className="text-sm lg:text-sm text-tertiary dark:text-gray-400">
                                                                 {(item as any).description}
                                                             </span>
                                                         ) : (
@@ -868,7 +868,7 @@ export const AdminContent2Page = () => {
                                                 {!isTagPage && (
                                                     <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                         <div className="overflow-hidden truncate w-20 lg:w-32">
-                                                            <div className="text-sm lg:text-sm" title={isEventsPage ? (item as any).eventDate : 
+                                                            <div className="text-sm lg:text-sm text-secondary dark:text-gray-300" title={isEventsPage ? (item as any).eventDate : 
                                                                        isSpacesPage ? (item as any).createdAt :
                                                                        (item as any).publishedAt}>
                                                                 {isEventsPage ? (item as any).eventDate : 
@@ -882,13 +882,13 @@ export const AdminContent2Page = () => {
                                                     <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                         <div className="overflow-hidden truncate w-20 lg:w-32">
                                                             {isEventsPage ? (
-                                                                <span className="text-sm lg:text-sm">{(item as any).attendees}</span>
+                                                                <span className="text-sm lg:text-sm text-secondary dark:text-gray-300">{(item as any).attendees}</span>
                                                             ) : isSpacesPage ? (
                                                                 <Badge color={(item as any).isPrivate ? 'warning' : 'success'} size="sm">
-                                                                    {(item as any).isPrivate ? 'Priv' : 'Pub'}
+                                                                    {(item as any).isPrivate ? 'Private' : 'Public'}
                                                                 </Badge>
                                                              ) : (
-                                                                <span className="text-sm lg:text-sm">{(item as any).replies}</span>
+                                                                <span className="text-sm lg:text-sm text-secondary dark:text-gray-300">{(item as any).replies}</span>
                                                              )}
                                                         </div>
                                                     </td>
@@ -896,11 +896,11 @@ export const AdminContent2Page = () => {
                                                 {!isSpacesPage && !isTagPage && (
                                                     <td className="px-1 lg:px-6 py-2 lg:py-4 whitespace-nowrap">
                                                         <div className="overflow-hidden truncate w-20 lg:w-32">
-                                                            <span className="text-sm lg:text-sm">{isEventsPage ? (item as any).capacity : ((item as any).reactions || 0)}</span>
+                                                            <span className="text-sm lg:text-sm text-secondary dark:text-gray-300">{isEventsPage ? (item as any).capacity : ((item as any).reactions || 0)}</span>
                                                         </div>
                                                     </td>
                                                 )}
-                                                <td className="pl-1 pr-3 lg:px-6 py-2 lg:py-4 whitespace-nowrap sticky right-0 bg-primary">
+                                                <td className="pl-1 pr-3 lg:px-6 py-2 lg:py-4 whitespace-nowrap sticky right-0 bg-primary dark:bg-gray-900">
                                                     <div className="w-8 lg:w-8">
                                                         {isEventsPage ? (
                                                             <>
@@ -1046,7 +1046,7 @@ export const AdminContent2Page = () => {
                                     duration: 0.25,
                                     ease: "easeOut"
                                 }}
-                                className="fixed bottom-0 left-0 right-0 bg-primary border-t border-secondary z-[76] lg:hidden max-h-[80vh] rounded-t-xl"
+                                className="fixed bottom-0 left-0 right-0 bg-primary dark:bg-gray-900 border-t border-secondary dark:border-gray-700 z-[76] lg:hidden max-h-[80vh] rounded-t-xl"
                             >
                                 <div className="flex flex-col">
                                     {/* Drag Handle */}
@@ -1146,12 +1146,12 @@ export const AdminContent2Page = () => {
                         />
                         
                         {/* Modal */}
-                        <div className="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                        <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
                             {/* Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900">Event RSVPs</h2>
-                                    <p className="text-sm text-gray-600 mt-1">
+                                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Event RSVPs</h2>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                                         Manage RSVPs for "{selectedEvent.title}"
                                     </p>
                                 </div>
@@ -1160,7 +1160,7 @@ export const AdminContent2Page = () => {
                                         setRsvpModalOpen(false);
                                         setSelectedEvent(null);
                                     }}
-                                    className="text-gray-400 hover:text-gray-600 p-2"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2"
                                 >
                                     ✕
                                 </button>
@@ -1169,25 +1169,25 @@ export const AdminContent2Page = () => {
                             {/* Content */}
                             <div className="p-6 space-y-6">
                                 {/* Overview Stats */}
-                                <div className="bg-gray-50 rounded-lg p-6">
+                                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
                                     <div className="space-y-4">
                                         {/* Header with numbers */}
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <div className="text-2xl font-bold text-gray-900">
+                                                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                                     <span>{selectedEvent.attendees || 0}</span>
-                                                    <span className="text-gray-400 mx-2">/</span>
+                                                    <span className="text-gray-400 dark:text-gray-500 mx-2">/</span>
                                                     <span>{selectedEvent.capacity || 0}</span>
                                                 </div>
-                                                <div className="text-sm text-gray-600 mt-1">
+                                                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                                                     RSVPs confirmed
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <div className="text-2xl font-bold text-gray-900">
+                                                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                                     {Math.round(((selectedEvent.attendees || 0) / (selectedEvent.capacity || 1)) * 100)}%
                                                 </div>
-                                                <div className="text-sm text-gray-600">
+                                                <div className="text-sm text-gray-600 dark:text-gray-400">
                                                     capacity filled
                                                 </div>
                                             </div>
@@ -1208,14 +1208,14 @@ export const AdminContent2Page = () => {
                                 {/* All Attendees List */}
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
-                                        <h3 className="font-medium text-gray-900">All Attendees</h3>
+                                        <h3 className="font-medium text-gray-900 dark:text-gray-100">All Attendees</h3>
                                         <div className="flex items-center gap-3">
                                             <div className="relative">
-                                                <SearchLg className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+                                                <SearchLg className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400 dark:text-gray-500" />
                                                 <input
                                                     type="text"
                                                     placeholder="Search attendees..."
-                                                    className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                    className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                                 />
                                             </div>
                                             <Button color="secondary" size="sm" iconLeading={Download01}>
@@ -1225,7 +1225,7 @@ export const AdminContent2Page = () => {
                                     </div>
                                     <div className="space-y-2 max-h-80 overflow-y-auto">
                                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((rsvp) => (
-                                            <div key={rsvp} className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 rounded-lg">
+                                            <div key={rsvp} className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
                                                 <div className="flex items-center gap-3 flex-1 min-w-0">
                                                     <Avatar
                                                         src={`https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80&${rsvp}`}
@@ -1332,7 +1332,7 @@ export const AdminContent2Page = () => {
 
                     {/* Stats Cards */}
                     <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        <div className="rounded-xl bg-primary p-6 shadow-xs ring-1 ring-secondary ring-inset">
+                        <div className="rounded-xl bg-primary dark:bg-gray-900 p-6 shadow-xs ring-1 ring-secondary dark:ring-gray-700 ring-inset">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     <Calendar className="size-8 text-brand-secondary" />
@@ -1343,7 +1343,7 @@ export const AdminContent2Page = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-primary p-6 shadow-xs ring-1 ring-secondary ring-inset">
+                        <div className="rounded-xl bg-primary dark:bg-gray-900 p-6 shadow-xs ring-1 ring-secondary dark:ring-gray-700 ring-inset">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     <MessageChatCircle className="size-8 text-brand-secondary" />
@@ -1354,7 +1354,7 @@ export const AdminContent2Page = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-primary p-6 shadow-xs ring-1 ring-secondary ring-inset">
+                        <div className="rounded-xl bg-primary dark:bg-gray-900 p-6 shadow-xs ring-1 ring-secondary dark:ring-gray-700 ring-inset">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     <Building05 className="size-8 text-brand-secondary" />
@@ -1365,7 +1365,7 @@ export const AdminContent2Page = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-primary p-6 shadow-xs ring-1 ring-secondary ring-inset">
+                        <div className="rounded-xl bg-primary dark:bg-gray-900 p-6 shadow-xs ring-1 ring-secondary dark:ring-gray-700 ring-inset">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     <Tag01 className="size-8 text-brand-secondary" />
@@ -1379,8 +1379,8 @@ export const AdminContent2Page = () => {
                     </div>
 
                     {/* Tree View Section */}
-                    <div className="rounded-xl bg-primary shadow-xs ring-1 ring-secondary ring-inset">
-                        <div className="border-b border-secondary px-6 py-4">
+                    <div className="rounded-xl bg-primary dark:bg-gray-900 shadow-xs ring-1 ring-secondary dark:ring-gray-700 ring-inset">
+                        <div className="border-b border-secondary dark:border-gray-700 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-semibold text-primary">Content Structure</h2>
                                 <div className="flex items-center gap-2">

@@ -20,9 +20,8 @@ export const DiscussionsListWidget: React.FC<DiscussionsListWidgetProps> = ({ cl
   // Generate tab items based on config
   const getTabItems = () => {
     const tabs = [];
-    if (discussionsListConfig.allTab) tabs.push({ id: 'All', label: 'All' });
+    if (discussionsListConfig.allTab) tabs.push({ id: 'Latest', label: 'Latest' });
     if (discussionsListConfig.trendingTab) tabs.push({ id: 'Trending', label: 'Trending' });
-    if (discussionsListConfig.recentTab) tabs.push({ id: 'Recent', label: 'Recent' });
     return tabs;
   };
 
@@ -317,6 +316,23 @@ export const DiscussionsListWidget: React.FC<DiscussionsListWidgetProps> = ({ cl
 
   return (
     <div className={cx("space-y-4", className)}>
+      {/* Title and Description */}
+      <div className="space-y-0 mb-4">
+        <h2 className={cx(
+          "text-base font-semibold",
+          theme === 'dark' ? "text-gray-100" : "text-primary"
+        )}>
+          {discussionsListConfig.title}
+        </h2>
+        <p className={cx(
+          "text-xs",
+          theme === 'dark' ? "text-gray-400" : "text-secondary"
+        )}>
+          {discussionsListConfig.description}
+        </p>
+      </div>
+
+      {/* Tab Navigation */}
       {discussionsListConfig.tabView && getTabItems().length > 0 && (
         <div className="mb-4">
           <Tabs selectedKey={activeTab} onSelectionChange={setActiveTab} className="w-max">

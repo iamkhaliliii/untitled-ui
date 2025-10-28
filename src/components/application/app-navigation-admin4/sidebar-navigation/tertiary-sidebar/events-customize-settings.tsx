@@ -634,18 +634,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'discussionsList', label: 'Discussions List' })}
             />
             
-            {/* 4. Knowledges List */}
-            <PropertyToggle
-              icon={BookOpen01}
-              label="Knowledges List"
-              isSelected={spaceWidgetStates.knowledgesList ?? false}
-              onChange={(value) => updateSpaceWidgetStates({ knowledgesList: value })}
-              id="knowledges-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'knowledgesList', label: 'Knowledges List' })}
-            />
-            
-            {/* 5. Wishlists List */}
+            {/* 4. Wishlists List */}
             <PropertyToggle
               icon={Heart}
               label="Wishlists List"
@@ -656,7 +645,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'wishlistsList', label: 'Wishlists List' })}
             />
             
-            {/* 6. Questions List */}
+            {/* 5. Questions List */}
             <PropertyToggle
               icon={QuestionIcon}
               label="Questions List"
@@ -665,61 +654,6 @@ export const EventsCustomizeSettings = ({
               id="questions-list"
               iconColor="bg-green-100/20"
               onSettingsClick={() => onWidgetConfig({ id: 'questionsList', label: 'Questions List' })}
-            />
-            
-            {/* 7. Announcement Banner */}
-            <PropertyToggle
-              icon={HelpCircle}
-              label="Announcement Banner"
-              isSelected={spaceWidgetStates.announcementBanner}
-              onChange={(value) => updateSpaceWidgetStates({ announcementBanner: value })}
-              id="announcement-banner"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'announcementBanner', label: 'Announcement Banner' })}
-            />
-            
-            {/* 8. Leaderboard */}
-            <PropertyToggle
-              icon={Star01}
-              label="Leaderboard"
-              isSelected={spaceWidgetStates.leaderboard}
-              onChange={(value) => updateSpaceWidgetStates({ leaderboard: value })}
-              id="leaderboard"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'leaderboard', label: 'Leaderboard' })}
-            />
-            
-            {/* 9. Html Script */}
-            <PropertyToggle
-              icon={Code01}
-              label="Html Script"
-              isSelected={spaceWidgetStates.htmlScript}
-              onChange={(value) => updateSpaceWidgetStates({ htmlScript: value })}
-              id="html-script"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'htmlScript', label: 'Html Script' })}
-            />
-            
-            {/* 10. Rich Text */}
-            <PropertyToggle
-              icon={File01}
-              label="Rich Text"
-              isSelected={spaceWidgetStates.richText}
-              onChange={(value) => updateSpaceWidgetStates({ richText: value })}
-              id="rich-text"
-              iconColor="bg-blue-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'richText', label: 'Rich Text' })}
-            />
-            
-            {/* 11. Posts */}
-            <PropertyToggle
-              icon={Calendar}
-              label="Posts"
-              isSelected={spaceWidgetStates.customEventsList}
-              onChange={(value) => updateSpaceWidgetStates({ customEventsList: value })}
-              id="posts"
-              iconColor="bg-purple-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'posts', label: 'Posts' })}
             />
             
             {/* Hero Banner and Composer widgets are hidden for now */}

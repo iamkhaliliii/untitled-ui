@@ -116,7 +116,7 @@ export const DesignLayout = ({
                         ref={scrollContainerRef}
                         className="flex-1 overflow-y-auto min-h-0 customizer-sidebar-scroll"
                     >
-                        {sidebarContent}
+                    {sidebarContent}
                     </div>
                 </div>
 
@@ -124,7 +124,7 @@ export const DesignLayout = ({
                 {tertiarySidebarContent && (
                     <div className="w-80 h-full bg-primary border-r border-secondary overflow-hidden flex flex-col">
                         <div className="flex-1 overflow-y-auto min-h-0">
-                            {tertiarySidebarContent}
+                        {tertiarySidebarContent}
                         </div>
                     </div>
                 )}

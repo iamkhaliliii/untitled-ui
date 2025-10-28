@@ -488,9 +488,9 @@ export const AdminContentEventsCreatePage = () => {
     };
 
     return (
-        <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background min-h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))]">
+        <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background dark:bg-gray-950 h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))] overflow-hidden">
             {/* Header Navigation */}
-            <header className="sticky top-0 z-50 bg-primary border-b border-secondary">
+            <header className="sticky top-0 z-50 bg-primary dark:bg-gray-900 border-b border-secondary dark:border-gray-800 flex-shrink-0">
                 <div className="flex h-16 w-full items-center justify-center">
                     <div className="flex w-full max-w-container justify-between pr-3 pl-4 md:px-8">
                         <div className="flex flex-1 items-center gap-4">
@@ -569,18 +569,18 @@ export const AdminContentEventsCreatePage = () => {
             </header>
 
             {/* Main Content */}
-            <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 flex-1">
-                <div className="w-full grid grid-cols-1 md:grid-cols-6 lg:grid-cols-8 max-w-full self-center gap-3 sm:gap-3.5 md:gap-4 lg:gap-5 flex-1">
+            <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 flex-1 overflow-y-auto">
+                <div className="w-full grid grid-cols-1 md:grid-cols-6 lg:grid-cols-8 max-w-full self-center gap-3 sm:gap-3.5 md:gap-4 lg:gap-5">
                     <main className="w-full flex flex-col col-span-1 md:col-span-6 lg:col-span-8 max-w-full justify-self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0">
                         <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5">
                             <div className="w-full flex flex-col max-w-full md:max-w-3xl self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-0 sm:py-0 md:py-0 lg:py-0 px-0 sm:px-0 md:px-0 lg:px-0">
                     
                     {/* Form Card */}
-                    <div className="border border-gray-300 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface">
+                    <div className="border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface dark:bg-gray-900">
                         
                         {/* Header */}
                         <div className="px-4 py-5 sm:p-6 pb-0 sm:pb-0">
-                            <h3 className="text-content font-medium text-heading-xs">
+                            <h3 className="text-content dark:text-gray-100 font-medium text-heading-xs">
                                 <div className="flex space-x-3 items-center">
                                     <Button 
                                         size="sm" 
@@ -590,7 +590,7 @@ export const AdminContentEventsCreatePage = () => {
                                         className="!p-2 !w-10 !h-10"
                                     >
                                     </Button>
-                                    <span className="text-xl font-medium flex-1">Create a new event</span>
+                                    <span className="text-xl font-medium flex-1 text-gray-900 dark:text-gray-100">Create a new event</span>
                                 </div>
                             </h3>
                         </div>
@@ -689,7 +689,7 @@ export const AdminContentEventsCreatePage = () => {
                                             
                                             {/* Show placeholder when empty */}
                                             {!formData.aboutEvent && (
-                                                <div className="absolute top-4 left-4 pointer-events-none text-placeholder">
+                                                <div className="absolute top-4 left-4 pointer-events-none text-placeholder dark:text-gray-500">
                                                     Describe your event in detail...
                                                 </div>
                                             )}
@@ -783,8 +783,8 @@ export const AdminContentEventsCreatePage = () => {
                                     {/* Recurring Event Fields - Show when toggle is enabled */}
                                     {formData.isRecurring && (
                                         <div className="relative pl-6 space-y-4">
-                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
-                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
+                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-700"></div>
+                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200 dark:bg-gray-700"></div>
                                             
                                             <div className="space-y-4">
                                                 {/* Frequency Dropdown */}
@@ -850,7 +850,7 @@ export const AdminContentEventsCreatePage = () => {
 
                                                 {/* Dynamic Helper Note - Minimal Style */}
                                                 {recurringPatternDescription && (
-                                                    <div className="pt-2 border-t border-gray-100">
+                                                    <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
                                                         <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                                                             {recurringPatternDescription}
                                                         </p>
@@ -881,8 +881,8 @@ export const AdminContentEventsCreatePage = () => {
                                     {/* Location Details */}
                                     {(formData.locationType === 'physical' || formData.locationType === 'hybrid') && (
                                         <div className="relative pl-6 mt-2 space-y-4">
-                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
-                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
+                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-700"></div>
+                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200 dark:bg-gray-700"></div>
                                             
                                             {/* Location - visible to everyone */}
                                             <Input
@@ -913,7 +913,7 @@ export const AdminContentEventsCreatePage = () => {
                                             {/* Map Preview */}
                                             {formData.address && (
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                         Location Preview
                                                     </label>
                                                     <EventMap 
@@ -927,11 +927,11 @@ export const AdminContentEventsCreatePage = () => {
 
                                     {(formData.locationType === 'virtual' || formData.locationType === 'hybrid') && (
                                         <div className="relative pl-6 mt-2 space-y-4">
-                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200"></div>
-                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200"></div>
+                                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-700"></div>
+                                            <div className="absolute left-0 top-4 w-3 h-px bg-gray-200 dark:bg-gray-700"></div>
                                             
                                             <div className="space-y-3">
-                                                <label className="block text-sm font-medium text-gray-700">Virtual Event Links</label>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Virtual Event Links</label>
                                                 {formData.virtualUrls.map((virtualUrl, index) => (
                                                     <div key={virtualUrl.id} className="flex items-start gap-2">
                                                         <div className="flex-1">
@@ -948,7 +948,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                     }}
                                                                 />
                                                             </InputGroup>
-                                                            <p className="mt-1 text-xs text-gray-500">Only shown after RSVP</p>
+                                                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Only shown after RSVP</p>
                                                         </div>
                                                         {formData.virtualUrls.length > 1 && index > 0 && (
                                                             <Button
@@ -987,19 +987,19 @@ export const AdminContentEventsCreatePage = () => {
 
                                     {/* Cover Image */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Cover Image
                                         </label>
                                         <FileTrigger
                                             acceptedFileTypes={["image/*"]}
                                             onSelect={(files) => setFormData(prev => ({ ...prev, coverImage: files?.[0] || null }))}
                                         >
-                                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                                                <Image01 className="mx-auto h-10 w-10 text-gray-400" />
-                                                <p className="mt-2 text-sm text-gray-600">
+                                            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer">
+                                                <Image01 className="mx-auto h-10 w-10 text-gray-400 dark:text-gray-500" />
+                                                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                                                     Upload image
                                                 </p>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-gray-500 dark:text-gray-500">
                                                     PNG, JPG up to 10MB
                                                 </p>
                                             </div>
@@ -1035,25 +1035,25 @@ export const AdminContentEventsCreatePage = () => {
                                     </div>
 
                                     {/* SEO options - Collapsible */}
-                                    <div className="border border-gray-200 rounded-lg">
+                                    <div className="border border-secondary dark:border-gray-700 rounded-lg">
                                         <button
                                             type="button"
                                             onClick={() => setSeoExpanded(!seoExpanded)}
-                                            className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                                            className="w-full flex items-center justify-between p-4 text-left hover:bg-secondary dark:hover:bg-gray-800 transition-colors"
                                         >
-                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                            <span className="text-sm font-medium text-secondary flex items-center gap-2">
                                                 SEO options
-                                                <EyeOff className="size-4 text-gray-400" />
+                                                <EyeOff className="size-4 text-tertiary" />
                                             </span>
                                             {seoExpanded ? (
-                                                <ChevronUp className="size-4 text-gray-400" />
+                                                <ChevronUp className="size-4 text-gray-400 dark:text-gray-500" />
                                             ) : (
-                                                <ChevronDown className="size-4 text-gray-400" />
+                                                <ChevronDown className="size-4 text-gray-400 dark:text-gray-500" />
                                             )}
                                         </button>
                                         
                                         <div className={`overflow-hidden transition-all duration-300 ${seoExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                            <div className="px-4 pb-4 space-y-3 border-t border-gray-100">
+                                            <div className="px-4 pb-4 space-y-3 border-t border-gray-100 dark:border-gray-800">
                                                 <Input
                                                     label="URL Slug"
                                                     placeholder="event-slug"
@@ -1081,29 +1081,29 @@ export const AdminContentEventsCreatePage = () => {
                                     </div>
 
                                     {/* Advanced Options - Collapsible */}
-                                    <div className="border border-gray-200 rounded-lg">
+                                    <div className="border border-secondary dark:border-gray-700 rounded-lg">
                                         <button
                                             type="button"
                                             onClick={() => setAdvancedExpanded(!advancedExpanded)}
-                                            className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                                            className="w-full flex items-center justify-between p-4 text-left hover:bg-secondary dark:hover:bg-gray-800 transition-colors"
                                         >
-                                            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                            <span className="text-sm font-medium text-secondary flex items-center gap-2">
                                                 Advanced Options
-                                                <EyeOff className="size-4 text-gray-400" />
+                                                <EyeOff className="size-4 text-tertiary" />
                                             </span>
                                             {advancedExpanded ? (
-                                                <ChevronUp className="size-4 text-gray-400" />
+                                                <ChevronUp className="size-4 text-gray-400 dark:text-gray-500" />
                                             ) : (
-                                                <ChevronDown className="size-4 text-gray-400" />
+                                                <ChevronDown className="size-4 text-gray-400 dark:text-gray-500" />
                                             )}
                                         </button>
                                         
                                         <div className={`overflow-hidden transition-all duration-300 ${advancedExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                            <div className="px-4 pb-4 space-y-5 border-t border-gray-100">
+                                            <div className="px-4 pb-4 space-y-5 border-t border-gray-100 dark:border-gray-800">
                                                 
                                                 {/* Privacy Settings */}
                                                 <div className="space-y-3">
-                                                    <h4 className="text-sm font-semibold text-gray-900 border-b border-gray-100 pb-2">Privacy Settings</h4>
+                                                    <h4 className="text-sm font-semibold text-primary border-b border-secondary dark:border-gray-700 pb-2">Privacy Settings</h4>
                                                     <div className="space-y-2">
                                                         <Toggle
                                                             slim
@@ -1126,7 +1126,7 @@ export const AdminContentEventsCreatePage = () => {
 
                                                 {/* Email Notifications */}
                                                 <div className="space-y-3">
-                                                    <h4 className="text-sm font-semibold text-gray-900 border-b border-gray-100 pb-2">Email Notifications</h4>
+                                                    <h4 className="text-sm font-semibold text-primary border-b border-secondary dark:border-gray-700 pb-2">Email Notifications</h4>
                                                     <div className="space-y-2">
                                                         <Toggle
                                                             slim
@@ -1145,7 +1145,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                 isSelected={formData.emailReminder}
                                                                 onChange={(isSelected) => setFormData(prev => ({ ...prev, emailReminder: isSelected }))}
                                                             />
-                                                            <div className="text-xs text-gray-500 pl-6">
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 pl-6">
                                                                 <p>• The event is deleted</p>
                                                                 <p>• The event time or location has changed</p>
                                                                 <p>• 1 hour before the event is due to start</p>
@@ -1157,7 +1157,7 @@ export const AdminContentEventsCreatePage = () => {
 
                                                 {/* In-App Notifications */}
                                                 <div className="space-y-3">
-                                                    <h4 className="text-sm font-semibold text-gray-900 border-b border-gray-100 pb-2">In-App Notifications</h4>
+                                                    <h4 className="text-sm font-semibold text-primary border-b border-secondary dark:border-gray-700 pb-2">In-App Notifications</h4>
                                                     <div className="space-y-2">
                                                         <Toggle
                                                             slim
@@ -1176,7 +1176,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                 isSelected={formData.inAppReminder}
                                                                 onChange={(isSelected) => setFormData(prev => ({ ...prev, inAppReminder: isSelected }))}
                                                             />
-                                                            <div className="text-xs text-gray-500 pl-6">
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 pl-6">
                                                                 <p>• The event is deleted</p>
                                                                 <p>• The event time or location has changed</p>
                                                                 <p>• 1 hour before the event is due to start</p>
@@ -1221,7 +1221,7 @@ export const AdminContentEventsCreatePage = () => {
                                                 </div>
                                                 
                                                 {dropdownOpen && (
-                                                    <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                                    <div className="absolute right-0 top-full mt-1 w-40 bg-primary dark:bg-gray-800 border border-secondary dark:border-gray-700 rounded-md shadow-lg z-50">
                                                         <div className="py-1">
                                                             <button
                                                                 type="button"
@@ -1229,7 +1229,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                     console.log('Save Draft');
                                                                     setDropdownOpen(false);
                                                                 }}
-                                                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                                                className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary dark:hover:bg-gray-700 transition-colors"
                                                             >
                                                                 Save Draft
                                                             </button>
@@ -1239,7 +1239,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                     console.log('Schedule');
                                                                     setDropdownOpen(false);
                                                                 }}
-                                                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                                                className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary dark:hover:bg-gray-700 transition-colors"
                                                             >
                                                                 Schedule
                                                             </button>
@@ -1249,7 +1249,7 @@ export const AdminContentEventsCreatePage = () => {
                                                                     console.log('Publish');
                                                                     setDropdownOpen(false);
                                                                 }}
-                                                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                                                className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary dark:hover:bg-gray-700 transition-colors"
                                                             >
                                                                 Publish
                                                             </button>

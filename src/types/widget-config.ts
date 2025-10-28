@@ -24,6 +24,7 @@ export interface EventsListConfig {
 
 export interface SpaceHeaderConfig {
   style: 'simple' | 'color' | 'image' | 'video' | 'pattern' | 'gradient';
+  headerStyle: 'modern' | 'simple';
   description: string;
   showDescription: boolean;
   showIcon: boolean;
@@ -31,6 +32,10 @@ export interface SpaceHeaderConfig {
   showMembers: boolean;
   actionAddPost: boolean;
   showActions: boolean;
+  // Style specific fields
+  backgroundColor: string;
+  imageUrl: string;
+  videoUrl: string;
 }
 
 export interface AnnouncementBannerConfig {
@@ -110,12 +115,21 @@ export interface WishlistsListConfig {
   style: 'card' | 'list' | 'feed';
   cardSize: 'small' | 'medium' | 'large' | 'extralarge';
   cardStyle: 'modern' | 'simple';
-  creatorInfo: boolean;
+  authorInfo: boolean;
   votesCounter: boolean;
   commentsCounter: boolean;
   statusBadge: boolean;
+  reactionAndReply: boolean;
+  tags: boolean;
   title: string;
   description: string;
+  // Tab views
+  tabView: boolean;
+  allTab: boolean;
+  trendingTab: boolean;
+  newTab: boolean;
+  mostPopularTab: boolean;
+  deliveredTab: boolean;
 }
 
 export interface QuestionsListConfig {
@@ -125,9 +139,16 @@ export interface QuestionsListConfig {
   authorInfo: boolean;
   answersCounter: boolean;
   votesCounter: boolean;
-  viewsCounter: boolean;
+  questionSummary: boolean;
+  tags: boolean;
   title: string;
   description: string;
+  // Tab views
+  tabView: boolean;
+  latestTab: boolean;
+  trendingTab: boolean;
+  answeredTab: boolean;
+  unresolvedTab: boolean;
 }
 
 export const defaultEventsListConfig: EventsListConfig = {
@@ -156,6 +177,7 @@ export const defaultEventsListConfig: EventsListConfig = {
 
 export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {
   style: 'video',
+  headerStyle: 'modern',
   description: 'Welcome to the "Ask the Community" channel!',
   showDescription: false,
   showIcon: true,
@@ -163,6 +185,10 @@ export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {
   showMembers: true,
   actionAddPost: true,
   showActions: true,
+  // Style specific defaults
+  backgroundColor: '#7f56d9',
+  imageUrl: '',
+  videoUrl: '',
 };
 
 export const defaultAnnouncementBannerConfig: AnnouncementBannerConfig = {
@@ -202,13 +228,13 @@ export const defaultRichTextConfig: RichTextConfig = {
 };
 
 export const defaultDiscussionsListConfig: DiscussionsListConfig = {
-  style: 'card',
+  style: 'feed',
   cardSize: 'medium',
   cardStyle: 'simple',
   tabView: true,
   allTab: true,
   trendingTab: true,
-  recentTab: false,
+  recentTab: true,
   // Card properties
   authorInfo: true,
   reactionsCounter: true,
@@ -239,25 +265,41 @@ export const defaultKnowledgesListConfig: KnowledgesListConfig = {
 };
 
 export const defaultWishlistsListConfig: WishlistsListConfig = {
-  style: 'card',
+  style: 'list',
   cardSize: 'medium',
   cardStyle: 'simple',
-  creatorInfo: true,
+  authorInfo: true,
   votesCounter: true,
   commentsCounter: true,
   statusBadge: true,
+  reactionAndReply: true,
+  tags: true,
   title: 'Feature Requests',
   description: 'Vote on upcoming features',
+  // Tab views
+  tabView: true,
+  allTab: true,
+  trendingTab: true,
+  newTab: true,
+  mostPopularTab: true,
+  deliveredTab: true,
 };
 
 export const defaultQuestionsListConfig: QuestionsListConfig = {
-  style: 'card',
+  style: 'list',
   cardSize: 'medium',
   cardStyle: 'simple',
   authorInfo: true,
   answersCounter: true,
   votesCounter: true,
-  viewsCounter: true,
+  questionSummary: true,
+  tags: true,
   title: 'Q&A',
   description: 'Ask and answer questions',
+  // Tab views
+  tabView: true,
+  latestTab: true,
+  trendingTab: true,
+  answeredTab: true,
+  unresolvedTab: true,
 }; 

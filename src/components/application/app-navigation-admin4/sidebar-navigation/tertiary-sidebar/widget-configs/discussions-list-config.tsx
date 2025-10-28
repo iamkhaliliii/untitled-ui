@@ -50,31 +50,29 @@ export const DiscussionsListConfig: React.FC<DiscussionsListConfigProps> = ({ on
 
   // Tab views state - initialize based on current config
   const [tabViews, setTabViews] = useState([
-    { id: 'all', label: 'All', enabled: allTab },
-    { id: 'trending', label: 'Trending', enabled: trendingTab },
-    { id: 'recent', label: 'Recent', enabled: recentTab }
+    { id: 'latest', label: 'Latest', enabled: allTab },
+    { id: 'trending', label: 'Trending', enabled: trendingTab }
   ]);
   const [editingTabId, setEditingTabId] = useState<string | null>(null);
 
   // Update tabView and individual tab configs whenever tabViews change
   useEffect(() => {
     const enabledTabsCount = tabViews.filter(tab => tab.enabled).length;
-    const allTabItem = tabViews.find(tab => tab.id === 'all');
+    const latestTabItem = tabViews.find(tab => tab.id === 'latest');
     const trendingTabItem = tabViews.find(tab => tab.id === 'trending');
-    const recentTabItem = tabViews.find(tab => tab.id === 'recent');
     
     updateDiscussionsListConfig({ 
       tabView: enabledTabsCount > 1,
-      allTab: allTabItem?.enabled || false,
+      allTab: latestTabItem?.enabled || false,
       trendingTab: trendingTabItem?.enabled || false,
-      recentTab: recentTabItem?.enabled || false
+      recentTab: false
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabViews]);
 
   // Tab views handlers
   const handleToggleTab = (tabId: string) => {
-    if (tabId === 'all') return;
+    if (tabId === 'latest') return;
     
     setTabViews(prev => {
       const updatedTabs = prev.map(tab => 

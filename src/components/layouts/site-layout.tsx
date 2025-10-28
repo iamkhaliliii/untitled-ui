@@ -245,7 +245,7 @@ export const SiteLayout = ({
     };
 
     return (
-        <div className="flex min-h-screen flex-col bg-primary">
+        <div className="flex h-screen flex-col bg-primary overflow-hidden">
             {/* Admin Sticky Header - Only visible to admins */}
             {isAdmin && (
                 <ErrorBoundary fallback={
@@ -262,7 +262,7 @@ export const SiteLayout = ({
             )}
 
             {/* Header */}
-            <div className={`sticky z-40 bg-primary/80 backdrop-blur-lg shadow-sm ${
+            <div className={`sticky z-40 bg-primary/80 backdrop-blur-lg shadow-sm flex-shrink-0 ${
                 isAdmin && adminHeaderVisible && !adminHeaderCollapsed
                     ? 'top-12' // Full admin header height (48px)
                     : 'top-0'  // No admin header or collapsed (back to normal)
@@ -309,15 +309,15 @@ export const SiteLayout = ({
             )}
 
             {/* Main Content */}
-            <div className="mx-auto pt-4 max-w-container px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-1">
+            <div className="mx-auto pt-4 max-w-container px-4 sm:px-6 lg:px-8 flex-1 overflow-y-auto">
+                <div className="flex">
                     {/* Left Sidebar */}
-                    <aside className="hidden lg:block w-64 bg-primary">
-                                                       <div className={`sticky overflow-y-auto scrollbar-thin py-4 pr-8 ${
-                                   isAdmin && adminHeaderVisible && !adminHeaderCollapsed
-                                       ? 'top-20 h-[calc(100vh-5rem)]'           // 3rem (admin) + 2rem (header) = 5rem  
-                                       : 'top-16 h-[calc(100vh-4rem)]'           // No admin header or collapsed (back to normal)
-                               }`}>
+                    <aside className="hidden lg:block w-64 bg-primary flex-shrink-0">
+                        <div className={`sticky overflow-y-auto scrollbar-thin py-4 pr-8 ${
+                            isAdmin && adminHeaderVisible && !adminHeaderCollapsed
+                                ? 'top-20 h-[calc(100vh-5rem)]'           // 3rem (admin) + 2rem (header) = 5rem  
+                                : 'top-16 h-[calc(100vh-4rem)]'           // No admin header or collapsed (back to normal)
+                        }`}>
                             {/* Navigation */}
                             <nav className="space-y-2">
                                 {siteNavigation.map((item) => (
@@ -340,7 +340,7 @@ export const SiteLayout = ({
                     </aside>
 
                     {/* Main Content Area */}
-                    <main className="flex-1 overflow-hidden">
+                    <main className="flex-1">
                         {showRightSidebar ? (
                             <div className="flex gap-6">
                                 <div className="flex-1">
@@ -358,67 +358,6 @@ export const SiteLayout = ({
                     </main>
                 </div>
             </div>
-
-            {/* Footer */}
-            <footer className="border-t border-secondary bg-primary">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                    <div className="py-12">
-                        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-                            <div>
-                                <h3 className="text-sm font-medium text-primary">Platform</h3>
-                                <ul className="mt-4 space-y-2">
-                                    <li><Link to="/site" className="text-sm text-tertiary hover:text-primary">Home</Link></li>
-                                    <li><Link to="/site/feed" className="text-sm text-tertiary hover:text-primary">Feed</Link></li>
-                                    <li><Link to="/site/event" className="text-sm text-tertiary hover:text-primary">Events</Link></li>
-                                    <li><Link to="/site/explore" className="text-sm text-tertiary hover:text-primary">Explore</Link></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-medium text-primary">Community</h3>
-                                <ul className="mt-4 space-y-2">
-                                    <li><Link to="/site/about" className="text-sm text-tertiary hover:text-primary">About</Link></li>
-                                    <li><Link to="/site/blog" className="text-sm text-tertiary hover:text-primary">Blog</Link></li>
-                                    <li><Link to="/site/help" className="text-sm text-tertiary hover:text-primary">Help Center</Link></li>
-                                    <li><Link to="/site/guidelines" className="text-sm text-tertiary hover:text-primary">Guidelines</Link></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-medium text-primary">Resources</h3>
-                                <ul className="mt-4 space-y-2">
-                                    <li><Link to="/site/api" className="text-sm text-tertiary hover:text-primary">API</Link></li>
-                                    <li><Link to="/site/docs" className="text-sm text-tertiary hover:text-primary">Documentation</Link></li>
-                                    <li><Link to="/site/status" className="text-sm text-tertiary hover:text-primary">Status</Link></li>
-                                    <li><Link to="/site/changelog" className="text-sm text-tertiary hover:text-primary">Changelog</Link></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-medium text-primary">Legal</h3>
-                                <ul className="mt-4 space-y-2">
-                                    <li><Link to="/site/privacy" className="text-sm text-tertiary hover:text-primary">Privacy</Link></li>
-                                    <li><Link to="/site/terms" className="text-sm text-tertiary hover:text-primary">Terms</Link></li>
-                                    <li><Link to="/site/cookies" className="text-sm text-tertiary hover:text-primary">Cookies</Link></li>
-                                    <li><Link to="/site/licenses" className="text-sm text-tertiary hover:text-primary">Licenses</Link></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="mt-8 border-t border-secondary pt-8">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <UntitledLogo className="h-6" />
-                                    <span className="text-sm text-tertiary">© 2024 Untitled UI. All rights reserved.</span>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <ButtonUtility size="sm" color="tertiary" icon={BookOpen01} tooltip="Documentation" />
-                                    <ButtonUtility size="sm" color="tertiary" icon={LifeBuoy01} tooltip="Support" />
-                                    <ButtonUtility size="sm" color="tertiary" icon={Settings01} tooltip="Settings" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
-
 
             {/* Admin Toggle for testing - can be removed in production */}
             <ErrorBoundary fallback={<div>Toggle error</div>}>

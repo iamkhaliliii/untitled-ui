@@ -1370,8 +1370,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (item.items?.some((subItem) => subItem.href === activeUrl)) return true;
         // Handle nested routes for Content 2
         if ((item.label === "Content 2" || item.label === "Content") && activeUrl?.includes("/content2")) return true;
-        // Handle Site routes - specifically for CMS events
-        if (item.label === "Site" && activeUrl?.includes("/site")) return true;
+        // Handle Site routes - specifically for CMS events (but not setting routes)
+        if (item.label === "Site" && activeUrl?.includes("/site") && !activeUrl?.includes("/setting")) return true;
+        // Handle Setting routes
+        if (item.label === "Setting" && activeUrl?.includes("/setting")) return true;
         return false;
     });
     const [currentItem, setCurrentItem] = useState(activeItem || items[0]);
@@ -2311,7 +2313,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             {/* Content */}
                             <div className="flex-1 overflow-y-auto pb-4">
                                 <div className="px-4">
-                                    {getTertiarySidebarContent()}
+                                {getTertiarySidebarContent()}
                                 </div>
                             </div>
                         </div>
@@ -2414,7 +2416,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             {/* Content */}
                             <div className="flex-1 overflow-y-auto pb-4">
                                 <div className="px-4">
-                                    {getTertiarySidebarContent()}
+                                {getTertiarySidebarContent()}
                                 </div>
                             </div>
                         </div>

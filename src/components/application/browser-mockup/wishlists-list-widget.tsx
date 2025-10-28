@@ -146,8 +146,63 @@ export const WishlistsListWidget: React.FC<WishlistsListWidgetProps> = ({ classN
     </div>
   );
 
+  // Get enabled tabs for display
+  const getEnabledTabs = () => {
+    const tabs = [];
+    if (wishlistsListConfig.allTab) tabs.push({ id: 'all', label: 'All' });
+    if (wishlistsListConfig.trendingTab) tabs.push({ id: 'trending', label: 'Trending' });
+    if (wishlistsListConfig.newTab) tabs.push({ id: 'new', label: 'New' });
+    if (wishlistsListConfig.mostPopularTab) tabs.push({ id: 'most-popular', label: 'Most Popular' });
+    if (wishlistsListConfig.deliveredTab) tabs.push({ id: 'delivered', label: 'Delivered' });
+    return tabs;
+  };
+
+  const enabledTabs = getEnabledTabs();
+  const showTabs = wishlistsListConfig.tabView && enabledTabs.length > 1;
+
   return (
     <div className={cx("space-y-4", className)}>
+      {/* Title and Description */}
+      <div className={cx("space-y-0", showTabs && "mb-4")}>
+        <h2 className={cx(
+          "text-base font-semibold",
+          theme === 'dark' ? "text-gray-100" : "text-primary"
+        )}>
+          {wishlistsListConfig.title}
+        </h2>
+        <p className={cx(
+          "text-xs",
+          theme === 'dark' ? "text-gray-400" : "text-secondary"
+        )}>
+          {wishlistsListConfig.description}
+        </p>
+      </div>
+
+      {/* Tab Navigation */}
+      {showTabs && (
+        <div className="mb-4">
+          <div className="flex gap-1">
+            {enabledTabs.map((tab, index) => (
+              <button
+                key={tab.id}
+                className={cx(
+                  "px-3 py-2 text-sm font-semibold rounded-md transition-colors",
+                  index === 0
+                    ? theme === 'dark'
+                      ? "bg-gray-700 text-gray-100"
+                      : "bg-active text-secondary"
+                    : theme === 'dark'
+                      ? "text-gray-400 hover:text-gray-200"
+                      : "text-quaternary hover:text-secondary"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className={cx(
         wishlistsListConfig.style === 'card' && "grid gap-4",
         wishlistsListConfig.style === 'card' && wishlistsListConfig.cardSize === 'small' && "grid-cols-4",
