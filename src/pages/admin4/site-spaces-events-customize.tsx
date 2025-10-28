@@ -10,6 +10,7 @@ import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
+import { cx } from "@/utils/cx";
 
 export const SiteSpacesEventsCustomizePage = () => {
     const navigate = useNavigate();
@@ -67,9 +68,10 @@ export const SiteSpacesEventsCustomizePage = () => {
     };
 
     const handleWidgetConfig = (widget: any) => {
-        setSelectedWidgetForConfig(widget);
-        setShowWidgetConfig(true);
-        setShowWidgetSelection(false);
+        // Navigate to dedicated widget config page
+        const widgetSlug = widget.label.toLowerCase().replace(/\s+/g, '-');
+        const basePath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
+        navigate(`${basePath}/widget/${widgetSlug}`);
     };
 
     const handleEditGlobalWidgets = () => {
@@ -247,7 +249,7 @@ export const SiteSpacesEventsCustomizePage = () => {
 
         // Wrap content with header controls first, then title
         return (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col">
                 {/* Header Section - Match Page Customizer styling */}
                 <div className="px-4 mt-6 lg:px-5 flex-shrink-0">
                     <div className="flex items-center justify-between mb-2">
@@ -289,7 +291,7 @@ export const SiteSpacesEventsCustomizePage = () => {
                 </div>
                 
                 {/* Main content */}
-                <div className="mt-2 flex-1 min-h-0 overflow-y-auto px-4">
+                <div className="mt-2 px-4">
                     {content}
                 </div>
             </div>

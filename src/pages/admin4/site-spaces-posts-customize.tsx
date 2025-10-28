@@ -183,7 +183,7 @@ export const SiteSpacesPostsCustomizePage = () => {
     // Render sidebar content with header controls first, then title
     const renderCustomizeSidebarContent = () => {
         return (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col">
                 {/* Header controls - Sticky */}
                 <div className="sticky top-0 z-10 bg-primary p-2 border-b border-secondary">
                     <div className="flex items-center justify-between mb-2">
@@ -219,7 +219,7 @@ export const SiteSpacesPostsCustomizePage = () => {
                 </div>
                 
                 {/* Main content */}
-                <div className="flex-1 overflow-y-auto">
+                <div>
                     <EventsCustomizeSettings
                         toggleStates={toggleStates}
                         customizeExpandedIds={customizeExpandedIds}

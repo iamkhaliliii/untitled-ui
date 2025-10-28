@@ -13,7 +13,15 @@ import {
   HtmlScriptConfig,
   defaultHtmlScriptConfig,
   RichTextConfig,
-  defaultRichTextConfig
+  defaultRichTextConfig,
+  DiscussionsListConfig,
+  defaultDiscussionsListConfig,
+  KnowledgesListConfig,
+  defaultKnowledgesListConfig,
+  WishlistsListConfig,
+  defaultWishlistsListConfig,
+  QuestionsListConfig,
+  defaultQuestionsListConfig
 } from '@/types/widget-config';
 
 interface ToggleStates {
@@ -44,6 +52,11 @@ interface SpaceWidgetStates {
   leaderboard: boolean;
   htmlScript: boolean;
   richText: boolean;
+  // List widgets
+  discussionsList: boolean;
+  knowledgesList: boolean;
+  wishlistsList: boolean;
+  questionsList: boolean;
   // Dynamic widgets
   dynamicWidgets: SpaceWidget[];
 }
@@ -81,6 +94,14 @@ interface WidgetConfigContextType {
   updateHtmlScriptConfig: (config: Partial<HtmlScriptConfig>) => void;
   richTextConfig: RichTextConfig;
   updateRichTextConfig: (config: Partial<RichTextConfig>) => void;
+  discussionsListConfig: DiscussionsListConfig;
+  updateDiscussionsListConfig: (config: Partial<DiscussionsListConfig>) => void;
+  knowledgesListConfig: KnowledgesListConfig;
+  updateKnowledgesListConfig: (config: Partial<KnowledgesListConfig>) => void;
+  wishlistsListConfig: WishlistsListConfig;
+  updateWishlistsListConfig: (config: Partial<WishlistsListConfig>) => void;
+  questionsListConfig: QuestionsListConfig;
+  updateQuestionsListConfig: (config: Partial<QuestionsListConfig>) => void;
   toggleStates: ToggleStates;
   updateToggleStates: (states: Partial<ToggleStates>) => void;
   spaceWidgetStates: SpaceWidgetStates;
@@ -119,6 +140,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
   const [leaderboardConfig, setLeaderboardConfig] = useState<LeaderboardConfig>(defaultLeaderboardConfig);
   const [htmlScriptConfig, setHtmlScriptConfig] = useState<HtmlScriptConfig>(defaultHtmlScriptConfig);
   const [richTextConfig, setRichTextConfig] = useState<RichTextConfig>(defaultRichTextConfig);
+  const [discussionsListConfig, setDiscussionsListConfig] = useState<DiscussionsListConfig>(defaultDiscussionsListConfig);
+  const [knowledgesListConfig, setKnowledgesListConfig] = useState<KnowledgesListConfig>(defaultKnowledgesListConfig);
+  const [wishlistsListConfig, setWishlistsListConfig] = useState<WishlistsListConfig>(defaultWishlistsListConfig);
+  const [questionsListConfig, setQuestionsListConfig] = useState<QuestionsListConfig>(defaultQuestionsListConfig);
   const [toggleStates, setToggleStates] = useState<ToggleStates>({
     header: true,
     leftSidebar: true,
@@ -129,15 +154,20 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     spaceHeader: true,
     eventsList: true,
     customEventsList: false,
-    upcomingEvents: true,
+    upcomingEvents: false,
     heroBanner: false,
-    menu: true,
-    // New widgets - default to true (show by default)
+    menu: false,
     composer: false,
-    announcementBanner: true,
-    leaderboard: true,
-    htmlScript: true,
-    richText: true,
+    // List widgets - only Events List enabled by default
+    discussionsList: false,
+    knowledgesList: false,
+    wishlistsList: false,
+    questionsList: false,
+    // Other widgets - all disabled by default
+    announcementBanner: false,
+    leaderboard: false,
+    htmlScript: false,
+    richText: false,
     dynamicWidgets: [],
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
@@ -175,6 +205,22 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
 
   const updateRichTextConfig = (config: Partial<RichTextConfig>) => {
     setRichTextConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateDiscussionsListConfig = (config: Partial<DiscussionsListConfig>) => {
+    setDiscussionsListConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateKnowledgesListConfig = (config: Partial<KnowledgesListConfig>) => {
+    setKnowledgesListConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateWishlistsListConfig = (config: Partial<WishlistsListConfig>) => {
+    setWishlistsListConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateQuestionsListConfig = (config: Partial<QuestionsListConfig>) => {
+    setQuestionsListConfig(prevConfig => ({ ...prevConfig, ...config }));
   };
 
   const updateToggleStates = (states: Partial<ToggleStates>) => {
@@ -298,6 +344,14 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateHtmlScriptConfig,
       richTextConfig,
       updateRichTextConfig,
+      discussionsListConfig,
+      updateDiscussionsListConfig,
+      knowledgesListConfig,
+      updateKnowledgesListConfig,
+      wishlistsListConfig,
+      updateWishlistsListConfig,
+      questionsListConfig,
+      updateQuestionsListConfig,
       toggleStates,
       updateToggleStates,
       spaceWidgetStates,

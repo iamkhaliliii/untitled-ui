@@ -4,6 +4,45 @@
 @plugin "tailwindcss-react-aria-components";
 @plugin "tailwindcss-animate";
 
+/* Prevent body/root overflow */
+html {
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Prevent scroll jump on content changes */
+.scrollbar-thin,
+.overflow-y-auto {
+  scroll-behavior: auto;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
+}
+
+/* Stable scrolling for customizer sidebar */
+.customizer-sidebar-scroll {
+  overflow-anchor: none;
+  scroll-snap-type: none;
+}
+
+.customizer-sidebar-scroll * {
+  overflow-anchor: none !important;
+}
+
+/* Disable animations in sidebar sections to prevent scroll jump */
+.customizer-sidebar-scroll .animate-in {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Smooth transition variables */
 :root {
   --transition-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);

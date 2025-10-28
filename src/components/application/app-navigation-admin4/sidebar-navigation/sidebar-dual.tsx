@@ -2229,7 +2229,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                 {isSpacePage && selectedSecondaryItem === "customize" && (
                     <div 
                         style={{ width: TERTIARY_SIDEBAR_WIDTH }}
-                        className="h-full overflow-y-auto bg-primary scrollbar-minimal border-r border-secondary"
+                        className="h-full overflow-hidden bg-primary border-r border-secondary"
                     >
                         <div className="flex h-full flex-col">
                             {/* Header with back button and title */}
@@ -2309,8 +2309,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             </div>
                             
                             {/* Content */}
-                            <div className="flex-1">
-                                {getTertiarySidebarContent()}
+                            <div className="flex-1 overflow-y-auto pb-4">
+                                <div className="px-4">
+                                    {getTertiarySidebarContent()}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2342,7 +2344,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             height: '100%',
                             backgroundColor: 'var(--color-bg-primary)' // Solid background
                         }}
-                        className="overflow-y-auto bg-primary scrollbar-minimal border-r border-secondary tertiary-overlay"
+                        className="overflow-hidden bg-primary border-r border-secondary tertiary-overlay"
                     >
                         <div className="flex h-full flex-col">
                             {/* Header with title and actions */}
@@ -2410,8 +2412,10 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                             )}
                             
                             {/* Content */}
-                            <div className="flex-1 px-4">
-                                {getTertiarySidebarContent()}
+                            <div className="flex-1 overflow-y-auto pb-4">
+                                <div className="px-4">
+                                    {getTertiarySidebarContent()}
+                                </div>
                             </div>
                         </div>
                     </div>

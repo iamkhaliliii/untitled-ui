@@ -10,6 +10,10 @@ import { AnnouncementBannerWidget } from "./announcement-banner-widget";
 import { LeaderboardWidget } from "./leaderboard-widget";
 import { HtmlScriptWidget } from "./html-script-widget";
 import { RichTextWidget } from "./rich-text-widget";
+import { DiscussionsListWidget } from "./discussions-list-widget";
+import { KnowledgesListWidget } from "./knowledges-list-widget";
+import { WishlistsListWidget } from "./wishlists-list-widget";
+import { QuestionsListWidget } from "./questions-list-widget";
 import { SpacePreviews } from "./space-previews";
 
 
@@ -479,6 +483,41 @@ export const BrowserMockup = ({
                       {spaceWidgetStates?.eventsList && (
                         <div className="transition-all duration-200 ease-out">
                           <EventsListWidget />
+                        </div>
+                      )}
+                      
+                      {/* Posts Widget (Custom Events List) */}
+                      {spaceWidgetStates?.customEventsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <EventsListWidget />
+                        </div>
+                      )}
+                      
+                      {/* Discussions List Widget */}
+                      {spaceWidgetStates?.discussionsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <DiscussionsListWidget />
+                        </div>
+                      )}
+                      
+                      {/* Knowledges List Widget */}
+                      {spaceWidgetStates?.knowledgesList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <KnowledgesListWidget />
+                        </div>
+                      )}
+                      
+                      {/* Wishlists List Widget */}
+                      {spaceWidgetStates?.wishlistsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <WishlistsListWidget />
+                        </div>
+                      )}
+                      
+                      {/* Questions List Widget */}
+                      {spaceWidgetStates?.questionsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <QuestionsListWidget />
                         </div>
                       )}
                       

@@ -82,7 +82,7 @@ export const SiteSpacesHelpCustomizePage = () => {
     // Render sidebar content with title and header controls
     const renderCustomizeSidebarContent = () => {
         return (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col">
                 {/* Title and Description */}
                 <div className="p-4">
                     <h2 className="text-lg font-semibold text-primary mb-2">{getMainTitle()}</h2>
@@ -107,7 +107,7 @@ export const SiteSpacesHelpCustomizePage = () => {
                 </div>
                 
                 {/* Main content */}
-                <div className="flex-1 overflow-y-auto">
+                <div>
                     <EventsCustomizeSettings
                         toggleStates={toggleStates}
                         customizeExpandedIds={customizeExpandedIds}

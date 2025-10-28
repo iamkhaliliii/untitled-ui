@@ -225,7 +225,7 @@ export const SiteCmsEventsCustomizePage = () => {
 
         // Wrap content with header controls first, then title
         return (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col">
                 {/* Header controls - Sticky */}
                 <div className="sticky top-0 z-10 bg-primary p-2 border-b border-secondary">
                     <div className="flex items-center justify-between mb-2">
@@ -261,7 +261,7 @@ export const SiteCmsEventsCustomizePage = () => {
                 </div>
                 
                 {/* Main content */}
-                <div className="flex-1 overflow-y-auto">
+                <div>
                     {content}
                 </div>
             </div>

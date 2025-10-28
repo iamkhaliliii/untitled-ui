@@ -69,6 +69,67 @@ export interface RichTextConfig {
   cardStyle: 'card' | 'no_padding' | 'none';
 }
 
+export interface DiscussionsListConfig {
+  style: 'card' | 'list' | 'feed';
+  cardSize: 'small' | 'medium' | 'large' | 'extralarge';
+  cardStyle: 'modern' | 'simple';
+  tabView: boolean;
+  allTab: boolean;
+  trendingTab: boolean;
+  recentTab: boolean;
+  // Card properties
+  authorInfo: boolean;
+  reactionsCounter: boolean;
+  repliesCounter: boolean;
+  coverImage: boolean;
+  // List properties
+  memberAvatar: boolean;
+  postSummary: boolean;
+  reactionAndReply: boolean;
+  tags: boolean;
+  // Feed properties
+  postContent: boolean;
+  comments: boolean;
+  title: string;
+  description: string;
+}
+
+export interface KnowledgesListConfig {
+  style: 'card' | 'list' | 'feed';
+  cardSize: 'small' | 'medium' | 'large' | 'extralarge';
+  cardStyle: 'modern' | 'simple';
+  authorInfo: boolean;
+  reactionsCounter: boolean;
+  coverImage: boolean;
+  readTime: boolean;
+  title: string;
+  description: string;
+}
+
+export interface WishlistsListConfig {
+  style: 'card' | 'list' | 'feed';
+  cardSize: 'small' | 'medium' | 'large' | 'extralarge';
+  cardStyle: 'modern' | 'simple';
+  creatorInfo: boolean;
+  votesCounter: boolean;
+  commentsCounter: boolean;
+  statusBadge: boolean;
+  title: string;
+  description: string;
+}
+
+export interface QuestionsListConfig {
+  style: 'card' | 'list' | 'feed';
+  cardSize: 'small' | 'medium' | 'large' | 'extralarge';
+  cardStyle: 'modern' | 'simple';
+  authorInfo: boolean;
+  answersCounter: boolean;
+  votesCounter: boolean;
+  viewsCounter: boolean;
+  title: string;
+  description: string;
+}
+
 export const defaultEventsListConfig: EventsListConfig = {
   style: 'card',
   cardSize: 'medium',
@@ -138,4 +199,65 @@ export const defaultHtmlScriptConfig: HtmlScriptConfig = {
 export const defaultRichTextConfig: RichTextConfig = {
   content: '# Welcome to Our Community! 🎉\n\nWe\'re thrilled to have you join our vibrant community of creators, innovators, and collaborators.\n\n## Getting Started:\n- Complete your profile\n- Join relevant spaces\n- Share your first post\n\n> "Great communities are built by great members."',
   cardStyle: 'card',
+};
+
+export const defaultDiscussionsListConfig: DiscussionsListConfig = {
+  style: 'card',
+  cardSize: 'medium',
+  cardStyle: 'simple',
+  tabView: true,
+  allTab: true,
+  trendingTab: true,
+  recentTab: false,
+  // Card properties
+  authorInfo: true,
+  reactionsCounter: true,
+  repliesCounter: true,
+  coverImage: false,
+  // List properties
+  memberAvatar: true,
+  postSummary: true,
+  reactionAndReply: true,
+  tags: true,
+  // Feed properties
+  postContent: true,
+  comments: true,
+  title: 'Discussions',
+  description: 'Browse and join community discussions',
+};
+
+export const defaultKnowledgesListConfig: KnowledgesListConfig = {
+  style: 'card',
+  cardSize: 'medium',
+  cardStyle: 'simple',
+  authorInfo: true,
+  reactionsCounter: true,
+  coverImage: true,
+  readTime: true,
+  title: 'Knowledge Base',
+  description: 'Explore articles and guides',
+};
+
+export const defaultWishlistsListConfig: WishlistsListConfig = {
+  style: 'card',
+  cardSize: 'medium',
+  cardStyle: 'simple',
+  creatorInfo: true,
+  votesCounter: true,
+  commentsCounter: true,
+  statusBadge: true,
+  title: 'Feature Requests',
+  description: 'Vote on upcoming features',
+};
+
+export const defaultQuestionsListConfig: QuestionsListConfig = {
+  style: 'card',
+  cardSize: 'medium',
+  cardStyle: 'simple',
+  authorInfo: true,
+  answersCounter: true,
+  votesCounter: true,
+  viewsCounter: true,
+  title: 'Q&A',
+  description: 'Ask and answer questions',
 }; 

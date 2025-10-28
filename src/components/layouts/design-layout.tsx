@@ -6,6 +6,7 @@ import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { Monitor02, ArrowRight } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { useNavigate } from "react-router";
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 
 interface DesignLayoutProps {
     children: ReactNode;
@@ -31,6 +32,9 @@ export const DesignLayout = ({
     const { isAdmin, adminHeaderVisible, toggleAdminHeader } = useAdmin();
     const isLg = useBreakpoint("lg");
     const navigate = useNavigate();
+    
+    // Lock scroll position when content changes
+    const scrollContainerRef = useScrollLock();
 
     // Mobile restriction - Show message for screens smaller than lg (1024px)
     if (!isLg) {
@@ -99,22 +103,29 @@ export const DesignLayout = ({
             {/* Main layout - Secondary sidebar and optional tertiary sidebar */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Secondary Sidebar */}
-                <div className={`${sidebarWidth} h-full bg-primary border-r border-secondary overflow-y-auto`}>
+                <div className={`${sidebarWidth} bg-primary border-r border-secondary overflow-hidden flex flex-col`}>
                     {/* Only show title/description if they're not empty */}
                     {(title || description) && (
-                        <div className="p-4 pt-6 mb-6">
+                        <div className="p-4 pt-6 pb-4 flex-shrink-0">
                             {title && <h2 className="text-lg font-semibold text-primary mb-2">{title}</h2>}
                             {description && <p className="text-sm text-tertiary">{description}</p>}
                         </div>
                     )}
                     
-                    {sidebarContent}
+                    <div 
+                        ref={scrollContainerRef}
+                        className="flex-1 overflow-y-auto min-h-0 customizer-sidebar-scroll"
+                    >
+                        {sidebarContent}
+                    </div>
                 </div>
 
                 {/* Tertiary Sidebar - Only show when content is provided */}
                 {tertiarySidebarContent && (
-                    <div className="w-80 h-full bg-primary border-r border-secondary overflow-y-auto">
-                        {tertiarySidebarContent}
+                    <div className="w-80 h-full bg-primary border-r border-secondary overflow-hidden flex flex-col">
+                        <div className="flex-1 overflow-y-auto min-h-0">
+                            {tertiarySidebarContent}
+                        </div>
                     </div>
                 )}
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid, ChevronUp, ChevronDown, HelpCircle, Code01, Star01 } from "@untitledui/icons";
+import { LayoutAlt01, LayoutTop, LayoutLeft, LayoutRight, LayoutBottom, FlexAlignTop, Menu01, Menu02, User02, FlexAlignBottom, Calendar, File01, Grid03, Plus, SearchLg, Grid02, Grid01, Settings01, Lock01, InfoCircle, Square, FlexAlignRight, Maximize01, DotsHorizontal, Edit03, EyeOff, Copy01, Trash01, DotsGrid, ChevronUp, ChevronDown, HelpCircle, Code01, Star01, MessageSquare01, BookOpen01, Heart, HelpCircle as QuestionIcon } from "@untitledui/icons";
 import { TreeView } from "@/components/ui/tree-view";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 import { cx } from "@/utils/cx";
@@ -66,6 +66,10 @@ export const EventsCustomizeSettings = ({
         leaderboard: true,
         htmlScript: true,
         richText: true,
+        discussionsList: false,
+        knowledgesList: false,
+        wishlistsList: false,
+        questionsList: false,
         dynamicWidgets: [],
       },
       updateSpaceWidgetStates: () => {},
@@ -597,6 +601,7 @@ export const EventsCustomizeSettings = ({
         {/* Growth folder gets Properties-style layout, others get TreeView */}
         {isGrowthFolderPage ? (
           <div className="space-y-2">
+            {/* 1. Space Header */}
             <PropertyToggle
               icon={FlexAlignTop}
               label="Space Header"
@@ -607,6 +612,62 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
             />
             
+            {/* 2. Events List */}
+            <PropertyToggle
+              icon={Calendar}
+              label="Events List"
+              isSelected={spaceWidgetStates.eventsList}
+              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
+              id="events-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
+            />
+            
+            {/* 3. Discussions List */}
+            <PropertyToggle
+              icon={MessageSquare01}
+              label="Discussions List"
+              isSelected={spaceWidgetStates.discussionsList ?? false}
+              onChange={(value) => updateSpaceWidgetStates({ discussionsList: value })}
+              id="discussions-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'discussionsList', label: 'Discussions List' })}
+            />
+            
+            {/* 4. Knowledges List */}
+            <PropertyToggle
+              icon={BookOpen01}
+              label="Knowledges List"
+              isSelected={spaceWidgetStates.knowledgesList ?? false}
+              onChange={(value) => updateSpaceWidgetStates({ knowledgesList: value })}
+              id="knowledges-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'knowledgesList', label: 'Knowledges List' })}
+            />
+            
+            {/* 5. Wishlists List */}
+            <PropertyToggle
+              icon={Heart}
+              label="Wishlists List"
+              isSelected={spaceWidgetStates.wishlistsList ?? false}
+              onChange={(value) => updateSpaceWidgetStates({ wishlistsList: value })}
+              id="wishlists-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'wishlistsList', label: 'Wishlists List' })}
+            />
+            
+            {/* 6. Questions List */}
+            <PropertyToggle
+              icon={QuestionIcon}
+              label="Questions List"
+              isSelected={spaceWidgetStates.questionsList ?? false}
+              onChange={(value) => updateSpaceWidgetStates({ questionsList: value })}
+              id="questions-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'questionsList', label: 'Questions List' })}
+            />
+            
+            {/* 7. Announcement Banner */}
             <PropertyToggle
               icon={HelpCircle}
               label="Announcement Banner"
@@ -617,6 +678,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'announcementBanner', label: 'Announcement Banner' })}
             />
             
+            {/* 8. Leaderboard */}
             <PropertyToggle
               icon={Star01}
               label="Leaderboard"
@@ -627,6 +689,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'leaderboard', label: 'Leaderboard' })}
             />
             
+            {/* 9. Html Script */}
             <PropertyToggle
               icon={Code01}
               label="Html Script"
@@ -637,6 +700,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'htmlScript', label: 'Html Script' })}
             />
             
+            {/* 10. Rich Text */}
             <PropertyToggle
               icon={File01}
               label="Rich Text"
@@ -647,14 +711,15 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'richText', label: 'Rich Text' })}
             />
             
+            {/* 11. Posts */}
             <PropertyToggle
               icon={Calendar}
-              label="Events List"
-              isSelected={spaceWidgetStates.eventsList}
-              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
-              id="events-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
+              label="Posts"
+              isSelected={spaceWidgetStates.customEventsList}
+              onChange={(value) => updateSpaceWidgetStates({ customEventsList: value })}
+              id="posts"
+              iconColor="bg-purple-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'posts', label: 'Posts' })}
             />
             
             {/* Hero Banner and Composer widgets are hidden for now */}
