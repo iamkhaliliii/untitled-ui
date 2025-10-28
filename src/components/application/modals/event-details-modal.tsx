@@ -70,9 +70,9 @@ Don't miss this opportunity to be part of a dynamic community that's driving pos
     
     return (
         <div className="">
-            <div className="text-sm text-gray-500 mb-3">About Event</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">About Event</div>
             <div className="prose prose-gray max-w-none">
-                <div className="text-gray-700 leading-relaxed text-sm whitespace-pre-line">
+                <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line">
                     {isExpanded ? fullDescription : shortText}
                 </div>
             </div>
@@ -198,7 +198,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
     if (!isOpen) return null;
     
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/70 backdrop-blur-sm">
             <div 
                 className="fixed inset-0 flex items-center justify-center p-4 max-md:p-4"
                 onClick={onClose}
@@ -222,14 +222,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                         .modal-scrollbar::-webkit-scrollbar-thumb:hover {
                             background-color: #9ca3af;
                         }
+                        .dark .modal-scrollbar::-webkit-scrollbar-thumb {
+                            background-color: #4b5563;
+                        }
+                        .dark .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+                            background-color: #6b7280;
+                        }
                         `
                     }} />
-                    <div className="bg-white rounded-3xl max-md:rounded-2xl shadow-2xl flex h-full max-md:flex-col relative overflow-hidden">
+                    <div className="bg-white dark:bg-gray-900 rounded-3xl max-md:rounded-2xl shadow-2xl flex h-full max-md:flex-col relative overflow-hidden">
 
                         {showOtherTimes ? (
                             /* Full Width Single Column View - for time slots */
                             <div className="w-full flex flex-col min-h-0">
-                                <div className="px-6 py-4 flex-shrink-0 bg-white border-b border-gray-100">
+                                <div className="px-6 py-4 flex-shrink-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 dark:border-gray-700">
                                     <div className="flex items-center justify-between">
                                         {showOtherTimes && (
                                         <Button
@@ -243,24 +249,24 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         <div className="flex-1"></div>
                                         <div className="flex items-center gap-1 flex-shrink-0">
                                             <button
-                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                 title="Share Event"
                                             >
-                                                <Share07 className="h-4 w-4 text-gray-500" />
+                                                <Share07 className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                             </button>
                                             <button
                                                 onClick={handleEventPageClick}
-                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                 title="Open in new tab"
                                             >
-                                                <LinkExternal01 className="h-4 w-4 text-gray-500" />
+                                                <LinkExternal01 className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                             </button>
                                             <button
                                                 onClick={onClose}
-                                                className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                 title="Close"
                                             >
-                                                <X className="h-4 w-4 text-gray-500" />
+                                                <X className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                             </button>
                                         </div>
                                     </div>
@@ -271,8 +277,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         {showOtherTimes ? (
                                             <>
                                                 <div className="mb-4">
-                                                    <h4 className="text-lg font-semibold text-gray-900 mb-1">Choose another date</h4>
-                                                    <p className="text-sm text-gray-600">Your current selection: {recurringTimeSlots[selectedTimeSlot].date}</p>
+                                                    <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-1">Choose another date</h4>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Your current selection: {recurringTimeSlots[selectedTimeSlot].date}</p>
                                                 </div>
                                         <div className="grid gap-4 grid-cols-1">
                                             {recurringTimeSlots.map((timeSlot) => (
@@ -280,25 +286,25 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     key={timeSlot.id}
                                                     className={`cursor-pointer transition-all duration-200 rounded-xl p-4 ${
                                                         timeSlot.status === 'Full' 
-                                                            ? 'opacity-60 cursor-not-allowed border border-gray-200'
+                                                            ? 'opacity-60 cursor-not-allowed border border-gray-200 dark:border-gray-700 dark:border-gray-700'
                                                             : selectedTimeSlot === timeSlot.id
-                                                            ? 'border-2 border-brand-solid bg-brand-50'
-                                                            : 'border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                                            ? 'border-2 border-brand-solid bg-brand-50 dark:bg-brand-900/20 dark:border-brand-600'
+                                                            : 'border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
                                                     }`}
                                                     onClick={() => timeSlot.status !== 'Full' && handleTimeSlotSelect(timeSlot.id)}
                                                 >
                                                     <div className="flex items-center gap-3 relative">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                            <div className="text-xs text-gray-500 leading-none">
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 leading-none">
                                                                 {new Date(timeSlot.date).toLocaleDateString('en-US', { month: 'short' })}
                                                             </div>
-                                                            <div className="text-sm font-semibold text-gray-900 leading-none">
+                                                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 leading-none">
                                                                 {new Date(timeSlot.date).getDate()}
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base">{timeSlot.date}</div>
-                                                            <div className="text-sm text-gray-600">{timeSlot.time}</div>
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base">{timeSlot.date}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{timeSlot.time}</div>
                                                         </div>
                                                         <div className="absolute top-0 right-0 flex gap-1 items-center">
                                                             <div className="flex gap-1 items-center">
@@ -356,8 +362,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             <>
                                                 {/* Welcome Message */}
                                                 <div className="mb-10">
-                                                    <h3 className="text-base font-semibold text-gray-900 mb-1">Dear John Smith,</h3>
-                                                    <p className="text-sm text-gray-600">Thank you for registering! We're excited to have you join us at this event.</p>
+                                                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Dear John Smith,</h3>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Thank you for registering! We're excited to have you join us at this event.</p>
                                                 </div>
 
                                                 {/* Event Title & Cover */}
@@ -372,17 +378,17 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </div>
                                                         <div className="flex-1 min-w-0 space-y-3">
                                                             {/* Success Message */}
-                                                            <div className="bg-success-50 border border-success-200 rounded-xl p-3">
+                                                            <div className="bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-700 rounded-xl p-3">
                                                                 <div className="flex items-center gap-2 mb-1">
-                                                                    <CheckCircle className="w-4 h-4 text-success-600" />
-                                                                    <span className="text-sm font-semibold text-success-700">Registration confirmed</span>
+                                                                    <CheckCircle className="w-4 h-4 text-success-600 dark:text-success-400" />
+                                                                    <span className="text-sm font-semibold text-success-700 dark:text-success-300">Registration confirmed</span>
                                                                 </div>
-                                                                <p className="text-xs text-success-600">Your RSVP has been confirmed. Event details have been sent to your email.</p>
+                                                                <p className="text-xs text-success-600 dark:text-success-400">Your RSVP has been confirmed. Event details have been sent to your email.</p>
                                                             </div>
 
                                                             <div>
-                                                                <div className="font-semibold text-gray-900 text-base mb-2 leading-snug">{event.title}</div>
-                                                                <div className="flex items-center gap-2 text-gray-600">
+                                                                <div className="font-semibold text-gray-900 dark:text-gray-100 text-base mb-2 leading-snug">{event.title}</div>
+                                                                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                                                     {event.organizers && event.organizers.length > 1 ? (
                                                                         <>
                                                                             {/* Avatar Group */}
@@ -390,7 +396,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                                 {event.organizers.map((org: any, index: number) => (
                                                                                     <div
                                                                                         key={index}
-                                                                                        className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200"
+                                                                                        className="w-4 h-4 rounded-full border border-white overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600"
                                                                                         style={{ zIndex: event.organizers.length - index }}
                                                                                     >
                                                                                         <img
@@ -408,7 +414,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         </>
                                                                     ) : (
                                                                         <>
-                                                                            <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200">
+                                                                            <div className="w-4 h-4 rounded-full overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600">
                                                                                 <img 
                                                                                     src={event.organizer.avatar} 
                                                                                     alt={event.organizer.name}
@@ -435,7 +441,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                     Add to calendar
                                                                 </Button>
                                                                 <button
-                                                                    className="flex-1 text-xs text-gray-500 hover:text-gray-700 underline transition-colors"
+                                                                    className="flex-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:text-gray-300 underline transition-colors"
                                                                     onClick={() => setShowCancelAlert(true)}
                                                                 >
                                                                     Can't make it? Cancel registration
@@ -447,20 +453,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                 {/* Event Information Section */}
                                                 <div className="mb-6">
-                                                    <h4 className="text-sm font-medium text-gray-500 mb-4">Event Information</h4>
+                                                    <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Event Information</h4>
                                                     <div className="space-y-4">
 
                                                         {/* Date & Time Card */}
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                                            <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
                                                                 {rsvpType === 'all' && event.isRecurring ? (
                                                                     <Repeat03 className="h-5 w-5 text-brand-solid" />
                                                                 ) : (
                                                                     <>
-                                                                        <div className="text-xs text-gray-500 leading-none">
+                                                                        <div className="text-xs text-gray-500 dark:text-gray-400 leading-none">
                                                                             {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
                                                                         </div>
-                                                                        <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none mt-0.5">
                                                                             {new Date(currentEventData.date).getDate()}
                                                                         </div>
                                                                     </>
@@ -469,8 +475,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <div className="flex-1">
                                                                 {rsvpType === 'all' && event.isRecurring ? (
                                                                     <>
-                                                                        <div className="font-medium text-gray-900 text-base">All following events</div>
-                                                                        <div className="text-sm text-gray-600 leading-relaxed">
+                                                                        <div className="font-medium text-gray-900 dark:text-gray-100 text-base">All following events</div>
+                                                                        <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                                                                             {event.recurringFrequency} at {currentEventData.time}
                                                                             <br />
                                                                             6 sessions starting {currentEventData.date} until May 31, 2024
@@ -478,8 +484,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        <div className="font-medium text-gray-900 text-base">{currentEventData.date}</div>
-                                                                        <div className="text-sm text-gray-600">{currentEventData.time}</div>
+                                                                        <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{currentEventData.date}</div>
+                                                                        <div className="text-sm text-gray-600 dark:text-gray-400">{currentEventData.time}</div>
                                                                     </>
                                                                 )}
                                                             </div>
@@ -488,14 +494,14 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         {/* Physical Location Card (for physical and hybrid) */}
                                                         {(event.locationType === "physical" || event.locationType === "hybrid") && (
                                                             <div className="flex items-start gap-3">
-                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                                                                    <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                                                    <MarkerPin01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="font-medium text-gray-900 text-base">
+                                                                    <div className="font-medium text-gray-900 dark:text-gray-100 text-base">
                                                                         {event.location}
                                                                     </div>
-                                                                    <div className="text-sm text-gray-600">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
                                                                 </div>
                                                             </div>
                                                         )}
@@ -503,11 +509,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         {/* Virtual Location Card (for virtual and hybrid) */}
                                                         {(event.locationType === "virtual" || event.locationType === "hybrid") && (
                                                             <div className="flex items-start gap-3">
-                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                                                                    <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                                                    <VideoRecorder className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="font-medium text-gray-900 text-base mb-2">
+                                                                    <div className="font-medium text-gray-900 dark:text-gray-100 text-base mb-2">
                                                                         Virtual links
                                                                     </div>
                                                                     <div className="space-y-2">
@@ -623,8 +629,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 )}
                                                 {/* Event Details Section - Moved before About Event */}
                                                 <div className="mb-6">
-                                                    <h4 className="text-sm font-medium text-gray-500 mb-3">Event Details</h4>
-                                                    <div className="space-y-2 text-sm text-gray-700">
+                                                    <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Event Details</h4>
+                                                    <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                                                         <div className="flex items-start gap-2">
                                                             <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
                                                             <p>Free snacks and drinks will be provided throughout the event</p>
@@ -676,7 +682,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                         ) : (
                             <>
                                 {/* Desktop: Left Column - Cover + Host + Registration */}
-                                <div className="w-2/5 max-lg:w-2/5 md:flex max-md:hidden bg-gray-50 relative flex-col min-h-0">
+                                <div className="w-2/5 max-lg:w-2/5 md:flex max-md:hidden bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 relative flex-col min-h-0">
                                     <div className="flex flex-col h-full p-6 max-lg:p-4">
                                         {/* Cover Image */}
                                         <div className="flex-shrink-0 mb-4">
@@ -693,10 +699,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                     {!showOtherTimes && (
                                             <div className="flex-shrink-0">
                                                 {rsvpStage === 'cancelled' && (
-                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                         <div className="text-center">
-                                                            <p className="text-sm text-gray-900 mb-3">Registration cancelled</p>
-                                                            <p className="text-xs text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
+                                                            <p className="text-sm text-gray-900 dark:text-gray-100 mb-3">Registration cancelled</p>
+                                                            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">You can RSVP again anytime if you change your mind.</p>
                                                             <Button 
                                                                 size="md" 
                                                                 color="secondary" 
@@ -709,21 +715,21 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     </div>
                                                 )}
                                                 {rsvpStage === 'processing' && (
-                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                         <div className="text-center">
                                                             <div className="flex items-center justify-center gap-2 mb-2">
                                                                 <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
                                                                 <span className="text-sm text-brand-600">Processing...</span>
                                                             </div>
-                                                            <p className="text-xs text-gray-500">Please wait</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400">Please wait</p>
                                                         </div>
                                                     </div>
                                                 )}
                                                 {(rsvpStage as RsvpStage) === 'confirmed' && (
-                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                         <div className="text-center">
                                                             <div className="mb-3">
-                                                                <h4 className="text-sm text-gray-900">Registered</h4>
+                                                                <h4 className="text-sm text-gray-900 dark:text-gray-100">Registered</h4>
                                                             </div>
                                                             <Button 
                                                                 size="md" 
@@ -734,7 +740,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 Add to calendar
                                                             </Button>
                                                             <button
-                                                                className="w-full text-xs text-gray-500 hover:text-gray-700 underline transition-colors text-center"
+                                                                className="w-full text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:text-gray-300 underline transition-colors text-center"
                                                                 onClick={() => setShowCancelAlert(true)}
                                                             >
                                                                 Can't make it? Cancel registration
@@ -743,10 +749,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     </div>
                                                 )}
                                                 {rsvpStage === 'initial' && rsvpState === 'open' && (
-                                                    <div className="border border-gray-200 rounded-xl p-4 relative">
+                                                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 relative">
                                                         <div className="text-center">
                                                             <div className="mb-3">
-                                                                <h4 className="text-sm text-gray-900">Ready to join?</h4>
+                                                                <h4 className="text-sm text-gray-900 dark:text-gray-100">Ready to join?</h4>
                                                             </div>
                                                             <Button 
                                                                 size="md" 
@@ -766,23 +772,23 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         onClick={() => setShowRecurringOptions(false)}
                                                                     />
                                                                     {/* Popover */}
-                                                                <div className="absolute bottom-4 left-0 right-0 mb-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
-                                                                        <div className="mb-3 pb-3 border-b border-gray-100">
+                                                                <div className="absolute bottom-4 left-0 right-0 mb-2 z-50 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-3">
+                                                                        <div className="mb-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                                                                             <div className="flex items-center gap-2 mb-1">
-                                                                                <h4 className="text-sm font-semibold text-gray-900">Recurring Event</h4>
+                                                                                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Recurring Event</h4>
                                                                             </div>
-                                                                            <p className="text-xs text-gray-600 text-left">Choose how you'd like to register</p>
+                                                                            <p className="text-xs text-gray-600 dark:text-gray-400 text-left">Choose how you'd like to register</p>
                                                                         </div>
                                                                         <div className="space-y-1">
                                                                             {/* RSVP for selected date */}
                                                                             <div 
-                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                                                                 onClick={() => handleRecurringRSVP('single')}
                                                                             >
-                                                                                <Calendar className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                                <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
                                                                                 <div className="flex-1 text-left">
-                                                                                    <div className="text-sm font-medium text-gray-900">This session only</div>
-                                                                                    <div className="text-xs text-gray-600 flex items-center gap-1">
+                                                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">This session only</div>
+                                                                                    <div className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                                                                         <span>{currentEventData.date}</span>
                                                                                         <button
                                                                                             onClick={(e) => {
@@ -801,13 +807,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                             
                                                                             {/* RSVP for all */}
                                                                             <div 
-                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                                className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                                                                 onClick={() => handleRecurringRSVP('all')}
                                                                             >
-                                                                                <Repeat03 className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                                <Repeat03 className="h-4 w-4 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
                                                                                 <div className="flex-1 text-left">
-                                                                                    <div className="text-sm font-medium text-gray-900">All upcoming sessions</div>
-                                                                                    <div className="text-xs text-gray-600">6 more until May 31, 2024</div>
+                                                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">All upcoming sessions</div>
+                                                                                    <div className="text-xs text-gray-600 dark:text-gray-400">6 more until May 31, 2024</div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -818,10 +824,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     </div>
                                                 )}
                                                 {rsvpStage === 'initial' && rsvpState !== 'open' && (
-                                                    <div className="border border-gray-200 rounded-xl p-4">
+                                                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                         <div className="text-center">
-                                                            <p className="text-sm text-gray-900 mb-2">{rsvpConfig.label}</p>
-                                                            <p className="text-xs text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
+                                                            <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">{rsvpConfig.label}</p>
+                                                            <p className="text-xs text-gray-600 dark:text-gray-400">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
                                                         </div>
                                                     </div>
                                                 )}
@@ -830,13 +836,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         
                                         {/* Host */}
                                         <div className="flex-shrink-0 mt-6 min-h-0">
-                                            <div className="text-xs font-medium text-gray-500 mb-2">Hosted by</div>
+                                            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Hosted by</div>
                                             {event.organizers && event.organizers.length > 1 ? (
                                                 <div className="space-y-1 pb-8 max-h-40 overflow-y-auto  overflow-x-hidden modal-scrollbar pr-1" style={scrollbarStyles}>
                                                     {event.organizers.map((org: any, index: number) => (
-                                                        <div key={index} className="group flex items-center justify-between gap-2 hover:bg-gray-50 -mx-2 px-2 py-1 rounded-lg transition-colors">
+                                                        <div key={index} className="group flex items-center justify-between gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 -mx-2 px-2 py-1 rounded-lg transition-colors">
                                                             <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                                                <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 flex-shrink-0">
+                                                                <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600 flex-shrink-0">
                                                                     <img
                                                                         src={org.avatar}
                                                                         alt={org.name}
@@ -846,29 +852,29 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         }}
                                                                     />
                                                                 </div>
-                                                                <span className="text-xs font-medium text-gray-900 truncate">{org.name}</span>
+                                                                <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{org.name}</span>
                                                             </div>
                                                             <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <button
-                                                                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                                                                     title="Message"
                                                                 >
-                                                                    <MessageChatCircle className="w-3.5 h-3.5 text-gray-600" />
+                                                                    <MessageChatCircle className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
                                                                 </button>
                                                                 <button
-                                                                    className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                                                                     title="View Profile"
                                                                 >
-                                                                    <User01 className="w-3.5 h-3.5 text-gray-600" />
+                                                                    <User01 className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div className="group flex items-center justify-between gap-2 hover:bg-gray-50 -mx-2 px-2 py-1 rounded-lg transition-colors">
+                                                <div className="group flex items-center justify-between gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 -mx-2 px-2 py-1 rounded-lg transition-colors">
                                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                                        <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 flex-shrink-0">
+                                                        <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600 flex-shrink-0">
                                                             <img 
                                                                 src={currentEventData.organizer.avatar} 
                                                                 alt={currentEventData.organizer.name}
@@ -878,20 +884,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs font-medium text-gray-900 truncate">{currentEventData.organizer.name}</span>
+                                                        <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{currentEventData.organizer.name}</span>
                                                     </div>
                                                     <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <button
-                                                            className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                                                             title="Message"
                                                         >
-                                                            <MessageChatCircle className="w-3.5 h-3.5 text-gray-600" />
+                                                            <MessageChatCircle className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
                                                         </button>
                                                         <button
-                                                            className="p-1 hover:bg-gray-200 rounded transition-colors"
+                                                            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                                                             title="View Profile"
                                                         >
-                                                            <User01 className="w-3.5 h-3.5 text-gray-600" />
+                                                            <User01 className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -904,20 +910,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                 {!showOtherTimes && (
                                     <div className="w-3/5 max-lg:w-3/5 md:flex max-md:hidden flex-col min-h-0">
                                         {/* Sticky Header with Action Buttons */}
-                                        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 z-10 flex justify-end items-center">
+                                        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 dark:border-gray-700 px-6 py-4 z-10 flex justify-end items-center">
                                             <div className="flex items-center gap-1 flex-shrink-0">
                                                 <button
-                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                    className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                     title="Share Event"
                                                 >
-                                                    <Share07 className="h-4 w-4 text-gray-500" />
+                                                    <Share07 className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                                 </button>
                                                 <button
                                                     onClick={handleEventPageClick}
-                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                    className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                     title="Open in new tab"
                                                 >
-                                                    <LinkExternal01 className="h-4 w-4 text-gray-500" />
+                                                    <LinkExternal01 className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                                 </button>
                                                 <Dropdown.Root>
                                                     <Dropdown.DotsButton />
@@ -944,10 +950,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 </Dropdown.Root>
                                                 <button
                                                     onClick={onClose}
-                                                    className="hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                                                    className="hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
                                                     title="Close"
                                                 >
-                                                    <X className="h-4 w-4 text-gray-500" />
+                                                    <X className="h-4 w-4 text-gray-500 dark:text-gray-400 dark:text-gray-400" />
                                                 </button>
                                             </div>
                                         </div>
@@ -962,35 +968,35 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 <>
                                                     {/* Event Title */}
                                                     <div>
-                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 mb-2">
+                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 mb-2">
                                                             {currentEventData.title}
                                                         </h1>
                                                     </div>
 
                                                     {/* Success Message */}
-                                                    <div className="bg-success-50 border border-success-200 rounded-xl p-3">
+                                                    <div className="bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-700 rounded-xl p-3">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <CheckCircle className="w-4 h-4 text-success-600" />
-                                                            <span className="text-sm font-semibold text-success-700">Registration confirmed</span>
+                                                            <CheckCircle className="w-4 h-4 text-success-600 dark:text-success-400" />
+                                                            <span className="text-sm font-semibold text-success-700 dark:text-success-300">Registration confirmed</span>
                                                         </div>
-                                                        <p className="text-xs text-success-600">Your RSVP has been confirmed. Event details have been sent to your email.</p>
+                                                        <p className="text-xs text-success-600 dark:text-success-400">Your RSVP has been confirmed. Event details have been sent to your email.</p>
                                                     </div>
 
                                                     {/* Event Information Section */}
                                                     <div>
-                                                        <h4 className="text-sm font-medium text-gray-500 mb-4">Event Information</h4>
+                                                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Event Information</h4>
                                                         <div className="space-y-4">
                                                             {/* Date & Time Card */}
                                                             <div className="flex items-center gap-3">
-                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
+                                                                <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
                                                                     {rsvpType === 'all' && event.isRecurring ? (
                                                                         <Repeat03 className="h-5 w-5 text-brand-solid" />
                                                                     ) : (
                                                                         <>
-                                                                            <div className="text-xs text-gray-500 leading-none">
+                                                                            <div className="text-xs text-gray-500 dark:text-gray-400 leading-none">
                                                                                 {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
                                                                             </div>
-                                                                            <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none mt-0.5">
                                                                                 {new Date(currentEventData.date).getDate()}
                                                                             </div>
                                                                         </>
@@ -999,8 +1005,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 <div className="flex-1">
                                                                     {rsvpType === 'all' && event.isRecurring ? (
                                                                         <>
-                                                                            <div className="font-medium text-gray-900 text-base">All following events</div>
-                                                                            <div className="text-sm text-gray-600 leading-relaxed">
+                                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base">All following events</div>
+                                                                            <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                                                                                 {event.recurringFrequency} at {currentEventData.time}
                                                                                 <br />
                                                                                 6 sessions starting {currentEventData.date} until May 31, 2024
@@ -1008,8 +1014,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                         </>
                                                                     ) : (
                                                                         <>
-                                                                            <div className="font-medium text-gray-900 text-base">{currentEventData.date}</div>
-                                                                            <div className="text-sm text-gray-600">{currentEventData.time}</div>
+                                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{currentEventData.date}</div>
+                                                                            <div className="text-sm text-gray-600 dark:text-gray-400">{currentEventData.time}</div>
                                                                         </>
                                                                     )}
                                                                 </div>
@@ -1018,14 +1024,14 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             {/* Physical Location Card (for physical and hybrid) */}
                                                             {(event.locationType === "physical" || event.locationType === "hybrid") && (
                                                                 <div className="flex items-center gap-3">
-                                                                    <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                    <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
+                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                     </div>
                                                                     <div className="flex-1">
-                                                                        <div className="font-medium text-gray-900 text-base">
+                                                                        <div className="font-medium text-gray-900 dark:text-gray-100 text-base">
                                                                             {event.location}
                                                                         </div>
-                                                                        <div className="text-sm text-gray-600">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
+                                                                        <div className="text-sm text-gray-600 dark:text-gray-400">{event.fullAddress || "Main auditorium, accessible entrance available"}</div>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -1033,11 +1039,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             {/* Virtual Location Card (for virtual and hybrid) */}
                                                             {(event.locationType === "virtual" || event.locationType === "hybrid") && (
                                                                 <div className="flex items-start gap-3">
-                                                                    <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm flex-shrink-0">
-                                                                        <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                    <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm flex-shrink-0">
+                                                                        <VideoRecorder className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
-                                                                        <div className="font-medium text-gray-900 text-base mb-2">
+                                                                        <div className="font-medium text-gray-900 dark:text-gray-100 text-base mb-2">
                                                                             Virtual links
                                                                         </div>
                                                                         <div className="space-y-2">
@@ -1155,8 +1161,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                     {/* Event Details Section */}
                                                     <div>
-                                                        <h4 className="text-sm font-medium text-gray-500 mb-3">Event Details</h4>
-                                                        <div className="space-y-2 text-sm text-gray-700">
+                                                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Event Details</h4>
+                                                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                                                             <div className="flex items-start gap-2">
                                                                 <div className="w-1.5 h-1.5 bg-brand-solid rounded-full mt-2 flex-shrink-0"></div>
                                                                 <p>Free snacks and drinks will be provided throughout the event</p>
@@ -1188,7 +1194,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 <>
                                                     {/* Title */}
                                                     <div>
-                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 mb-2">
+                                                        <h1 className="text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 mb-2">
                                                             {currentEventData.title}
                                                         </h1>
                                                         {/* Recurring Event Badge - Only show for recurring events */}
@@ -1207,7 +1213,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             {/* Selected Session Label - Only for recurring events */}
                                                             {event.isRecurring && (
                                                                 <div className="flex items-center justify-between">
-                                                                    <div className="text-sm font-medium text-gray-500">Your selected session</div>
+                                                                    <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Your selected session</div>
                                                                     <button 
                                                                         onClick={handleOtherTimesClick}
                                                                         className="text-brand-secondary hover:text-brand-secondary_hover hover:underline text-xs font-medium flex items-center gap-1 cursor-pointer"
@@ -1220,48 +1226,48 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             
                                                             {/* Date & Time Card */}
                                                             <div className="flex items-center gap-3">
-                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                                    <div className="text-xs text-gray-500 leading-none">
+                                                                <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
+                                                                    <div className="text-xs text-gray-500 dark:text-gray-400 leading-none">
                                                                         {new Date(currentEventData.date).toLocaleDateString('en-US', { month: 'short' })}
                                                                     </div>
-                                                                    <div className="text-sm font-semibold text-gray-900 leading-none mt-0.5">
+                                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none mt-0.5">
                                                                         {new Date(currentEventData.date).getDate()}
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex-1">
-                                                                    <div className="font-medium text-gray-900 text-base">
+                                                                    <div className="font-medium text-gray-900 dark:text-gray-100 text-base">
                                                                         {currentEventData.date}
                                                                         {event.isRecurring && selectedTimeSlot !== 0 && (
                                                                             <span className="text-xs text-brand-secondary ml-1">(updated)</span>
                                                                         )}
                                                                     </div>
-                                                                    <div className="text-sm text-gray-600">{currentEventData.time}</div>
+                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">{currentEventData.time}</div>
                                                                 </div>
                                                             </div>
 
                                                             {/* Location Card */}
                                                             <div className="flex items-center gap-3">
-                                                                <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                                <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
                                                                     {event.locationType === "virtual" ? (
-                                                                        <VideoRecorder className="h-5 w-5 text-gray-500" />
+                                                                        <VideoRecorder className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                     ) : event.locationType === "hybrid" ? (
                                                                         <div className="flex items-center -space-x-1">
-                                                                            <MarkerPin01 className="h-4 w-4 bg-white text-gray-500" />
-                                                                            <VideoRecorder className="h-4 w-4 bg-white text-gray-500" />
+                                                                            <MarkerPin01 className="h-4 w-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400" />
+                                                                            <VideoRecorder className="h-4 w-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400" />
                                                                         </div>
                                                                     ) : (
-                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                        <MarkerPin01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                                     )}
                                                                 </div>
                                                                 <div className="flex-1">
-                                                                    <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                                    <div className="font-medium text-gray-900 dark:text-gray-100 text-base flex items-center gap-1">
                                                                         {event.locationType === "virtual" ? "Virtual" : 
                                                                          event.locationType === "hybrid" ? (
-                                                                            <span>{event.location} <span className="text-xs text-gray-500">+ Virtual</span></span>
+                                                                            <span>{event.location} <span className="text-xs text-gray-500 dark:text-gray-400">+ Virtual</span></span>
                                                                          ) :
                                                                          event.location}
                                                                     </div>
-                                                                    <div className="text-sm text-gray-600">
+                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">
                                                                         {event.locationType === "virtual"
                                                                             ? "Event join link available after RSVP"
                                                                             : event.locationType === "hybrid" 
@@ -1276,18 +1282,18 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                     {/* About Event */}
                                                     <div>
-                                                        <div className="text-sm font-medium text-gray-500 mb-3">About Event</div>
+                                                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">About Event</div>
                                                         <div className="prose prose-gray max-w-none">
-                                                            <p className="text-gray-700 leading-relaxed text-sm mb-4">
+                                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm mb-4">
                                                                 {event.description}
                                                             </p>
-                                                            <p className="text-gray-700 leading-relaxed text-sm mb-4">
+                                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm mb-4">
                                                                 Join us for an immersive experience that brings together industry leaders, innovative thinkers, and passionate professionals. This carefully curated event is designed to foster meaningful connections, share cutting-edge insights, and explore the latest trends shaping our industry.
                                                             </p>
-                                                            <p className="text-gray-700 leading-relaxed text-sm mb-4">
+                                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm mb-4">
                                                                 Whether you're looking to expand your network, gain new perspectives, or simply enjoy engaging conversations with like-minded individuals, this event offers something valuable for everyone. Our speakers and participants represent diverse backgrounds and expertise levels, creating a rich environment for learning and collaboration.
                                                             </p>
-                                                            <p className="text-gray-700 leading-relaxed text-sm">
+                                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
                                                                 Don't miss this opportunity to be part of a dynamic community that's driving positive change and innovation. Reserve your spot today and prepare for an inspiring and transformative experience.
                                                             </p>
                                                         </div>
@@ -1304,9 +1310,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                         {!showOtherTimes && (
                             <div className="md:hidden flex flex-col h-full">
                                 {/* Mobile Header */}
-                                <div className="flex-shrink-0 border-b border-gray-100 px-4 py-4 flex justify-between items-center">
+                                <div className="flex-shrink-0 border-b border-gray-100 dark:border-gray-700 px-4 py-4 flex justify-between items-center">
                                     <div className="flex-1 min-w-0 pr-3">
-                                        <h2 className="text-base font-semibold text-gray-900 truncate leading-tight">
+                                        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate leading-tight">
                                             {event.title}
                                         </h2>
                                     </div>
@@ -1315,20 +1321,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         {/* Event Page Button */}
                                         <button
                                             onClick={handleEventPageClick}
-                                            className="hover:bg-gray-100 rounded-lg p-3.5 transition-colors"
+                                            className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-3.5 transition-colors"
                                             title="View Event Page"
                                         >
-                                            <svg className="h-6 w-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="h-6 w-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                             </svg>
                                         </button>
 
                                         {/* Share Button */}
                                         <button
-                                            className="hover:bg-gray-100 rounded-lg p-3.5 transition-colors"
+                                            className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-3.5 transition-colors"
                                             title="Share Event"
                                         >
-                                            <svg className="h-6 w-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="h-6 w-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                                             </svg>
                                         </button>
@@ -1336,10 +1342,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         {/* Close Button */}
                                         <button
                                             onClick={onClose}
-                                            className="hover:bg-gray-100 rounded-lg p-3.5 transition-colors"
+                                            className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-3.5 transition-colors"
                                             title="Close"
                                         >
-                                            <X className="h-6 w-6 text-gray-500" />
+                                            <X className="h-6 w-6 text-gray-500 dark:text-gray-400" />
                                         </button>
                                     </div>
                                 </div>
@@ -1362,10 +1368,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                         <div className="space-y-3">
                                             {/* Title & Host */}
                                             <div className="space-y-2">
-                                                <h1 className="text-2xl font-bold leading-tight text-gray-900">
+                                                <h1 className="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100">
                                                     {event.title}
                                                 </h1>
-                                                <div className="flex items-center gap-2 text-gray-600">
+                                                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                                     {event.organizers && event.organizers.length > 1 ? (
                                                         <>
                                                             {/* Avatar Group */}
@@ -1373,7 +1379,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 {event.organizers.map((org: any, index: number) => (
                                                                     <div
                                                                         key={index}
-                                                                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                                                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600"
                                                                         style={{ zIndex: event.organizers.length - index }}
                                                                     >
                                                                         <img
@@ -1391,7 +1397,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <div className="w-6 h-6 rounded-full overflow-hidden ring-1 ring-gray-200">
+                                                            <div className="w-6 h-6 rounded-full overflow-hidden ring-1 ring-gray-200 dark:ring-gray-600">
                                                                 <img 
                                                                     src={event.organizer.avatar} 
                                                                     alt={event.organizer.name}
@@ -1419,17 +1425,17 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                 <div className="space-y-4">
                                                     {/* Date & Time Card */}
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                            <div className="text-xs text-gray-500 leading-none">
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 leading-none">
                                                                 {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
                                                             </div>
-                                                            <div className="text-sm font-semibold text-gray-900 leading-none">
+                                                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none">
                                                                 {new Date(event.date).getDate()}
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2">
-                                                                <div className="font-medium text-gray-900 text-base">{event.date}</div>
+                                                                <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{event.date}</div>
                                                                 {event.isRecurring && !showOtherTimes && (
                                                                     <button 
                                                                         onClick={handleOtherTimesClick}
@@ -1440,27 +1446,27 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                     </button>
                                                                 )}
                                                             </div>
-                                                            <div className="text-sm text-gray-600">{event.time}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">{event.time}</div>
                                                         </div>
                                                     </div>
 
                                                     {/* Location Card */}
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
                                                             {event.type === "online" ? (
-                                                                <Link01 className="h-5 w-5 text-gray-500" />
+                                                                <Link01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                             ) : (
-                                                                <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                <MarkerPin01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                             )}
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base flex items-center gap-1">
                                                                 {event.location}
                                                                 <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="text-sm text-gray-600">
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">
                                                                 {event.type === "online" 
                                                                     ? "Event join link available after RSVP" 
                                                                     : "Full details available after RSVP"
@@ -1473,12 +1479,12 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                             {/* Confirmation Message (when RSVP confirmed) */}
                                             {rsvpStage === 'confirmed' && (
-                                                <div className="bg-success-50 border border-success-200 rounded-xl p-4">
+                                                <div className="bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-700 rounded-xl p-4">
                                                     <div className="flex items-center gap-2 mb-2">
-                                                        <CheckCircle className="w-5 h-5 text-success-600" />
-                                                        <span className="text-base font-medium text-success-700">You're All Set!</span>
+                                                        <CheckCircle className="w-5 h-5 text-success-600 dark:text-success-400" />
+                                                        <span className="text-base font-medium text-success-700 dark:text-success-300">You're All Set!</span>
                                                     </div>
-                                                    <p className="text-sm text-success-600">Your RSVP has been confirmed. Event details will be sent to your email.</p>
+                                                    <p className="text-sm text-success-600 dark:text-success-400">Your RSVP has been confirmed. Event details will be sent to your email.</p>
                                                 </div>
                                             )}
                                         </div>
@@ -1491,61 +1497,61 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             <>
                                                 {/* Success Message */}
                                                 <div className="pb-2">
-                                                    <h3 className="text-xl font-medium text-gray-900">Registration confirmed</h3>
+                                                    <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">Registration confirmed</h3>
                                                 </div>
                                                 
                                                 {/* Event Information Title */}
                                                 <div className="pb-0">
-                                                    <div className="text-base text-gray-500 mb-4">Event Information</div>
+                                                    <div className="text-base text-gray-500 dark:text-gray-400 mb-4">Event Information</div>
                                                 </div>
                                                 
                                                 {/* Event Data Cards */}
                                                 <div className="space-y-4">
                                                     {/* Event Title & Host Card */}
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
-                                                            <Calendar className="h-5 w-5 text-gray-500" />
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
+                                                            <Calendar className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base">{event.title}</div>
-                                                            <div className="text-sm text-gray-600">Hosted by {event.organizer.name}</div>
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{event.title}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">Hosted by {event.organizer.name}</div>
                                                         </div>
                                                     </div>
 
                                                     {/* Date & Time Card */}
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center shadow-sm">
-                                                            <div className="text-xs text-gray-500 leading-none">
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-sm">
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 leading-none">
                                                                 {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
                                                             </div>
-                                                            <div className="text-sm font-semibold text-gray-900 leading-none">
+                                                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none">
                                                                 {new Date(event.date).getDate()}
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base">{event.date}</div>
-                                                            <div className="text-sm text-gray-600">{event.time}</div>
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{event.date}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">{event.time}</div>
                                                         </div>
                                                     </div>
 
                                                     {/* Location */}
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shadow-sm">
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
                                                             {event.type === "online" ? (
-                                                                <Link01 className="h-5 w-5 text-gray-500" />
+                                                                <Link01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                             ) : (
-                                                                <MarkerPin01 className="h-5 w-5 text-gray-500" />
+                                                                <MarkerPin01 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                             )}
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 text-base flex items-center gap-1">
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base flex items-center gap-1">
                                                                 {event.location}
                                                                 <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17l10-10M17 7H7v10" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="text-sm text-gray-600">{event.fullAddress}</div>
-                                                            <div className="text-sm text-gray-600">
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">{event.fullAddress}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">
                                                                 {event.type === "online" 
                                                                     ? (
                                                                         <a 
@@ -1586,8 +1592,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                 {/* Event Details Section */}
                                                 <div>
-                                                    <div className="text-base text-gray-500 mb-4">Event Details</div>
-                                                    <div className="space-y-3 text-sm text-gray-700">
+                                                    <div className="text-base text-gray-500 dark:text-gray-400 mb-4">Event Details</div>
+                                                    <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                                                         <div className="flex items-start gap-2">
                                                             <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
                                                             <p>Free snacks and drinks will be provided throughout the event</p>
@@ -1619,18 +1625,18 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             <>
                                                 {/* About Event Card */}
                                                 <div>
-                                                    <div className="text-base text-gray-500 mb-4">About Event</div>
+                                                    <div className="text-base text-gray-500 dark:text-gray-400 mb-4">About Event</div>
                                                     <div className="prose prose-gray max-w-none">
-                                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base mb-4">
                                                             {event.description}
                                                         </p>
-                                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base mb-4">
                                                             Join us for an immersive experience that brings together industry leaders, innovative thinkers, and passionate professionals. This carefully curated event is designed to foster meaningful connections, share cutting-edge insights, and explore the latest trends shaping our industry.
                                                         </p>
-                                                        <p className="text-gray-700 leading-relaxed text-base mb-4">
+                                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base mb-4">
                                                             Whether you're looking to expand your network, gain new perspectives, or simply enjoy engaging conversations with like-minded individuals, this event offers something valuable for everyone. Our speakers and participants represent diverse backgrounds and expertise levels, creating a rich environment for learning and collaboration.
                                                         </p>
-                                                        <p className="text-gray-700 leading-relaxed text-base">
+                                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
                                                             Don't miss this opportunity to be part of a dynamic community that's driving positive change and innovation. Reserve your spot today and prepare for an inspiring and transformative experience.
                                                         </p>
                                                     </div>
@@ -1638,11 +1644,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                                 {/* Location Card */}
                                                 <div>
-                                                    <div className="text-base text-gray-500 mb-4">Location</div>
+                                                    <div className="text-base text-gray-500 dark:text-gray-400 mb-4">Location</div>
                                                     <div className="space-y-3">
                                                         <div>
-                                                            <div className="font-medium text-gray-900 text-base">{event.location}</div>
-                                                            <div className="text-base text-gray-600 mt-1">
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 text-base">{event.location}</div>
+                                                            <div className="text-base text-gray-600 dark:text-gray-400 mt-1">
                                                                 {event.type === "online" 
                                                                     ? "Join link will be sent before the event" 
                                                                     : "Full address will be provided after registration"
@@ -1658,13 +1664,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
 
                                 {/* Mobile Footer - Hide during time selection */}
                                 {!showOtherTimes && (
-                                    <div className="flex-shrink-0 border-t border-gray-200">
-                                        <div className="bg-gray-50 rounded-xl p-4">
+                                    <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
+                                        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
                                             {rsvpStage === 'cancelled' ? (
-                                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                     <div className="text-center">
-                                                        <p className="text-base font-medium text-gray-900 mb-1">Registration cancelled</p>
-                                                        <p className="text-sm text-gray-600 mb-3">You can RSVP again anytime if you change your mind.</p>
+                                                        <p className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">Registration cancelled</p>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">You can RSVP again anytime if you change your mind.</p>
                                                         <Button 
                                                             size="sm" 
                                                             color="secondary" 
@@ -1678,8 +1684,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                             ) : rsvpState === 'open' ? (
                                                 <div className="text-center relative">
                                                     <div className="mb-3">
-                                                        <h4 className="text-base font-medium text-gray-900 mb-1">Ready to join?</h4>
-                                                        <p className="text-sm text-gray-600">Secure your spot at this event</p>
+                                                        <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">Ready to join?</h4>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">Secure your spot at this event</p>
                                                     </div>
                                                     <Button 
                                                         size="md" 
@@ -1699,51 +1705,51 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                                 onClick={() => setShowRecurringOptions(false)}
                                                             />
                                                             {/* Popover */}
-                                                            <div className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-3">
-                                                                <div className="mb-3 pb-3 border-b border-gray-100">
+                                                            <div className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-3">
+                                                                <div className="mb-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                                                                     <div className="flex items-center gap-2 mb-1">
                                                                         <Repeat03 className="h-5 w-5 text-brand-solid" />
-                                                                        <h4 className="text-base font-semibold text-gray-900">Recurring Event</h4>
+                                                                        <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100">Recurring Event</h4>
                                                                     </div>
-                                                                    <p className="text-sm text-gray-600 text-left">Choose how you'd like to register</p>
+                                                                    <p className="text-sm text-gray-600 dark:text-gray-400 text-left">Choose how you'd like to register</p>
                                                                 </div>
                                                                 <div className="space-y-1">
                                                                     {/* RSVP for selected date */}
                                                                     <div 
-                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                                                         onClick={() => handleRecurringRSVP('single')}
                                                                     >
-                                                                        <Calendar className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <Calendar className="h-5 w-5 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
                                                                         <div className="flex-1 text-left">
-                                                                            <div className="text-sm font-medium text-gray-900">RSVP for this date only</div>
-                                                                            <div className="text-xs text-gray-600">{currentEventData.date}</div>
+                                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">RSVP for this date only</div>
+                                                                            <div className="text-xs text-gray-600 dark:text-gray-400">{currentEventData.date}</div>
                                                                         </div>
                                                                     </div>
                                                                     
                                                                     {/* Change selected date */}
                                                                     <div 
-                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                                                         onClick={() => {
                                                                             setShowRecurringOptions(false);
                                                                             handleOtherTimesClick();
                                                                         }}
                                                                     >
-                                                                        <ClockRefresh className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <ClockRefresh className="h-5 w-5 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
                                                                         <div className="flex-1 text-left">
-                                                                            <div className="text-sm font-medium text-gray-900">Change selected date</div>
-                                                                            <div className="text-xs text-gray-600">5 other dates available</div>
+                                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Change selected date</div>
+                                                                            <div className="text-xs text-gray-600 dark:text-gray-400">5 other dates available</div>
                                                                         </div>
                                                                     </div>
                                                                     
                                                                     {/* RSVP for all */}
                                                                     <div 
-                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                                                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                                                                         onClick={() => handleRecurringRSVP('all')}
                                                                     >
-                                                                        <Repeat03 className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                                                                        <Repeat03 className="h-5 w-5 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
                                                                         <div className="flex-1 text-left">
-                                                                            <div className="text-sm font-medium text-gray-900">RSVP for all following events</div>
-                                                                            <div className="text-xs text-gray-600">6 events until May 31, 2024</div>
+                                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">RSVP for all following events</div>
+                                                                            <div className="text-xs text-gray-600 dark:text-gray-400">6 events until May 31, 2024</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1752,10 +1758,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                     )}
                                                 </div>
                                             ) : (
-                                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                                <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                                                     <div className="text-center">
-                                                        <p className="text-base font-medium text-gray-900 mb-1">{rsvpConfig.label}</p>
-                                                        <p className="text-sm text-gray-600">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
+                                                        <p className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">{rsvpConfig.label}</p>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">{rsvpState === 'closed' ? 'Registration has closed for this event.' : 'This event has already finished.'}</p>
                                                     </div>
                                                 </div>
                                             )}
@@ -1776,13 +1782,13 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                         onClick={() => setShowCancelAlert(false)}
                     />
                     <div 
-                        className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6"
+                        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-6"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                             Are you sure you don't want to attend this event?
                         </h3>
-                        <p className="text-sm text-gray-600 mb-6">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                             This will cancel your registration and free up your spot for others.
                         </p>
                         <div className="flex gap-3 justify-end">

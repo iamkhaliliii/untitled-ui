@@ -457,7 +457,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin/*" element={<Navigate to="/admin3" replace />} />
                         
                         {/* Site Routes */}
-                        <Route path="/site" element={<SiteHomePage />} />
+                        <Route path="/site" element={<Navigate to="/site/feed" replace />} />
                         <Route path="/site/feed" element={<SiteFeedPage />} />
                         <Route path="/site/post-view" element={<PostViewPage />} />
                         <Route path="/site/event" element={<SiteEventPage />} />

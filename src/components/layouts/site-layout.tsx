@@ -25,11 +25,18 @@ import {
     FileCode01,
     PlayCircle,
     Stars02,
+    Sun,
+    Moon01,
+    UserSquare,
+    UsersPlus,
+    Shield01,
+    LogOut01,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Input } from "@/components/base/input/input";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
 import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
 import { cx } from "@/utils/cx";
@@ -54,11 +61,6 @@ interface SiteLayoutProps {
 
 const siteNavigation = [
     {
-        label: "Home",
-        href: "/site",
-        icon: Home01,
-    },
-    {
         label: "Feed",
         href: "/site/feed",
         icon: Rss01,
@@ -67,21 +69,6 @@ const siteNavigation = [
         label: "Events",
         href: "/site/event",
         icon: Calendar,
-    },
-    {
-        label: "Explore",
-        href: "/site/explore",
-        icon: SearchLg,
-    },
-    {
-        label: "Bookmarks",
-        href: "/site/bookmarks",
-        icon: Bookmark,
-    },
-    {
-        label: "Profile",
-        href: "/site/profile",
-        icon: User01,
     },
 ];
 
@@ -134,7 +121,7 @@ const DropdownMenuSimple = () => {
     );
 };
 
-const HeaderDropdownSimple = ({ onMobileMenuToggle }: { onMobileMenuToggle?: () => void }) => (
+const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { onMobileMenuToggle?: () => void; theme?: string; onThemeToggle?: () => void }) => (
     <div className="flex max-w-container mx-auto items-center justify-between w-full px-4 sm:px-6 lg:px-8 py-4 max-sm:py-3 max-sm:px-3">
         {/* Logo & Mobile Menu */}
         <div className="flex items-center gap-3">
@@ -210,6 +197,16 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle }: { onMobileMenuToggle?: () 
                 </span>
             </div>
             
+            {/* Theme Toggle */}
+            <ButtonUtility 
+                size="sm" 
+                color="secondary"
+                icon={theme === "dark" ? Sun : Moon01}
+                className="w-10 h-10"
+                tooltip={theme === "dark" ? "Light mode" : "Dark mode"}
+                onClick={onThemeToggle}
+            />
+            
             {/* Add/Create Button */}
             <ButtonUtility 
                 size="sm" 
@@ -219,8 +216,36 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle }: { onMobileMenuToggle?: () 
                 tooltip="Create"
             />
             
-            {/* Profile Avatar */}
-            <Avatar status="online" size="sm" alt="Olivia Rhye" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" />
+            {/* Profile Avatar with Dropdown */}
+            <Dropdown.Root>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent">
+                    <Avatar status="online" size="sm" alt="Olivia Rhye" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" className="cursor-pointer" />
+                </Button>
+                <Dropdown.Popover>
+                    <Dropdown.Menu>
+                        <Dropdown.Item key="profile" icon={User01}>
+                            Your profile
+                        </Dropdown.Item>
+                        <Dropdown.Item key="settings" icon={Settings01}>
+                            Account settings
+                        </Dropdown.Item>
+                        <Dropdown.Item key="invite" icon={UsersPlus}>
+                            Invite members
+                        </Dropdown.Item>
+                        <Dropdown.Separator />
+                        <Dropdown.Item key="admin" icon={UserSquare}>
+                            Administration
+                        </Dropdown.Item>
+                        <Dropdown.Item key="moderation" icon={Shield01}>
+                            Moderation
+                        </Dropdown.Item>
+                        <Dropdown.Separator />
+                        <Dropdown.Item key="logout" icon={LogOut01} className="text-error-solid">
+                            Log out
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown.Popover>
+            </Dropdown.Root>
 
         </div>
     </div>
@@ -236,7 +261,7 @@ export const SiteLayout = ({
     showRightSidebar = false,
     rightSidebarContent
 }: SiteLayoutProps) => {
-    const { theme } = useTheme();
+    const { theme, setTheme } = useTheme();
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed, toggleAdminHeader } = useAdmin();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -244,9 +269,37 @@ export const SiteLayout = ({
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const handleThemeToggle = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+    };
+
     return (
-        <div className="flex h-screen flex-col bg-primary overflow-hidden">
-            {/* Admin Sticky Header - Only visible to admins */}
+        <>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .site-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .site-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .site-scrollbar::-webkit-scrollbar-thumb {
+                    background-color: #d1d5db;
+                    border-radius: 3px;
+                }
+                .site-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background-color: #9ca3af;
+                }
+                .dark .site-scrollbar::-webkit-scrollbar-thumb {
+                    background-color: #4b5563;
+                }
+                .dark .site-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background-color: #6b7280;
+                }
+                `
+            }} />
+            <div className="flex h-screen flex-col bg-primary overflow-hidden">
+                {/* Admin Sticky Header - Only visible to admins */}
             {isAdmin && (
                 <ErrorBoundary fallback={
                     <div className="h-12 bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 text-sm">
@@ -267,15 +320,19 @@ export const SiteLayout = ({
                     ? 'top-12' // Full admin header height (48px)
                     : 'top-0'  // No admin header or collapsed (back to normal)
             }`}>
-                <HeaderDropdownSimple onMobileMenuToggle={handleMobileMenuToggle} />
+                <HeaderDropdownSimple 
+                    onMobileMenuToggle={handleMobileMenuToggle}
+                    theme={theme}
+                    onThemeToggle={handleThemeToggle}
+                />
 
             </div>
 
             {/* Mobile Sidebar Overlay */}
             {isMobileMenuOpen && (
                 <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={handleMobileMenuToggle}>
-                    <div className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-zinc-900 shadow-xl" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
+                    <div className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-gray-900 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                             <UntitledLogo className="h-8" />
                             <ButtonUtility 
                                 size="sm" 
@@ -295,8 +352,8 @@ export const SiteLayout = ({
                                     className={cx(
                                         "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium transition-colors",
                                         currentPath === item.href
-                                            ? "bg-brand-50 text-brand-secondary"
-                                            : "text-secondary hover:bg-secondary hover:text-primary"
+                                            ? "bg-brand-50 dark:bg-brand-900/30 text-brand-secondary dark:text-brand-400"
+                                            : "text-secondary dark:text-gray-300 hover:bg-secondary dark:hover:bg-gray-800 hover:text-primary dark:hover:text-gray-100"
                                     )}
                                 >
                                     <item.icon className="h-5 w-5" />
@@ -309,15 +366,11 @@ export const SiteLayout = ({
             )}
 
             {/* Main Content */}
-            <div className="mx-auto pt-4 max-w-container px-4 sm:px-6 lg:px-8 flex-1 overflow-y-auto">
-                <div className="flex">
-                    {/* Left Sidebar */}
-                    <aside className="hidden lg:block w-64 bg-primary flex-shrink-0">
-                        <div className={`sticky overflow-y-auto scrollbar-thin py-4 pr-8 ${
-                            isAdmin && adminHeaderVisible && !adminHeaderCollapsed
-                                ? 'top-20 h-[calc(100vh-5rem)]'           // 3rem (admin) + 2rem (header) = 5rem  
-                                : 'top-16 h-[calc(100vh-4rem)]'           // No admin header or collapsed (back to normal)
-                        }`}>
+            <div className="flex-1 flex overflow-hidden">
+                <div className="mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8 flex overflow-hidden">
+                    {/* Left Sidebar - Fixed */}
+                    <aside className="hidden lg:block w-64 bg-primary dark:bg-gray-950 flex-shrink-0 pt-4">
+                        <div className="pr-8">
                             {/* Navigation */}
                             <nav className="space-y-2">
                                 {siteNavigation.map((item) => (
@@ -327,8 +380,8 @@ export const SiteLayout = ({
                                         className={cx(
                                             "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                                             currentPath === item.href
-                                                ? "bg-brand-50 text-brand-secondary"
-                                                : "text-secondary hover:bg-secondary hover:text-primary"
+                                                ? "bg-brand-50 dark:bg-brand-900/30 text-brand-secondary dark:text-brand-400"
+                                                : "text-secondary dark:text-gray-300 hover:bg-secondary dark:hover:bg-gray-800 hover:text-primary dark:hover:text-gray-100"
                                         )}
                                     >
                                         <item.icon className="h-5 w-5" />
@@ -339,8 +392,8 @@ export const SiteLayout = ({
                         </div>
                     </aside>
 
-                    {/* Main Content Area */}
-                    <main className="flex-1">
+                    {/* Main Content Area - Scrollable */}
+                    <main className="flex-1 overflow-y-auto pt-4 pb-8 site-scrollbar">
                         {showRightSidebar ? (
                             <div className="flex gap-6">
                                 <div className="flex-1">
@@ -359,10 +412,11 @@ export const SiteLayout = ({
                 </div>
             </div>
 
-            {/* Admin Toggle for testing - can be removed in production */}
-            <ErrorBoundary fallback={<div>Toggle error</div>}>
-                <AdminToggle />
-            </ErrorBoundary>
-        </div>
+                {/* Admin Toggle for testing - can be removed in production */}
+                <ErrorBoundary fallback={<div>Toggle error</div>}>
+                    <AdminToggle />
+                </ErrorBoundary>
+            </div>
+        </>
     );
 }; 

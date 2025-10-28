@@ -76,7 +76,7 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
 
     return (
         <div 
-            className="group relative rounded-2xl border border-gray-300 bg-primary overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:shadow-md hover:shadow-gray-100/10 hover:border-brand-200"
+            className="group relative rounded-2xl border border-gray-300 dark:border-gray-700 bg-primary dark:bg-gray-900 overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:shadow-md hover:shadow-gray-100/10 dark:hover:shadow-gray-700/20 hover:border-brand-200 dark:hover:border-gray-600 dark:hover:bg-gray-800"
             onClick={onClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -85,10 +85,10 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
             {/* Event Image */}
             <div className="relative overflow-hidden aspect-square">
                 {imageError ? (
-                    <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/70 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
                         <div className="text-center">
-                            <ImageX className="h-8 w-8 text-tertiary mx-auto mb-2" />
-                            <p className="text-xs text-tertiary">Image unavailable</p>
+                            <ImageX className="h-8 w-8 text-tertiary dark:text-gray-500 mx-auto mb-2" />
+                            <p className="text-xs text-tertiary dark:text-gray-400">Image unavailable</p>
                         </div>
                     </div>
                 ) : (
@@ -150,7 +150,7 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                                     {event.organizers.slice(0, 4).map((org: any, index: number) => (
                                         <div
                                             key={index}
-                                            className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200"
+                                            className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700"
                                             style={{ zIndex: event.organizers.length - index }}
                                         >
                                             <img
@@ -164,18 +164,18 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                                         </div>
                                     ))}
                                     {event.organizers.length > 4 && (
-                                        <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center">
-                                            <span className="text-[10px] font-semibold text-gray-600">+{event.organizers.length - 4}</span>
+                                        <div className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-700 ring-1 ring-gray-200 dark:ring-gray-700 flex items-center justify-center">
+                                            <span className="text-[10px] font-semibold text-gray-600 dark:text-gray-300">+{event.organizers.length - 4}</span>
                                         </div>
                                     )}
                                 </div>
-                                <span className="text-xs text-secondary">
+                                <span className="text-xs text-secondary dark:text-gray-300">
                                     By {event.organizers.length} hosts
                                 </span>
                             </>
                         ) : (
                             <>
-                                <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden ring-1 ring-gray-200">
+                                <div className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
                                     <img
                                         src={event.organizer.avatar}
                                         alt={event.organizer.name}
@@ -185,7 +185,7 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                                         }}
                                     />
                                 </div>
-                                <span className="text-xs text-secondary">
+                                <span className="text-xs text-secondary dark:text-gray-300">
                                     By {event.organizer.name}
                                 </span>
                             </>
@@ -193,59 +193,59 @@ const EventCard = ({ event, onClick, rsvpStatus }: { event: any; onClick: () => 
                     </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2 group-hover:text-brand-solid transition-colors duration-200">
+                <h3 className="text-xl font-bold text-primary dark:text-gray-200 mb-3 line-clamp-2 group-hover:text-brand-solid dark:group-hover:text-gray-100 transition-colors duration-200">
                     {event.title}
                 </h3>
 
                 {/* Event Details */}
                 <div className="space-y-1 flex-1">
-                    <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                        <Calendar className="h-3.5 w-3.5 text-brand-solid" />
+                    <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                        <Calendar className="h-3.5 w-3.5 text-brand-solid dark:text-gray-500" />
                         <span className="font-medium">{event.date}</span>
                         {event.isRecurring && (
-                            <span className="text-xs text-gray-500">+ 5 more sessions</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-500">+ 5 more sessions</span>
                         )}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                        <Clock className="h-3.5 w-3.5 text-success-solid" />
+                    <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                        <Clock className="h-3.5 w-3.5 text-success-solid dark:text-gray-500" />
                         <span>{event.time}</span>
                     </div>
                     
                     {/* Recurring Event Info */}
                     {event.isRecurring && (
-                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                            <Repeat03 className="h-3.5 w-3.5 text-brand-solid" />
-                            <span className="text-brand-solid font-medium">Repeats {event.recurringFrequency}</span>
+                        <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                            <Repeat03 className="h-3.5 w-3.5 text-brand-solid dark:text-gray-500" />
+                            <span className="text-brand-solid dark:text-gray-400 font-medium">Repeats {event.recurringFrequency}</span>
                         </div>
                     )}
                     
                     {/* Location Display Logic */}
                     {event.locationType === 'physical' && (
-                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+                        <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid dark:text-gray-500" />
                             <span>{event.location}</span>
                         </div>
                     )}
                     
                     {event.locationType === 'virtual' && (
-                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                            <VideoRecorder className="h-3.5 w-3.5 text-warning-solid" />
+                        <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                            <VideoRecorder className="h-3.5 w-3.5 text-warning-solid dark:text-gray-500" />
                             <span>Virtual</span>
                         </div>
                     )}
                     
                     {event.locationType === 'hybrid' && (
-                        <div className="flex items-center gap-2 text-sm text-secondary group-hover:text-primary transition-colors">
-                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid" />
+                        <div className="flex items-center gap-2 text-sm text-secondary dark:text-gray-400 group-hover:text-primary dark:group-hover:text-gray-300 transition-colors">
+                            <MarkerPin01 className="h-3.5 w-3.5 text-warning-solid dark:text-gray-500" />
                             <span className="flex items-center gap-1">
-                                {event.location} + <VideoRecorder className="h-3.5 w-3.5 text-warning-solid" /> Virtual
+                                {event.location} + <VideoRecorder className="h-3.5 w-3.5 text-warning-solid dark:text-gray-500" /> Virtual
                             </span>
                         </div>
                     )}
                 </div>
 
                 {/* Actions Footer */}
-                <div className="pt-3 mt-2 border-t border-secondary/30 group-hover:border-gray-200 transition-colors">
+                <div className="pt-3 mt-2 border-t border-secondary/30 dark:border-gray-700 group-hover:border-gray-200 dark:group-hover:border-gray-600 transition-colors">
                     <div className="flex items-center justify-end">
                         <Button
                             color={buttonDisplay.color}
@@ -596,14 +596,14 @@ export default function SiteEventPage() {
                 <div className="mb-6">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-semibold text-primary">Browse Events</h3>
-                            <p className="text-sm text-tertiary">Find the perfect event for you</p>
+                            <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Browse Events</h3>
+                            <p className="text-sm text-tertiary dark:text-gray-400">Find the perfect event for you</p>
                         </div>
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-3">
                         {/* Time Filters */}
-                        <div className="flex items-center bg-secondary/30 rounded-xl p-1">
+                        <div className="flex items-center bg-secondary/30 dark:bg-gray-800/50 rounded-xl p-1">
                             <Button 
                                 size="sm" 
                                 color={activeTab === 'all' ? "primary" : "tertiary"} 
@@ -661,16 +661,16 @@ export default function SiteEventPage() {
                 {/* Events Grid */}
                 {filteredEvents.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/30 mb-4">
-                            <Calendar className="h-8 w-8 text-tertiary" />
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/30 dark:bg-gray-800/50 mb-4">
+                            <Calendar className="h-8 w-8 text-tertiary dark:text-gray-500" />
                         </div>
-                        <h3 className="text-lg font-semibold text-primary mb-2">
+                        <h3 className="text-lg font-semibold text-primary dark:text-gray-100 mb-2">
                             {activeTab === 'live' && 'No Live Events'}
                             {activeTab === 'upcoming' && 'No Upcoming Events'}
                             {activeTab === 'past' && 'No Past Events'}
                             {activeTab === 'all' && 'No Events Found'}
                         </h3>
-                        <p className="text-sm text-tertiary max-w-md mx-auto">
+                        <p className="text-sm text-tertiary dark:text-gray-400 max-w-md mx-auto">
                             {activeTab === 'live' && 'There are no events happening right now. Check back later or explore upcoming events.'}
                             {activeTab === 'upcoming' && 'There are no upcoming events scheduled at the moment. Check back soon for new events!'}
                             {activeTab === 'past' && 'No past events to display.'}
