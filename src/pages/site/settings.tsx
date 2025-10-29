@@ -71,7 +71,11 @@ const timezones = [
 ];
 
 export default function SiteSettingsPage() {
-    const [currentSection, setCurrentSection] = useState("account");
+    // Check URL params for section
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionParam = urlParams.get('section');
+    
+    const [currentSection, setCurrentSection] = useState(sectionParam || "account");
     const [email, setEmail] = useState("amirhossienkhalili@gmail.com");
     const [timezone, setTimezone] = useState("Asia/Dubai");
     const [notificationToggles, setNotificationToggles] = useState({

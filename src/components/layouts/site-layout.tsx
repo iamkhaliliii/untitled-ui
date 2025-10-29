@@ -163,25 +163,21 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
         {/* Action Buttons */}
         <div className="flex items-center gap-2 max-md:gap-1">
             {/* Search - Mobile only */}
-            <ButtonUtility 
-                size="sm" 
-                color="secondary"
-                icon={SearchLg}
-                className="md:hidden w-10 h-10"
-                tooltip="Search"
-            />
+            <button className="md:hidden w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                <SearchLg className="w-5 h-5 text-tertiary dark:text-gray-400" />
+            </button>
             
             {/* Messages */}
             <Dropdown.Root>
-                <div className="relative">
-                    <Button color="tertiary" className="!p-0 !w-10 !h-10 !min-w-0 !border-0 !shadow-none">
-                        <MessageCircle01 className="w-5 h-5" />
-                    </Button>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent relative">
+                    <button className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                        <MessageCircle01 className="w-5 h-5 text-tertiary dark:text-gray-400" />
+                    </button>
                     <span className="absolute -top-1 -right-1 w-5 h-5 max-sm:w-4 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
                         2
                     </span>
-                </div>
-                <Dropdown.Popover className="!w-96">
+                </Button>
+                <Dropdown.Popover className="!w-96 !border-gray-200 dark:!border-gray-700">
                     <div className="p-4">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Messages</h3>
@@ -191,38 +187,38 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
                         <div className="space-y-3">
                             {/* Message Item 1 */}
                             <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                                <Avatar size="sm" initials="T" className="flex-shrink-0" />
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" alt="Olivia Rhye" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Test</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">3 months ago</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Olivia Rhye</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">2 hours ago</span>
                                     </div>
-                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Elaya M... Bettermode is uniquely posi...</p>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Thanks for the quick response! I'll check...</p>
                                 </div>
                             </div>
                             
                             {/* Message Item 2 */}
                             <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/candice-wu?fm=webp&q=80" alt="Deleted Member" className="flex-shrink-0" />
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80" alt="Phoenix Baker" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Deleted Member</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">8 months ago</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Phoenix Baker</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">Yesterday</span>
                                     </div>
-                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Karen s... Hello</p>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Hey! Can you help me with the event setup?</p>
                                 </div>
                             </div>
                             
                             {/* Message Item 3 */}
                             <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                                <Avatar size="sm" initials="A" className="flex-shrink-0 bg-pink-100 text-pink-700" />
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/lana-steiner?fm=webp&q=80" alt="Lana Steiner" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Amanda</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">8 months ago</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Lana Steiner</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">3 days ago</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <p className="text-sm text-secondary dark:text-gray-300 truncate flex-1">I messaged one of the other admins ye...</p>
+                                        <p className="text-sm text-secondary dark:text-gray-300 truncate flex-1">The new dashboard looks amazing! When...</p>
                                         <Badge color="success" size="sm">2</Badge>
                                     </div>
                                 </div>
@@ -230,13 +226,13 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
                             
                             {/* Message Item 4 */}
                             <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/drew-cano?fm=webp&q=80" alt="Allen" className="flex-shrink-0" />
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/drew-cano?fm=webp&q=80" alt="Drew Cano" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Allen</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">10 months ago</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Drew Cano</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">1 week ago</span>
                                     </div>
-                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">You: chi poshidi?</p>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">You: Sure, I'll send you the documentation</p>
                                 </div>
                             </div>
                         </div>
@@ -253,59 +249,93 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
             
             {/* Notifications */}
             <Dropdown.Root>
-                <div className="relative">
-                    <Button color="tertiary" className="!p-0 !w-10 !h-10 !min-w-0 !border-0 !shadow-none">
-                        <Bell01 className="w-5 h-5" />
-                    </Button>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent relative">
+                    <button className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                        <Bell01 className="w-5 h-5 text-tertiary dark:text-gray-400" />
+                    </button>
                     <span className="absolute -top-1 -right-1 w-6 h-5 max-sm:w-5 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
                         99+
                     </span>
-                </div>
-                <Dropdown.Popover className="!w-[32rem]">
+                </Button>
+                <Dropdown.Popover className="!w-[32rem] !border-gray-200 dark:!border-gray-700">
                     <div className="p-4">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Notifications</h3>
                             <div className="flex items-center gap-2">
-                                <Button color="tertiary" size="sm" iconLeading={CheckCircle} className="!p-1.5">
+                                <Button color="tertiary" size="sm" iconLeading={CheckCircle} className="!p-1.5" title="Mark all as read">
                                 </Button>
-                                <Button color="tertiary" size="sm" iconLeading={Settings01} className="!p-1.5">
+                                <Button 
+                                    color="tertiary" 
+                                    size="sm" 
+                                    iconLeading={Settings01} 
+                                    className="!p-1.5"
+                                    title="Notification settings"
+                                    onClick={() => window.location.href = '/site/settings?section=notifications'}
+                                >
                                 </Button>
                             </div>
                         </div>
                         
                         <div className="space-y-3 max-h-96 overflow-y-auto">
                             {/* Notification Item 1 */}
-                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-success-solid">
-                                <Avatar size="sm" initials="B" className="flex-shrink-0 bg-purple-600 text-white" />
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-gray-200 dark:border-success-solid">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80" alt="Phoenix Baker" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Ben Smith</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">posted</span>
-                                        <span className="text-xs font-medium text-brand-secondary">Bulk user import using CSV</span>
-                                        <span className="text-xs text-tertiary dark:text-gray-400">in</span>
-                                        <span className="text-xs text-brand-secondary">Wishlist</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Phoenix Baker</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">mentioned you in</span>
+                                        <span className="text-xs font-medium text-brand-secondary">React Conference 2024</span>
                                         <span className="ml-auto w-2 h-2 bg-success-solid rounded-full flex-shrink-0"></span>
                                     </div>
-                                    <p className="text-xs text-tertiary dark:text-gray-400 mb-2">2 days ago</p>
+                                    <p className="text-xs text-tertiary dark:text-gray-400 mb-2">5 minutes ago</p>
                                     <div className="bg-secondary dark:bg-gray-700 rounded-lg p-3 text-sm text-secondary dark:text-gray-300">
-                                        I often need to add multiple users at once, and manually typing in correct names to match email addresses is tedious. Can we get the capability to import users using a CSV upload?
+                                        @you Great presentation ideas! Would love to collaborate on this session with you.
                                     </div>
                                 </div>
                             </div>
                             
                             {/* Notification Item 2 */}
-                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-success-solid">
-                                <Avatar size="sm" src="https://via.placeholder.com/32x32/000000/FFFFFF?text=BLVK" alt="BLVK" className="flex-shrink-0" />
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-gray-200 dark:border-success-solid">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/lana-steiner?fm=webp&q=80" alt="Lana Steiner" className="flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">BLVK</span>
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Lana Steiner</span>
                                         <span className="text-xs text-tertiary dark:text-gray-400">posted</span>
-                                        <span className="text-xs font-medium text-brand-secondary">A pro plan should include no bettermode branding</span>
+                                        <span className="text-xs font-medium text-brand-secondary">New Feature Announcement</span>
                                         <span className="text-xs text-tertiary dark:text-gray-400">in</span>
-                                        <span className="text-xs text-brand-secondary">Wishlist</span>
+                                        <span className="text-xs text-brand-secondary">Updates</span>
                                         <span className="ml-auto w-2 h-2 bg-success-solid rounded-full flex-shrink-0"></span>
                                     </div>
-                                    <p className="text-xs text-tertiary dark:text-gray-400">8 months ago</p>
+                                    <p className="text-xs text-tertiary dark:text-gray-400 mb-2">2 hours ago</p>
+                                    <div className="bg-secondary dark:bg-gray-700 rounded-lg p-3 text-sm text-secondary dark:text-gray-300">
+                                        We're excited to announce our new event management system with advanced RSVP features and recurring event support!
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Notification Item 3 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" alt="Olivia Rhye" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Olivia Rhye</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">reacted to your post in</span>
+                                        <span className="text-xs text-brand-secondary">General Discussion</span>
+                                    </div>
+                                    <p className="text-xs text-tertiary dark:text-gray-400">1 day ago</p>
+                                </div>
+                            </div>
+                            
+                            {/* Notification Item 4 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/drew-cano?fm=webp&q=80" alt="Drew Cano" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Drew Cano</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">commented on</span>
+                                        <span className="text-xs font-medium text-brand-secondary">Product Roadmap Q2</span>
+                                    </div>
+                                    <p className="text-xs text-tertiary dark:text-gray-400">3 days ago</p>
                                 </div>
                             </div>
                         </div>
@@ -321,23 +351,22 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
             </Dropdown.Root>
             
             {/* Theme Toggle */}
-            <ButtonUtility 
-                size="sm" 
-                color="secondary"
-                icon={theme === "dark" ? Sun : Moon01}
-                className="w-10 h-10"
-                tooltip={theme === "dark" ? "Light mode" : "Dark mode"}
+            <button 
+                className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700"
                 onClick={onThemeToggle}
-            />
+                title={theme === "dark" ? "Light mode" : "Dark mode"}
+            >
+                {theme === "dark" ? <Sun className="w-5 h-5 text-tertiary dark:text-gray-400" /> : <Moon01 className="w-5 h-5 text-tertiary dark:text-gray-400" />}
+            </button>
             
             {/* Add/Create Button */}
-            <ButtonUtility 
-                size="sm" 
-                color="secondary"
-                icon={Plus}
-                className="w-10 h-10"
-                tooltip="Create"
-            />
+            <button 
+                className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700"
+                title="Create"
+                onClick={() => window.location.href = '/admin4/content2/posts/create'}
+            >
+                <Plus className="w-5 h-5 text-tertiary dark:text-gray-400" />
+            </button>
             
             {/* Profile Avatar with Dropdown */}
             <Dropdown.Root>
