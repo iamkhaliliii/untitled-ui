@@ -43,28 +43,25 @@ export const AdminSiteSettingsPage = () => {
     });
 
     const [selectedSpaces] = useState([
-        { id: "1", name: "Knowledge Base", image: "https://via.placeholder.com/24" },
-        { id: "2", name: "Product Updates", image: "https://via.placeholder.com/24" },
-        { id: "3", name: "Getting Started", image: "https://via.placeholder.com/24" },
-        { id: "4", name: "Intros & Networking", image: "https://via.placeholder.com/24" },
-        { id: "5", name: "Events", image: "https://via.placeholder.com/24" },
-        { id: "6", name: "Ask the Community", image: "https://via.placeholder.com/24" },
+        { id: "1", name: "Knowledge Base", image: "https://tribe-s3-production.imgix.net/aHDfuZGQwlbN9vTvq1Qix?fit=max&w=200&auto=compress,format" },
+        { id: "2", name: "Product Updates", image: "https://tribe-s3-production.imgix.net/3xI2HKZ5AFSb3M6GK7L7S?fit=max&w=200&auto=compress,format" },
+        { id: "3", name: "Getting Started", image: "https://tribe-s3-production.imgix.net/QGpJwXPWLBU8wRP5FvI3K?fit=max&w=200&auto=compress,format" },
+        { id: "4", name: "Intros & Networking", image: "https://tribe-s3-production.imgix.net/Qrb2DaiDzGkHXtwUcWqRQ?fit=max&w=200&auto=compress,format" },
+        { id: "5", name: "Events", image: "https://tribe-s3-production.imgix.net/ZskUIUGc0srygKdjsZARg?fit=max&w=200&auto=compress,format" },
+        { id: "6", name: "Ask the Community", image: "https://tribe-s3-production.imgix.net/1hCMlUSZC6NMBPQerUuo9?fit=max&w=200&auto=compress,format" },
+        { id: "7", name: "Content Management", image: "https://tribe-s3-production.imgix.net/Vuzh2BtenLuhUO5LK8w7F?fit=max&w=200&auto=compress,format" },
+        { id: "8", name: "Wishlist", image: "https://tribe-s3-production.imgix.net/QXHQz4HTxfQmys2715aS5?fit=max&w=200&auto=compress,format" },
+        { id: "9", name: "Member Management", image: "https://tribe-s3-production.imgix.net/7OeBEMQdwby78TE7nhxTd?fit=max&w=200&auto=compress,format" },
+        { id: "10", name: "Appearance & Design", image: "https://tribe-s3-production.imgix.net/l4bMrEDDJ3truJllbYydq?fit=max&w=200&auto=compress,format" },
+        { id: "11", name: "Reports & Analytics", image: "https://tribe-s3-production.imgix.net/aCCH7i6cNguc40WL6GvIP?fit=max&w=200&auto=compress,format" },
+        { id: "12", name: "Apps & Integrations", image: "https://tribe-s3-production.imgix.net/4tmlxrMmzej01aV9moYiM?fit=max&w=200&auto=compress,format" },
+        { id: "13", name: "API & Webhooks", image: "https://tribe-s3-production.imgix.net/OBcsDLGh5UVPFryKjycgV?fit=max&w=200&auto=compress,format" },
+        { id: "14", name: "Feed", image: "https://tribe-s3-production.imgix.net/WEr82PIUEMPd35TCxQ5IM?fit=max&w=200&auto=compress,format" },
     ]);
 
     const [selectedFileTypes] = useState([
         "image/*", "audio/*", "video/*", ".pdf", "application/json"
     ]);
-
-    const headerActions = (
-        <div className="flex items-center gap-2">
-            <Button size="sm" color="tertiary">
-                Preview Changes
-            </Button>
-            <Button size="sm" iconLeading={Settings01}>
-                Advanced Settings
-            </Button>
-        </div>
-    );
 
     const handleInputChange = (name: string, value: string | number) => {
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -79,7 +76,7 @@ export const AdminSiteSettingsPage = () => {
             title="Site settings"
             description="Configure general settings, permissions, and preferences for your community"
             currentPath={location.pathname}
-            headerActions={headerActions}
+            hideHeader={true}
         >
             <div className="w-full flex flex-col max-w-full self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-3 sm:py-3.5 md:py-4 lg:py-5 sm:px-3.5 md:px-4 lg:px-5 min-h-full relative">
                 <div className="flex flex-col space-y-5 max-w-3xl">
@@ -280,21 +277,27 @@ export const AdminSiteSettingsPage = () => {
                         <div className="flex-1 px-4 py-5 sm:p-6">
                             <div className="flex flex-col space-y-5">
                                 <div className="relative">
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-2 p-3 border border-secondary rounded-lg bg-primary">
                                         {selectedSpaces.map((space) => (
                                             <Badge
                                                 key={space.id}
                                                 size="md"
-                                                className="flex items-center gap-2 px-3 py-2"
+                                                color="gray"
+                                                className="flex items-center gap-2 px-2 py-1"
                                             >
                                                 <img 
                                                     src={space.image} 
                                                     alt={space.name}
-                                                    className="w-4 h-4 rounded-sm"
+                                                    className="w-5 h-5 rounded object-cover"
                                                 />
-                                                <span>{space.name}</span>
-                                                <button className="ml-1 hover:text-error">
-                                                    ×
+                                                <span className="text-sm">{space.name}</span>
+                                                <button 
+                                                    className="ml-1 hover:text-error transition-colors"
+                                                    aria-label={`Remove ${space.name}`}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                    </svg>
                                                 </button>
                                             </Badge>
                                         ))}

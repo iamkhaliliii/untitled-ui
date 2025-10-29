@@ -160,7 +160,6 @@ const generateAdmin4NavItems = (): NavItemType[] => {
             { label: "Notifications", href: "/admin4/setting/notifications", icon: Bell01 },
             { label: "SEO settings", href: "/admin4/setting/seo-settings", icon: SearchMd },
             { label: "Security & Privacy", href: "/admin4/setting/security-privacy", icon: Lock01 },
-            { label: "Gamification", href: "/admin4/setting/gamification", icon: Trophy01 },
         ],
     });
     

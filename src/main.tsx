@@ -52,6 +52,14 @@ import { AdminSettingsPage as Admin4SettingsPage } from "@/pages/admin4/settings
 import { AdminGamificationPage as Admin4GamificationPage } from "@/pages/admin4/gamification";
 import { AdminSiteSettingsPage as Admin4SiteSettingsPage } from "@/pages/admin4/site-settings";
 import { AdminAuthenticationPage as Admin4AuthenticationPage } from "@/pages/admin4/authentication";
+import { AdminDomainPage as Admin4DomainPage } from "@/pages/admin4/domain";
+import { AdminSearchPage as Admin4SearchPage } from "@/pages/admin4/search";
+import { AdminMessagingPage as Admin4MessagingPage } from "@/pages/admin4/messaging";
+import { AdminModerationPage as Admin4ModerationPage } from "@/pages/admin4/moderation";
+import { AdminLocalizationPage as Admin4LocalizationPage } from "@/pages/admin4/localization";
+import { AdminNotificationsPage as Admin4NotificationsPage } from "@/pages/admin4/notifications";
+import { AdminSEOSettingsPage as Admin4SEOSettingsPage } from "@/pages/admin4/seo-settings";
+import { AdminSecurityPrivacyPage as Admin4SecurityPrivacyPage } from "@/pages/admin4/security-privacy";
 import { AdminSitePage as Admin4SitePage } from "@/pages/admin4/site";
 import { SiteFilesPage as Admin4SiteFilesPage } from "@/pages/admin4/site-files";
 import { AdminOnboardingPage as Admin4OnboardingPage } from "@/pages/admin4/onboarding";
@@ -267,17 +275,16 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/appstore" element={<Admin4AppStorePage />} />
                         <Route path="/admin4/appstore/addons" element={<Admin4AppStorePage />} />
                         <Route path="/admin4/setting" element={<Navigate to="/admin4/setting/site-settings" replace />} />
-                        <Route path="/admin4/setting/site-settings" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/authentication" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/domain" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/search" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/messaging" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/moderation" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/localization" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/notifications" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/seo-settings" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/security-privacy" element={<Admin4SettingsPage />} />
-                        <Route path="/admin4/setting/gamification" element={<Admin4SettingsPage />} />
+                        <Route path="/admin4/setting/site-settings" element={<Admin4SiteSettingsPage />} />
+                        <Route path="/admin4/setting/authentication" element={<Admin4AuthenticationPage />} />
+                        <Route path="/admin4/setting/domain" element={<Admin4DomainPage />} />
+                        <Route path="/admin4/setting/search" element={<Admin4SearchPage />} />
+                        <Route path="/admin4/setting/messaging" element={<Admin4MessagingPage />} />
+                        <Route path="/admin4/setting/moderation" element={<Admin4ModerationPage />} />
+                        <Route path="/admin4/setting/localization" element={<Admin4LocalizationPage />} />
+                        <Route path="/admin4/setting/notifications" element={<Admin4NotificationsPage />} />
+                        <Route path="/admin4/setting/seo-settings" element={<Admin4SEOSettingsPage />} />
+                        <Route path="/admin4/setting/security-privacy" element={<Admin4SecurityPrivacyPage />} />
                         <Route path="/admin4/site" element={<Admin4SitePage />} />
                         <Route path="/admin4/site/spaces/create" element={<Admin4SiteSpacesCreatePage />} />
                         <Route path="/admin4/site/files" element={<Admin4SiteFilesPage />} />
