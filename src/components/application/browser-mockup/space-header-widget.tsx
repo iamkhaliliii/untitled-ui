@@ -357,9 +357,9 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
             {spaceHeaderConfig.showIcon && (
               <div className={cx(
                 "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl",
-                spaceHeaderConfig.style === 'simple' && "bg-blue-600",
+                spaceHeaderConfig.style === 'simple' && (theme === 'dark' ? "bg-white/10" : "bg-black/10"),
                 spaceHeaderConfig.style === 'color' && contrastColors?.iconBg,
-                spaceHeaderConfig.style === 'pattern' && "bg-blue-600",
+                spaceHeaderConfig.style === 'pattern' && (theme === 'dark' ? "bg-white/10" : "bg-black/10"),
                 (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') 
                   && "bg-white/20 backdrop-blur-sm"
               )}>
