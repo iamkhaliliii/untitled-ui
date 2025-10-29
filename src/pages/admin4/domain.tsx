@@ -74,11 +74,11 @@ export const AdminDomainPage = () => {
                                             </div>
                                         </div>
                                         <div className="text-sm text-tertiary">
-                                            <div className="p-3 bg-warning-secondary rounded-lg border border-warning-tertiary">
+                                            <div className="p-3 bg-warning-secondary/50 dark:bg-yellow-900/20 rounded-lg border border-warning-tertiary dark:border-yellow-700/50 text-primary">
                                                 Your site is only accessible via its alias, located at{" "}
                                                 <a 
                                                     href="https://bettermode.com/hub"
-                                                    className="text-brand-secondary hover:text-brand-secondary-hovered underline font-mono"
+                                                    className="text-brand-secondary hover:text-brand-secondary-hovered font-mono"
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                 >

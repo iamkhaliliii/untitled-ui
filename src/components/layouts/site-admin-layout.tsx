@@ -369,7 +369,7 @@ export const SiteAdminLayout = ({
                 }
                 `
             }} />
-            <div className="flex h-screen flex-col bg-primary dark:bg-gray-950 overflow-hidden">
+            <div className="flex h-screen flex-col bg-[#f3f3f3] dark:bg-[#171717] overflow-hidden">
                 {/* Admin Sticky Header - Only visible to admins */}
                 {isAdmin && (
                     <ErrorBoundary fallback={
@@ -425,7 +425,7 @@ export const SiteAdminLayout = ({
                     <div className="mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8 flex gap-6 overflow-hidden">
                         {/* Left Sidebar - Fixed */}
                         {leftSidebarContent && (
-                            <aside className="hidden lg:block w-64 bg-primary dark:bg-gray-950 flex-shrink-0 pt-6">
+                            <aside className="hidden lg:block w-64 bg-[#f3f3f3] dark:bg-[#171717] flex-shrink-0 pt-6">
                                 <div className="pr-4">
                                     {leftSidebarContent}
                                 </div>
@@ -433,13 +433,13 @@ export const SiteAdminLayout = ({
                         )}
 
                         {/* Main Content Area - Scrollable */}
-                        <main className="flex-1 overflow-y-auto pt-6 pb-8 site-admin-scrollbar">
+                        <main className="flex-1 overflow-y-auto pt-6 pb-8 site-admin-scrollbar bg-[#f3f3f3] dark:bg-[#171717]">
                             {children}
                         </main>
 
                         {/* Right Sidebar - Fixed */}
                         {rightSidebarContent && (
-                            <aside className="hidden xl:block w-80 bg-primary dark:bg-gray-950 flex-shrink-0 pt-6">
+                            <aside className="hidden xl:block w-80 bg-[#f3f3f3] dark:bg-[#171717] flex-shrink-0 pt-6">
                                 <div className="pl-4">
                                     {rightSidebarContent}
                                 </div>

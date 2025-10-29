@@ -60,12 +60,12 @@ export const AdminSEOSettingsPage = () => {
                                 <div className="flex flex-col space-y-5">
                                     
                                     {/* Info Banner */}
-                                    <div className="relative flex flex-col sm:flex-row gap-3 p-4 shadow-sm border bg-warning-secondary/50 border-warning-tertiary rounded-lg">
+                                    <div className="relative flex flex-col sm:flex-row gap-3 p-4 shadow-sm border bg-warning-secondary/50 dark:bg-yellow-900/20 border-warning-tertiary dark:border-yellow-700/50 rounded-lg">
                                         <div className="shrink-0">
-                                            <AlertCircle className="w-5 h-5 text-warning-primary" />
+                                            <AlertCircle className="w-5 h-5 text-warning-primary dark:text-yellow-500" />
                                         </div>
                                         <div className="min-w-0 grow space-y-1">
-                                            <div className="text-sm">
+                                            <div className="text-sm text-primary">
                                                 <div className="flex flex-col gap-2">
                                                     <div>
                                                         The SEO details set here will apply to the{" "}
@@ -73,7 +73,7 @@ export const AdminSEOSettingsPage = () => {
                                                             href="/hub/"
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="text-brand-secondary hover:text-brand-secondary-hovered underline inline-flex items-center gap-1"
+                                                            className="text-brand-secondary hover:text-brand-secondary-hovered inline-flex items-center gap-1"
                                                         >
                                                             <span>community's homepage</span>
                                                             <LinkExternal01 className="w-3 h-3" />
@@ -234,7 +234,7 @@ export const AdminSEOSettingsPage = () => {
                             </div>
                         </div>
                         <div className="flex-1 px-4 py-5 sm:p-6">
-                            <div className="border border-gray-300 rounded-lg bg-primary w-full cursor-default">
+                            <div className="border border-secondary dark:border-gray-700 rounded-lg bg-primary w-full cursor-default">
                                 {/* OG Image Preview */}
                                 {seoSettings.ogImage && (
                                     <div 

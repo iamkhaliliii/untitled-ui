@@ -7,19 +7,40 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { Admin4Layout } from "@/components/layouts/admin4-layout";
 import { useLocation } from "react-router";
 
-// Social login provider icons (we'll use simple colored circles for now)
+// Social login provider icons
 const SocialIcon = ({ provider }: { provider: string }) => {
-    const colors: Record<string, string> = {
-        google: "bg-red-500",
-        facebook: "bg-blue-600",
-        linkedin: "bg-blue-700",
-        discord: "bg-indigo-600",
-        slack: "bg-purple-600",
+    const iconMap: Record<string, { src: string; bg: string }> = {
+        google: { 
+            src: "https://www.google.com/favicon.ico",
+            bg: "bg-white"
+        },
+        facebook: { 
+            src: "https://www.facebook.com/favicon.ico",
+            bg: "bg-blue-600"
+        },
+        linkedin: { 
+            src: "https://www.linkedin.com/favicon.ico",
+            bg: "bg-blue-700"
+        },
+        discord: { 
+            src: "/logos/s/discord.svg",
+            bg: "bg-white"
+        },
+        slack: { 
+            src: "/logos/s/slack-new-logo.svg",
+            bg: "bg-white"
+        },
     };
     
+    const iconData = iconMap[provider] || { src: "", bg: "bg-gray-500" };
+    
     return (
-        <div className={`w-5 h-5 rounded-full ${colors[provider] || "bg-gray-500"} flex items-center justify-center text-white text-xs font-bold`}>
-            {provider[0].toUpperCase()}
+        <div className={`w-6 h-6 rounded-full ${iconData.bg} flex items-center justify-center p-1 shrink-0 border border-secondary shadow-sm`}>
+            <img 
+                src={iconData.src} 
+                alt={provider}
+                className="w-full h-full object-contain"
+            />
         </div>
     );
 };

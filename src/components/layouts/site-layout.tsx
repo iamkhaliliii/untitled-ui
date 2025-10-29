@@ -450,7 +450,7 @@ export const SiteLayout = ({
                 }
                 `
             }} />
-            <div className="flex h-screen flex-col bg-primary overflow-hidden">
+            <div className="flex h-screen flex-col overflow-hidden bg-[#f3f3f3] dark:bg-[#171717]">
                 {/* Admin Sticky Header - Only visible to admins */}
             {isAdmin && (
                 <ErrorBoundary fallback={
@@ -521,7 +521,7 @@ export const SiteLayout = ({
             <div className="flex-1 flex overflow-hidden">
                 <div className="mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8 flex overflow-hidden">
                     {/* Left Sidebar - Fixed */}
-                    <aside className="hidden lg:block w-64 bg-primary dark:bg-gray-950 flex-shrink-0 pt-4">
+                    <aside className="hidden lg:block w-64 flex-shrink-0 pt-4 bg-[#f3f3f3] dark:bg-[#171717]">
                         <div className="pr-8">
                             {/* Navigation */}
                             <nav className="space-y-2">
@@ -532,8 +532,8 @@ export const SiteLayout = ({
                                         className={cx(
                                             "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                                             currentPath === item.href
-                                                ? "bg-brand-50 dark:bg-brand-900/30 text-brand-secondary dark:text-brand-400"
-                                                : "text-secondary dark:text-gray-300 hover:bg-secondary dark:hover:bg-gray-800 hover:text-primary dark:hover:text-gray-100"
+                                                ? "bg-gray-200 dark:bg-gray-800 text-primary"
+                                                : "text-tertiary hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-primary"
                                         )}
                                     >
                                         <item.icon className="h-5 w-5" />
@@ -545,7 +545,7 @@ export const SiteLayout = ({
                     </aside>
 
                     {/* Main Content Area - Scrollable */}
-                    <main className="flex-1 overflow-y-auto pt-4 pb-8 site-scrollbar">
+                    <main className="flex-1 overflow-y-auto pt-4 pb-8 site-scrollbar bg-[#f3f3f3] dark:bg-[#171717]">
                         {showRightSidebar ? (
                             <div className="flex gap-6">
                                 <div className="flex-1">

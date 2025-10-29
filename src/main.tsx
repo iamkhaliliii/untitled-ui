@@ -63,6 +63,7 @@ import { AdminNotificationsPage as Admin4NotificationsPage } from "@/pages/admin
 import { AdminSEOSettingsPage as Admin4SEOSettingsPage } from "@/pages/admin4/seo-settings";
 import { AdminSecurityPrivacyPage as Admin4SecurityPrivacyPage } from "@/pages/admin4/security-privacy";
 import { AdminSitePage as Admin4SitePage } from "@/pages/admin4/site";
+import { SiteProfilePage } from "@/pages/site/profile";
 import { SiteFilesPage as Admin4SiteFilesPage } from "@/pages/admin4/site-files";
 import { AdminOnboardingPage as Admin4OnboardingPage } from "@/pages/admin4/onboarding";
 import { SiteSpacesEventsPage as Admin4SiteSpacesEventsPage } from "@/pages/admin4/site-spaces-events";
@@ -493,6 +494,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/site/moderation" element={<SiteModerationPage />} />
                         <Route path="/site/modration" element={<Navigate to="/site/moderation" replace />} />
                         <Route path="/site/settings" element={<SiteSettingsPage />} />
+                        <Route path="/site/profile" element={<SiteProfilePage />} />
                         
                         {/* Backwards compatibility routes - redirect to Admin 3.0 */}
                         <Route path="/content" element={<Navigate to="/admin3/content" replace />} />

@@ -1,8 +1,44 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from "react-router";
 import { useListData } from 'react-stately';
-import { ArrowLeft, Plus, Bell01, MessageChatCircle, Moon01, SearchLg, Zap, Edit03, FaceSmile, Image01, Paperclip, ChevronDown, Eye, EyeOff, X, Calendar, Clock, MarkerPin01, Users01, Tag01, Settings01, Globe01, Globe06, VideoRecorder, ChevronUp, HelpCircle } from "@untitledui/icons";
+import { 
+    ArrowLeft, 
+    Plus, 
+    Bell01, 
+    MessageCircle01,
+    Moon01, 
+    SearchLg, 
+    Zap, 
+    Edit03, 
+    FaceSmile, 
+    Image01, 
+    Paperclip, 
+    ChevronDown, 
+    Eye, 
+    EyeOff, 
+    X, 
+    Calendar, 
+    Clock, 
+    MarkerPin01, 
+    Users01, 
+    Tag01, 
+    Settings01, 
+    Globe01, 
+    Globe06, 
+    VideoRecorder, 
+    ChevronUp, 
+    HelpCircle,
+    Menu02,
+    Sun,
+    User01,
+    UsersPlus,
+    UserSquare,
+    Shield01,
+    LogOut01,
+    CheckCircle
+} from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { ButtonUtility } from '@/components/base/buttons/button-utility';
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Input, InputBase } from '@/components/base/input/input';
 import { InputGroup } from '@/components/base/input/input-group';
@@ -15,13 +51,16 @@ import { Toggle } from '@/components/base/toggle/toggle';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { FileTrigger } from "@/components/base/file-upload-trigger/file-upload-trigger";
 import { Avatar } from '@/components/base/avatar/avatar';
+import { Badge } from '@/components/base/badges/badges';
+import { Dropdown } from '@/components/base/dropdown/dropdown';
 import EventMap from '@/components/base/map/event-map';
 import { UntitledLogo } from '@/components/foundations/logo/untitledui-logo';
-import { NavItemButton } from '@/components/application/app-navigation/base-components/nav-item-button';
+import { UntitledLogoMinimal } from '@/components/foundations/logo/untitledui-logo-minimal';
 import { DatePicker } from "@/components/application/date-picker/date-picker";
 import { TimePicker } from "@/components/application/date-picker/time-picker";
 import { parseDate, today, getLocalTimeZone, Time } from "@internationalized/date";
 import type { DateValue, TimeValue } from "react-aria-components";
+import { useTheme } from "@/providers/theme";
 
 import { cx } from "@/utils/cx";
 
@@ -92,9 +131,195 @@ interface FormData {
     hideFromSearch: boolean;
 }
 
+const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { onMobileMenuToggle?: () => void; theme?: string; onThemeToggle?: () => void }) => (
+    <div className="flex max-w-container mx-auto items-center justify-between w-full px-4 sm:px-6 lg:px-8 py-4 max-sm:py-3 max-sm:px-3">
+        {/* Logo & Mobile Menu */}
+        <div className="flex items-center gap-3">
+            {/* Mobile Menu Button */}
+            <ButtonUtility 
+                size="sm" 
+                color="secondary"
+                icon={Menu02}
+                className="md:hidden w-10 h-10"
+                tooltip="Menu"
+                onClick={onMobileMenuToggle}
+            />
+            
+            {/* Logo - Full on desktop, icon only on mobile */}
+            <div className="flex items-center">
+                <UntitledLogo className="h-8 max-md:hidden" />
+                <UntitledLogoMinimal className="h-8 max-sm:h-6 md:hidden" />
+            </div>
+        </div>
+
+        {/* Search Box - Hidden on mobile */}
+        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <div className="relative w-full">
+                <Input
+                    placeholder="Search events, posts, or people..."
+                    className="w-full bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                    icon={SearchLg}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <kbd className="px-2 py-1 text-xs font-semibold text-white/70 bg-white/10 border border-white/20 rounded-md">
+                        ⌘K
+                    </kbd>
+                </div>
+            </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 max-md:gap-1">
+            {/* Search - Mobile only */}
+            <button className="md:hidden w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                <SearchLg className="w-5 h-5 text-tertiary dark:text-gray-400" />
+            </button>
+            
+            {/* Messages */}
+            <Dropdown.Root>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent relative">
+                    <button className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                        <MessageCircle01 className="w-5 h-5 text-tertiary dark:text-gray-400" />
+                    </button>
+                    <span className="absolute -top-1 -right-1 w-5 h-5 max-sm:w-4 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
+                        2
+                    </span>
+                </Button>
+                <Dropdown.Popover className="!w-96 !border-gray-200 dark:!border-gray-700">
+                    <div className="p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Messages</h3>
+                            <Button color="tertiary" size="sm" iconLeading={Plus} className="!p-1.5">
+                            </Button>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" alt="Olivia Rhye" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Olivia Rhye</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">2 hours ago</span>
+                                    </div>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Thanks for the quick response! I'll check...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-secondary dark:border-gray-700">
+                            <button className="w-full text-center text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors py-2">
+                                See all messages
+                            </button>
+                        </div>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown.Root>
+            
+            {/* Notifications */}
+            <Dropdown.Root>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent relative">
+                    <button className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700">
+                        <Bell01 className="w-5 h-5 text-tertiary dark:text-gray-400" />
+                    </button>
+                    <span className="absolute -top-1 -right-1 w-6 h-5 max-sm:w-5 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
+                        99+
+                    </span>
+                </Button>
+                <Dropdown.Popover className="!w-[32rem] !border-gray-200 dark:!border-gray-700">
+                    <div className="p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Notifications</h3>
+                            <div className="flex items-center gap-2">
+                                <Button color="tertiary" size="sm" iconLeading={CheckCircle} className="!p-1.5" title="Mark all as read">
+                                </Button>
+                                <Button 
+                                    color="tertiary" 
+                                    size="sm" 
+                                    iconLeading={Settings01} 
+                                    className="!p-1.5"
+                                    title="Notification settings"
+                                    onClick={() => window.location.href = '/site/settings?section=notifications'}
+                                >
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80" alt="Phoenix Baker" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Phoenix Baker</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">mentioned you</span>
+                                    </div>
+                                    <p className="text-xs text-tertiary dark:text-gray-400">5 minutes ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-secondary dark:border-gray-700">
+                            <button className="w-full text-center text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors py-2">
+                                See all notifications
+                            </button>
+                        </div>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown.Root>
+            
+            {/* Theme Toggle */}
+            <button 
+                className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700"
+                onClick={onThemeToggle}
+                title={theme === "dark" ? "Light mode" : "Dark mode"}
+            >
+                {theme === "dark" ? <Sun className="w-5 h-5 text-tertiary dark:text-gray-400" /> : <Moon01 className="w-5 h-5 text-tertiary dark:text-gray-400" />}
+            </button>
+            
+            {/* Add/Create Button */}
+            <button 
+                className="w-10 h-10 rounded-full bg-secondary dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors border border-gray-300 dark:border-gray-700"
+                title="Create"
+                onClick={() => window.location.href = '/admin4/content2/posts/create'}
+            >
+                <Plus className="w-5 h-5 text-tertiary dark:text-gray-400" />
+            </button>
+            
+            {/* Profile Avatar with Dropdown */}
+            <Dropdown.Root>
+                <Button color="tertiary" className="!p-0 !w-auto !h-auto !min-w-0 !border-0 !shadow-none hover:!bg-transparent">
+                    <Avatar status="online" size="sm" alt="Olivia Rhye" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" className="cursor-pointer" />
+                </Button>
+                <Dropdown.Popover>
+                    <Dropdown.Menu>
+                        <Dropdown.Item key="profile" icon={User01} onAction={() => window.location.href = '/site/profile'}>
+                            Your profile
+                        </Dropdown.Item>
+                        <Dropdown.Item key="settings" icon={Settings01} onAction={() => window.location.href = '/site/settings'}>
+                            Account settings
+                        </Dropdown.Item>
+                        <Dropdown.Item key="invite" icon={UsersPlus}>
+                            Invite members
+                        </Dropdown.Item>
+                        <Dropdown.Separator />
+                        <Dropdown.Item key="admin" icon={UserSquare} onAction={() => window.location.href = '/admin4'}>
+                            Administration
+                        </Dropdown.Item>
+                        <Dropdown.Item key="moderation" icon={Shield01} onAction={() => window.location.href = '/site/moderation'}>
+                            Moderation
+                        </Dropdown.Item>
+                        <Dropdown.Separator />
+                        <Dropdown.Item key="logout" icon={LogOut01} className="text-error-solid">
+                            Log out
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown.Popover>
+            </Dropdown.Root>
+
+        </div>
+    </div>
+);
+
 export const AdminContentEventsCreatePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { theme, setTheme } = useTheme();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [formData, setFormData] = useState<FormData>({
         // Step 1: Event Details
         title: '',
@@ -478,7 +703,7 @@ export const AdminContentEventsCreatePage = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin4/content2/events");
+        navigate(-1); // Go back to previous page
     };
 
     const handleFileSelect = (files: FileList | null) => {
@@ -487,85 +712,23 @@ export const AdminContentEventsCreatePage = () => {
         }
     };
 
+    const handleMobileMenuToggle = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const handleThemeToggle = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+    };
+
     return (
         <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background dark:bg-gray-950 h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))] overflow-hidden">
             {/* Header Navigation */}
-            <header className="sticky top-0 z-50 bg-primary dark:bg-gray-900 border-b border-secondary dark:border-gray-800 flex-shrink-0">
-                <div className="flex h-16 w-full items-center justify-center">
-                    <div className="flex w-full max-w-container justify-between pr-3 pl-4 md:px-8">
-                        <div className="flex flex-1 items-center gap-4">
-                            <a
-                                aria-label="Go to homepage"
-                                href="/"
-                                className="rounded-sm outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2"
-                            >
-                                <UntitledLogo className="h-8" />
-                            </a>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            <div className="hidden lg:block max-w-md w-full">
-                                <Input 
-                                    shortcut 
-                                    size="sm" 
-                                    aria-label="Search" 
-                                    placeholder="Search or ask a question (⌘ + /)" 
-                                    icon={SearchLg}
-                                />
-                            </div>
-
-                            <div className="hidden lg:flex">
-                                <Button size="sm" color="primary" iconLeading={Plus}>
-                                    Create
-                                </Button>
-                            </div>
-
-                            <div className="relative">
-                                <NavItemButton 
-                                    label="Notifications" 
-                                    icon={Bell01}
-                                    size="md"
-                                />
-                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                                    93
-                                </div>
-                            </div>
-
-                            <div className="relative">
-                                <NavItemButton 
-                                    label="Messages" 
-                                    icon={MessageChatCircle}
-                                    size="md" 
-                                />
-                                <div className="absolute -top-1 -right-1 bg-error-solid text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                                    2
-                                </div>
-                            </div>
-
-                            <div className="hidden lg:flex">
-                                <NavItemButton 
-                                    label="Toggle dark mode" 
-                                    icon={Moon01}
-                                    size="md"
-                                />
-                            </div>
-
-                            <div className="hidden lg:flex">
-                                <NavItemButton 
-                                    label="Language" 
-                                    icon={() => <span className="text-sm">🇺🇸</span>}
-                                    size="md"
-                                />
-                            </div>
-
-                            <Avatar 
-                                size="md"
-                                initials="A"
-                                className="cursor-pointer"
-                            />
-                        </div>
-                    </div>
-                </div>
+            <header className="sticky top-0 z-50 bg-primary/80 backdrop-blur-lg shadow-sm border-b border-secondary dark:border-gray-800 flex-shrink-0">
+                <HeaderDropdownSimple 
+                    onMobileMenuToggle={handleMobileMenuToggle}
+                    theme={theme}
+                    onThemeToggle={handleThemeToggle}
+                />
             </header>
 
             {/* Main Content */}

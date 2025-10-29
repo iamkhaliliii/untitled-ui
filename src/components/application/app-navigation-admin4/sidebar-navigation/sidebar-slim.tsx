@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { LifeBuoy01, LogOut01, Settings01 } from "@untitledui/icons";
+import { LifeBuoy01, LogOut01, Settings01, Sun, Moon01, Monitor01 } from "@untitledui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { useAdmin } from "@/hooks/use-admin";
+import { useTheme } from "@/providers/theme";
 import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
@@ -34,6 +35,7 @@ interface SidebarNavigationSlimProps {
 
 export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hideBorder, hideRightBorder }: SidebarNavigationSlimProps) => {
     const { isAdmin, adminHeaderVisible, adminHeaderCollapsed } = useAdmin();
+    const { theme, setTheme } = useTheme();
     
     // Determine current admin version from activeUrl
     const getCurrentAdminVersion = () => {
@@ -48,6 +50,28 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[1]);
     const [isHovering, setIsHovering] = useState(false);
+
+    const toggleTheme = () => {
+        if (theme === "light") {
+            setTheme("dark");
+        } else if (theme === "dark") {
+            setTheme("system");
+        } else {
+            setTheme("light");
+        }
+    };
+
+    const getThemeIcon = () => {
+        if (theme === "light") return Sun;
+        if (theme === "dark") return Moon01;
+        return Monitor01; // System mode
+    };
+
+    const getThemeLabel = () => {
+        if (theme === "light") return "Light Mode";
+        if (theme === "dark") return "Dark Mode";
+        return "System Mode";
+    };
 
     const isSecondarySidebarVisible = isHovering && Boolean(currentItem.items?.length);
 
@@ -64,7 +88,7 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
             <div
                 className={cx(
                     "flex w-auto flex-col justify-between rounded-xl ring-1 ring-secondary transition duration-300 ring-inset",
-                    isAdmin && adminHeaderVisible && (currentAdminVersion === 'admin3' || currentAdminVersion === 'admin4') ? "pt-3" : "pt-5", // Reduced padding when logo is hidden
+                    currentAdminVersion === 'admin4' ? "pt-0" : isAdmin && adminHeaderVisible && currentAdminVersion === 'admin3' ? "pt-3" : "pt-5", // No padding for admin4, reduced for admin3 when logo is hidden
                     hideBorder && !isSecondarySidebarVisible && "ring-transparent",
                 )}
             >
@@ -103,6 +127,15 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
                                     />
                                 </li>
                             ))}
+                            <li>
+                                <NavItemButton
+                                    size="md"
+                                    current={false}
+                                    label={getThemeLabel()}
+                                    icon={getThemeIcon()}
+                                    onClick={toggleTheme}
+                                />
+                            </li>
                         </ul>
                     )}
 

@@ -27,7 +27,7 @@ const LeftSidebarContent = ({ currentSection, onSectionChange }: { currentSectio
             {/* Back to Community Button */}
             <button 
                 onClick={() => window.location.href = '/site/feed'}
-                className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-secondary dark:text-gray-300 hover:bg-secondary dark:hover:bg-gray-800 hover:text-primary dark:hover:text-gray-100 border border-secondary dark:border-gray-700"
+                className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-tertiary hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-primary border border-secondary dark:border-gray-700"
             >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Back to community</span>
@@ -44,8 +44,8 @@ const LeftSidebarContent = ({ currentSection, onSectionChange }: { currentSectio
                                     onClick={() => onSectionChange(section.id)}
                                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                                         currentSection === section.id
-                                            ? "bg-brand-50 dark:bg-brand-900/30 text-brand-secondary dark:text-brand-400"
-                                            : "text-secondary dark:text-gray-300 hover:bg-secondary dark:hover:bg-gray-800 hover:text-primary dark:hover:text-gray-100"
+                                            ? "bg-gray-200 dark:bg-gray-800 text-primary"
+                                            : "text-tertiary hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-primary"
                                     }`}
                                 >
                                     <Icon className="h-4 w-4" />

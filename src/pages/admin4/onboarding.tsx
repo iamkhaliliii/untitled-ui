@@ -17,6 +17,9 @@ import {
     GraduationHat02,
     Lock01,
     LinkExternal01,
+    CreditCard01,
+    Grid01,
+    Settings02,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Badge, BadgeWithIcon } from "@/components/base/badges/badges";
@@ -534,6 +537,7 @@ export const AdminOnboardingPage = () => {
     }, []);
     
     // Admin2 navigation items
+    // Import nav items from admin4-layout to keep consistency
     const navItems: NavItemType[] = [
         {
             label: "Content",
@@ -551,19 +555,24 @@ export const AdminOnboardingPage = () => {
             icon: Users01,
         },
         {
-            label: "Setting",
-            href: "/admin4/setting/site-settings",
-            icon: Settings01,
+            label: "Billing",
+            href: "/admin4/billing",
+            icon: CreditCard01,
         },
         {
-            label: "Report",
+            label: "Reports",
             href: "/admin4/report",
             icon: BarChartSquare02,
         },
         {
-            label: "AppStore",
+            label: "App Store",
             href: "/admin4/appstore",
-            icon: Data,
+            icon: Grid01,
+        },
+        {
+            label: "Setting",
+            href: "/admin4/setting",
+            icon: Settings02,
         },
     ];
 
@@ -585,12 +594,7 @@ export const AdminOnboardingPage = () => {
                     items={navItems}
                     footerItems={[
                         {
-                            label: "Support",
-                            href: "/support",
-                            icon: LifeBuoy01,
-                        },
-                        {
-                            label: "Onboarding",
+                            label: "Onboarding Pro",
                             href: "/admin4/onboarding",
                             icon: GraduationHat02,
                         },
