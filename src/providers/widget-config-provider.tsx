@@ -23,6 +23,7 @@ import {
   QuestionsListConfig,
   defaultQuestionsListConfig
 } from '@/types/widget-config';
+import { FlexAlignTop, Calendar, MessageSquare01, HelpCircle, Heart } from '@untitledui/icons';
 
 interface ToggleStates {
   header: boolean;
@@ -177,7 +178,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       leaderboard: false,
       htmlScript: false,
       richText: false,
-      dynamicWidgets: [],
+      dynamicWidgets: [], // Start with empty dynamic widgets
     };
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
@@ -199,15 +200,18 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       const isGrowthQuestion = currentPath.includes('/site/spaces/growth/question') || currentPath.includes('/design/spaces/questions');
       const isGrowthWishlist = currentPath.includes('/site/spaces/growth/wishlist') || currentPath.includes('/design/spaces/wishlist');
       const isGrowthEvents = currentPath.includes('/site/spaces/growth/events') || currentPath.includes('/design/spaces/events');
+      const isDesignHome = currentPath === '/admin4/design' || currentPath.includes('/design/page-customizer');
+      const isGrowthOrDesign = isGrowthDiscussion || isGrowthQuestion || isGrowthWishlist || isGrowthEvents || isDesignHome;
       
-      // Only update if we're on a Growth folder page or Design space page
-      if (isGrowthDiscussion || isGrowthQuestion || isGrowthWishlist || isGrowthEvents) {
+      // Only update boolean flags, not dynamic widgets (to preserve user additions)
+      if (isGrowthOrDesign) {
         setSpaceWidgetStates(prev => ({
           ...prev,
-          eventsList: isGrowthEvents,
+          eventsList: isGrowthEvents || isDesignHome,
           discussionsList: isGrowthDiscussion,
           questionsList: isGrowthQuestion,
           wishlistsList: isGrowthWishlist,
+          // Don't reset dynamicWidgets - preserve user's widget additions
         }));
       }
     };

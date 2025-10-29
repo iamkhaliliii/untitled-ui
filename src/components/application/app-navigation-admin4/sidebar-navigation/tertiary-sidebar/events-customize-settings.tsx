@@ -703,7 +703,7 @@ export const EventsCustomizeSettings = ({
         {/* Growth folder and Design spaces get Properties-style layout, others get TreeView */}
         {(isGrowthFolderPage || isDesignSpacePage) ? (
           <div className="space-y-2">
-            {/* 1. Space Header */}
+            {/* Default widgets shown as PropertyToggles */}
             <PropertyToggle
               icon={FlexAlignTop}
               label="Space Header"
@@ -714,7 +714,7 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
             />
             
-            {/* 2. Content Widget - Dynamic based on space type */}
+            {/* Content Widget - Dynamic based on space type */}
             {isGrowthEvents && (
               <PropertyToggle
                 icon={Calendar}
@@ -763,7 +763,7 @@ export const EventsCustomizeSettings = ({
               />
             )}
             
-            {/* Other widgets can still be added dynamically via "Add Widget" */}
+            {/* Additional widgets can be added via "Add Widget" button */}
             
             {/* Hero Banner and Composer widgets are hidden for now */}
             {/* <PropertyToggle

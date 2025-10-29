@@ -24,8 +24,8 @@ export const DesignSpacesCustomizePage = () => {
                                    document.referrer.includes('/admin4/design/spaces/create');
     const currentPath = location.pathname;
     
-    // Use widget config context for toggle states
-    const { toggleStates, updateToggleStates: contextUpdateToggleStates } = useWidgetConfig();
+    // Use widget config context for toggle states and widgets
+    const { toggleStates, updateToggleStates: contextUpdateToggleStates, addSpaceWidget, addSidebarWidget } = useWidgetConfig();
     
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
     
@@ -100,8 +100,27 @@ export const DesignSpacesCustomizePage = () => {
     };
 
     const handleWidgetSelect = (widget: any) => {
-        setSelectedWidgetForConfig(widget);
-        setShowWidgetConfig(true);
+        console.log('Selected widget:', widget);
+        
+        if (widgetSelectionType === 'space') {
+            // Add widget to space widgets section
+            addSpaceWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+                containerId: 'mainColumn', // Default to main column
+            });
+            console.log(`Added widget "${widget.label}" to Space Widgets section`);
+        } else if (widgetSelectionType === 'sidebar') {
+            // Add widget to sidebar widgets section
+            addSidebarWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+            });
+            console.log(`Added widget "${widget.label}" to Sidebar Widgets section`);
+        }
+        
         setShowWidgetSelection(false);
     };
 
