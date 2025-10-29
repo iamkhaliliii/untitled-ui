@@ -31,12 +31,14 @@ import {
     UsersPlus,
     Shield01,
     LogOut01,
+    CheckCircle,
 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Input } from "@/components/base/input/input";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
+import { Badge } from "@/components/base/badges/badges";
 import { UntitledLogo } from "@/components/foundations/logo/untitledui-logo";
 import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
 import { cx } from "@/utils/cx";
@@ -170,32 +172,153 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
             />
             
             {/* Messages */}
-            <div className="relative">
-                <ButtonUtility 
-                    size="sm" 
-                    color="secondary"
-                    icon={MessageCircle01}
-                    className="w-10 h-10"
-                    tooltip="Messages"
-                />
-                <span className="absolute -top-1 -right-1 w-5 h-5 max-sm:w-4 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center">
-                    2
-                </span>
-            </div>
+            <Dropdown.Root>
+                <div className="relative">
+                    <Button color="tertiary" className="!p-0 !w-10 !h-10 !min-w-0 !border-0 !shadow-none">
+                        <MessageCircle01 className="w-5 h-5" />
+                    </Button>
+                    <span className="absolute -top-1 -right-1 w-5 h-5 max-sm:w-4 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
+                        2
+                    </span>
+                </div>
+                <Dropdown.Popover className="!w-96">
+                    <div className="p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Messages</h3>
+                            <Button color="tertiary" size="sm" iconLeading={Plus} className="!p-1.5">
+                            </Button>
+                        </div>
+                        <div className="space-y-3">
+                            {/* Message Item 1 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" initials="T" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Test</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">3 months ago</span>
+                                    </div>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Elaya M... Bettermode is uniquely posi...</p>
+                                </div>
+                            </div>
+                            
+                            {/* Message Item 2 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/candice-wu?fm=webp&q=80" alt="Deleted Member" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Deleted Member</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">8 months ago</span>
+                                    </div>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">Karen s... Hello</p>
+                                </div>
+                            </div>
+                            
+                            {/* Message Item 3 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" initials="A" className="flex-shrink-0 bg-pink-100 text-pink-700" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Amanda</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">8 months ago</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-sm text-secondary dark:text-gray-300 truncate flex-1">I messaged one of the other admins ye...</p>
+                                        <Badge color="success" size="sm">2</Badge>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Message Item 4 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors">
+                                <Avatar size="sm" src="https://www.untitledui.com/images/avatars/drew-cano?fm=webp&q=80" alt="Allen" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Allen</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">10 months ago</span>
+                                    </div>
+                                    <p className="text-sm text-secondary dark:text-gray-300 truncate">You: chi poshidi?</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* See All Button */}
+                        <div className="mt-4 pt-3 border-t border-secondary dark:border-gray-700">
+                            <button className="w-full text-center text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors py-2">
+                                See all messages
+                            </button>
+                        </div>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown.Root>
             
             {/* Notifications */}
-            <div className="relative">
-                <ButtonUtility 
-                    size="sm" 
-                    color="secondary"
-                    icon={Bell01}
-                    className="w-10 h-10"
-                    tooltip="Notifications"
-                />
-                <span className="absolute -top-1 -right-1 w-6 h-5 max-sm:w-5 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center">
-                    99+
-                </span>
-            </div>
+            <Dropdown.Root>
+                <div className="relative">
+                    <Button color="tertiary" className="!p-0 !w-10 !h-10 !min-w-0 !border-0 !shadow-none">
+                        <Bell01 className="w-5 h-5" />
+                    </Button>
+                    <span className="absolute -top-1 -right-1 w-6 h-5 max-sm:w-5 max-sm:h-4 bg-red-500 text-white text-xs max-sm:text-[10px] rounded-full flex items-center justify-center pointer-events-none">
+                        99+
+                    </span>
+                </div>
+                <Dropdown.Popover className="!w-[32rem]">
+                    <div className="p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-primary dark:text-gray-100">Notifications</h3>
+                            <div className="flex items-center gap-2">
+                                <Button color="tertiary" size="sm" iconLeading={CheckCircle} className="!p-1.5">
+                                </Button>
+                                <Button color="tertiary" size="sm" iconLeading={Settings01} className="!p-1.5">
+                                </Button>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {/* Notification Item 1 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-success-solid">
+                                <Avatar size="sm" initials="B" className="flex-shrink-0 bg-purple-600 text-white" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">Ben Smith</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">posted</span>
+                                        <span className="text-xs font-medium text-brand-secondary">Bulk user import using CSV</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">in</span>
+                                        <span className="text-xs text-brand-secondary">Wishlist</span>
+                                        <span className="ml-auto w-2 h-2 bg-success-solid rounded-full flex-shrink-0"></span>
+                                    </div>
+                                    <p className="text-xs text-tertiary dark:text-gray-400 mb-2">2 days ago</p>
+                                    <div className="bg-secondary dark:bg-gray-700 rounded-lg p-3 text-sm text-secondary dark:text-gray-300">
+                                        I often need to add multiple users at once, and manually typing in correct names to match email addresses is tedious. Can we get the capability to import users using a CSV upload?
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Notification Item 2 */}
+                            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary dark:hover:bg-gray-800 cursor-pointer transition-colors border-l-2 border-success-solid">
+                                <Avatar size="sm" src="https://via.placeholder.com/32x32/000000/FFFFFF?text=BLVK" alt="BLVK" className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-sm text-primary dark:text-gray-100">BLVK</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">posted</span>
+                                        <span className="text-xs font-medium text-brand-secondary">A pro plan should include no bettermode branding</span>
+                                        <span className="text-xs text-tertiary dark:text-gray-400">in</span>
+                                        <span className="text-xs text-brand-secondary">Wishlist</span>
+                                        <span className="ml-auto w-2 h-2 bg-success-solid rounded-full flex-shrink-0"></span>
+                                    </div>
+                                    <p className="text-xs text-tertiary dark:text-gray-400">8 months ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* See All Button */}
+                        <div className="mt-4 pt-3 border-t border-secondary dark:border-gray-700">
+                            <button className="w-full text-center text-sm font-medium text-brand-secondary hover:text-brand-secondary_hover transition-colors py-2">
+                                See all notifications
+                            </button>
+                        </div>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown.Root>
             
             {/* Theme Toggle */}
             <ButtonUtility 
