@@ -302,6 +302,9 @@ export const AdminStickyHeader = ({
                     isSection: true
                 },
                 { label: "Growth Events", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/growth/events`) },
+                { label: "Growth Discussion", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/growth/discussion`) },
+                { label: "Growth Question", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/growth/question`) },
+                { label: "Growth Wishlist", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/growth/wishlist`) },
                 { label: "Events", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/events`) },
                 { label: "Blog", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/blog`) },
                 { label: "Help", onClick: () => navigate(`/${currentAdminVersion}/site/spaces/myfolder/help`) },

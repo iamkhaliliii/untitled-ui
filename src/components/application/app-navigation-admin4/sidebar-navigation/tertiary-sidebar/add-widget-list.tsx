@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, Rows01, User01, Grid03, Edit03, File01, Star01, Bookmark, Users01, Tag01, Monitor01, ArrowLeft, HelpCircle, Code01, Link01, Image01, Calendar, MessageCircle02, Heart, HelpCircle as QuestionIcon } from "@untitledui/icons";
+import { AlertCircle, Grid03, File01, Star01, Users01, ArrowLeft, HelpCircle, Code01, Image01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 
 interface AddWidgetListProps {
@@ -9,31 +9,14 @@ interface AddWidgetListProps {
 }
 
 const spaceWidgets = [
-  { id: 'events', label: 'Events', icon: Calendar },
-  { id: 'discussions', label: 'Discussions', icon: MessageCircle02 },
-  { id: 'wishlists', label: 'Wishlists', icon: Heart },
-  { id: 'questions', label: 'Questions', icon: QuestionIcon },
-  { id: 'about', label: 'About', icon: AlertCircle, underDesign: true },
-  { id: 'accordions', label: 'Accordions', icon: Rows01, underDesign: true },
-  { id: 'announcement-banner', label: 'Banner', icon: HelpCircle, underDesign: true },
-  { id: 'auth-member-card', label: 'Auth member card', icon: User01, underDesign: true },
-  { id: 'collections-menu', label: 'Collections menu', icon: Grid03, underDesign: true },
-  { id: 'composer', label: 'Composer', icon: Edit03, underDesign: true },
-  { id: 'feed', label: 'Feed', icon: File01, underDesign: true },
-  { id: 'hero-banner', label: 'Hero banner', icon: HelpCircle, underDesign: true },
-  { id: 'html-script', label: 'Html script', icon: Code01, underDesign: true },
-  { id: 'leaderboard', label: 'Leaderboard', icon: Star01, underDesign: true },
-  { id: 'link-menu', label: 'Link menu', icon: Bookmark, underDesign: true },
+  { id: 'space-header', label: 'Space Header', icon: Image01 },
+  { id: 'hero-banner', label: 'Hero Banner', icon: HelpCircle },
+  { id: 'announcement-banner', label: 'Announcement Banner', icon: HelpCircle },
   { id: 'members', label: 'Members', icon: Users01, underDesign: true },
-  { id: 'posts', label: 'Posts', icon: File01, underDesign: true },
-  { id: 'quick-links', label: 'Quick links', icon: Link01, underDesign: true },
-  { id: 'rich-text', label: 'Rich text', icon: File01, underDesign: true },
-  { id: 'section', label: 'Section', icon: Grid03, underDesign: true },
-  { id: 'single-post', label: 'Single post', icon: File01, underDesign: true },
-  { id: 'space-header', label: 'Space header', icon: Image01, underDesign: true },
+  { id: 'leaderboard', label: 'Leaderboard', icon: Star01, underDesign: true },
   { id: 'spaces', label: 'Spaces', icon: Grid03, underDesign: true },
-  { id: 'tags', label: 'Tags', icon: Tag01, underDesign: true },
-  { id: 'iframe', label: 'iFrame', icon: Monitor01, underDesign: true },
+  { id: 'html-script', label: 'Html Script', icon: Code01, underDesign: true },
+  { id: 'rich-text', label: 'Rich Text', icon: File01, underDesign: true },
 ];
 
 const sidebarWidgets = [

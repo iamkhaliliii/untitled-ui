@@ -102,11 +102,18 @@ export const EventsCustomizeSettings = ({
     duplicateSidebarWidget
   } = widgetConfig;
   
-  // Detect if we're on a private space page, CMS events page, or Growth folder page
+  // Detect if we're on a private space page, CMS events page, Growth folder page, or Design space page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const isPrivateSpacePage = currentPath.includes('/admin/site/spaces/private-space');
   const isCmsEventsPage = currentPath.includes('/site/cms/events');
   const isGrowthFolderPage = currentPath.includes('/site/spaces/growth/');
+  const isDesignSpacePage = currentPath.includes('/design/spaces/'); // Design space customization
+  
+  // Detect specific Growth space types OR Design space types
+  const isGrowthEvents = currentPath.includes('/site/spaces/growth/events') || currentPath.includes('/design/spaces/events');
+  const isGrowthDiscussion = currentPath.includes('/site/spaces/growth/discussion') || currentPath.includes('/design/spaces/discussions');
+  const isGrowthQuestion = currentPath.includes('/site/spaces/growth/question') || currentPath.includes('/design/spaces/questions');
+  const isGrowthWishlist = currentPath.includes('/site/spaces/growth/wishlist') || currentPath.includes('/design/spaces/wishlist');
   
   // State for space widgets tree expansion
   const [spaceWidgetsExpandedIds, setSpaceWidgetsExpandedIds] = useState<string[]>(
@@ -646,8 +653,8 @@ export const EventsCustomizeSettings = ({
         theme === 'dark' ? "border-gray-700" : "border-secondary"
       )}></div>
       
-      {/* Space Layout Section - Only for Growth folder pages */}
-      {isGrowthFolderPage && (
+      {/* Space Layout Section - For Growth folder pages and Design space pages */}
+      {(isGrowthFolderPage || isDesignSpacePage) && (
         <>
           <CustomizerSection
             title="Space Layout"
@@ -693,8 +700,8 @@ export const EventsCustomizeSettings = ({
           onClick: handleAddSpaceWidget
         }}
       >
-        {/* Growth folder gets Properties-style layout, others get TreeView */}
-        {isGrowthFolderPage ? (
+        {/* Growth folder and Design spaces get Properties-style layout, others get TreeView */}
+        {(isGrowthFolderPage || isDesignSpacePage) ? (
           <div className="space-y-2">
             {/* 1. Space Header */}
             <PropertyToggle
@@ -707,18 +714,56 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
             />
             
-            {/* 2. Events */}
-            <PropertyToggle
-              icon={Calendar}
-              label="Events"
-              isSelected={spaceWidgetStates.eventsList}
-              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
-              id="events-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events' })}
-            />
+            {/* 2. Content Widget - Dynamic based on space type */}
+            {isGrowthEvents && (
+              <PropertyToggle
+                icon={Calendar}
+                label="Events"
+                isSelected={spaceWidgetStates.eventsList}
+                onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
+                id="events-list"
+                iconColor="bg-green-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events' })}
+              />
+            )}
             
-            {/* Discussions, Wishlists, Questions are now added dynamically via "Add Widget" */}
+            {isGrowthDiscussion && (
+              <PropertyToggle
+                icon={MessageSquare01}
+                label="Discussion"
+                isSelected={spaceWidgetStates.discussionsList}
+                onChange={(value) => updateSpaceWidgetStates({ discussionsList: value })}
+                id="discussions-list"
+                iconColor="bg-green-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'discussionsList', label: 'Discussion' })}
+              />
+            )}
+            
+            {isGrowthQuestion && (
+              <PropertyToggle
+                icon={QuestionIcon}
+                label="Question"
+                isSelected={spaceWidgetStates.questionsList}
+                onChange={(value) => updateSpaceWidgetStates({ questionsList: value })}
+                id="questions-list"
+                iconColor="bg-green-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'questionsList', label: 'Question' })}
+              />
+            )}
+            
+            {isGrowthWishlist && (
+              <PropertyToggle
+                icon={Heart}
+                label="Wishlist"
+                isSelected={spaceWidgetStates.wishlistsList}
+                onChange={(value) => updateSpaceWidgetStates({ wishlistsList: value })}
+                id="wishlists-list"
+                iconColor="bg-green-100/20"
+                onSettingsClick={() => onWidgetConfig({ id: 'wishlistsList', label: 'Wishlist' })}
+              />
+            )}
+            
+            {/* Other widgets can still be added dynamically via "Add Widget" */}
             
             {/* Hero Banner and Composer widgets are hidden for now */}
             {/* <PropertyToggle

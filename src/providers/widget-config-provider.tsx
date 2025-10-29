@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
   EventsListConfig, 
   defaultEventsListConfig, 
@@ -150,25 +150,34 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     rightSidebar: false,
     footer: false,
   });
-  const [spaceWidgetStates, setSpaceWidgetStates] = useState<SpaceWidgetStates>({
-    spaceHeader: true,
-    eventsList: true,
-    customEventsList: false,
-    upcomingEvents: false,
-    heroBanner: false,
-    menu: false,
-    composer: false,
-    // List widgets - all disabled by default, will be added dynamically
-    discussionsList: false,
-    knowledgesList: false,
-    wishlistsList: false,
-    questionsList: false,
-    // Other widgets - all disabled by default
-    announcementBanner: false,
-    leaderboard: false,
-    htmlScript: false,
-    richText: false,
-    dynamicWidgets: [],
+  const [spaceWidgetStates, setSpaceWidgetStates] = useState<SpaceWidgetStates>(() => {
+    // Detect current URL to set appropriate initial state
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+    const isGrowthDiscussion = currentPath.includes('/site/spaces/growth/discussion') || currentPath.includes('/design/spaces/discussions');
+    const isGrowthQuestion = currentPath.includes('/site/spaces/growth/question') || currentPath.includes('/design/spaces/questions');
+    const isGrowthWishlist = currentPath.includes('/site/spaces/growth/wishlist') || currentPath.includes('/design/spaces/wishlist');
+    const isGrowthEvents = currentPath.includes('/site/spaces/growth/events') || currentPath.includes('/design/spaces/events');
+    
+    return {
+      spaceHeader: true,
+      eventsList: isGrowthEvents,
+      customEventsList: false,
+      upcomingEvents: false,
+      heroBanner: false,
+      menu: false,
+      composer: false,
+      // List widgets - set based on space type
+      discussionsList: isGrowthDiscussion,
+      knowledgesList: false,
+      wishlistsList: isGrowthWishlist,
+      questionsList: isGrowthQuestion,
+      // Other widgets - all disabled by default
+      announcementBanner: false,
+      leaderboard: false,
+      htmlScript: false,
+      richText: false,
+      dynamicWidgets: [],
+    };
   });
   const [layoutStates, setLayoutStates] = useState<LayoutStates>({
     layoutStyle: 'simple',
@@ -178,6 +187,49 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     recentActivity: false,
     dynamicWidgets: [],
   });
+
+  // Watch for URL changes and update widget states accordingly
+  useEffect(() => {
+    let lastPath = window.location.pathname;
+    
+    const updateWidgetStates = () => {
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+      const isGrowthDiscussion = currentPath.includes('/site/spaces/growth/discussion') || currentPath.includes('/design/spaces/discussions');
+      const isGrowthQuestion = currentPath.includes('/site/spaces/growth/question') || currentPath.includes('/design/spaces/questions');
+      const isGrowthWishlist = currentPath.includes('/site/spaces/growth/wishlist') || currentPath.includes('/design/spaces/wishlist');
+      const isGrowthEvents = currentPath.includes('/site/spaces/growth/events') || currentPath.includes('/design/spaces/events');
+      
+      // Only update if we're on a Growth folder page or Design space page
+      if (isGrowthDiscussion || isGrowthQuestion || isGrowthWishlist || isGrowthEvents) {
+        setSpaceWidgetStates(prev => ({
+          ...prev,
+          eventsList: isGrowthEvents,
+          discussionsList: isGrowthDiscussion,
+          questionsList: isGrowthQuestion,
+          wishlistsList: isGrowthWishlist,
+        }));
+      }
+    };
+
+    // Update on mount
+    updateWidgetStates();
+
+    // Listen for URL changes (for browser back/forward)
+    window.addEventListener('popstate', updateWidgetStates);
+    
+    // Poll for URL changes (catches React Router navigation)
+    const intervalId = setInterval(() => {
+      if (window.location.pathname !== lastPath) {
+        lastPath = window.location.pathname;
+        updateWidgetStates();
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('popstate', updateWidgetStates);
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const updateEventsListConfig = (config: Partial<EventsListConfig>) => {
     setEventsListConfig(prevConfig => ({ ...prevConfig, ...config }));

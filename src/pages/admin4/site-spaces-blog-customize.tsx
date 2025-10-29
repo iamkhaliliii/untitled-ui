@@ -8,22 +8,27 @@ import WidgetConfig from "@/components/application/app-navigation-admin4/sidebar
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
-import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01 } from "@untitledui/icons";
+import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01, Sun, Moon01 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 
 export const SiteSpacesBlogCustomizePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    
+    // Check if user came from Page Customizer
+    const cameFromPageCustomizer = location.state?.from === 'page-customizer' || 
+                                   document.referrer.includes('/admin4/design/page-customizer');
     const currentPath = location.pathname;
     
-    // Use widget config context for toggle states
-    const { toggleStates, updateToggleStates: contextUpdateToggleStates } = useWidgetConfig();
+    // Use widget config context for toggle states and widgets
+    const { toggleStates, updateToggleStates: contextUpdateToggleStates, addSpaceWidget, addSidebarWidget } = useWidgetConfig();
     
     const [customizeExpandedIds, setCustomizeExpandedIds] = useState<string[]>([]);
     
     // Device and navigation state
     const [selectedDevice, setSelectedDevice] = useState<string>("desktop");
     const [selectedNavigation, setSelectedNavigation] = useState<string>("forward");
+    const [selectedTheme, setSelectedTheme] = useState<string>("light");
     
     // Widget selection and configuration state
     const [showWidgetSelection, setShowWidgetSelection] = useState<boolean>(false);
@@ -39,10 +44,10 @@ export const SiteSpacesBlogCustomizePage = () => {
         if (currentPath.includes("/admin4/site/spaces/private-space")) {
             return "Customize your private space layout and appearance";
         }
-        if (currentPath.includes("/admin4/site/spaces/growth/blog")) {
-            return "Customize your blog page layout and appearance";
+        if (currentPath.includes("/admin4/site/spaces/growth/discussion")) {
+            return "Customize your discussion page layout and appearance";
         }
-        return "Customize your blog page layout and appearance";
+        return "Customize your discussion page layout and appearance";
     };
 
     const getMainTitle = () => {
@@ -63,18 +68,44 @@ export const SiteSpacesBlogCustomizePage = () => {
     };
 
     const handleWidgetConfig = (widget: any) => {
-        setSelectedWidgetForConfig(widget);
-        setShowWidgetConfig(true);
-        setShowWidgetSelection(false);
+        // Navigate to dedicated widget config page
+        const widgetSlug = widget.label.toLowerCase().replace(/\s+/g, '-');
+        const basePath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
+        navigate(`${basePath}/widget/${widgetSlug}`);
     };
 
     const handleEditGlobalWidgets = () => {
-        setShowNavigationInTertiary(true);
+        // Navigate to design navigation page with state to track where we came from
+        navigate('/admin4/design/site-appearance/navigation', {
+            state: { 
+                from: 'customize-page',
+                returnTo: location.pathname 
+            }
+        });
     };
 
     const handleWidgetSelect = (widget: any) => {
-        setSelectedWidgetForConfig(widget);
-        setShowWidgetConfig(true);
+        console.log('Selected widget:', widget);
+        
+        if (widgetSelectionType === 'space') {
+            // Add widget to space widgets section
+            addSpaceWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+                containerId: 'mainColumn', // Default to main column
+            });
+            console.log(`Added widget "${widget.label}" to Space Widgets section`);
+        } else if (widgetSelectionType === 'sidebar') {
+            // Add widget to sidebar widgets section
+            addSidebarWidget({
+                id: `${widget.id}_${Date.now()}`, // Unique ID with timestamp
+                label: widget.label,
+                icon: widget.icon,
+            });
+            console.log(`Added widget "${widget.label}" to Sidebar Widgets section`);
+        }
+        
         setShowWidgetSelection(false);
     };
 
@@ -126,6 +157,11 @@ export const SiteSpacesBlogCustomizePage = () => {
         const basePath = currentPath.replace('/customize', '');
         navigate(basePath);
     };
+    
+    // Back to Page Customizer handler
+    const handleBackToPageCustomizer = () => {
+        navigate('/admin4/design/page-customizer');
+    };
 
     // Device selection handler
     const handleDeviceChange = (device: string) => {
@@ -135,6 +171,11 @@ export const SiteSpacesBlogCustomizePage = () => {
     // Navigation handler
     const handleNavigationChange = (direction: string) => {
         setSelectedNavigation(direction);
+    };
+
+    // Theme handler
+    const handleThemeChange = (theme: string) => {
+        setSelectedTheme(theme);
     };
 
     // Save changes handler
@@ -177,7 +218,7 @@ export const SiteSpacesBlogCustomizePage = () => {
             return "Configure navigation settings";
         }
         
-        return "Customize your blog page layout and appearance";
+        return "Customize your discussion page layout and appearance";
     };
     
     // Render sidebar content based on current state
@@ -233,42 +274,48 @@ export const SiteSpacesBlogCustomizePage = () => {
         // Wrap content with header controls first, then title
         return (
             <div className="flex flex-col">
-                {/* Header controls - Sticky */}
-                <div className="sticky top-0 z-10 bg-primary p-2 border-b border-secondary">
+                {/* Header Section - Match Page Customizer styling */}
+                <div className="px-4 mt-6 lg:px-5 flex-shrink-0">
                     <div className="flex items-center justify-between mb-2">
-                        {/* Left: Circular back button - only show if not on main customizer state */}
+                        {/* Left: Back button - show widget back button OR page customizer back button */}
                         {(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) ? (
-                            <ButtonUtility
-                                size="sm"
-                                color="tertiary"
-                                icon={ArrowLeft}
-                                tooltip="Back to Customizer"
+                            <button
                                 onClick={handleBackToCustomizer}
-                                className="rounded-full border border-secondary"
-                            />
+                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                            >
+                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                            </button>
+                        ) : cameFromPageCustomizer ? (
+                            <button
+                                onClick={handleBackToPageCustomizer}
+                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                            >
+                                <ArrowLeft className="size-4 text-fg-quaternary" />
+                            </button>
                         ) : (
                             <div></div> // Empty div to maintain layout
                         )}
                         
-                        {/* Right: Space Settings link */}
-                        <button
-                            onClick={handleSpaceSettings}
-                            className="flex items-center gap-1 px-1 py-0.5 text-xs font-medium transition-colors cursor-pointer text-brand-secondary hover:text-brand-secondary_hover"
-                        >
-                            <FlipBackward className="size-3" />
-                            Back to Space Settings
-                        </button>
+                        {/* Right: Space Settings button - only show on main customizer state */}
+                        {!(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) && (
+                            <button
+                                onClick={handleSpaceSettings}
+                                className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
+                            >
+                                <Settings01 className="size-4 text-fg-quaternary" />
+                            </button>
+                        )}
                     </div>
                     
                     {/* Title and Description */}
-                    <div>
-                        <h2 className="text-lg font-semibold text-primary mb-2">{getSidebarTitle()}</h2>
-                        <p className="text-sm text-tertiary">{getSidebarDescription()}</p>
+                    <div className="mb-3">
+                        <h3 className="text-[1.35rem] font-semibold text-primary tracking-tight">{getSidebarTitle()}</h3>
+                        <p className="text-sm text-tertiary mt-1">{getSidebarDescription()}</p>
                     </div>
                 </div>
                 
                 {/* Main content */}
-                <div>
+                <div className="mt-2 px-4">
                     {content}
                 </div>
             </div>
@@ -282,9 +329,9 @@ export const SiteSpacesBlogCustomizePage = () => {
             currentPath={currentPath}
             sidebarContent={renderCustomizeSidebarContent()}
         >
-            <div className="p-6">
+            <div className="p-4">
                 {/* Control bar above browser mockup */}
-                <div className="flex items-center justify-between mb-6 p-4 bg-secondary/20 rounded-lg border border-secondary">
+                <div className="flex items-center justify-between mb-3">
                     {/* Left side: Device and Navigation ButtonGroups */}
                     <div className="flex items-center gap-4">
                         {/* Device ButtonGroup */}
@@ -313,6 +360,19 @@ export const SiteSpacesBlogCustomizePage = () => {
                             <ButtonGroupItem id="backward" iconLeading={FlipBackward} />
                             <ButtonGroupItem id="forward" iconLeading={FlipForward} />
                         </ButtonGroup>
+
+                        {/* Theme ButtonGroup */}
+                        <ButtonGroup 
+                            size="sm"
+                            selectedKeys={[selectedTheme]}
+                            onSelectionChange={(keys) => {
+                                const selected = Array.from(keys)[0] as string;
+                                if (selected) handleThemeChange(selected);
+                            }}
+                        >
+                            <ButtonGroupItem id="light" iconLeading={Sun} />
+                            <ButtonGroupItem id="dark" iconLeading={Moon01} />
+                        </ButtonGroup>
                     </div>
                     
                     {/* Right side: Save button */}
@@ -326,7 +386,10 @@ export const SiteSpacesBlogCustomizePage = () => {
                 </div>
                 
                 {/* Browser Mockup */}
-                <BrowserMockup />
+                <BrowserMockup 
+                  theme={selectedTheme as 'light' | 'dark'}
+                  device={selectedDevice as 'mobile' | 'tablet' | 'desktop'}
+                />
             </div>
         </DesignLayout>
     );

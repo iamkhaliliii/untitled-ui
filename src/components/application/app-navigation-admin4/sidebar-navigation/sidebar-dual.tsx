@@ -440,27 +440,27 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
         if (activeUrl?.includes("/site/spaces/growth/events/audit-logs")) return "audit-logs";
         if (activeUrl?.includes("/site/spaces/growth/events/seo")) return "seo";
         if (activeUrl?.includes("/site/spaces/growth/events/danger")) return "danger";
-        if (activeUrl?.includes("/site/spaces/growth/blog/customize")) return "customize";
-        if (activeUrl?.includes("/site/spaces/growth/blog/permissions")) return "permissions";
-        if (activeUrl?.includes("/site/spaces/growth/blog/members")) return "members";
-        if (activeUrl?.includes("/site/spaces/growth/blog/analytics")) return "analytics";
-        if (activeUrl?.includes("/site/spaces/growth/blog/audit-logs")) return "audit-logs";
-        if (activeUrl?.includes("/site/spaces/growth/blog/seo")) return "seo";
-        if (activeUrl?.includes("/site/spaces/growth/blog/danger")) return "danger";
-        if (activeUrl?.includes("/site/spaces/growth/help/customize")) return "customize";
-        if (activeUrl?.includes("/site/spaces/growth/help/permissions")) return "permissions";
-        if (activeUrl?.includes("/site/spaces/growth/help/members")) return "members";
-        if (activeUrl?.includes("/site/spaces/growth/help/analytics")) return "analytics";
-        if (activeUrl?.includes("/site/spaces/growth/help/audit-logs")) return "audit-logs";
-        if (activeUrl?.includes("/site/spaces/growth/help/seo")) return "seo";
-        if (activeUrl?.includes("/site/spaces/growth/help/danger")) return "danger";
-        if (activeUrl?.includes("/site/spaces/growth/posts/customize")) return "customize";
-        if (activeUrl?.includes("/site/spaces/growth/posts/permissions")) return "permissions";
-        if (activeUrl?.includes("/site/spaces/growth/posts/members")) return "members";
-        if (activeUrl?.includes("/site/spaces/growth/posts/analytics")) return "analytics";
-        if (activeUrl?.includes("/site/spaces/growth/posts/audit-logs")) return "audit-logs";
-        if (activeUrl?.includes("/site/spaces/growth/posts/seo")) return "seo";
-        if (activeUrl?.includes("/site/spaces/growth/posts/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/discussion/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/question/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/question/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/question/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/question/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/question/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/question/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/question/danger")) return "danger";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/customize")) return "customize";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/permissions")) return "permissions";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/members")) return "members";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/analytics")) return "analytics";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/audit-logs")) return "audit-logs";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/seo")) return "seo";
+        if (activeUrl?.includes("/site/spaces/growth/wishlist/danger")) return "danger";
         if (activeUrl?.includes("/site/spaces/private-space/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/customize")) return "customize";
         if (activeUrl?.includes("/site/cms/events/settings")) return "general";
@@ -518,27 +518,26 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                       folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/events` } : undefined
             },
             { 
-                id: `${folderId}-blog`, 
-                label: "Blog", 
+                id: `${folderId}-discussion`, 
+                label: folderId === "myFolder2" ? "Discussion" : "Blog", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/blog` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/discussion` } : undefined
             },
             { 
-                id: `${folderId}-help`, 
-                label: "Help", 
+                id: `${folderId}-question`, 
+                label: folderId === "myFolder2" ? "Question" : "Help", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/help` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/question` } : undefined
             },
             { 
-                id: `${folderId}-posts`, 
-                label: "Posts", 
+                id: `${folderId}-wishlist`, 
+                label: "Wishlist", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/posts` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/wishlist` } : undefined
             },
-            { id: `${folderId}-wishlist`, label: "Wishlist", icon: <File05 className="size-5 text-fg-quaternary" /> },
             ...Array.from({ length: childrenCount }, (_, index) => ({
                 id: `${folderId}-item-${index + 6}`,
                 label: `${folderLabel} Item ${index + 6}`,
@@ -1104,9 +1103,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
 
     // Check if we're on any events page, blog page, help page, posts page, private space page, spaces create page, or CMS events page
     const isEventsPage = activeUrl?.includes("/site/spaces/myfolder/events") || activeUrl?.includes("/site/spaces/growth/events");
-    const isBlogPage = activeUrl?.includes("/site/spaces/myfolder/blog") || activeUrl?.includes("/site/spaces/growth/blog");
-    const isHelpPage = activeUrl?.includes("/site/spaces/myfolder/help") || activeUrl?.includes("/site/spaces/growth/help");
-    const isPostsPage = activeUrl?.includes("/site/spaces/myfolder/posts") || activeUrl?.includes("/site/spaces/growth/posts");
+    const isBlogPage = activeUrl?.includes("/site/spaces/myfolder/blog") || activeUrl?.includes("/site/spaces/growth/discussion");
+    const isHelpPage = activeUrl?.includes("/site/spaces/myfolder/help") || activeUrl?.includes("/site/spaces/growth/question");
+    const isPostsPage = activeUrl?.includes("/site/spaces/myfolder/posts") || activeUrl?.includes("/site/spaces/growth/wishlist");
     const isPrivateSpacePage = activeUrl?.includes("/site/spaces/private-space");
     const isSpacesCreatePage = activeUrl?.includes("/site/spaces/create");
     const isCmsEventsPage = activeUrl?.includes("/site/cms/events");
@@ -1546,11 +1545,11 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                          isEventsPage ? 
                             (activeUrl?.includes("/site/spaces/growth/events") ? "Growth Events" : "Events") : 
                          isBlogPage ? 
-                            (activeUrl?.includes("/site/spaces/growth/blog") ? "Growth Blog" : "Blog") : 
+                            (activeUrl?.includes("/site/spaces/growth/discussion") ? "Growth Discussion" : "Blog") : 
                          isHelpPage ? 
-                            (activeUrl?.includes("/site/spaces/growth/help") ? "Growth Help" : "Help") : 
+                            (activeUrl?.includes("/site/spaces/growth/question") ? "Growth Question" : "Help") : 
                          isPostsPage ? 
-                            (activeUrl?.includes("/site/spaces/growth/posts") ? "Growth Posts" : "Posts") : 
+                            (activeUrl?.includes("/site/spaces/growth/wishlist") ? "Growth Wishlist" : "Posts") : 
                          isPrivateSpacePage ? "Private Space" : 
                          isCmsEventsPage ? "CMS Events" : 
                          currentItem?.label}
@@ -1905,9 +1904,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             const generalUrl = isGenericSpaceSettings ?
                                                 (activeUrl?.replace(/\/(settings.*)?$/, '/settings') || '') :
                                                 isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
+                                                activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
+                                                activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help` :
+                                                activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
                                                 activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :
@@ -1934,9 +1933,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             const permissionsUrl = isGenericSpaceSettings ?
                                                 (activeUrl?.replace(/\/(settings.*)?$/, '/settings/permissions') || '') :
                                                 isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/permissions` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/permissions` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help/permissions` :
+                                                activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts/permissions` :
                                                 activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/permissions` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/permissions` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/permissions` :
@@ -1963,9 +1962,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             onClick={() => {
                                                 const membersUrl = isGenericSpaceSettings ? 
                                                     (activeUrl?.replace(/\/(settings.*)?$/, '/settings/members') || '') :
-                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/members` :
-                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/members` :
-                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help/members` :
+                                                    activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts/members` :
                                                     activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/members` :
                                                     isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/members` :
                                                     isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/members` :
@@ -1988,9 +1987,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             onClick={() => {
                                                 const seoUrl = isGenericSpaceSettings ?
                                                     (activeUrl?.replace(/\/(settings.*)?$/, '/settings/seo') || '') :
-                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
-                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
-                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help/seo` :
+                                                    activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts/seo` :
                                                     activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/seo` :
                                                     isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/seo` :
                                                     isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/seo` :
@@ -2013,9 +2012,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                             onClick={() => {
                                                 const dangerUrl = isGenericSpaceSettings ?
                                                     (activeUrl?.replace(/\/(settings.*)?$/, '/settings/danger') || '') :
-                                                    activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/danger` :
-                                                    activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/danger` :
-                                                    activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help/danger` :
+                                                    activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts/danger` :
                                                     activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/danger` :
                                                     isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/danger` :
                                                     isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/danger` :
@@ -2060,9 +2059,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                         onClick={() => handleSecondaryItemClick("customize", 
                                             isCmsEventsPage ? `/${currentAdminVersion}/site/cms/events/customize` :
                                             isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/customize` : 
-                                            activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
-                                            activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
-                                            activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help/customize` :
+                                            activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts/customize` :
                                             activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events/customize` :
                                             isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` :
                                             isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help/customize` :
@@ -2271,9 +2270,9 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                     <button
                                         onClick={() => {
                                             const backUrl = isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space` : 
-                                                activeUrl?.includes("/site/spaces/growth/blog") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
-                                                activeUrl?.includes("/site/spaces/growth/help") ? `/${currentAdminVersion}/site/spaces/growth/help` :
-                                                activeUrl?.includes("/site/spaces/growth/posts") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
+                                                activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/blog` :
+                                                activeUrl?.includes("/site/spaces/growth/question") ? `/${currentAdminVersion}/site/spaces/growth/help` :
+                                                activeUrl?.includes("/site/spaces/growth/wishlist") ? `/${currentAdminVersion}/site/spaces/growth/posts` :
                                                 activeUrl?.includes("/site/spaces/growth/events") ? `/${currentAdminVersion}/site/spaces/growth/events` :
                                                 isBlogPage ? `/${currentAdminVersion}/site/spaces/myfolder/blog` :
                                                 isHelpPage ? `/${currentAdminVersion}/site/spaces/myfolder/help` :

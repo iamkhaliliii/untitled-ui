@@ -103,17 +103,17 @@ export const DesignSpacesCreatePage = () => {
     
     // Space types list
     const spaceTypes = [
-        { id: "explore", label: "Explore", icon: Globe01 },
-        { id: "guidelines", label: "Guidelines", icon: File01 },
-        { id: "discussions", label: "Discussions", icon: Users01 },
-        { id: "questions", label: "Questions", icon: Users01 },
-        { id: "articles", label: "Articles", icon: File01 },
-        { id: "events", label: "Events", icon: Calendar },
-        { id: "changelogs", label: "Changelogs", icon: File01 },
-        { id: "jobs", label: "Jobs", icon: FolderCode },
-        { id: "wishlist", label: "Wishlist", icon: Star01 },
-        { id: "podcast", label: "Podcast", icon: Image01 },
-        { id: "blank", label: "Blank", icon: File05 },
+        { id: "events", label: "Event", previewLabel: "Events", icon: Calendar, disabled: false },
+        { id: "discussions", label: "Discussion", previewLabel: "Discussions", icon: Users01, disabled: false },
+        { id: "questions", label: "Question", previewLabel: "Questions", icon: Users01, disabled: false },
+        { id: "wishlist", label: "Wishlist", previewLabel: "Wishlist", icon: Star01, disabled: false },
+        { id: "explore", label: "Explore", previewLabel: "Explore", icon: Globe01, disabled: true },
+        { id: "guidelines", label: "Guidelines", previewLabel: "Guidelines", icon: File01, disabled: true },
+        { id: "articles", label: "Articles", previewLabel: "Articles", icon: File01, disabled: true },
+        { id: "changelogs", label: "Changelogs", previewLabel: "Changelogs", icon: File01, disabled: true },
+        { id: "jobs", label: "Jobs", previewLabel: "Jobs", icon: FolderCode, disabled: true },
+        { id: "podcast", label: "Podcast", previewLabel: "Podcast", icon: Image01, disabled: true },
+        { id: "blank", label: "Blank", previewLabel: "Blank", icon: File05, disabled: true },
     ];
     
     // Handle space type selection
@@ -211,8 +211,9 @@ export const DesignSpacesCreatePage = () => {
                         {spaceTypes.map((type) => (
                             <div 
                                 key={type.id}
-                                onMouseEnter={() => !isCreatingSpace ? setHoveredSpaceType(type.label) : null}
+                                onMouseEnter={() => !isCreatingSpace ? setHoveredSpaceType(type.previewLabel) : null}
                                 onMouseLeave={() => setHoveredSpaceType(null)}
+                                className={type.disabled ? "opacity-50" : ""}
                             >
                                 <NavItemBase 
                                     type="link" 
@@ -227,13 +228,21 @@ export const DesignSpacesCreatePage = () => {
                                         )
                                     }
                                     onClick={(e: React.MouseEvent) => {
-                                        if (!isCreatingSpace) {
+                                        if (!isCreatingSpace && !type.disabled) {
                                             e.preventDefault();
                                             handleSpaceTypeSelect(type.id);
+                                        } else if (type.disabled) {
+                                            e.preventDefault();
                                         }
                                     }}
+                                    className={type.disabled ? "cursor-not-allowed" : ""}
                                 >
-                                    {type.label}
+                                    <span className="flex items-center gap-2">
+                                        <span>{type.label}</span>
+                                        {type.disabled && (
+                                            <span className="text-xs text-gray-400 italic">(underdesign)</span>
+                                        )}
+                                    </span>
                                 </NavItemBase>
                             </div>
                         ))}

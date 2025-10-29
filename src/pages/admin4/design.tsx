@@ -233,22 +233,22 @@ export const AdminDesignPage = () => {
                             data: { href: `/${currentAdminVersion}/site/spaces/growth/events/customize` }
                         },
                         { 
-                            id: "myFolder2-blog", 
-                            label: "Blog", 
+                            id: "myFolder2-discussion", 
+                            label: "Discussion", 
                             icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/growth/blog/customize` }
+                            data: { href: `/${currentAdminVersion}/site/spaces/growth/discussion/customize` }
                         },
                         { 
-                            id: "myFolder2-help", 
-                            label: "Help", 
+                            id: "myFolder2-question", 
+                            label: "Question", 
                             icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/growth/help/customize` }
+                            data: { href: `/${currentAdminVersion}/site/spaces/growth/question/customize` }
                         },
                         { 
-                            id: "myFolder2-posts", 
-                            label: "Posts", 
+                            id: "myFolder2-wishlist", 
+                            label: "Wishlist", 
                             icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/growth/posts/customize` }
+                            data: { href: `/${currentAdminVersion}/site/spaces/growth/wishlist/customize` }
                         }
                     ]
                 },

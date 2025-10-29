@@ -341,8 +341,8 @@ export const BrowserMockup = ({
                     key={previewType || 'default'}
                     className="transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-bottom-4"
                   >
-                    {(isSpacesCreatePage || isSpaceCustomizePage) ? (
-                    /* Preview Content for Space Types on Create/Customize Page */
+                    {isSpacesCreatePage ? (
+                    /* Preview Content for Space Types on Create Page */
                     <SpacePreviews previewType={previewType || null} theme={theme} />
                   ) : isPrivateSpacePage ? (
                     /* Private Space Empty State */
@@ -513,6 +513,27 @@ export const BrowserMockup = ({
                       {spaceWidgetStates?.eventsList && (
                         <div className="transition-all duration-200 ease-out">
                           <EventsListWidget theme={theme} device={device} />
+                        </div>
+                      )}
+                      
+                      {/* Discussions List Widget */}
+                      {spaceWidgetStates?.discussionsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <DiscussionsListWidget theme={theme} device={device} />
+                        </div>
+                      )}
+                      
+                      {/* Questions List Widget */}
+                      {spaceWidgetStates?.questionsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <QuestionsListWidget theme={theme} device={device} />
+                        </div>
+                      )}
+                      
+                      {/* Wishlists List Widget */}
+                      {spaceWidgetStates?.wishlistsList && (
+                        <div className="transition-all duration-200 ease-out">
+                          <WishlistsListWidget theme={theme} device={device} />
                         </div>
                       )}
                       

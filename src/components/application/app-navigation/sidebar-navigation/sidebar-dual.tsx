@@ -511,27 +511,26 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                       folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/events` } : undefined
             },
             { 
-                id: `${folderId}-blog`, 
-                label: "Blog", 
+                id: `${folderId}-discussion`, 
+                label: folderId === "myFolder2" ? "Discussion" : "Blog", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/blog` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/blog` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/discussion` } : undefined
             },
             { 
-                id: `${folderId}-help`, 
-                label: "Help", 
+                id: `${folderId}-question`, 
+                label: folderId === "myFolder2" ? "Question" : "Help", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/help` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/help` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/question` } : undefined
             },
             { 
-                id: `${folderId}-posts`, 
-                label: "Posts", 
+                id: `${folderId}-wishlist`, 
+                label: "Wishlist", 
                 icon: <File05 className="size-5 text-fg-quaternary" />,
                 data: folderId === "myFolder" ? { href: `/${currentAdminVersion}/site/spaces/myfolder/posts` } : 
-                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/posts` } : undefined
+                      folderId === "myFolder2" ? { href: `/${currentAdminVersion}/site/spaces/growth/wishlist` } : undefined
             },
-            { id: `${folderId}-wishlist`, label: "Wishlist", icon: <File05 className="size-5 text-fg-quaternary" /> },
             ...Array.from({ length: childrenCount }, (_, index) => ({
                 id: `${folderId}-item-${index + 6}`,
                 label: `${folderLabel} Item ${index + 6}`,

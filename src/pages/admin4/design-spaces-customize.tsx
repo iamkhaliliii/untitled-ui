@@ -7,7 +7,7 @@ import { WidgetSelection } from "@/components/application/app-navigation-admin4/
 import WidgetConfig from "@/components/application/app-navigation-admin4/sidebar-navigation/tertiary-sidebar/widget-config";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
-import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01, Edit02 } from "@untitledui/icons";
+import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01, Edit02, Sun, Moon01 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { cx } from "@/utils/cx";
 
@@ -48,6 +48,7 @@ export const DesignSpacesCustomizePage = () => {
     // Device and navigation state
     const [selectedDevice, setSelectedDevice] = useState<string>("desktop");
     const [selectedNavigation, setSelectedNavigation] = useState<string>("forward");
+    const [selectedTheme, setSelectedTheme] = useState<string>("light");
     
     // Widget selection and configuration state
     const [showWidgetSelection, setShowWidgetSelection] = useState<boolean>(false);
@@ -174,6 +175,11 @@ export const DesignSpacesCustomizePage = () => {
     // Navigation handler
     const handleNavigationChange = (direction: string) => {
         setSelectedNavigation(direction);
+    };
+
+    // Theme handler
+    const handleThemeChange = (theme: string) => {
+        setSelectedTheme(theme);
     };
 
     // Save changes handler
@@ -410,6 +416,19 @@ export const DesignSpacesCustomizePage = () => {
                             <ButtonGroupItem id="backward" iconLeading={FlipBackward} />
                             <ButtonGroupItem id="forward" iconLeading={FlipForward} />
                         </ButtonGroup>
+
+                        {/* Theme ButtonGroup */}
+                        <ButtonGroup 
+                            size="sm"
+                            selectedKeys={[selectedTheme]}
+                            onSelectionChange={(keys) => {
+                                const selected = Array.from(keys)[0] as string;
+                                if (selected) handleThemeChange(selected);
+                            }}
+                        >
+                            <ButtonGroupItem id="light" iconLeading={Sun} />
+                            <ButtonGroupItem id="dark" iconLeading={Moon01} />
+                        </ButtonGroup>
                     </div>
                     
                     {/* Right side: Save button */}
@@ -422,8 +441,11 @@ export const DesignSpacesCustomizePage = () => {
                     </Button>
                 </div>
                 
-                {/* Browser Mockup with selected space type preview */}
-                <BrowserMockup previewType={spaceType} />
+                {/* Browser Mockup */}
+                <BrowserMockup 
+                  theme={selectedTheme as 'light' | 'dark'}
+                  device={selectedDevice as 'mobile' | 'tablet' | 'desktop'}
+                />
             </div>
         </DesignLayout>
     );
