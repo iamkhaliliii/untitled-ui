@@ -157,10 +157,11 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     const isGrowthQuestion = currentPath.includes('/site/spaces/growth/question') || currentPath.includes('/design/spaces/questions');
     const isGrowthWishlist = currentPath.includes('/site/spaces/growth/wishlist') || currentPath.includes('/design/spaces/wishlist');
     const isGrowthEvents = currentPath.includes('/site/spaces/growth/events') || currentPath.includes('/design/spaces/events');
+    const isDesignHome = currentPath === '/admin4/design' || currentPath.includes('/design/page-customizer');
     
     return {
       spaceHeader: true,
-      eventsList: isGrowthEvents,
+      eventsList: isGrowthEvents || isDesignHome, // Default to Events for design home pages
       customEventsList: false,
       upcomingEvents: false,
       heroBanner: false,

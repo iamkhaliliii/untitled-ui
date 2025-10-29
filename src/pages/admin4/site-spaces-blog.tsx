@@ -37,9 +37,12 @@ export const SiteSpacesBlogPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
-    const isBlogPage = currentPath.includes("/admin4/site/spaces/myfolder/blog") || currentPath.includes("/admin4/site/spaces/growth/blog");
+    const isBlogPage = currentPath.includes("/admin4/site/spaces/myfolder/blog") || currentPath.includes("/admin4/site/spaces/growth/discussion") || (currentPath.includes("/admin4/site/spaces/discussions") && !currentPath.includes("growth") && !currentPath.includes("myfolder"));
     const isPrivateSpacePage = currentPath.includes("/admin4/site/spaces/private-space");
     const isSpacePage = isBlogPage || isPrivateSpacePage;
+    
+    // Detect if this is the direct discussions space (not MyFolder or Growth)
+    const isDirectDiscussionsSpace = currentPath.includes("/admin4/site/spaces/discussions") && !currentPath.includes("growth") && !currentPath.includes("myfolder");
     
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -61,7 +64,7 @@ export const SiteSpacesBlogPage = () => {
     const [dangerConfirmationText, setDangerConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
-    const spaceName = "Event"; // This would come from props or context in real implementation
+    const spaceName = isDirectDiscussionsSpace ? "Discussion" : "Blog"; // Dynamic based on space type
     const isDangerConfirmationValid = dangerConfirmationText === spaceName;
     
     const handleDelete = async () => {
@@ -119,7 +122,7 @@ export const SiteSpacesBlogPage = () => {
         return (
             <div className="flex items-center gap-2">
                 <Package className="size-4 text-blue-400 bg-blue-100/20 p-[1px] rounded-md" />
-                <span className="text-sm font-medium text-secondary">Blog</span>
+                <span className="text-sm font-medium text-secondary">{isDirectDiscussionsSpace ? "Discussion" : "Blog"}</span>
                 <Badge size="sm" color="gray" className="ml-0">
                     Active
                 </Badge>
@@ -129,6 +132,9 @@ export const SiteSpacesBlogPage = () => {
     
     // Get content description for blog page
     const getContentDescription = () => {
+        if (isDirectDiscussionsSpace) {
+            return "The Discussion module is active for this space. Discussions can be created, managed, and displayed to members by admins and staff.";
+        }
         return "The Blog module is active for this space. Blog posts can be created, managed, and displayed to members by admins and staff.";
     };
     
@@ -386,6 +392,7 @@ export const SiteSpacesBlogPage = () => {
                         <EventsDangerSettings 
                             confirmationText={dangerConfirmationText}
                             onConfirmationTextChange={setDangerConfirmationText}
+                            spaceName={spaceName}
                         />
                     </div>
                 );

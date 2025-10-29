@@ -39,10 +39,13 @@ export const SiteSpacesEventsPage = () => {
     const location = useLocation();
     const params = useParams();
     const currentPath = location.pathname;
-    const isEventsPage = currentPath.includes("/admin4/site/spaces/myfolder/events") || currentPath.includes("/admin4/site/spaces/growth/events");
+    const isEventsPage = currentPath.includes("/admin4/site/spaces/myfolder/events") || currentPath.includes("/admin4/site/spaces/growth/events") || (currentPath.includes("/admin4/site/spaces/events") && !currentPath.includes("growth") && !currentPath.includes("myfolder"));
     const isPrivateSpacePage = currentPath.includes("/admin4/site/spaces/private-space");
     const isGenericSpaceSettings = currentPath.includes("/admin4/site/spaces/") && currentPath.includes("/settings");
     const isSpacePage = isEventsPage || isPrivateSpacePage || isGenericSpaceSettings;
+    
+    // Detect if this is the direct events space (not MyFolder or Growth)
+    const isDirectEventsSpace = currentPath.includes("/admin4/site/spaces/events") && !currentPath.includes("growth") && !currentPath.includes("myfolder");
     
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -64,8 +67,9 @@ export const SiteSpacesEventsPage = () => {
     const [dangerConfirmationText, setDangerConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
-    // Get space name from location state or generate from params
-    const spaceName = location.state?.spaceName || 
+    // Get space name dynamically based on URL
+    const spaceName = isDirectEventsSpace ? "Event" : 
+                     location.state?.spaceName || 
                      (params.spaceType ? `New ${params.spaceType.charAt(0).toUpperCase() + params.spaceType.slice(1)} Template` : "Event");
     const isDangerConfirmationValid = dangerConfirmationText === spaceName;
     
@@ -403,6 +407,7 @@ export const SiteSpacesEventsPage = () => {
                         <EventsDangerSettings 
                             confirmationText={dangerConfirmationText}
                             onConfirmationTextChange={setDangerConfirmationText}
+                            spaceName={spaceName}
                         />
                     </div>
                 );

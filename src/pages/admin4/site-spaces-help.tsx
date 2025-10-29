@@ -37,9 +37,12 @@ export const SiteSpacesHelpPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
-    const isHelpPage = currentPath.includes("/admin4/site/spaces/myfolder/help") || currentPath.includes("/admin4/site/spaces/growth/help");
+    const isHelpPage = currentPath.includes("/admin4/site/spaces/myfolder/help") || currentPath.includes("/admin4/site/spaces/growth/question") || (currentPath.includes("/admin4/site/spaces/questions") && !currentPath.includes("growth") && !currentPath.includes("myfolder"));
     const isPrivateSpacePage = currentPath.includes("/admin4/site/spaces/private-space");
     const isSpacePage = isHelpPage || isPrivateSpacePage;
+    
+    // Detect if this is the direct questions space (not MyFolder or Growth)
+    const isDirectQuestionsSpace = currentPath.includes("/admin4/site/spaces/questions") && !currentPath.includes("growth") && !currentPath.includes("myfolder");
     
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -61,7 +64,7 @@ export const SiteSpacesHelpPage = () => {
     const [dangerConfirmationText, setDangerConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
-    const spaceName = "Event"; // This would come from props or context in real implementation
+    const spaceName = isDirectQuestionsSpace ? "Question" : "Help"; // Dynamic based on space type
     const isDangerConfirmationValid = dangerConfirmationText === spaceName;
     
     const handleDelete = async () => {
@@ -119,7 +122,7 @@ export const SiteSpacesHelpPage = () => {
         return (
             <div className="flex items-center gap-2">
                 <Package className="size-4 text-green-400 bg-green-100/20 p-[1px] rounded-md" />
-                <span className="text-sm font-medium text-secondary">Help</span>
+                <span className="text-sm font-medium text-secondary">{isDirectQuestionsSpace ? "Question" : "Help"}</span>
                 <Badge size="sm" color="gray" className="ml-0">
                     Active
                 </Badge>
@@ -129,6 +132,9 @@ export const SiteSpacesHelpPage = () => {
     
     // Get content description for help page
     const getContentDescription = () => {
+        if (isDirectQuestionsSpace) {
+            return "The Question module is active for this space. Questions can be created, managed, and displayed to members by admins and staff.";
+        }
         return "The Help module is active for this space. Help articles can be created, managed, and displayed to members by admins and staff.";
     };
     
@@ -386,6 +392,7 @@ export const SiteSpacesHelpPage = () => {
                         <EventsDangerSettings 
                             confirmationText={dangerConfirmationText}
                             onConfirmationTextChange={setDangerConfirmationText}
+                            spaceName={spaceName}
                         />
                     </div>
                 );

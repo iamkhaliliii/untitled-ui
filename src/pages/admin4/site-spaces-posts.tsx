@@ -37,9 +37,12 @@ export const SiteSpacesPostsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
-    const isPostsPage = currentPath.includes("/admin4/site/spaces/myfolder/posts") || currentPath.includes("/admin4/site/spaces/growth/posts");
+    const isPostsPage = currentPath.includes("/admin4/site/spaces/myfolder/posts") || currentPath.includes("/admin4/site/spaces/growth/wishlist") || (currentPath.includes("/admin4/site/spaces/wishlist") && !currentPath.includes("growth") && !currentPath.includes("myfolder"));
     const isPrivateSpacePage = currentPath.includes("/admin4/site/spaces/private-space");
     const isSpacePage = isPostsPage || isPrivateSpacePage;
+    
+    // Detect if this is the direct wishlist space (not MyFolder or Growth)
+    const isDirectWishlistSpace = currentPath.includes("/admin4/site/spaces/wishlist") && !currentPath.includes("growth") && !currentPath.includes("myfolder");
     
     // State for form toggles
     const [formToggles, setFormToggles] = useState({
@@ -61,7 +64,7 @@ export const SiteSpacesPostsPage = () => {
     const [dangerConfirmationText, setDangerConfirmationText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     
-    const spaceName = "Event"; // This would come from props or context in real implementation
+    const spaceName = isDirectWishlistSpace ? "Wishlist" : "Posts"; // Dynamic based on space type
     const isDangerConfirmationValid = dangerConfirmationText === spaceName;
     
     const handleDelete = async () => {
@@ -119,7 +122,7 @@ export const SiteSpacesPostsPage = () => {
         return (
             <div className="flex items-center gap-2">
                 <Package className="size-4 text-orange-400 bg-orange-100/20 p-[1px] rounded-md" />
-                <span className="text-sm font-medium text-secondary">Discussion</span>
+                <span className="text-sm font-medium text-secondary">{isDirectWishlistSpace ? "Wishlist" : "Discussion"}</span>
                 <Badge size="sm" color="gray" className="ml-0">
                     Active
                 </Badge>
@@ -129,6 +132,9 @@ export const SiteSpacesPostsPage = () => {
     
     // Get content description for posts page
     const getContentDescription = () => {
+        if (isDirectWishlistSpace) {
+            return "The Wishlist module is active for this space. Wishlist items can be created, managed, and displayed to members by admins and staff.";
+        }
         return "The Discussion module is active for this space. Posts can be created, managed, and displayed to members by admins and staff.";
     };
     
@@ -386,6 +392,7 @@ export const SiteSpacesPostsPage = () => {
                         <EventsDangerSettings 
                             confirmationText={dangerConfirmationText}
                             onConfirmationTextChange={setDangerConfirmationText}
+                            spaceName={spaceName}
                         />
                     </div>
                 );

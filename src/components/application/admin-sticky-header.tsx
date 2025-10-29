@@ -520,8 +520,21 @@ export const AdminStickyHeader = ({
                                                                     label="Admin Mode"
                                                                     onAction={() => {
                                                                         const path = location.pathname;
-                                                                        // If on a customize page, go back to the space page
-                                                                        if (path.includes('/customize') && path.includes('/site/spaces/')) {
+                                                                        // If on a design space customize page, go to corresponding direct site space page
+                                                                        if (path.includes('/design/spaces/')) {
+                                                                            // Map design space types to direct site space URLs (not growth folder)
+                                                                            if (path.includes('/events/customize')) {
+                                                                                navigate(`/${currentAdminVersion}/site/spaces/events`);
+                                                                            } else if (path.includes('/discussions/customize')) {
+                                                                                navigate(`/${currentAdminVersion}/site/spaces/discussions`);
+                                                                            } else if (path.includes('/questions/customize')) {
+                                                                                navigate(`/${currentAdminVersion}/site/spaces/questions`);
+                                                                            } else if (path.includes('/wishlist/customize')) {
+                                                                                navigate(`/${currentAdminVersion}/site/spaces/wishlist`);
+                                                                            } else {
+                                                                                navigate(`/${currentAdminVersion}`);
+                                                                            }
+                                                                        } else if (path.includes('/customize') && path.includes('/site/spaces/')) {
                                                                             // Remove /customize from the path
                                                                             const basePath = path.replace('/customize', '');
                                                                             navigate(basePath);
@@ -537,10 +550,30 @@ export const AdminStickyHeader = ({
                                                                     label="Design Mode"
                                                                     onAction={() => {
                                                                         const path = location.pathname;
-                                                                        // If on a space page (events, blog, help, posts), go to its customize page
-                                                                        if (path.includes('/site/spaces/') && (path.includes('/events') || path.includes('/blog') || path.includes('/help') || path.includes('/posts'))) {
-                                                                            // Extract the base path and add /customize
-                                                                            // Remove any trailing segments like /general, /permissions, /members, /seo, /danger
+                                                                        // If on a direct site space page, go to design space customize
+                                                                        if (path.includes('/site/spaces/events')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/events/customize`);
+                                                                        } else if (path.includes('/site/spaces/discussions')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/discussions/customize`);
+                                                                        } else if (path.includes('/site/spaces/questions')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/questions/customize`);
+                                                                        } else if (path.includes('/site/spaces/wishlist')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/wishlist/customize`);
+                                                                        } else if (path.includes('/site/spaces/growth/')) {
+                                                                            // Map Growth folder space types to design URLs
+                                                                            if (path.includes('/events')) {
+                                                                                navigate(`/${currentAdminVersion}/design/spaces/events/customize`);
+                                                                            } else if (path.includes('/discussion')) {
+                                                                                navigate(`/${currentAdminVersion}/design/spaces/discussions/customize`);
+                                                                            } else if (path.includes('/question')) {
+                                                                                navigate(`/${currentAdminVersion}/design/spaces/questions/customize`);
+                                                                            } else if (path.includes('/wishlist')) {
+                                                                                navigate(`/${currentAdminVersion}/design/spaces/wishlist/customize`);
+                                                                            } else {
+                                                                                navigate(`/${currentAdminVersion}/design`);
+                                                                            }
+                                                                        } else if (path.includes('/site/spaces/myfolder/')) {
+                                                                            // For MyFolder spaces, go to their customize pages
                                                                             let basePath = path;
                                                                             const segments = ['general', 'permissions', 'members', 'seo', 'danger', 'analytics', 'audit-logs'];
                                                                             const lastSegment = path.split('/').pop();
@@ -576,16 +609,49 @@ export const AdminStickyHeader = ({
                                                                 const path = location.pathname;
                                                                 
                                                                 if (selected === 'admin') {
-                                                                    // If on a customize page, go back to the space page
-                                                                    if (path.includes('/customize') && path.includes('/site/spaces/')) {
+                                                                    // If on a design space customize page, go to corresponding direct site space page
+                                                                    if (path.includes('/design/spaces/')) {
+                                                                        if (path.includes('/events/customize')) {
+                                                                            navigate(`/${currentAdminVersion}/site/spaces/events`);
+                                                                        } else if (path.includes('/discussions/customize')) {
+                                                                            navigate(`/${currentAdminVersion}/site/spaces/discussions`);
+                                                                        } else if (path.includes('/questions/customize')) {
+                                                                            navigate(`/${currentAdminVersion}/site/spaces/questions`);
+                                                                        } else if (path.includes('/wishlist/customize')) {
+                                                                            navigate(`/${currentAdminVersion}/site/spaces/wishlist`);
+                                                                        } else {
+                                                                            navigate(`/${currentAdminVersion}`);
+                                                                        }
+                                                                    } else if (path.includes('/customize') && path.includes('/site/spaces/')) {
                                                                         const basePath = path.replace('/customize', '');
                                                                         navigate(basePath);
                                                                     } else {
                                                                         navigate(`/${currentAdminVersion}`);
                                                                     }
                                                                 } else if (selected === 'design') {
-                                                                    // If on a space page, go to its customize page
-                                                                    if (path.includes('/site/spaces/') && (path.includes('/events') || path.includes('/blog') || path.includes('/help') || path.includes('/posts'))) {
+                                                                    // If on a direct site space page, go to design space customize
+                                                                    if (path.includes('/site/spaces/events')) {
+                                                                        navigate(`/${currentAdminVersion}/design/spaces/events/customize`);
+                                                                    } else if (path.includes('/site/spaces/discussions')) {
+                                                                        navigate(`/${currentAdminVersion}/design/spaces/discussions/customize`);
+                                                                    } else if (path.includes('/site/spaces/questions')) {
+                                                                        navigate(`/${currentAdminVersion}/design/spaces/questions/customize`);
+                                                                    } else if (path.includes('/site/spaces/wishlist')) {
+                                                                        navigate(`/${currentAdminVersion}/design/spaces/wishlist/customize`);
+                                                                    } else if (path.includes('/site/spaces/growth/')) {
+                                                                        // Map Growth folder space types to design URLs
+                                                                        if (path.includes('/events')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/events/customize`);
+                                                                        } else if (path.includes('/discussion')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/discussions/customize`);
+                                                                        } else if (path.includes('/question')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/questions/customize`);
+                                                                        } else if (path.includes('/wishlist')) {
+                                                                            navigate(`/${currentAdminVersion}/design/spaces/wishlist/customize`);
+                                                                        } else {
+                                                                            navigate(`/${currentAdminVersion}/design`);
+                                                                        }
+                                                                    } else if (path.includes('/site/spaces/myfolder/')) {
                                                                         let basePath = path;
                                                                         const segments = ['general', 'permissions', 'members', 'seo', 'danger', 'analytics', 'audit-logs'];
                                                                         const lastSegment = path.split('/').pop();

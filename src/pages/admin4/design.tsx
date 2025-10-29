@@ -91,8 +91,8 @@ export const AdminDesignPage = () => {
     const cameFromCustomizePage = location.state?.from === 'customize-page';
     const returnToUrl = location.state?.returnTo;
     
-    // State for TreeView
-    const [expandedIds, setExpandedIds] = useState<string[]>([]);
+    // State for TreeView - Default expand Spaces and Growth
+    const [expandedIds, setExpandedIds] = useState<string[]>(["spaces", "myFolder2"]);
     
     // State for Navigation config
     const [headerSidebarExpanded, setHeaderSidebarExpanded] = useState(true);
@@ -184,43 +184,8 @@ export const AdminDesignPage = () => {
             children: [
                 // Simple spaces (no children)
                 { id: "feed", label: "Feed", icon: <File05 className="size-5 text-fg-quaternary" />, data: { href: `/${currentAdminVersion}/site/spaces/feed/customize` } },
-                { id: "explorer", label: "Explorer", icon: <File05 className="size-5 text-fg-quaternary" />, data: { href: `/${currentAdminVersion}/site/spaces/explorer/customize` } },
-                { id: "members", label: "Members", icon: <File05 className="size-5 text-fg-quaternary" />, data: { href: `/${currentAdminVersion}/site/spaces/members/customize` } },
-                { id: "help", label: "Help", icon: <File05 className="size-5 text-fg-quaternary" />, data: { href: `/${currentAdminVersion}/site/spaces/help/customize` } },
-                { id: "showcase", label: "Showcase", icon: <File05 className="size-5 text-fg-quaternary" />, data: { href: `/${currentAdminVersion}/site/spaces/showcase/customize` } },
                 
-                // Folders with children
-                {
-                    id: "myFolder",
-                    label: "MyFolder",
-                    icon: <Folder className="size-5 text-fg-quaternary" />,
-                    children: [
-                        { 
-                            id: "myFolder-events", 
-                            label: "Events", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/events/customize` }
-                        },
-                        { 
-                            id: "myFolder-blog", 
-                            label: "Blog", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/blog/customize` }
-                        },
-                        { 
-                            id: "myFolder-help", 
-                            label: "Help", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/help/customize` }
-                        },
-                        { 
-                            id: "myFolder-posts", 
-                            label: "Posts", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder/posts/customize` }
-                        }
-                    ]
-                },
+                // Growth Folder
                 {
                     id: "myFolder2",
                     label: "Growth",
@@ -249,99 +214,6 @@ export const AdminDesignPage = () => {
                             label: "Wishlist", 
                             icon: <File05 className="size-5 text-fg-quaternary" />,
                             data: { href: `/${currentAdminVersion}/site/spaces/growth/wishlist/customize` }
-                        }
-                    ]
-                },
-                {
-                    id: "myFolder3",
-                    label: "MyFolder3",
-                    icon: <Folder className="size-5 text-fg-quaternary" />,
-                    children: [
-                        { 
-                            id: "myFolder3-events", 
-                            label: "Events", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder3/events/customize` }
-                        },
-                        { 
-                            id: "myFolder3-blog", 
-                            label: "Blog", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder3/blog/customize` }
-                        },
-                        { 
-                            id: "myFolder3-help", 
-                            label: "Help", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder3/help/customize` }
-                        },
-                        { 
-                            id: "myFolder3-posts", 
-                            label: "Posts", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder3/posts/customize` }
-                        }
-                    ]
-                },
-                {
-                    id: "myFolder4",
-                    label: "MyFolder4",
-                    icon: <Folder className="size-5 text-fg-quaternary" />,
-                    children: [
-                        { 
-                            id: "myFolder4-events", 
-                            label: "Events", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder4/events/customize` }
-                        },
-                        { 
-                            id: "myFolder4-blog", 
-                            label: "Blog", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder4/blog/customize` }
-                        },
-                        { 
-                            id: "myFolder4-help", 
-                            label: "Help", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder4/help/customize` }
-                        },
-                        { 
-                            id: "myFolder4-posts", 
-                            label: "Posts", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder4/posts/customize` }
-                        }
-                    ]
-                },
-                {
-                    id: "myFolder5",
-                    label: "MyFolder5",
-                    icon: <Folder className="size-5 text-fg-quaternary" />,
-                    children: [
-                        { 
-                            id: "myFolder5-events", 
-                            label: "Events", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder5/events/customize` }
-                        },
-                        { 
-                            id: "myFolder5-blog", 
-                            label: "Blog", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder5/blog/customize` }
-                        },
-                        { 
-                            id: "myFolder5-help", 
-                            label: "Help", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder5/help/customize` }
-                        },
-                        { 
-                            id: "myFolder5-posts", 
-                            label: "Posts", 
-                            icon: <File05 className="size-5 text-fg-quaternary" />,
-                            data: { href: `/${currentAdminVersion}/site/spaces/myfolder5/posts/customize` }
                         }
                     ]
                 }
@@ -987,7 +859,7 @@ export const AdminDesignPage = () => {
 
                 {/* Browser Mockup */}
                 <div className="mx-auto">
-                    <BrowserMockup />
+                    <BrowserMockup previewType="Events" />
                 </div>
             </div>
         );

@@ -8,11 +8,13 @@ import { cx } from "@/utils/cx";
 interface EventsDangerSettingsProps {
     confirmationText?: string;
     onConfirmationTextChange?: (value: string) => void;
+    spaceName?: string; // Dynamic space name
 }
 
 export const EventsDangerSettings = ({ 
     confirmationText: externalConfirmationText, 
-    onConfirmationTextChange 
+    onConfirmationTextChange,
+    spaceName: propSpaceName 
 }: EventsDangerSettingsProps) => {
     const theme = useResolvedTheme();
     const [internalConfirmationText, setInternalConfirmationText] = useState("");
@@ -21,7 +23,7 @@ export const EventsDangerSettings = ({
     const confirmationText = externalConfirmationText !== undefined ? externalConfirmationText : internalConfirmationText;
     const setConfirmationText = onConfirmationTextChange || setInternalConfirmationText;
     
-    const spaceName = "Event"; // This would come from props or context in real implementation
+    const spaceName = propSpaceName || "Event"; // Use prop or default to "Event"
 
     return (
         <div className="space-y-6">
@@ -43,7 +45,7 @@ export const EventsDangerSettings = ({
                                 <h4 className={cx(
                                     "text-lg font-semibold",
                                     theme === 'dark' ? "text-red-400" : "text-error"
-                                )}>Delete Event</h4>
+                                )}>Delete {spaceName}</h4>
                                 <p className="text-sm text-tertiary mt-1">
                                     You will lose posts, comments, and all content related to the space.
                                 </p>
