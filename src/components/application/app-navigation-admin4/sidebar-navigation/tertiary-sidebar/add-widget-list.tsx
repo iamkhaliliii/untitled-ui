@@ -1,7 +1,6 @@
 import React from "react";
 import { AlertCircle, Rows01, User01, Grid03, Edit03, File01, Star01, Bookmark, Users01, Tag01, Monitor01, ArrowLeft, HelpCircle, Code01, Link01, Image01, Calendar, MessageCircle02, Heart, HelpCircle as QuestionIcon } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
-import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 interface AddWidgetListProps {
   onBack: () => void;
@@ -46,26 +45,25 @@ const sidebarWidgets = [
 ];
 
 export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetListProps) => {
-  const theme = useResolvedTheme();
   const widgets = widgetType === 'space' ? spaceWidgets : sidebarWidgets;
 
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-10 flex items-center gap-3 px-4 pt-6 pb-4 border-b border-secondary bg-primary">
+      <div className="sticky top-0 z-10 flex items-center gap-3 px-4 pt-6 pb-4 border-b border-secondary dark:border-gray-700 bg-primary dark:bg-gray-900">
         <button
           onClick={onBack}
-          className="p-1 rounded-md hover:bg-secondary/60 transition-colors"
+          className="p-1 rounded-md hover:bg-secondary/60 dark:hover:bg-gray-800 transition-colors"
         >
-          <ArrowLeft className="size-4 text-fg-quaternary" />
+          <ArrowLeft className="size-4 text-fg-quaternary dark:text-gray-400" />
         </button>
-        <h3 className="text-sm font-semibold text-brand-secondary">
+        <h3 className="text-sm font-semibold text-brand-secondary dark:text-brand-400">
           Add {widgetType === 'space' ? 'Space' : 'Sidebar'} Widget
         </h3>
       </div>
 
       {/* Widget List */}
-      <div className="flex-1 min-w-0 text-content-subdued -m-2 p-4">
+      <div className="flex-1 min-w-0 text-content-subdued dark:text-gray-400 -m-2 p-4">
         <div className="space-y-1">
           {widgets.map((widget) => {
             const IconComponent = widget.icon;
@@ -78,12 +76,10 @@ export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetL
                 onClick={() => !isDisabled && onSelectWidget(widget)}
                 disabled={isDisabled}
                 className={cx(
-                  "w-full py-2 px-5 transition-colors rounded-md",
+                  "w-full py-2 px-5 transition-colors rounded-md text-gray-700 dark:text-gray-300",
                   isDisabled 
                     ? "cursor-not-allowed opacity-50"
-                    : theme === 'dark' 
-                      ? "hover:bg-gray-700 text-gray-300"
-                      : "hover:bg-gray-100 text-gray-700"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
                 )}
               >
                 <div className="flex flex-grow items-center gap-3">
@@ -91,10 +87,9 @@ export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetL
                   <div className="text-start font-medium flex items-center gap-2">
                     <span>{widget.label}</span>
                     {isDisabled && (
-                      <span className={cx(
-                        "text-xs",
-                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
-                      )}>(under design)</span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
+                        (under design)
+                      </span>
                     )}
                   </div>
                 </div>

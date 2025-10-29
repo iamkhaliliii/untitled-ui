@@ -252,7 +252,10 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                 
                 {/* Title & Description */}
                 <div className="flex-1">
-                  <h1 className="text-xl font-bold text-primary mb-1">
+                  <h1 className={cx(
+                    "text-xl font-bold mb-1",
+                    theme === 'dark' ? "text-gray-100" : "text-gray-800"
+                  )}>
                     Events & Activities
                   </h1>
                   {spaceHeaderConfig.showDescription && (
@@ -267,30 +270,37 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
               <div className="flex flex-col items-end gap-2">
                 {/* Stats + Members */}
                 <div className="flex items-center gap-3">
-                  {/* Stats */}
-                  {spaceHeaderConfig.showStats && (
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <User01 className="w-3 h-3 text-tertiary" />
-                        <span className="text-xs text-tertiary">0</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <File04 className="w-3 h-3 text-tertiary" />
-                        <span className="text-xs text-tertiary">0</span>
-                      </div>
+                {/* Stats */}
+                {spaceHeaderConfig.showStats && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      <User01 className={cx("w-3 h-3", theme === 'dark' ? "text-gray-400" : "text-black/60")} />
+                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-300" : "text-black/80")}>0</span>
                     </div>
-                  )}
+                    <div className="flex items-center gap-1">
+                      <File04 className={cx("w-3 h-3", theme === 'dark' ? "text-gray-400" : "text-black/60")} />
+                      <span className={cx("text-xs", theme === 'dark' ? "text-gray-300" : "text-black/80")}>0</span>
+                    </div>
+                  </div>
+                )}
                   
                   {/* Members */}
                   {spaceHeaderConfig.showMembers && (
                     <div className="flex items-center -space-x-1">
-                      <img className="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://images.unsplash.com/photo-1494790108755-2616c96f40ce?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                      <img className="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                      <img className="w-7 h-7 rounded-full border-2 border-white shadow-sm" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                      <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                      <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                      <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                      <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                      <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face" alt="Member" />
                       <div className={cx(
-                        "w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-xs font-medium shadow-sm",
-                        theme === 'dark' ? "bg-gray-700 text-gray-200" : "bg-gray-200 text-gray-700"
-                      )}>+3</div>
+                        "w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20 flex items-center justify-center",
+                        theme === 'dark' ? "bg-gray-700" : "bg-gray-300"
+                      )}>
+                        <span className={cx(
+                          "text-xs font-medium",
+                          theme === 'dark' ? "text-white" : "text-gray-700"
+                        )}>+5</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -298,10 +308,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                 {/* Action Buttons */}
                 <div className="flex items-center gap-1.5">
                   {spaceHeaderConfig.actionAddPost && (
-                    <button className={cx(
-                      "px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
-                      theme === 'dark' ? "bg-brand-solid text-white hover:bg-brand-solid_hover" : "bg-brand-solid text-white hover:bg-brand-solid_hover"
-                    )}>
+                    <button className="px-3 py-1.5 rounded-full text-xs font-medium transition-colors bg-brand-solid text-white hover:bg-brand-solid_hover">
                       Add Post
                     </button>
                   )}
@@ -386,23 +393,6 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                   spaceHeaderConfig.style === 'gradient' && "text-white/80"
                 )}>{spaceHeaderConfig.description}</p>
               )}
-              
-              {/* Members Avatar Group */}
-              {spaceHeaderConfig.showMembers && (
-                <div className="flex items-center gap-0.5">
-                  <div className="flex items-center -space-x-0.5">
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1494790108755-2616c96f40ce?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <img className="w-5 h-5 rounded-full border border-white" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face" alt="Member" />
-                    <div className="w-5 h-5 rounded-full bg-gray-800 border border-white flex items-center justify-center">
-                      <span className="text-xs font-medium text-white">+5</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -416,7 +406,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
               <div className="flex items-center gap-1">
                 <User01 className={cx(
                   "w-3 h-3",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-400",
+                  spaceHeaderConfig.style === 'simple' && (theme === 'dark' ? "text-gray-400" : "text-black/60"),
                   spaceHeaderConfig.style === 'color' && contrastColors?.icon,
                   spaceHeaderConfig.style === 'pattern' && "text-gray-400",
                   (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/70",
@@ -424,7 +414,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                 )} />
                 <span className={cx(
                   "text-xs font-medium",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-300",
+                  spaceHeaderConfig.style === 'simple' && (theme === 'dark' ? "text-gray-300" : "text-black/80"),
                   spaceHeaderConfig.style === 'color' && contrastColors?.textSecondary,
                   spaceHeaderConfig.style === 'pattern' && "text-gray-300",
                   (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/90",
@@ -434,7 +424,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
               <div className="flex items-center gap-1">
                 <File04 className={cx(
                   "w-3 h-3",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-400",
+                  spaceHeaderConfig.style === 'simple' && (theme === 'dark' ? "text-gray-400" : "text-black/60"),
                   spaceHeaderConfig.style === 'color' && contrastColors?.icon,
                   spaceHeaderConfig.style === 'pattern' && "text-gray-400",
                   (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/70",
@@ -442,31 +432,34 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                 )} />
                 <span className={cx(
                   "text-xs font-medium",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-300",
+                  spaceHeaderConfig.style === 'simple' && (theme === 'dark' ? "text-gray-300" : "text-black/80"),
                   spaceHeaderConfig.style === 'color' && contrastColors?.textSecondary,
                   spaceHeaderConfig.style === 'pattern' && "text-gray-300",
                   (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/90",
                   spaceHeaderConfig.style === 'gradient' && "text-white/80"
                 )}>4</span>
               </div>
-              <div className="flex items-center gap-1">
-                <Calendar className={cx(
-                  "w-3 h-3",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-400",
-                  spaceHeaderConfig.style === 'color' && contrastColors?.icon,
-                  spaceHeaderConfig.style === 'pattern' && "text-gray-400",
-                  (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/70",
-                  spaceHeaderConfig.style === 'gradient' && "text-white/60"
-                )} />
-                <span className={cx(
-                  "text-xs font-medium",
-                  spaceHeaderConfig.style === 'simple' && "text-gray-300",
-                  spaceHeaderConfig.style === 'color' && contrastColors?.textSecondary,
-                  spaceHeaderConfig.style === 'pattern' && "text-gray-300",
-                  (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "text-white/90",
-                  spaceHeaderConfig.style === 'gradient' && "text-white/80"
-                )}>created 3 days ago</span>
-              </div>
+              {/* Members Avatar Group - Replacing "created 3 days ago" */}
+              {spaceHeaderConfig.showMembers && (
+                <div className="flex items-center gap-0.5">
+                  <div className="flex items-center -space-x-1">
+                    <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                    <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                    <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                    <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                    <img className="w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face" alt="Member" />
+                    <div className={cx(
+                      "w-6 h-6 rounded-full overflow-hidden ring-1 border-2 border-white/10 ring-gray-200/20 flex items-center justify-center",
+                      theme === 'dark' ? "bg-gray-700" : "bg-gray-300"
+                    )}>
+                      <span className={cx(
+                        "text-xs font-medium",
+                        theme === 'dark' ? "text-white" : "text-gray-700"
+                      )}>+5</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -476,9 +469,9 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
             {spaceHeaderConfig.actionAddPost && (
               <button className={cx(
                 "px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
-                spaceHeaderConfig.style === 'simple' && "bg-green-600 text-white hover:bg-green-700",
+                spaceHeaderConfig.style === 'simple' && "bg-brand-solid text-white hover:bg-brand-solid_hover",
                 spaceHeaderConfig.style === 'color' && contrastColors?.buttonPrimary,
-                spaceHeaderConfig.style === 'pattern' && "bg-green-600 text-white hover:bg-green-700",
+                spaceHeaderConfig.style === 'pattern' && "bg-brand-solid text-white hover:bg-brand-solid_hover",
                 (spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') && "bg-white text-gray-900 hover:bg-white/90",
                 spaceHeaderConfig.style === 'gradient' && "bg-white text-black hover:bg-white/90"
               )}>
