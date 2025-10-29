@@ -10,9 +10,10 @@ import { Badge } from '@/components/base/badges/badges';
 interface DiscussionsListWidgetProps {
   className?: string;
   theme?: 'light' | 'dark';
+  device?: 'mobile' | 'tablet' | 'desktop';
 }
 
-export const DiscussionsListWidget: React.FC<DiscussionsListWidgetProps> = ({ className, theme: propTheme }) => {
+export const DiscussionsListWidget: React.FC<DiscussionsListWidgetProps> = ({ className, theme: propTheme, device = 'desktop' }) => {
   const { discussionsListConfig } = useWidgetConfig();
   const theme = useResolvedTheme(propTheme);
   const [activeTab, setActiveTab] = useState<Key>('All');

@@ -8,9 +8,10 @@ import { Badge } from '@/components/base/badges/badges';
 interface QuestionsListWidgetProps {
   className?: string;
   theme?: 'light' | 'dark';
+  device?: 'mobile' | 'tablet' | 'desktop';
 }
 
-export const QuestionsListWidget: React.FC<QuestionsListWidgetProps> = ({ className, theme: propTheme }) => {
+export const QuestionsListWidget: React.FC<QuestionsListWidgetProps> = ({ className, theme: propTheme, device = 'desktop' }) => {
   const { questionsListConfig } = useWidgetConfig();
   const theme = useResolvedTheme(propTheme);
 

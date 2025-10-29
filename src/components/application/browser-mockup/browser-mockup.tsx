@@ -90,6 +90,7 @@ interface BrowserMockupProps {
   title?: string;
   theme?: 'light' | 'dark';
   previewType?: string;
+  device?: 'mobile' | 'tablet' | 'desktop';
 }
 
 
@@ -98,7 +99,8 @@ export const BrowserMockup = ({
   url = "/site/event", 
   title = "Events",
   theme: propTheme,
-  previewType
+  previewType,
+  device = 'desktop'
 }: BrowserMockupProps) => {
   const theme = useResolvedTheme(propTheme);
   const { toggleStates, spaceWidgetStates, layoutStates, sidebarWidgetStates } = useWidgetConfig();
@@ -109,12 +111,26 @@ export const BrowserMockup = ({
   const isSpacesCreatePage = currentPath.includes('/design/spaces/create');
   const isSpaceCustomizePage = currentPath.includes('/design/spaces/') && currentPath.includes('/customize');
 
+  // Get device-specific width
+  const getDeviceWidth = () => {
+    switch (device) {
+      case 'mobile':
+        return 'max-w-[375px]';
+      case 'tablet':
+        return 'max-w-[768px]';
+      case 'desktop':
+      default:
+        return 'w-full';
+    }
+  };
+
   return (
-    <div className="w-full h-full">
+    <div className={cx("w-full h-full flex justify-center", theme === 'dark' ? 'dark' : '')}>
       <style>{customStyles}</style>
       <div className={cx(
-        "w-full rounded-xl shadow-lg overflow-hidden border",
-        theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200",
+        "rounded-xl shadow-lg overflow-hidden border transition-all duration-300",
+        getDeviceWidth(),
+        theme === 'dark' ? "dark bg-gray-900 border-gray-700" : "bg-white border-gray-200",
         className
       )}>
         {/* Browser Header */}
@@ -182,10 +198,23 @@ export const BrowserMockup = ({
           >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
+                  {/* Hamburger Menu - Only on Mobile/Tablet */}
+                  {(device === 'mobile' || device === 'tablet') && (
+                    <button className={cx(
+                      "p-1 rounded transition-colors",
+                      theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                    )}>
+                      <Menu01 className="w-5 h-5" />
+                    </button>
+                  )}
+                  
                   <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
                     <div className="w-3 h-3 bg-white rounded-sm"></div>
                   </div>
-                  <nav className="flex items-center gap-6" data-tour-nav-items>
+                  
+                  {/* Nav Items - Only on Desktop */}
+                  {device === 'desktop' && (
+                    <nav className="flex items-center gap-6" data-tour-nav-items>
                     <span className={cx(
                       "text-xs transition-colors cursor-pointer",
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
@@ -207,6 +236,7 @@ export const BrowserMockup = ({
                       theme === 'dark' ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
                     )}>About</span>
                   </nav>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <button 
@@ -233,10 +263,10 @@ export const BrowserMockup = ({
 
           {/* Main Layout */}
           <div className="flex flex-1 overflow-hidden">
-            {/* Left Sidebar */}
+            {/* Left Sidebar - Hidden on Mobile/Tablet */}
             <div className={cx(
               "transition-all duration-200 ease-out",
-              toggleStates?.leftSidebar !== false 
+              device === 'desktop' && toggleStates?.leftSidebar !== false 
                 ? "w-48 opacity-100" 
                 : "w-0 opacity-0 overflow-hidden",
               theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
@@ -443,46 +473,46 @@ export const BrowserMockup = ({
                     </>
                   ) : (
                     /* Events Content */
-                    <div className="space-y-6">
+                    <div className={cx("space-y-6", theme === 'dark' && 'dark')}>
                       {/* Space Header Widget */}
                       {spaceWidgetStates?.spaceHeader && (
                         <div className="transition-all duration-200 ease-out">
-                          <SpaceHeaderWidget />
+                          <SpaceHeaderWidget theme={theme} />
                         </div>
                       )}
 
                       {/* Announcement Banner Widget */}
                       {spaceWidgetStates?.announcementBanner && (
                         <div className="transition-all duration-200 ease-out">
-                          <AnnouncementBannerWidget />
+                          <AnnouncementBannerWidget theme={theme} />
                         </div>
                       )}
 
                       {/* Leaderboard Widget */}
                       {spaceWidgetStates?.leaderboard && (
                         <div className="transition-all duration-200 ease-out">
-                          <LeaderboardWidget />
+                          <LeaderboardWidget theme={theme} />
                         </div>
                       )}
 
                       {/* HTML Script Widget */}
                       {spaceWidgetStates?.htmlScript && (
                         <div className="transition-all duration-200 ease-out">
-                          <HtmlScriptWidget />
+                          <HtmlScriptWidget theme={theme} />
                         </div>
                       )}
 
                       {/* Rich Text Widget */}
                       {spaceWidgetStates?.richText && (
                         <div className="transition-all duration-200 ease-out">
-                          <RichTextWidget />
+                          <RichTextWidget theme={theme} />
                         </div>
                       )}
                       
                       {/* Events List Widget */}
                       {spaceWidgetStates?.eventsList && (
                         <div className="transition-all duration-200 ease-out">
-                          <EventsListWidget />
+                          <EventsListWidget theme={theme} device={device} />
                         </div>
                       )}
                       
@@ -492,25 +522,25 @@ export const BrowserMockup = ({
                         if (widget.id.startsWith('events_')) {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
-                              <EventsListWidget />
+                              <EventsListWidget theme={theme} device={device} />
                             </div>
                           );
                         } else if (widget.id.startsWith('discussions_')) {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
-                              <DiscussionsListWidget />
+                              <DiscussionsListWidget theme={theme} device={device} />
                             </div>
                           );
                         } else if (widget.id.startsWith('wishlists_')) {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
-                              <WishlistsListWidget />
+                              <WishlistsListWidget theme={theme} device={device} />
                             </div>
                           );
                         } else if (widget.id.startsWith('questions_')) {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
-                              <QuestionsListWidget />
+                              <QuestionsListWidget theme={theme} device={device} />
                             </div>
                           );
                         }
@@ -521,8 +551,14 @@ export const BrowserMockup = ({
                               "rounded-lg border p-4",
                               theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
                             )}>
-                              <h3 className="font-semibold mb-2">{widget.label}</h3>
-                              <p className="text-sm text-tertiary">Widget preview will appear here</p>
+                              <h3 className={cx(
+                                "font-semibold mb-2",
+                                theme === 'dark' ? "text-gray-100" : "text-gray-900"
+                              )}>{widget.label}</h3>
+                              <p className={cx(
+                                "text-sm",
+                                theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                              )}>Widget preview will appear here</p>
                             </div>
                           </div>
                         );
@@ -531,7 +567,7 @@ export const BrowserMockup = ({
                       {/* Posts Widget (Custom Events List) */}
                       {spaceWidgetStates?.customEventsList && (
                         <div className="transition-all duration-200 ease-out">
-                          <EventsListWidget />
+                          <EventsListWidget theme={theme} device={device} />
                         </div>
                       )}
                       
@@ -553,7 +589,7 @@ export const BrowserMockup = ({
                       {/* Composer Widget */}
                       {spaceWidgetStates?.composer && (
                         <div className="transition-all duration-200 ease-out">
-                          <ComposerWidget />
+                          <ComposerWidget theme={theme} />
                         </div>
                       )}
                     </div>
@@ -563,10 +599,10 @@ export const BrowserMockup = ({
               </div>
             </div>
 
-            {/* Right Sidebar */}
+            {/* Right Sidebar - Hidden on Mobile/Tablet */}
             <div className={cx(
               "transition-all duration-200 ease-out border-l",
-              layoutStates?.layoutStyle === 'with-sidebar'
+              device === 'desktop' && layoutStates?.layoutStyle === 'with-sidebar'
                 ? "w-64 opacity-100" 
                 : "w-0 opacity-0 overflow-hidden",
               theme === 'dark' ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"

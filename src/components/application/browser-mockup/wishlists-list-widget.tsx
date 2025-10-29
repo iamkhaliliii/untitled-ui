@@ -8,9 +8,10 @@ import { Badge } from '@/components/base/badges/badges';
 interface WishlistsListWidgetProps {
   className?: string;
   theme?: 'light' | 'dark';
+  device?: 'mobile' | 'tablet' | 'desktop';
 }
 
-export const WishlistsListWidget: React.FC<WishlistsListWidgetProps> = ({ className, theme: propTheme }) => {
+export const WishlistsListWidget: React.FC<WishlistsListWidgetProps> = ({ className, theme: propTheme, device = 'desktop' }) => {
   const { wishlistsListConfig } = useWidgetConfig();
   const theme = useResolvedTheme(propTheme);
 

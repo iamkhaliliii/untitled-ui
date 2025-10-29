@@ -8,7 +8,7 @@ import WidgetConfig from "@/components/application/app-navigation-admin4/sidebar
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
-import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01 } from "@untitledui/icons";
+import { ArrowLeft, FlipBackward, FlipForward, Phone01, Tablet01, Monitor01, Settings01, Sun, Moon01 } from "@untitledui/icons";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { cx } from "@/utils/cx";
 
@@ -29,6 +29,7 @@ export const SiteSpacesEventsCustomizePage = () => {
     // Device and navigation state
     const [selectedDevice, setSelectedDevice] = useState<string>("desktop");
     const [selectedNavigation, setSelectedNavigation] = useState<string>("forward");
+    const [selectedTheme, setSelectedTheme] = useState<string>("light");
     
     // Widget selection and configuration state
     const [showWidgetSelection, setShowWidgetSelection] = useState<boolean>(false);
@@ -171,6 +172,11 @@ export const SiteSpacesEventsCustomizePage = () => {
     // Navigation handler
     const handleNavigationChange = (direction: string) => {
         setSelectedNavigation(direction);
+    };
+
+    // Theme handler
+    const handleThemeChange = (theme: string) => {
+        setSelectedTheme(theme);
     };
 
     // Save changes handler
@@ -355,6 +361,19 @@ export const SiteSpacesEventsCustomizePage = () => {
                             <ButtonGroupItem id="backward" iconLeading={FlipBackward} />
                             <ButtonGroupItem id="forward" iconLeading={FlipForward} />
                         </ButtonGroup>
+
+                        {/* Theme ButtonGroup */}
+                        <ButtonGroup 
+                            size="sm"
+                            selectedKeys={[selectedTheme]}
+                            onSelectionChange={(keys) => {
+                                const selected = Array.from(keys)[0] as string;
+                                if (selected) handleThemeChange(selected);
+                            }}
+                        >
+                            <ButtonGroupItem id="light" iconLeading={Sun} />
+                            <ButtonGroupItem id="dark" iconLeading={Moon01} />
+                        </ButtonGroup>
                     </div>
                     
                     {/* Right side: Save button */}
@@ -368,7 +387,10 @@ export const SiteSpacesEventsCustomizePage = () => {
                 </div>
                 
                 {/* Browser Mockup */}
-                <BrowserMockup />
+                <BrowserMockup 
+                  theme={selectedTheme as 'light' | 'dark'}
+                  device={selectedDevice as 'mobile' | 'tablet' | 'desktop'}
+                />
             </div>
         </DesignLayout>
     );
