@@ -486,38 +486,52 @@ export const BrowserMockup = ({
                         </div>
                       )}
                       
+                      {/* Dynamic Widgets - Rendered based on user additions */}
+                      {spaceWidgetStates?.dynamicWidgets?.filter(w => w.enabled).map((widget) => {
+                        // Match widget ID to appropriate component
+                        if (widget.id.startsWith('events_')) {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <EventsListWidget />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('discussions_')) {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <DiscussionsListWidget />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('wishlists_')) {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <WishlistsListWidget />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('questions_')) {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <QuestionsListWidget />
+                            </div>
+                          );
+                        }
+                        // Default: render a placeholder for unknown widgets
+                        return (
+                          <div key={widget.id} className="transition-all duration-200 ease-out">
+                            <div className={cx(
+                              "rounded-lg border p-4",
+                              theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                            )}>
+                              <h3 className="font-semibold mb-2">{widget.label}</h3>
+                              <p className="text-sm text-tertiary">Widget preview will appear here</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
                       {/* Posts Widget (Custom Events List) */}
                       {spaceWidgetStates?.customEventsList && (
                         <div className="transition-all duration-200 ease-out">
                           <EventsListWidget />
-                        </div>
-                      )}
-                      
-                      {/* Discussions List Widget */}
-                      {spaceWidgetStates?.discussionsList && (
-                        <div className="transition-all duration-200 ease-out">
-                          <DiscussionsListWidget />
-                        </div>
-                      )}
-                      
-                      {/* Knowledges List Widget */}
-                      {spaceWidgetStates?.knowledgesList && (
-                        <div className="transition-all duration-200 ease-out">
-                          <KnowledgesListWidget />
-                        </div>
-                      )}
-                      
-                      {/* Wishlists List Widget */}
-                      {spaceWidgetStates?.wishlistsList && (
-                        <div className="transition-all duration-200 ease-out">
-                          <WishlistsListWidget />
-                        </div>
-                      )}
-                      
-                      {/* Questions List Widget */}
-                      {spaceWidgetStates?.questionsList && (
-                        <div className="transition-all duration-200 ease-out">
-                          <QuestionsListWidget />
                         </div>
                       )}
                       

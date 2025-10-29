@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, Rows01, User01, Grid03, Edit03, File01, Star01, Bookmark, Users01, Tag01, Monitor01, ArrowLeft, HelpCircle, Code01, Link01, Image01 } from "@untitledui/icons";
+import { AlertCircle, Rows01, User01, Grid03, Edit03, File01, Star01, Bookmark, Users01, Tag01, Monitor01, ArrowLeft, HelpCircle, Code01, Link01, Image01, Calendar, MessageCircle02, Heart, HelpCircle as QuestionIcon } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
@@ -10,35 +10,39 @@ interface AddWidgetListProps {
 }
 
 const spaceWidgets = [
-  { id: 'about', label: 'About', icon: AlertCircle },
-  { id: 'accordions', label: 'Accordions', icon: Rows01 },
-  { id: 'announcement-banner', label: 'Announcement Banner', icon: HelpCircle },
-  { id: 'auth-member-card', label: 'Auth member card', icon: User01 },
-  { id: 'collections-menu', label: 'Collections menu', icon: Grid03 },
-  { id: 'composer', label: 'Composer', icon: Edit03 },
-  { id: 'feed', label: 'Feed', icon: File01 },
-  { id: 'hero-banner', label: 'Hero banner', icon: HelpCircle },
-  { id: 'html-script', label: 'Html script', icon: Code01 },
-  { id: 'leaderboard', label: 'Leaderboard', icon: Star01 },
-  { id: 'link-menu', label: 'Link menu', icon: Bookmark },
-  { id: 'members', label: 'Members', icon: Users01 },
-  { id: 'posts', label: 'Posts', icon: File01 },
-  { id: 'quick-links', label: 'Quick links', icon: Link01 },
-  { id: 'rich-text', label: 'Rich text', icon: File01 },
-  { id: 'section', label: 'Section', icon: Grid03 },
-  { id: 'single-post', label: 'Single post', icon: File01 },
-  { id: 'space-header', label: 'Space header', icon: Image01 },
-  { id: 'spaces', label: 'Spaces', icon: Grid03 },
-  { id: 'tags', label: 'Tags', icon: Tag01 },
-  { id: 'iframe', label: 'iFrame', icon: Monitor01 },
+  { id: 'events', label: 'Events', icon: Calendar },
+  { id: 'discussions', label: 'Discussions', icon: MessageCircle02 },
+  { id: 'wishlists', label: 'Wishlists', icon: Heart },
+  { id: 'questions', label: 'Questions', icon: QuestionIcon },
+  { id: 'about', label: 'About', icon: AlertCircle, underDesign: true },
+  { id: 'accordions', label: 'Accordions', icon: Rows01, underDesign: true },
+  { id: 'announcement-banner', label: 'Banner', icon: HelpCircle, underDesign: true },
+  { id: 'auth-member-card', label: 'Auth member card', icon: User01, underDesign: true },
+  { id: 'collections-menu', label: 'Collections menu', icon: Grid03, underDesign: true },
+  { id: 'composer', label: 'Composer', icon: Edit03, underDesign: true },
+  { id: 'feed', label: 'Feed', icon: File01, underDesign: true },
+  { id: 'hero-banner', label: 'Hero banner', icon: HelpCircle, underDesign: true },
+  { id: 'html-script', label: 'Html script', icon: Code01, underDesign: true },
+  { id: 'leaderboard', label: 'Leaderboard', icon: Star01, underDesign: true },
+  { id: 'link-menu', label: 'Link menu', icon: Bookmark, underDesign: true },
+  { id: 'members', label: 'Members', icon: Users01, underDesign: true },
+  { id: 'posts', label: 'Posts', icon: File01, underDesign: true },
+  { id: 'quick-links', label: 'Quick links', icon: Link01, underDesign: true },
+  { id: 'rich-text', label: 'Rich text', icon: File01, underDesign: true },
+  { id: 'section', label: 'Section', icon: Grid03, underDesign: true },
+  { id: 'single-post', label: 'Single post', icon: File01, underDesign: true },
+  { id: 'space-header', label: 'Space header', icon: Image01, underDesign: true },
+  { id: 'spaces', label: 'Spaces', icon: Grid03, underDesign: true },
+  { id: 'tags', label: 'Tags', icon: Tag01, underDesign: true },
+  { id: 'iframe', label: 'iFrame', icon: Monitor01, underDesign: true },
 ];
 
 const sidebarWidgets = [
-  { id: 'quick-actions', label: 'Quick Actions', icon: HelpCircle },
-  { id: 'recent-activity', label: 'Recent Activity', icon: File01 },
-  { id: 'event-calendar', label: 'Event Calendar', icon: AlertCircle },
-  { id: 'member-list', label: 'Member List', icon: Users01 },
-  { id: 'navigation-menu', label: 'Navigation Menu', icon: Grid03 },
+  { id: 'quick-actions', label: 'Quick Actions', icon: HelpCircle, underDesign: true },
+  { id: 'recent-activity', label: 'Recent Activity', icon: File01, underDesign: true },
+  { id: 'event-calendar', label: 'Event Calendar', icon: AlertCircle, underDesign: true },
+  { id: 'member-list', label: 'Member List', icon: Users01, underDesign: true },
+  { id: 'navigation-menu', label: 'Navigation Menu', icon: Grid03, underDesign: true },
 ];
 
 export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetListProps) => {
@@ -65,23 +69,34 @@ export const AddWidgetList = ({ onBack, onSelectWidget, widgetType }: AddWidgetL
         <div className="space-y-1">
           {widgets.map((widget) => {
             const IconComponent = widget.icon;
+            const isDisabled = widget.underDesign;
+            
             return (
               <button
                 key={widget.id}
                 type="button"
-                onClick={() => onSelectWidget(widget)}
+                onClick={() => !isDisabled && onSelectWidget(widget)}
+                disabled={isDisabled}
                 className={cx(
-                  "w-full py-2 px-5 truncate transition-colors rounded-md",
-                  "hover:bg-action-primary hover:text-content-on-primary",
-                  "disabled:bg-surface-disabled disabled:text-content-disabled",
-                  theme === 'dark' 
-                    ? "hover:bg-blue-600 hover:text-white text-gray-300"
-                    : "hover:bg-blue-600 hover:text-white text-gray-700"
+                  "w-full py-2 px-5 transition-colors rounded-md",
+                  isDisabled 
+                    ? "cursor-not-allowed opacity-50"
+                    : theme === 'dark' 
+                      ? "hover:bg-gray-700 text-gray-300"
+                      : "hover:bg-gray-100 text-gray-700"
                 )}
               >
                 <div className="flex flex-grow items-center gap-3">
                   <IconComponent className="shrink-0 h-5 w-5" />
-                  <div className="text-start truncate font-medium">{widget.label}</div>
+                  <div className="text-start font-medium flex items-center gap-2">
+                    <span>{widget.label}</span>
+                    {isDisabled && (
+                      <span className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-500" : "text-gray-400"
+                      )}>(under design)</span>
+                    )}
+                  </div>
                 </div>
               </button>
             );

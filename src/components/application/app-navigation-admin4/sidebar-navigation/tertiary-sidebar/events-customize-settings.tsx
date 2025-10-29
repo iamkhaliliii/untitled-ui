@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { useWidgetConfig } from "@/providers/widget-config-provider";
 import { Label } from "@/components/base/input/label";
+import { Input } from "@/components/base/input/input";
 import { AddWidgetList } from "./add-widget-list";
 import { CustomizerSection } from "./customizer-section";
 
@@ -47,6 +48,10 @@ export const EventsCustomizeSettings = ({
 }: EventsCustomizeSettingsProps) => {
   const theme = useResolvedTheme();
   
+  // State for editing widget names
+  const [editingWidgetId, setEditingWidgetId] = useState<string | null>(null);
+  const [editingWidgetLabel, setEditingWidgetLabel] = useState<string>("");
+
   // Safe widget config usage - handle cases where provider is not available
   let widgetConfig;
   try {
@@ -130,7 +135,22 @@ export const EventsCustomizeSettings = ({
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (openDropdownId) {
-        setOpenDropdownId(null);
+        const target = event.target as HTMLElement;
+        // Check if click is inside a dropdown menu or dropdown button
+        const isInsideDropdown = target.closest('.dropdown-menu-container');
+        const isDropdownButton = target.closest('.dropdown-button');
+        
+        console.log('Click outside check:', {
+          openDropdownId,
+          isInsideDropdown: !!isInsideDropdown,
+          isDropdownButton: !!isDropdownButton,
+          target: target.tagName
+        });
+        
+        if (!isInsideDropdown && !isDropdownButton) {
+          console.log('Closing dropdown because click was outside');
+          setOpenDropdownId(null);
+        }
       }
     };
     
@@ -153,8 +173,43 @@ export const EventsCustomizeSettings = ({
     widgetType?: 'space' | 'sidebar';
   }) => {
     const isDropdownOpen = openDropdownId === id;
+    const isEditing = editingWidgetId === id;
     // Static widgets (space-header, events-list, etc.) can't be deleted, but dynamic widgets can
     const isDeleteDisabled = !isDynamic && (id === 'space-header' || id === 'events-list');
+    
+    const handleStartEdit = () => {
+      if (isDynamic) {
+        setEditingWidgetId(id);
+        setEditingWidgetLabel(label);
+        setOpenDropdownId(null);
+      }
+    };
+    
+    const handleRename = () => {
+      console.log('Rename triggered:', { id, label, editingWidgetLabel, widgetType });
+      if (editingWidgetLabel.trim() && editingWidgetLabel !== label) {
+        if (widgetType === 'space') {
+          const updatedWidgets = spaceWidgetStates.dynamicWidgets.map(w => 
+            w.id === id ? { ...w, label: editingWidgetLabel.trim() } : w
+          );
+          console.log('Updating space widgets:', updatedWidgets);
+          updateSpaceWidgetStates({ dynamicWidgets: updatedWidgets });
+        } else if (widgetType === 'sidebar') {
+          const updatedWidgets = sidebarWidgetStates.dynamicWidgets.map(w => 
+            w.id === id ? { ...w, label: editingWidgetLabel.trim() } : w
+          );
+          console.log('Updating sidebar widgets:', updatedWidgets);
+          updateSidebarWidgetStates({ dynamicWidgets: updatedWidgets });
+        }
+      }
+      setEditingWidgetId(null);
+      setEditingWidgetLabel("");
+    };
+    
+    const handleCancelEdit = () => {
+      setEditingWidgetId(null);
+      setEditingWidgetLabel("");
+    };
     
     return (
       <div className={cx(
@@ -163,9 +218,9 @@ export const EventsCustomizeSettings = ({
           ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
           : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
       )}>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 flex-1 min-w-0">
           {/* Reorder handle */}
-          <div className="cursor-move p-1">
+          <div className="cursor-move p-1 flex-shrink-0">
             <DotsGrid className={cx(
               "h-4 w-4",
               theme === 'dark' ? "text-gray-500" : "text-gray-400"
@@ -173,7 +228,7 @@ export const EventsCustomizeSettings = ({
           </div>
           
           <div className={cx(
-            "p-1.5 rounded-md",
+            "p-1.5 rounded-md flex-shrink-0",
             iconColor || "bg-green-100/20"
           )}>
             <Icon className={cx(
@@ -187,10 +242,33 @@ export const EventsCustomizeSettings = ({
               : "text-green-400"
             )} />
           </div>
-          <span className={cx(
-            "text-sm font-medium",
-            theme === 'dark' ? "text-gray-100" : "text-gray-900"
-          )}>{label}</span>
+          
+          {isEditing ? (
+            <div className="flex-1 min-w-0">
+              <Input
+                value={editingWidgetLabel}
+                onChange={(value) => setEditingWidgetLabel(value)}
+                onBlur={handleRename}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleRename();
+                  if (e.key === 'Escape') handleCancelEdit();
+                }}
+                size="sm"
+                autoFocus
+              />
+            </div>
+          ) : (
+            <span 
+              className={cx(
+                "text-sm font-medium flex-1 min-w-0 truncate",
+                theme === 'dark' ? "text-gray-100" : "text-gray-900",
+                isDynamic && "cursor-pointer"
+              )}
+              onDoubleClick={isDynamic ? handleStartEdit : undefined}
+            >
+              {label}
+            </span>
+          )}
         </div>
         <div className="ml-auto flex items-center space-x-1">
           {/* Dropdown Menu Button */}
@@ -199,11 +277,13 @@ export const EventsCustomizeSettings = ({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Dropdown button clicked for:', id, 'Currently open:', openDropdownId);
-                setOpenDropdownId(isDropdownOpen ? null : id);
+                console.log('Dropdown button clicked for:', id, 'Currently open:', openDropdownId, 'isDropdownOpen:', isDropdownOpen);
+                const newState = isDropdownOpen ? null : id;
+                console.log('Setting dropdown to:', newState);
+                setOpenDropdownId(newState);
               }}
               className={cx(
-                "p-1 rounded-md hover:bg-secondary/60 transition-colors",
+                "dropdown-button p-1 rounded-md hover:bg-secondary/60 transition-colors",
                 theme === 'dark' ? "hover:bg-gray-700" : "hover:bg-gray-100"
               )}
             >
@@ -217,7 +297,7 @@ export const EventsCustomizeSettings = ({
             {isDropdownOpen && (
               <div 
                 className={cx(
-                  "absolute right-0 top-8 w-40 rounded-lg border shadow-lg py-1",
+                  "dropdown-menu-container absolute right-0 top-8 w-40 rounded-lg border shadow-lg py-1",
                   theme === 'dark' 
                     ? "bg-gray-800 border-gray-700" 
                     : "bg-white border-gray-200"
@@ -226,17 +306,21 @@ export const EventsCustomizeSettings = ({
                   zIndex: 9999,
                   backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff'
                 }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  console.log('Dropdown menu clicked (should not close)');
+                  e.stopPropagation();
+                }}
               >
                 <button
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Rename clicked for:', label);
-                    setOpenDropdownId(null);
+                    handleStartEdit();
                   }}
+                  disabled={!isDynamic}
                   className={cx(
                     "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    !isDynamic ? "opacity-50 cursor-not-allowed" : "",
                     theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
                   )}
                 >
@@ -265,18 +349,26 @@ export const EventsCustomizeSettings = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Duplicate clicked for:', label, 'isDynamic:', isDynamic, 'widgetType:', widgetType);
+                    console.log('Duplicate clicked for:', { id, label, isDynamic, widgetType });
+                    console.log('duplicateSpaceWidget function:', duplicateSpaceWidget);
+                    console.log('duplicateSidebarWidget function:', duplicateSidebarWidget);
                     if (isDynamic && widgetType === 'space') {
+                      console.log('Calling duplicateSpaceWidget with id:', id);
                       duplicateSpaceWidget(id);
+                      console.log('duplicateSpaceWidget called');
                     } else if (isDynamic && widgetType === 'sidebar') {
+                      console.log('Calling duplicateSidebarWidget with id:', id);
                       duplicateSidebarWidget(id);
+                      console.log('duplicateSidebarWidget called');
                     } else {
                       console.log('Duplicate not supported for static widget:', label);
                     }
                     setOpenDropdownId(null);
                   }}
+                  disabled={!isDynamic}
                   className={cx(
                     "w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-secondary/60 transition-colors",
+                    !isDynamic ? "opacity-50 cursor-not-allowed" : "",
                     theme === 'dark' ? "text-gray-200 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-50"
                   )}
                 >
@@ -305,11 +397,14 @@ export const EventsCustomizeSettings = ({
                 
                 <button
                   onClick={() => {
+                    console.log('Delete clicked for:', { id, label, isDynamic, widgetType, isDeleteDisabled });
                     if (!isDeleteDisabled) {
                       if (isDynamic && widgetType === 'space') {
+                        console.log('Calling removeSpaceWidget with id:', id);
                         removeSpaceWidget(id);
                         console.log('Deleted space widget:', label);
                       } else if (isDynamic && widgetType === 'sidebar') {
+                        console.log('Calling removeSidebarWidget with id:', id);
                         removeSidebarWidget(id);
                         console.log('Deleted sidebar widget:', label);
                       } else {
@@ -612,49 +707,18 @@ export const EventsCustomizeSettings = ({
               onSettingsClick={() => onWidgetConfig({ id: 'spaceheader', label: 'Space Header' })}
             />
             
-            {/* 2. Events List */}
+            {/* 2. Events */}
             <PropertyToggle
               icon={Calendar}
-              label="Events List"
+              label="Events"
               isSelected={spaceWidgetStates.eventsList}
               onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
               id="events-list"
               iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events List' })}
+              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events' })}
             />
             
-            {/* 3. Discussions List */}
-            <PropertyToggle
-              icon={MessageSquare01}
-              label="Discussions List"
-              isSelected={spaceWidgetStates.discussionsList ?? false}
-              onChange={(value) => updateSpaceWidgetStates({ discussionsList: value })}
-              id="discussions-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'discussionsList', label: 'Discussions List' })}
-            />
-            
-            {/* 4. Wishlists List */}
-            <PropertyToggle
-              icon={Heart}
-              label="Wishlists List"
-              isSelected={spaceWidgetStates.wishlistsList ?? false}
-              onChange={(value) => updateSpaceWidgetStates({ wishlistsList: value })}
-              id="wishlists-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'wishlistsList', label: 'Wishlists List' })}
-            />
-            
-            {/* 5. Questions List */}
-            <PropertyToggle
-              icon={QuestionIcon}
-              label="Questions List"
-              isSelected={spaceWidgetStates.questionsList ?? false}
-              onChange={(value) => updateSpaceWidgetStates({ questionsList: value })}
-              id="questions-list"
-              iconColor="bg-green-100/20"
-              onSettingsClick={() => onWidgetConfig({ id: 'questionsList', label: 'Questions List' })}
-            />
+            {/* Discussions, Wishlists, Questions are now added dynamically via "Add Widget" */}
             
             {/* Hero Banner and Composer widgets are hidden for now */}
             {/* <PropertyToggle

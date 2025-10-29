@@ -28,6 +28,7 @@ export interface SpaceHeaderConfig {
   description: string;
   showDescription: boolean;
   showIcon: boolean;
+  iconEmoji: string;
   showStats: boolean;
   showMembers: boolean;
   actionAddPost: boolean;
@@ -181,6 +182,7 @@ export const defaultSpaceHeaderConfig: SpaceHeaderConfig = {
   description: 'Welcome to the "Ask the Community" channel!',
   showDescription: false,
   showIcon: true,
+  iconEmoji: '📅',
   showStats: true,
   showMembers: true,
   actionAddPost: true,

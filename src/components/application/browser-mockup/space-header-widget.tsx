@@ -246,7 +246,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
                     "w-20 h-20 rounded-2xl border-4 flex items-center justify-center text-5xl flex-shrink-0 shadow-lg -mt-10",
                     theme === 'dark' ? "bg-gray-900 border-gray-900" : "bg-white border-white"
                   )}>
-                    📅
+                    {spaceHeaderConfig.iconEmoji || '📅'}
                   </div>
                 )}
                 
@@ -349,17 +349,14 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
             {/* Icon */}
             {spaceHeaderConfig.showIcon && (
               <div className={cx(
-                "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
+                "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl",
                 spaceHeaderConfig.style === 'simple' && "bg-blue-600",
                 spaceHeaderConfig.style === 'color' && contrastColors?.iconBg,
                 spaceHeaderConfig.style === 'pattern' && "bg-blue-600",
                 (spaceHeaderConfig.style === 'gradient' || spaceHeaderConfig.style === 'image' || spaceHeaderConfig.style === 'video') 
                   && "bg-white/20 backdrop-blur-sm"
               )}>
-                <div className={cx(
-                  "w-6 h-6 rounded",
-                  spaceHeaderConfig.style === 'color' && textColor === 'white' ? "bg-white" : "bg-gray-900"
-                )}></div>
+                {spaceHeaderConfig.iconEmoji || '📅'}
               </div>
             )}
             

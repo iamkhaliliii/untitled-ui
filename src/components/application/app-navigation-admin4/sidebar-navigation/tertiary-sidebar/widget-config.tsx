@@ -286,17 +286,17 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         renderFilterView()
       ) : (
         <div className="transition-all duration-300 ease-in-out min-h-0">
-          {selectedWidget.label === 'Events List' 
+          {(selectedWidget.label === 'Events List' || selectedWidget.label === 'Events')
             ? <EventsListConfig onTabConfigChange={onTabConfigChange} />
             : selectedWidget.label === 'Posts'
               ? <CustomEventsListConfig onFilterViewChange={onFilterViewChange} />
-            : selectedWidget.label === 'Discussions List'
+            : (selectedWidget.label === 'Discussions List' || selectedWidget.label === 'Discussions')
               ? <DiscussionsListConfig onTabConfigChange={onTabConfigChange} />
             : selectedWidget.label === 'Knowledges List'
               ? <KnowledgesListConfig />
-            : selectedWidget.label === 'Wishlists List'
+            : (selectedWidget.label === 'Wishlists List' || selectedWidget.label === 'Wishlists')
               ? <WishlistsListConfig />
-            : selectedWidget.label === 'Questions List'
+            : (selectedWidget.label === 'Questions List' || selectedWidget.label === 'Questions')
               ? <QuestionsListConfig />
             : selectedWidget.label === 'Space Header'
               ? <SpaceHeaderConfig />

@@ -158,7 +158,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     heroBanner: false,
     menu: false,
     composer: false,
-    // List widgets - only Events List enabled by default
+    // List widgets - all disabled by default, will be added dynamically
     discussionsList: false,
     knowledgesList: false,
     wishlistsList: false,
