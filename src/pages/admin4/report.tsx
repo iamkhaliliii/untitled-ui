@@ -725,11 +725,10 @@ export const AdminReportPage = () => {
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-24">
                                                             <ProgressBar
-                                                                labelPosition="none"
+                                                                labelPosition="top-floating"
                                                                 min={0}
                                                                 max={100}
                                                                 value={space.engagement}
-                                                                size="sm"
                                                             />
                                                         </div>
                                                         <span className="text-sm text-secondary dark:text-gray-300">{space.engagement}%</span>

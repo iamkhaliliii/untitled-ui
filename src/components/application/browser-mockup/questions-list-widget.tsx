@@ -144,7 +144,7 @@ export const QuestionsListWidget: React.FC<QuestionsListWidgetProps> = ({ classN
                 <span>{question.author}</span>
               </div>
             )}
-            {questionsListConfig.viewsCounter && (
+            {questionsListConfig.votesCounter && (
               <div className="flex items-center gap-1">
                 <Eye className="w-4 h-4" />
                 <span>{question.views} views</span>

@@ -124,7 +124,7 @@ export const WishlistsListWidget: React.FC<WishlistsListWidgetProps> = ({ classN
 
           {/* Author & Stats */}
           <div className="flex items-center gap-4 text-sm text-tertiary">
-            {wishlistsListConfig.creatorInfo && (
+            {wishlistsListConfig.authorInfo && (
               <div className="flex items-center gap-1">
                 <img
                   src={wishlist.avatar}

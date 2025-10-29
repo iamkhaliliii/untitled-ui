@@ -460,11 +460,10 @@ export const AdminBillingPage = () => {
 
                                             {!isUnlimited && (
                                                 <ProgressBar
-                                                    labelPosition="none"
+                                                    labelPosition="top-floating"
                                                     min={0}
                                                     max={service.limit || 100}
                                                     value={service.current}
-                                                    size="sm"
                                                 />
                                             )}
                                             {isUnlimited && (
@@ -531,11 +530,10 @@ export const AdminBillingPage = () => {
                                                                 {!isUnlimited && (
                                                                     <div className="w-32">
                                                                         <ProgressBar
-                                                                            labelPosition="none"
+                                                                            labelPosition="top-floating"
                                                                             min={0}
                                                                             max={service.limit || 100}
                                                                             value={service.current}
-                                                                            size="sm"
                                                                         />
                                                                     </div>
                                                                 )}

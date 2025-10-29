@@ -483,7 +483,7 @@ export const AdminPeoplePage = () => {
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item key="edit" icon={Edit01}>Edit</Dropdown.Item>
                                                             <Dropdown.Item key="view" icon={Eye}>View Profile</Dropdown.Item>
-                                                            <Dropdown.Item key="delete" icon={Trash01} variant="destructive">Remove</Dropdown.Item>
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-error-solid">Remove</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
@@ -527,7 +527,7 @@ export const AdminPeoplePage = () => {
                                                     <Dropdown.Popover>
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item key="edit" icon={Edit01}>Edit</Dropdown.Item>
-                                                            <Dropdown.Item key="delete" icon={Trash01} variant="destructive">Remove</Dropdown.Item>
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-error-solid">Remove</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
@@ -567,7 +567,7 @@ export const AdminPeoplePage = () => {
                                                     <Dropdown.Popover>
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item key="resend" icon={Mail01}>Resend</Dropdown.Item>
-                                                            <Dropdown.Item key="delete" icon={Trash01} variant="destructive">Cancel</Dropdown.Item>
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-error-solid">Cancel</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
@@ -607,7 +607,7 @@ export const AdminPeoplePage = () => {
                                                     <Dropdown.Popover>
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item key="edit" icon={Edit01}>Edit</Dropdown.Item>
-                                                            <Dropdown.Item key="delete" icon={Trash01} variant="destructive">Delete</Dropdown.Item>
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-error-solid">Delete</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
@@ -637,7 +637,7 @@ export const AdminPeoplePage = () => {
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item key="edit" icon={Edit01}>Edit</Dropdown.Item>
                                                             <Dropdown.Item key="view" icon={Eye}>View Members</Dropdown.Item>
-                                                            <Dropdown.Item key="delete" icon={Trash01} variant="destructive">Delete</Dropdown.Item>
+                                                            <Dropdown.Item key="delete" icon={Trash01} className="text-error-solid">Delete</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown.Popover>
                                                 </Dropdown.Root>
