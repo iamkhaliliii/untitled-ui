@@ -81,6 +81,8 @@ import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
 import SiteEventDetailPage from "@/pages/site/event-detail";
 import EventEmailPreview from "@/pages/site/event-email-preview";
+import SiteModerationPage from "@/pages/site/moderation";
+import SiteSettingsPage from "@/pages/site/settings";
 import PostViewPage from "@/pages/site/post-view";
 import { NotFound } from "@/pages/not-found";
 import { SignupPage } from "@/pages/signup";
@@ -463,6 +465,9 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/site/event" element={<SiteEventPage />} />
                         <Route path="/site/event/email" element={<EventEmailPreview />} />
                         <Route path="/site/event/:id" element={<SiteEventDetailPage />} />
+                        <Route path="/site/moderation" element={<SiteModerationPage />} />
+                        <Route path="/site/modration" element={<Navigate to="/site/moderation" replace />} />
+                        <Route path="/site/settings" element={<SiteSettingsPage />} />
                         
                         {/* Backwards compatibility routes - redirect to Admin 3.0 */}
                         <Route path="/content" element={<Navigate to="/admin3/content" replace />} />

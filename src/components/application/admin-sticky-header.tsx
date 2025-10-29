@@ -555,7 +555,7 @@ export const AdminStickyHeader = ({
                                                                 <Dropdown.Item
                                                                     icon={Shield01}
                                                                     label="Moderation Mode"
-                                                                    onAction={() => navigate(`/${currentAdminVersion}/moderation`)}
+                                                                    onAction={() => navigate(`/site/moderation`)}
                                                                 />
                                                             )}
                                                         </Dropdown.Menu>
@@ -594,7 +594,7 @@ export const AdminStickyHeader = ({
                                                                         navigate(`/${currentAdminVersion}/design`);
                                                                     }
                                                                 } else if (selected === 'moderation') {
-                                                                    navigate(`/${currentAdminVersion}/moderation`);
+                                                                    navigate(`/site/moderation`);
                                                                 }
                                                             }}
                                                             className="[&_button]:!bg-gray-900 dark:[&_button]:!bg-gray-100 [&_button]:!text-gray-400 dark:[&_button]:!text-gray-600 [&_button]:!ring-gray-700 dark:[&_button]:!ring-gray-300 [&_button[data-selected=true]]:!bg-gray-600 [&_button[data-selected=true]]:!text-white dark:[&_button[data-selected=true]]:!bg-gray-800 dark:[&_button[data-selected=true]]:!text-white [&_button[data-selected=true]]:!ring-0 [&_button[data-selected=true]]:!rounded-md [&_button]:hover:!bg-gray-800 dark:[&_button]:hover:!bg-gray-200 [&_button]:hover:!text-gray-200 dark:[&_button]:hover:!text-gray-800 [&_button]:!text-xs [&_button]:!px-2  [&_button]:!py-1.5 [&_button_svg]:!size-4.5 [&_button_svg]:!text-gray-500 dark:[&_button_svg]:!text-gray-600 [&_button[data-selected=true]_svg]:!text-white"
@@ -726,7 +726,7 @@ export const AdminStickyHeader = ({
                                     {[
                                         { icon: Settings02, label: 'Admin Mode', path: `/${currentAdminVersion}`, enabled: true },
                                         { icon: Brush02, label: 'Design Mode', path: `/${currentAdminVersion}/design`, enabled: true },
-                                        { icon: Shield01, label: 'Moderation Mode', path: `/${currentAdminVersion}/moderation`, enabled: true }
+                                        { icon: Shield01, label: 'Moderation Mode', path: `/site/moderation`, enabled: true }
                                     ].map((mode) => (
                                         <button
                                             key={mode.label}

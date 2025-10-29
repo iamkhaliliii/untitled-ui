@@ -223,20 +223,20 @@ const HeaderDropdownSimple = ({ onMobileMenuToggle, theme, onThemeToggle }: { on
                 </Button>
                 <Dropdown.Popover>
                     <Dropdown.Menu>
-                        <Dropdown.Item key="profile" icon={User01}>
+                        <Dropdown.Item key="profile" icon={User01} onAction={() => window.location.href = '/site/profile'}>
                             Your profile
                         </Dropdown.Item>
-                        <Dropdown.Item key="settings" icon={Settings01}>
+                        <Dropdown.Item key="settings" icon={Settings01} onAction={() => window.location.href = '/site/settings'}>
                             Account settings
                         </Dropdown.Item>
                         <Dropdown.Item key="invite" icon={UsersPlus}>
                             Invite members
                         </Dropdown.Item>
                         <Dropdown.Separator />
-                        <Dropdown.Item key="admin" icon={UserSquare}>
+                        <Dropdown.Item key="admin" icon={UserSquare} onAction={() => window.location.href = '/admin4'}>
                             Administration
                         </Dropdown.Item>
-                        <Dropdown.Item key="moderation" icon={Shield01}>
+                        <Dropdown.Item key="moderation" icon={Shield01} onAction={() => window.location.href = '/site/moderation'}>
                             Moderation
                         </Dropdown.Item>
                         <Dropdown.Separator />

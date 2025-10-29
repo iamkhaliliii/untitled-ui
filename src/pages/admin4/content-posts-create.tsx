@@ -59,9 +59,9 @@ export const AdminContentPostsCreatePage = () => {
     };
 
     return (
-        <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background min-h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))]">
+        <div className="w-full flex flex-col max-w-full self-center space-y-0 sm:space-y-0 md:space-y-0 lg:space-y-0 bg-background dark:bg-gray-950 min-h-screen transition duration-200 ms-[calc(env(safe-area-inset-left))] me-[calc(env(safe-area-inset-right))]">
             {/* Header Navigation */}
-            <header className="sticky top-0 z-50 bg-primary border-b border-secondary">
+            <header className="sticky top-0 z-50 bg-primary dark:bg-gray-900 border-b border-secondary dark:border-gray-800">
                 <div className="flex h-16 w-full items-center justify-center">
                     <div className="flex w-full max-w-container justify-between pr-3 pl-4 md:px-8">
                         <div className="flex flex-1 items-center gap-4">
@@ -147,10 +147,10 @@ export const AdminContentPostsCreatePage = () => {
                             <div className="w-full flex flex-col max-w-full md:max-w-3xl self-center space-y-3 sm:space-y-3.5 md:space-y-4 lg:space-y-5 py-0 sm:py-0 md:py-0 lg:py-0 px-0 sm:px-0 md:px-0 lg:px-0">
                     
                     {/* Card Container */}
-                    <div className="border border-gray-300 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface">
+                    <div className="border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col text-content-subdued transition duration-200 justify-between bg-surface dark:bg-gray-900">
                         {/* Header */}
                         <div className="px-4 py-5 sm:p-6 pb-0 sm:pb-0">
-                            <h3 className="text-primary font-medium text-lg">
+                            <h3 className="text-primary dark:text-gray-100 font-medium text-lg">
                                 <div className="flex space-x-3 items-center">
                                     <Button
                                         type="button"
@@ -168,21 +168,21 @@ export const AdminContentPostsCreatePage = () => {
 
                         {/* List Content */}
                         <div className="flex-1 px-4 py-5 sm:p-6">
-                            <ul className="flex flex-col divide-y divide-secondary border-t border-secondary">
+                            <ul className="flex flex-col divide-y divide-secondary dark:divide-gray-700 border-t border-secondary dark:border-gray-700">
                                 {postTypes.map((postType) => (
                                     <li key={postType.id} className="py-0">
                                         <button
                                             onClick={() => handlePostTypeSelect(postType.id)}
-                                            className="cursor-pointer rounded-md transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand hover:bg-secondary px-4 py-5 sm:p-6 flex space-x-3 items-center w-full text-left group"
+                                            className="cursor-pointer rounded-md transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand hover:bg-secondary dark:hover:bg-gray-800 px-4 py-5 sm:p-6 flex space-x-3 items-center w-full text-left group"
                                         >
                                             {/* Icon */}
                                             <div className="flex items-center justify-center shrink-0 h-6 w-6">
-                                                <postType.icon className={`h-6 w-6 ${postType.iconColor}`} />
+                                                <postType.icon className={`h-6 w-6 ${postType.iconColor} dark:text-gray-400`} />
                                             </div>
 
                                             {/* Label and Badge */}
                                             <div className="flex-1 flex items-center gap-2">
-                                                <span className="text-primary font-medium">
+                                                <span className="text-primary dark:text-gray-100 font-medium">
                                                     {postType.label}
                                                 </span>
                                                 {postType.hasModuleBadge && (
@@ -194,7 +194,7 @@ export const AdminContentPostsCreatePage = () => {
                                             </div>
 
                                             {/* Chevron */}
-                                            <ChevronRight className="w-6 h-6 text-quaternary group-hover:text-tertiary shrink-0 transition-colors" />
+                                            <ChevronRight className="w-6 h-6 text-quaternary dark:text-gray-500 group-hover:text-tertiary dark:group-hover:text-gray-400 shrink-0 transition-colors" />
                                         </button>
                                     </li>
                                 ))}
