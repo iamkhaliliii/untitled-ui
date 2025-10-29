@@ -46,6 +46,8 @@ import { AdminContentPostsCreatePage as Admin4ContentPostsCreatePage } from "@/p
 import { AdminContent2Page as Admin4Content2Page } from "@/pages/admin4/content2";
 import { AdminPeoplePage as Admin4PeoplePage } from "@/pages/admin4/people";
 import { AdminBillingPage as Admin4BillingPage } from "@/pages/admin4/billing";
+import { AdminBillingPlansPage as Admin4BillingPlansPage } from "@/pages/admin4/billing-plans";
+import { AdminBillingUsagePage as Admin4BillingUsagePage } from "@/pages/admin4/billing-usage";
 import { AdminReportPage as Admin4ReportPage } from "@/pages/admin4/report";
 import { AdminAppStorePage as Admin4AppStorePage } from "@/pages/admin4/appstore";
 import { AdminSettingsPage as Admin4SettingsPage } from "@/pages/admin4/settings";
@@ -263,8 +265,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/people/profile-fields" element={<Admin4PeoplePage />} />
                         <Route path="/admin4/people/badges" element={<Admin4PeoplePage />} />
                         <Route path="/admin4/billing" element={<Admin4BillingPage />} />
-                        <Route path="/admin4/billing/plans" element={<Admin4BillingPage />} />
-                        <Route path="/admin4/billing/usage" element={<Admin4BillingPage />} />
+                        <Route path="/admin4/billing/plans" element={<Admin4BillingPlansPage />} />
+                        <Route path="/admin4/billing/usage" element={<Admin4BillingUsagePage />} />
                         <Route path="/admin4/report" element={<Admin4ReportPage />} />
                         <Route path="/admin4/report/reach" element={<Admin4ReportPage />} />
                         <Route path="/admin4/report/people" element={<Admin4ReportPage />} />

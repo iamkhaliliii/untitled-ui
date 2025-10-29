@@ -206,11 +206,6 @@ export const Admin4Layout = ({
             items={navItems}
             footerItems={[
                 {
-                    label: "Support Center",
-                    href: "/admin4/support",
-                    icon: LifeBuoy01,
-                },
-                {
                     label: "Onboarding Pro",
                     href: "/admin4/onboarding",
                     icon: GraduationHat02,
