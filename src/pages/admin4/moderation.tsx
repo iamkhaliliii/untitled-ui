@@ -177,15 +177,19 @@ export const AdminModerationPage = () => {
                                     </div>
                                     <div>
                                         <Toggle
-                                            label={
-                                                <a 
-                                                    href="https://github.com/web-mech/badwords/blob/master/lib/lang.json"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-brand-secondary hover:text-brand-secondary-hovered underline"
-                                                >
-                                                    Include common profanities
-                                                </a>
+                                            label="Include common profanities"
+                                            hint={
+                                                <span>
+                                                    View the{" "}
+                                                    <a 
+                                                        href="https://github.com/web-mech/badwords/blob/master/lib/lang.json"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-brand-secondary hover:text-brand-secondary-hovered underline"
+                                                    >
+                                                        list of common profanities
+                                                    </a>
+                                                </span>
                                             }
                                             isSelected={moderationSettings.includeProfanities}
                                             onChange={(checked) => handleToggleChange("includeProfanities", checked)}
