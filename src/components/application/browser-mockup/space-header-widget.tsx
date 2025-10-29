@@ -38,7 +38,7 @@ export const SpaceHeaderWidget: React.FC<SpaceHeaderWidgetProps> = ({ className,
       text: isDark ? 'text-white' : 'text-black',
       textSecondary: isDark ? 'text-white/80' : 'text-black/80',
       icon: isDark ? 'text-white/60' : 'text-black/60',
-      iconBg: isDark ? 'bg-white/20' : 'bg-black/10',
+      iconBg: isDark ? 'bg-white/20' : 'bg-white/50',
       buttonPrimary: isDark 
         ? 'bg-white text-gray-900 hover:bg-white/90' 
         : 'bg-gray-900 text-white hover:bg-gray-800',
