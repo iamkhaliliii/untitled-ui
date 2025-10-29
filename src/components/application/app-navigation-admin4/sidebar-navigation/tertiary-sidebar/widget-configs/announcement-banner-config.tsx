@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { Settings01, AlertTriangle, InfoCircle, X, Square, Zap } from '@untitledui/icons';
+import { Settings01, AlertTriangle, InfoCircle, X, Square, Zap, Palette, Image01, VideoRecorder, Upload01 } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { Toggle } from '@/components/base/toggle/toggle';
 import { useResolvedTheme } from '@/hooks/use-resolved-theme';
 import { cx } from '@/utils/cx';
 import { useWidgetConfig } from '@/providers/widget-config-provider';
 import { CustomizerSection } from '../customizer-section';
+import { FileTrigger } from '@/components/base/file-upload-trigger/file-upload-trigger';
+import { Button } from '@/components/base/buttons/button';
 
 export const AnnouncementBannerConfig: React.FC = () => {
   const { announcementBannerConfig, updateAnnouncementBannerConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { title, url, style, showIcon, showCloseButton } = announcementBannerConfig;
+  const { title, url, style, showIcon, showCloseButton, backgroundColor, imageUrl, videoUrl } = announcementBannerConfig;
 
   // Section collapse/expand states
   const [infoExpanded, setInfoExpanded] = useState(true);
@@ -23,7 +25,10 @@ export const AnnouncementBannerConfig: React.FC = () => {
     { id: 'natural', label: 'Natural', icon: Square },
     { id: 'warning', label: 'Warning', icon: AlertTriangle },
     { id: 'error', label: 'Error', icon: X },
-    { id: 'info', label: 'Info', icon: InfoCircle }
+    { id: 'info', label: 'Info', icon: InfoCircle },
+    { id: 'color', label: 'Color', icon: Palette },
+    { id: 'image', label: 'Image', icon: Image01 },
+    { id: 'video', label: 'Video', icon: VideoRecorder }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -100,20 +105,245 @@ export const AnnouncementBannerConfig: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      {/* Basic Section */}
+      {/* Style Section */}
       <CustomizerSection
-        title="Basic"
+        title="Style"
+        isExpanded={layoutExpanded}
+        onExpandedChange={setLayoutExpanded}
+      >
+        <div className="space-y-6">
+          <div>
+            <div className="grid grid-cols-4 gap-2">
+              {styleOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={style === option.id}
+                  onClick={() => updateAnnouncementBannerConfig({ style: option.id as any })}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Color Selector - Show when Color style is selected */}
+          {style === 'color' && (
+            <div>
+              {/* Color Input with Circle Preview */}
+              <div className="flex items-center gap-3">
+                <label className={cx(
+                  "text-sm font-medium",
+                  theme === 'dark' ? "text-gray-100" : "text-secondary"
+                )}>
+                  Background color
+                </label>
+                
+                <div className="ml-auto relative">
+                  {/* Color Circle Button */}
+                  <label htmlFor="banner-color-input" className="cursor-pointer">
+                    <div 
+                      className={cx(
+                        "w-10 h-10 rounded-full border-2 transition-all shadow-sm hover:scale-110",
+                        theme === 'dark' ? "border-gray-600" : "border-gray-300"
+                      )}
+                      style={{ backgroundColor: backgroundColor || '#ec4899' }}
+                    />
+                  </label>
+                  
+                  {/* Hidden Color Input */}
+                  <input
+                    id="banner-color-input"
+                    type="color"
+                    value={backgroundColor || '#ec4899'}
+                    onChange={(e) => updateAnnouncementBannerConfig({ backgroundColor: e.target.value })}
+                    className="absolute opacity-0 w-0 h-0"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Image Upload - Show when Image style is selected */}
+          {style === 'image' && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className={cx(
+                  "text-sm font-medium",
+                  theme === 'dark' ? "text-gray-100" : "text-secondary"
+                )}>
+                  Banner Image
+                </label>
+                
+                {imageUrl && (
+                  <button
+                    onClick={() => updateAnnouncementBannerConfig({ imageUrl: '' })}
+                    className={cx(
+                      "text-xs font-medium transition-colors",
+                      theme === 'dark'
+                        ? "text-red-400 hover:text-red-300"
+                        : "text-red-600 hover:text-red-700"
+                    )}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              
+              <FileTrigger
+                acceptedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/svg+xml']}
+                onSelect={(files) => {
+                  if (files && files.length > 0) {
+                    const file = files[0];
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                      updateAnnouncementBannerConfig({ imageUrl: e.target?.result as string });
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              >
+                <div className={cx(
+                  "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all",
+                  theme === 'dark'
+                    ? "border-gray-700 hover:border-gray-600 bg-gray-800/50"
+                    : "border-gray-300 hover:border-brand-300 hover:bg-brand-25"
+                )}>
+                  {imageUrl ? (
+                    <div className="space-y-2">
+                      <img src={imageUrl} alt="Banner preview" className="w-full h-32 object-cover rounded-lg" />
+                      <p className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                      )}>
+                        Click to change image
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload01 className={cx(
+                        "w-8 h-8 mx-auto mb-2",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                      )} />
+                      <p className={cx(
+                        "text-sm font-medium mb-1",
+                        theme === 'dark' ? "text-gray-200" : "text-gray-900"
+                      )}>
+                        Upload Banner
+                      </p>
+                      <p className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                      )}>
+                        SVG, PNG, JPG or GIF
+                      </p>
+                    </>
+                  )}
+                </div>
+              </FileTrigger>
+            </div>
+          )}
+
+          {/* Video Upload - Show when Video style is selected */}
+          {style === 'video' && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className={cx(
+                  "text-sm font-medium",
+                  theme === 'dark' ? "text-gray-100" : "text-secondary"
+                )}>
+                  Banner Video
+                </label>
+                
+                {videoUrl && (
+                  <button
+                    onClick={() => updateAnnouncementBannerConfig({ videoUrl: '' })}
+                    className={cx(
+                      "text-xs font-medium transition-colors",
+                      theme === 'dark'
+                        ? "text-red-400 hover:text-red-300"
+                        : "text-red-600 hover:text-red-700"
+                    )}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              
+              <FileTrigger
+                acceptedFileTypes={['video/mp4', 'video/webm', 'video/ogg']}
+                onSelect={(files) => {
+                  if (files && files.length > 0) {
+                    const file = files[0];
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                      updateAnnouncementBannerConfig({ videoUrl: e.target?.result as string });
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              >
+                <div className={cx(
+                  "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all",
+                  theme === 'dark'
+                    ? "border-gray-700 hover:border-gray-600 bg-gray-800/50"
+                    : "border-gray-300 hover:border-brand-300 hover:bg-brand-25"
+                )}>
+                  {videoUrl ? (
+                    <div className="space-y-2">
+                      <video src={videoUrl} className="w-full h-32 object-cover rounded-lg" controls />
+                      <p className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                      )}>
+                        Click to change video
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload01 className={cx(
+                        "w-8 h-8 mx-auto mb-2",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-500"
+                      )} />
+                      <p className={cx(
+                        "text-sm font-medium mb-1",
+                        theme === 'dark' ? "text-gray-200" : "text-gray-900"
+                      )}>
+                        Upload Video
+                      </p>
+                      <p className={cx(
+                        "text-xs",
+                        theme === 'dark' ? "text-gray-400" : "text-gray-600"
+                      )}>
+                        MP4, WebM or OGG
+                      </p>
+                    </>
+                  )}
+                </div>
+              </FileTrigger>
+            </div>
+          )}
+        </div>
+      </CustomizerSection>
+
+      {/* Divider */}
+      <div className={cx(
+        "border-t",
+        theme === 'dark' ? "border-gray-700" : "border-secondary"
+      )}></div>
+
+      {/* Content Section */}
+      <CustomizerSection
+        title="Content"
         isExpanded={infoExpanded}
         onExpandedChange={setInfoExpanded}
       >
         <div className="space-y-4">
           <div>
             <Input
-              label="Title"
-              id="banner-title"
+              label="Text"
+              id="banner-text"
               value={title}
               onChange={(value) => updateAnnouncementBannerConfig({ title: value })}
-              placeholder="Enter announcement title"
+              placeholder="Enter announcement text"
             />
           </div>
           
@@ -135,34 +365,6 @@ export const AnnouncementBannerConfig: React.FC = () => {
         theme === 'dark' ? "border-gray-700" : "border-secondary"
       )}></div>
 
-      {/* Style Section */}
-      <CustomizerSection
-        title="Style"
-        isExpanded={layoutExpanded}
-        onExpandedChange={setLayoutExpanded}
-      >
-        <div className="space-y-6">
-          <div>
-            <div className="grid grid-cols-3 gap-2">
-              {styleOptions.map((option) => (
-                <StyleTile
-                  key={option.id}
-                  option={option}
-                  isSelected={style === option.id}
-                  onClick={() => updateAnnouncementBannerConfig({ style: option.id as 'primary' | 'natural' | 'warning' | 'error' | 'info' })}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </CustomizerSection>
-
-      {/* Divider */}
-      <div className={cx(
-        "border-t",
-        theme === 'dark' ? "border-gray-700" : "border-secondary"
-      )}></div>
-
       {/* Properties Section */}
       <CustomizerSection
         title="Properties"
@@ -170,13 +372,16 @@ export const AnnouncementBannerConfig: React.FC = () => {
         onExpandedChange={setPropertiesExpanded}
       >
         <div className="space-y-2">
-          <PropertyToggle
-            icon={Settings01}
-            label="Icon"
-            isSelected={showIcon}
-            onChange={(value) => updateAnnouncementBannerConfig({ showIcon: value })}
-            id="show-icon"
-          />
+          {/* Icon toggle - only for natural, warning, error, info styles */}
+          {['natural', 'warning', 'error', 'info'].includes(style) && (
+            <PropertyToggle
+              icon={Settings01}
+              label="Icon"
+              isSelected={showIcon}
+              onChange={(value) => updateAnnouncementBannerConfig({ showIcon: value })}
+              id="show-icon"
+            />
+          )}
 
           <PropertyToggle
             icon={X}

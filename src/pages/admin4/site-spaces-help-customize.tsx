@@ -225,7 +225,7 @@ export const SiteSpacesHelpCustomizePage = () => {
     const renderCustomizeSidebarContent = () => {
         const content = (() => {
             if (showWidgetSelection) {
-                return (
+        return (
                     <WidgetSelection
                         onBack={handleWidgetSelectionBack}
                         onSelectWidget={handleWidgetSelect}
@@ -253,21 +253,21 @@ export const SiteSpacesHelpCustomizePage = () => {
                     </div>
                 );
             }
-            
+                
             // Default: show EventsCustomizeSettings
             return (
-                <EventsCustomizeSettings
-                    toggleStates={toggleStates}
-                    customizeExpandedIds={customizeExpandedIds}
-                    setCustomizeExpandedIds={setCustomizeExpandedIds}
-                    handleToggleChange={handleToggleChange}
-                    updateToggleStates={updateToggleStates}
-                    onAddWidgetClick={handleAddWidgetClick}
-                    onWidgetConfig={handleWidgetConfig}
-                    onEditGlobalWidgets={handleEditGlobalWidgets}
-                    onWidgetSelect={handleWidgetSelect}
-                    onSetWidgetSelectionType={handleSetWidgetSelectionType}
-                />
+                    <EventsCustomizeSettings
+                        toggleStates={toggleStates}
+                        customizeExpandedIds={customizeExpandedIds}
+                        setCustomizeExpandedIds={setCustomizeExpandedIds}
+                        handleToggleChange={handleToggleChange}
+                        updateToggleStates={updateToggleStates}
+                        onAddWidgetClick={handleAddWidgetClick}
+                        onWidgetConfig={handleWidgetConfig}
+                        onEditGlobalWidgets={handleEditGlobalWidgets}
+                        onWidgetSelect={handleWidgetSelect}
+                        onSetWidgetSelectionType={handleSetWidgetSelectionType}
+                    />
             );
         })();
 

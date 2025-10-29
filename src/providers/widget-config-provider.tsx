@@ -161,23 +161,23 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
     const isDesignHome = currentPath === '/admin4/design' || currentPath.includes('/design/page-customizer');
     
     return {
-      spaceHeader: true,
+    spaceHeader: true,
       eventsList: isGrowthEvents || isDesignHome, // Default to Events for design home pages
-      customEventsList: false,
-      upcomingEvents: false,
-      heroBanner: false,
-      menu: false,
-      composer: false,
+    customEventsList: false,
+    upcomingEvents: false,
+    heroBanner: false,
+    menu: false,
+    composer: false,
       // List widgets - set based on space type
       discussionsList: isGrowthDiscussion,
-      knowledgesList: false,
+    knowledgesList: false,
       wishlistsList: isGrowthWishlist,
       questionsList: isGrowthQuestion,
-      // Other widgets - all disabled by default
-      announcementBanner: false,
-      leaderboard: false,
-      htmlScript: false,
-      richText: false,
+    // Other widgets - all disabled by default
+    announcementBanner: false,
+    leaderboard: false,
+    htmlScript: false,
+    richText: false,
       dynamicWidgets: [], // Start with empty dynamic widgets
     };
   });

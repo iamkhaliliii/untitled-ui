@@ -87,6 +87,8 @@ import KnowledgesListCustomizePage from "@/pages/admin4/customize/widgets/knowle
 import WishlistsListCustomizePage from "@/pages/admin4/customize/widgets/wishlists-list-customize";
 import QuestionsListCustomizePage from "@/pages/admin4/customize/widgets/questions-list-customize";
 import SpaceHeaderCustomizePage from "@/pages/admin4/customize/widgets/space-header-customize";
+import AnnouncementBannerCustomizePage from "@/pages/admin4/customize/widgets/announcement-banner-customize";
+import HeroBannerCustomizePage from "@/pages/admin4/customize/widgets/hero-banner-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
@@ -354,6 +356,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/events/create" element={<Admin4SiteSpacesEventsCreatePage />} />
                         <Route path="/admin4/site/spaces/growth/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/events/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/events/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/events/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/events/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/events/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/events/customize/widget/discussions-list" element={<DiscussionsListCustomizePage />} />
@@ -372,6 +376,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/discussion" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/growth/discussion/customize" element={<Admin4SiteSpacesBlogCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/discussion/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/discussion/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/discussion/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/discussion/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/discussion/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/discussion/customize/widget/discussions-list" element={<DiscussionsListCustomizePage />} />
@@ -390,6 +396,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/question" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/growth/question/customize" element={<Admin4SiteSpacesHelpCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/question/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/question/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/question/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/question/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/question/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/question/customize/widget/discussions-list" element={<DiscussionsListCustomizePage />} />
@@ -408,6 +416,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/growth/wishlist" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/growth/wishlist/customize" element={<Admin4SiteSpacesPostsCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/growth/wishlist/customize/widget/discussions-list" element={<DiscussionsListCustomizePage />} />
@@ -452,6 +462,8 @@ createRoot(document.getElementById("root")!).render(
                         {/* Design mode - Space type customization routes */}
                         <Route path="/admin4/design/spaces/:spaceType/customize" element={<Admin4DesignSpacesCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/design/spaces/:spaceType/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/design/spaces/:spaceType/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/discussion" element={<DiscussionsListCustomizePage />} />
@@ -477,6 +489,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/events" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/events/customize" element={<Admin4SiteSpacesEventsCustomizePage />} />
                         <Route path="/admin4/site/spaces/events/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/events/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/events/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/events/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/events/permissions" element={<Admin4SiteSpacesEventsPage />} />
                         <Route path="/admin4/site/spaces/events/members" element={<Admin4SiteSpacesEventsPage />} />
@@ -488,6 +502,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/discussions" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/discussions/customize" element={<Admin4SiteSpacesBlogCustomizePage />} />
                         <Route path="/admin4/site/spaces/discussions/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/discussions/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/discussions/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/discussions/customize/widget/discussion" element={<DiscussionsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/discussions/permissions" element={<Admin4SiteSpacesBlogPage />} />
                         <Route path="/admin4/site/spaces/discussions/members" element={<Admin4SiteSpacesBlogPage />} />
@@ -499,6 +515,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/questions" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/questions/customize" element={<Admin4SiteSpacesHelpCustomizePage />} />
                         <Route path="/admin4/site/spaces/questions/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/questions/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/questions/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/questions/customize/widget/question" element={<QuestionsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/questions/permissions" element={<Admin4SiteSpacesHelpPage />} />
                         <Route path="/admin4/site/spaces/questions/members" element={<Admin4SiteSpacesHelpPage />} />
@@ -510,6 +528,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/site/spaces/wishlist" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/wishlist/customize" element={<Admin4SiteSpacesPostsCustomizePage />} />
                         <Route path="/admin4/site/spaces/wishlist/customize/widget/space-header" element={<SpaceHeaderCustomizePage />} />
+                        <Route path="/admin4/site/spaces/wishlist/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
+                        <Route path="/admin4/site/spaces/wishlist/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/site/spaces/wishlist/customize/widget/wishlist" element={<WishlistsListCustomizePage />} />
                         <Route path="/admin4/site/spaces/wishlist/permissions" element={<Admin4SiteSpacesPostsPage />} />
                         <Route path="/admin4/site/spaces/wishlist/members" element={<Admin4SiteSpacesPostsPage />} />

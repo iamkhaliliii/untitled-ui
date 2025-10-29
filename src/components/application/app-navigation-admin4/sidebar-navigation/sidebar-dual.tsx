@@ -1836,7 +1836,7 @@ export const SidebarNavigationDual = ({ activeUrl, items, footerItems = [], hide
                                 <li>
                                     <button
                                         onClick={() => {
-                                                const permissionsUrl = isGenericSpaceSettings ?
+                                            const permissionsUrl = isGenericSpaceSettings ?
                                                 (activeUrl?.replace(/\/(settings.*)?$/, '/settings/permissions') || '') :
                                                 isPrivateSpacePage ? `/${currentAdminVersion}/site/spaces/private-space/permissions` : 
                                                 activeUrl?.includes("/site/spaces/growth/discussion") ? `/${currentAdminVersion}/site/spaces/growth/discussion/permissions` :

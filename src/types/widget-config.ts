@@ -43,9 +43,13 @@ export interface AnnouncementBannerConfig {
   title: string;
   description: string;
   url: string;
-  style: 'primary' | 'natural' | 'warning' | 'error' | 'info';
+  style: 'primary' | 'natural' | 'warning' | 'error' | 'info' | 'color' | 'image' | 'video';
   showIcon: boolean;
   showCloseButton: boolean;
+  // Style specific fields
+  backgroundColor: string;
+  imageUrl: string;
+  videoUrl: string;
 }
 
 export interface ComposerConfig {
@@ -200,6 +204,10 @@ export const defaultAnnouncementBannerConfig: AnnouncementBannerConfig = {
   style: 'primary',
   showIcon: true,
   showCloseButton: true,
+  // Style specific defaults
+  backgroundColor: '#ec4899',
+  imageUrl: '',
+  videoUrl: '',
 };
 
 export const defaultComposerConfig: ComposerConfig = {

@@ -716,15 +716,15 @@ export const EventsCustomizeSettings = ({
             
             {/* Content Widget - Dynamic based on space type */}
             {isGrowthEvents && (
-              <PropertyToggle
-                icon={Calendar}
-                label="Events"
-                isSelected={spaceWidgetStates.eventsList}
-                onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
-                id="events-list"
-                iconColor="bg-green-100/20"
-                onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events' })}
-              />
+            <PropertyToggle
+              icon={Calendar}
+              label="Events"
+              isSelected={spaceWidgetStates.eventsList}
+              onChange={(value) => updateSpaceWidgetStates({ eventsList: value })}
+              id="events-list"
+              iconColor="bg-green-100/20"
+              onSettingsClick={() => onWidgetConfig({ id: 'eventsList', label: 'Events' })}
+            />
             )}
             
             {isGrowthDiscussion && (

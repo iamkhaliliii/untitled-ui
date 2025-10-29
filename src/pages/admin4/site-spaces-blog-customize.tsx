@@ -298,12 +298,12 @@ export const SiteSpacesBlogCustomizePage = () => {
                         
                         {/* Right: Space Settings button - only show on main customizer state */}
                         {!(showWidgetSelection || showWidgetConfig || showNavigationInTertiary) && (
-                            <button
-                                onClick={handleSpaceSettings}
+                        <button
+                            onClick={handleSpaceSettings}
                                 className="p-2 rounded-full border border-secondary hover:bg-secondary/60 transition-colors"
-                            >
+                        >
                                 <Settings01 className="size-4 text-fg-quaternary" />
-                            </button>
+                        </button>
                         )}
                     </div>
                     
