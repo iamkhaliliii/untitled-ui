@@ -25,10 +25,7 @@ export const AnnouncementBannerConfig: React.FC = () => {
     { id: 'natural', label: 'Natural', icon: Square },
     { id: 'warning', label: 'Warning', icon: AlertTriangle },
     { id: 'error', label: 'Error', icon: X },
-    { id: 'info', label: 'Info', icon: InfoCircle },
-    { id: 'color', label: 'Color', icon: Palette },
-    { id: 'image', label: 'Image', icon: Image01 },
-    { id: 'video', label: 'Video', icon: VideoRecorder }
+    { id: 'info', label: 'Info', icon: InfoCircle }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -113,7 +110,7 @@ export const AnnouncementBannerConfig: React.FC = () => {
       >
         <div className="space-y-6">
           <div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-5 gap-2">
               {styleOptions.map((option) => (
                 <StyleTile
                   key={option.id}
