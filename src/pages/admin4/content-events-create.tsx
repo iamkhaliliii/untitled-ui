@@ -1243,7 +1243,7 @@ export const AdminContentEventsCreatePage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Advanced Options - Collapsible */}
+                                    {/* Notification settings - Collapsible */}
                                     <div className="border border-secondary dark:border-gray-700 rounded-lg">
                                         <button
                                             type="button"
@@ -1251,7 +1251,7 @@ export const AdminContentEventsCreatePage = () => {
                                             className="w-full flex items-center justify-between p-4 text-left hover:bg-secondary dark:hover:bg-gray-800 transition-colors"
                                         >
                                             <span className="text-sm font-medium text-secondary flex items-center gap-2">
-                                                Advanced Options
+                                                Notification settings
                                                 <EyeOff className="size-4 text-tertiary" />
                                             </span>
                                             {advancedExpanded ? (
@@ -1264,29 +1264,6 @@ export const AdminContentEventsCreatePage = () => {
                                         <div className={`overflow-hidden transition-all duration-300 ${advancedExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                                             <div className="px-4 pb-4 space-y-5 border-t border-gray-100 dark:border-gray-800">
                                                 
-                                                {/* Privacy Settings */}
-                                                <div className="space-y-3">
-                                                    <h4 className="text-sm font-semibold text-primary border-b border-secondary dark:border-gray-700 pb-2">Privacy Settings</h4>
-                                                    <div className="space-y-2">
-                                                        <Toggle
-                                                            slim
-                                                            size="sm"
-                                                            label="Hide Address from non-attendees"
-                                                            hint="Only confirmed attendees can see address"
-                                                            isSelected={formData.hideAddress}
-                                                            onChange={(isSelected) => setFormData(prev => ({ ...prev, hideAddress: isSelected }))}
-                                                        />
-                                                        <Toggle
-                                                            slim
-                                                            size="sm"
-                                                            label="Hide Attendees"
-                                                            hint="Don't show who's attending this event"
-                                                            isSelected={formData.hideAttendees}
-                                                            onChange={(isSelected) => setFormData(prev => ({ ...prev, hideAttendees: isSelected }))}
-                                                        />
-                                                    </div>
-                                                </div>
-
                                                 {/* Email Notifications */}
                                                 <div className="space-y-3">
                                                     <h4 className="text-sm font-semibold text-primary border-b border-secondary dark:border-gray-700 pb-2">Email Notifications</h4>
