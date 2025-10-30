@@ -11,31 +11,49 @@ export const LeaderboardConfig: React.FC = () => {
   const { leaderboardConfig, updateLeaderboardConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { source, numberOfMembers, excludeAdmins, tabView, showScore } = leaderboardConfig;
+  const { source, numberOfMembers, excludeAdmins, tabView, allTab, monthTab, weekTab, showScore } = leaderboardConfig;
 
   // Section collapse/expand states
   const [sourceExpanded, setSourceExpanded] = useState(true);
   const [tabExpanded, setTabExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
 
-  // Tab views state
+  // Tab views state - sync with config
   const [tabViews, setTabViews] = useState([
-    { id: 'all', label: 'All Time', enabled: true },
-    { id: 'month', label: 'This Month', enabled: true },
-    { id: 'week', label: 'This Week', enabled: true }
+    { id: 'all', label: 'All Time', enabled: allTab },
+    { id: 'month', label: 'This Month', enabled: monthTab },
+    { id: 'week', label: 'This Week', enabled: weekTab }
   ]);
   const [editingTabId, setEditingTabId] = useState<string | null>(null);
 
-  // Update tabView whenever tabViews change
+  // Sync tabViews with config
   useEffect(() => {
+    setTabViews([
+      { id: 'all', label: 'All Time', enabled: allTab },
+      { id: 'month', label: 'This Month', enabled: monthTab },
+      { id: 'week', label: 'This Week', enabled: weekTab }
+    ]);
+  }, [allTab, monthTab, weekTab]);
+
+  // Update config whenever tabViews change
+  useEffect(() => {
+    const allTabItem = tabViews.find(t => t.id === 'all');
+    const monthTabItem = tabViews.find(t => t.id === 'month');
+    const weekTabItem = tabViews.find(t => t.id === 'week');
+    
+    updateLeaderboardConfig({
+      allTab: allTabItem?.enabled ?? true,
+      monthTab: monthTabItem?.enabled ?? true,
+      weekTab: weekTabItem?.enabled ?? true
+    });
+
+    // If current tab is disabled, switch to first enabled
     const enabledTabs = tabViews.filter(tab => tab.enabled);
-    // Find which tab is currently selected based on tabView config
     const currentTab = tabViews.find(tab => tab.id === tabView);
     if (currentTab && !currentTab.enabled && enabledTabs.length > 0) {
-      // If current tab is disabled, switch to first enabled tab
       updateLeaderboardConfig({ tabView: enabledTabs[0].id as any });
     }
-  }, [tabViews, tabView, updateLeaderboardConfig]);
+  }, [tabViews]);
 
   // Tab handlers
   const handleToggleTab = (tabId: string) => {

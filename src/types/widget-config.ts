@@ -88,6 +88,9 @@ export interface LeaderboardConfig {
   numberOfMembers: number;
   excludeAdmins: boolean;
   tabView: 'all' | 'month' | 'week';
+  allTab: boolean;
+  monthTab: boolean;
+  weekTab: boolean;
   showScore: boolean;
 }
 
@@ -284,6 +287,9 @@ export const defaultLeaderboardConfig: LeaderboardConfig = {
   numberOfMembers: 5,
   excludeAdmins: false,
   tabView: 'all',
+  allTab: true,
+  monthTab: true,
+  weekTab: true,
   showScore: true,
 };
 
