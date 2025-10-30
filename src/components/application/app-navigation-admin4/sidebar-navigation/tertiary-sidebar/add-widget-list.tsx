@@ -11,8 +11,8 @@ interface AddWidgetListProps {
 const spaceWidgets = [
   { id: 'hero-banner', label: 'Hero Banner', icon: CursorBox },
   { id: 'announcement-banner', label: 'Announcement Banner', icon: FlexAlignTop },
-  { id: 'members', label: 'Members', icon: Users01, underDesign: true },
-  { id: 'leaderboard', label: 'Leaderboard', icon: Star01, underDesign: true },
+  { id: 'members', label: 'Members', icon: Users01 },
+  { id: 'leaderboard', label: 'Leaderboard', icon: Star01 },
   { id: 'spaces', label: 'Spaces', icon: Grid03, underDesign: true },
   { id: 'html-script', label: 'Html Script', icon: Code01, underDesign: true },
   { id: 'rich-text', label: 'Rich Text', icon: File01, underDesign: true },

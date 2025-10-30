@@ -23,7 +23,7 @@ export const LeaderboardWidget: React.FC<LeaderboardWidgetProps> = ({ className,
   ];
 
   // Filter data based on configuration
-  const filteredData = leaderboardConfig.excludeAdminsModerators 
+  const filteredData = leaderboardConfig.excludeAdmins 
     ? leaderboardData.filter(user => !user.isAdmin)
     : leaderboardData;
 

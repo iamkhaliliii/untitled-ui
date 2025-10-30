@@ -8,6 +8,8 @@ import {
   defaultAnnouncementBannerConfig,
   HeroBannerConfig,
   defaultHeroBannerConfig,
+  MembersConfig,
+  defaultMembersConfig,
   ComposerConfig,
   defaultComposerConfig,
   LeaderboardConfig,
@@ -91,6 +93,8 @@ interface WidgetConfigContextType {
   updateAnnouncementBannerConfig: (config: Partial<AnnouncementBannerConfig>) => void;
   heroBannerConfig: HeroBannerConfig;
   updateHeroBannerConfig: (config: Partial<HeroBannerConfig>) => void;
+  membersConfig: MembersConfig;
+  updateMembersConfig: (config: Partial<MembersConfig>) => void;
   composerConfig: ComposerConfig;
   updateComposerConfig: (config: Partial<ComposerConfig>) => void;
   leaderboardConfig: LeaderboardConfig;
@@ -142,6 +146,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
   const [spaceHeaderConfig, setSpaceHeaderConfig] = useState<SpaceHeaderConfig>(defaultSpaceHeaderConfig);
   const [announcementBannerConfig, setAnnouncementBannerConfig] = useState<AnnouncementBannerConfig>(defaultAnnouncementBannerConfig);
   const [heroBannerConfig, setHeroBannerConfig] = useState<HeroBannerConfig>(defaultHeroBannerConfig);
+  const [membersConfig, setMembersConfig] = useState<MembersConfig>(defaultMembersConfig);
   const [composerConfig, setComposerConfig] = useState<ComposerConfig>(defaultComposerConfig);
   const [leaderboardConfig, setLeaderboardConfig] = useState<LeaderboardConfig>(defaultLeaderboardConfig);
   const [htmlScriptConfig, setHtmlScriptConfig] = useState<HtmlScriptConfig>(defaultHtmlScriptConfig);
@@ -255,6 +260,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
 
   const updateHeroBannerConfig = (config: Partial<HeroBannerConfig>) => {
     setHeroBannerConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateMembersConfig = (config: Partial<MembersConfig>) => {
+    setMembersConfig(prevConfig => ({ ...prevConfig, ...config }));
   };
 
   const updateComposerConfig = (config: Partial<ComposerConfig>) => {
@@ -404,6 +413,8 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateAnnouncementBannerConfig,
       heroBannerConfig,
       updateHeroBannerConfig,
+      membersConfig,
+      updateMembersConfig,
       composerConfig,
       updateComposerConfig,
       leaderboardConfig,

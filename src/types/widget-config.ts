@@ -56,15 +56,39 @@ export interface HeroBannerConfig {
   layout: 'fill' | 'right' | 'left' | 'top' | 'bottom';
   style: 'simple' | 'color' | 'image' | 'video';
   alignment: 'left' | 'center' | 'right';
+  showIcon: boolean;
+  iconEmoji: string;
   title: string;
   description: string;
-  showCTA: boolean;
-  ctaText: string;
-  ctaUrl: string;
+  showPrimaryCTA: boolean;
+  primaryCTAText: string;
+  primaryCTAUrl: string;
+  showSecondaryCTA: boolean;
+  secondaryCTAText: string;
+  secondaryCTAUrl: string;
   // Style specific fields
   backgroundColor: string;
   imageUrl: string;
   videoUrl: string;
+}
+
+export interface MembersConfig {
+  source: 'all' | 'current';
+  hideAdmins: boolean;
+  sort: 'alphabetic' | 'oldest' | 'newest';
+  layout: 'list' | 'card' | 'carousel';
+  showAvatar: boolean;
+  showBadges: boolean;
+  showMessageButton: boolean;
+  showDetails: boolean;
+}
+
+export interface LeaderboardConfig {
+  source: 'all' | 'current';
+  numberOfMembers: number;
+  excludeAdmins: boolean;
+  tabView: 'all' | 'month' | 'week';
+  showScore: boolean;
 }
 
 export interface ComposerConfig {
@@ -73,15 +97,6 @@ export interface ComposerConfig {
   showAttachments: boolean;
   showEmoji: boolean;
   buttonText: string;
-}
-
-export interface LeaderboardConfig {
-  title: string;
-  source: 'all_spaces' | 'current_space' | 'event' | 'blog';
-  numberOfMembers: number;
-  defaultTab: 'all_time' | 'month' | 'week';
-  showScore: boolean;
-  excludeAdminsModerators: boolean;
 }
 
 export interface HtmlScriptConfig {
@@ -229,15 +244,31 @@ export const defaultHeroBannerConfig: HeroBannerConfig = {
   layout: 'fill',
   style: 'color',
   alignment: 'center',
+  showIcon: true,
+  iconEmoji: '🎉',
   title: 'Welcome to Our Community',
   description: 'Join us for discussions, events, and more',
-  showCTA: true,
-  ctaText: 'Get Started',
-  ctaUrl: '#',
+  showPrimaryCTA: true,
+  primaryCTAText: 'Get Started',
+  primaryCTAUrl: '#',
+  showSecondaryCTA: true,
+  secondaryCTAText: 'Learn More',
+  secondaryCTAUrl: '#',
   // Style specific defaults
   backgroundColor: '#7f56d9',
   imageUrl: '',
   videoUrl: '',
+};
+
+export const defaultMembersConfig: MembersConfig = {
+  source: 'current',
+  hideAdmins: false,
+  sort: 'alphabetic',
+  layout: 'card',
+  showAvatar: true,
+  showBadges: true,
+  showMessageButton: true,
+  showDetails: true,
 };
 
 export const defaultComposerConfig: ComposerConfig = {
@@ -249,12 +280,11 @@ export const defaultComposerConfig: ComposerConfig = {
 };
 
 export const defaultLeaderboardConfig: LeaderboardConfig = {
-  title: 'Top Contributors',
-  source: 'current_space',
+  source: 'current',
   numberOfMembers: 5,
-  defaultTab: 'all_time',
+  excludeAdmins: false,
+  tabView: 'all',
   showScore: true,
-  excludeAdminsModerators: false,
 };
 
 export const defaultHtmlScriptConfig: HtmlScriptConfig = {

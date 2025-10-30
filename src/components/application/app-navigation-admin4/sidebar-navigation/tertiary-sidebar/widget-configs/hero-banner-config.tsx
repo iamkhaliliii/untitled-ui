@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Settings01, Palette, Image01, VideoRecorder, Upload01, Square, Zap, GridDotsOuter, FlexAlignRight, FlexAlignLeft, FlexAlignTop, FlexAlignBottom, AlignLeft, AlignCenter, AlignRight } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
@@ -13,13 +13,41 @@ export const HeroBannerConfig: React.FC = () => {
   const { heroBannerConfig, updateHeroBannerConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { layout, style, alignment, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
+  const { layout, style, alignment, showIcon, iconEmoji, title, description, showPrimaryCTA, primaryCTAText, primaryCTAUrl, showSecondaryCTA, secondaryCTAText, secondaryCTAUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
 
   // Section collapse/expand states
   const [layoutExpanded, setLayoutExpanded] = useState(true);
   const [styleExpanded, setStyleExpanded] = useState(true);
   const [contentExpanded, setContentExpanded] = useState(true);
   const [ctaExpanded, setCtaExpanded] = useState(true);
+  
+  // Emoji picker state
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Common emojis for quick selection
+  const commonEmojis = [
+    '🎉', '🚀', '✨', '🎯', '💡', '🔥', '⭐', '🎨',
+    '📱', '💻', '🌟', '🎊', '🎈', '🏆', '💫', '🌈',
+    '👋', '❤️', '👍', '🙌', '💪', '🎵', '📢', '🔔'
+  ];
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    
+    if (showEmojiPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   // Auto-switch from simple to color when layout changes to split
   useEffect(() => {
@@ -385,6 +413,70 @@ export const HeroBannerConfig: React.FC = () => {
         onExpandedChange={setContentExpanded}
       >
         <div className="space-y-4">
+          {/* Icon Toggle */}
+          <PropertyToggle
+            icon={Settings01}
+            label="Icon"
+            isSelected={showIcon}
+            onChange={(value) => updateHeroBannerConfig({ showIcon: value })}
+            id="show-icon"
+          />
+
+          {/* Icon Emoji Picker */}
+          {showIcon && (
+            <div className="pt-2">
+              <div className="flex items-center gap-3">
+                <label className={cx(
+                  "text-sm font-medium",
+                  theme === 'dark' ? "text-gray-100" : "text-secondary"
+                )}>
+                  Icon
+                </label>
+                
+                <div className="ml-auto relative" ref={emojiPickerRef}>
+                  {/* Emoji Button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className={cx(
+                      "w-14 h-14 rounded-lg border-2 transition-all shadow-sm hover:scale-105 flex items-center justify-center text-3xl",
+                      theme === 'dark' ? "border-gray-600 bg-gray-800" : "border-gray-300 bg-white"
+                    )}
+                  >
+                    {iconEmoji || '🎉'}
+                  </button>
+                  
+                  {/* Emoji Picker Popover */}
+                  {showEmojiPicker && (
+                    <div className={cx(
+                      "absolute right-0 mt-2 p-3 rounded-lg border shadow-lg z-50 w-64",
+                      theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                    )}>
+                      <div className="grid grid-cols-8 gap-2">
+                        {commonEmojis.map((emoji) => (
+                          <button
+                            key={emoji}
+                            type="button"
+                            onClick={() => {
+                              updateHeroBannerConfig({ iconEmoji: emoji });
+                              setShowEmojiPicker(false);
+                            }}
+                            className={cx(
+                              "w-8 h-8 flex items-center justify-center text-xl rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+                              iconEmoji === emoji && "bg-brand-50 dark:bg-brand-900/30"
+                            )}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           <Input
             label="Title"
             value={title}
@@ -434,36 +526,72 @@ export const HeroBannerConfig: React.FC = () => {
         isExpanded={ctaExpanded}
         onExpandedChange={setCtaExpanded}
       >
-        <div className="space-y-2">
-          <PropertyToggle
-            icon={Zap}
-            label="Show CTA Button"
-            isSelected={showCTA}
-            onChange={(value) => updateHeroBannerConfig({ showCTA: value })}
-            id="show-cta"
-          />
-          
-          {showCTA && (
-            <>
-              <div className="pt-2">
-                <Input
-                  label="Button Text"
-                  value={ctaText}
-                  onChange={(value) => updateHeroBannerConfig({ ctaText: value })}
-                  placeholder="Enter button text"
-                />
-              </div>
-              
-              <div className="pt-2">
-                <Input
-                  label="Button URL"
-                  value={ctaUrl}
-                  onChange={(value) => updateHeroBannerConfig({ ctaUrl: value })}
-                  placeholder="Enter button URL"
-                />
-              </div>
-            </>
-          )}
+        <div className="space-y-4">
+          {/* Primary CTA */}
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={Zap}
+              label="Primary Button"
+              isSelected={showPrimaryCTA}
+              onChange={(value) => updateHeroBannerConfig({ showPrimaryCTA: value })}
+              id="show-primary-cta"
+            />
+            
+            {showPrimaryCTA && (
+              <>
+                <div className="pt-2">
+                  <Input
+                    label="Button Text"
+                    value={primaryCTAText}
+                    onChange={(value) => updateHeroBannerConfig({ primaryCTAText: value })}
+                    placeholder="Enter primary button text"
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Input
+                    label="Button URL"
+                    value={primaryCTAUrl}
+                    onChange={(value) => updateHeroBannerConfig({ primaryCTAUrl: value })}
+                    placeholder="Enter primary button URL"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Secondary CTA */}
+          <div className="space-y-2">
+            <PropertyToggle
+              icon={Zap}
+              label="Secondary Button"
+              isSelected={showSecondaryCTA}
+              onChange={(value) => updateHeroBannerConfig({ showSecondaryCTA: value })}
+              id="show-secondary-cta"
+            />
+            
+            {showSecondaryCTA && (
+              <>
+                <div className="pt-2">
+                  <Input
+                    label="Button Text"
+                    value={secondaryCTAText}
+                    onChange={(value) => updateHeroBannerConfig({ secondaryCTAText: value })}
+                    placeholder="Enter secondary button text"
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Input
+                    label="Button URL"
+                    value={secondaryCTAUrl}
+                    onChange={(value) => updateHeroBannerConfig({ secondaryCTAUrl: value })}
+                    placeholder="Enter secondary button URL"
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </CustomizerSection>
     </div>

@@ -8,6 +8,7 @@ import { EventsListWidget } from "./events-list-widget";
 import { ComposerWidget } from "./composer-widget";
 import { AnnouncementBannerWidget } from "./announcement-banner-widget";
 import { HeroBannerWidget } from "./hero-banner-widget";
+import { MembersWidget } from "./members-widget";
 import { LeaderboardWidget } from "./leaderboard-widget";
 import { HtmlScriptWidget } from "./html-script-widget";
 import { RichTextWidget } from "./rich-text-widget";
@@ -557,6 +558,18 @@ export const BrowserMockup = ({
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
                               <HeroBannerWidget theme={theme} />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('members_') || widget.label === 'Members') {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <MembersWidget theme={theme} />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('leaderboard_') || widget.label === 'Leaderboard') {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <LeaderboardWidget theme={theme} />
                             </div>
                           );
                         } else if (widget.id.startsWith('events_')) {

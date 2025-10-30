@@ -15,7 +15,7 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
   const theme = useResolvedTheme(propTheme);
   const { heroBannerConfig } = useWidgetConfig();
   
-  const { layout, style, alignment, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
+  const { layout, style, alignment, showIcon, iconEmoji, title, description, showPrimaryCTA, primaryCTAText, primaryCTAUrl, showSecondaryCTA, secondaryCTAText, secondaryCTAUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
 
   // Calculate contrast and determine text color
   const getTextColor = (hexColor: string): 'white' | 'black' => {
@@ -139,6 +139,13 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl">
+        {/* Icon */}
+        {showIcon && (
+          <div className="text-5xl mb-4">
+            {iconEmoji || '🎉'}
+          </div>
+        )}
+        
         <h2 className={cx(
           "text-2xl font-bold mb-3",
           style === 'simple' && (theme === 'dark' ? "text-gray-100" : "text-gray-900"),
@@ -155,18 +162,41 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
           {description}
         </p>
         
-        {showCTA && (
-          <a
-            href={ctaUrl}
-            className={cx(
-              "inline-block px-6 py-3 rounded-lg font-medium text-sm transition-colors",
-              style === 'simple' && "bg-brand-solid text-white hover:bg-brand-solid_hover",
-              style === 'color' && (textColor === 'white' ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-900 text-white hover:bg-gray-800'),
-              (style === 'image' || style === 'video') && "bg-white text-gray-900 hover:bg-gray-100"
+        {(showPrimaryCTA || showSecondaryCTA) && (
+          <div className={cx(
+            "flex gap-3",
+            alignment === 'left' && "justify-start",
+            alignment === 'center' && "justify-center",
+            alignment === 'right' && "justify-end"
+          )}>
+            {showPrimaryCTA && (
+              <a
+                href={primaryCTAUrl}
+                className={cx(
+                  "inline-block px-6 py-3 rounded-lg font-medium text-sm transition-colors",
+                  style === 'simple' && "bg-brand-solid text-white hover:bg-brand-solid_hover",
+                  style === 'color' && (textColor === 'white' ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-900 text-white hover:bg-gray-800'),
+                  (style === 'image' || style === 'video') && "bg-white text-gray-900 hover:bg-gray-100"
+                )}
+              >
+                {primaryCTAText}
+              </a>
             )}
-          >
-            {ctaText}
-          </a>
+            
+            {showSecondaryCTA && (
+              <a
+                href={secondaryCTAUrl}
+                className={cx(
+                  "inline-block px-6 py-3 rounded-lg font-medium text-sm transition-colors border",
+                  style === 'simple' && (theme === 'dark' ? "border-gray-700 text-gray-200 hover:bg-gray-800" : "border-gray-300 text-gray-700 hover:bg-gray-50"),
+                  style === 'color' && (textColor === 'white' ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/5'),
+                  (style === 'image' || style === 'video') && "border-white/30 text-white hover:bg-white/10"
+                )}
+              >
+                {secondaryCTAText}
+              </a>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -190,6 +220,13 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
         (layout === 'left' || layout === 'right') && "w-1/2",
         (layout === 'top' || layout === 'bottom') && "w-full"
       )}>
+        {/* Icon */}
+        {showIcon && (
+          <div className="text-5xl mb-4">
+            {iconEmoji || '🎉'}
+          </div>
+        )}
+        
         <h2 className={cx(
           "text-2xl font-bold mb-3",
           theme === 'dark' ? "text-gray-100" : "text-gray-900"
@@ -204,14 +241,33 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
           {description}
         </p>
         
-        {showCTA && (
-          <div>
-            <a
-              href={ctaUrl}
-              className="inline-block px-6 py-3 rounded-lg font-medium text-sm bg-brand-solid text-white hover:bg-brand-solid_hover transition-colors"
-            >
-              {ctaText}
-            </a>
+        {(showPrimaryCTA || showSecondaryCTA) && (
+          <div className={cx(
+            "flex gap-3",
+            alignment === 'left' && "justify-start",
+            alignment === 'center' && "justify-center",
+            alignment === 'right' && "justify-end"
+          )}>
+            {showPrimaryCTA && (
+              <a
+                href={primaryCTAUrl}
+                className="inline-block px-6 py-3 rounded-lg font-medium text-sm bg-brand-solid text-white hover:bg-brand-solid_hover transition-colors"
+              >
+                {primaryCTAText}
+              </a>
+            )}
+            
+            {showSecondaryCTA && (
+              <a
+                href={secondaryCTAUrl}
+                className={cx(
+                  "inline-block px-6 py-3 rounded-lg font-medium text-sm transition-colors border",
+                  theme === 'dark' ? "border-gray-700 text-gray-200 hover:bg-gray-800" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                )}
+              >
+                {secondaryCTAText}
+              </a>
+            )}
           </div>
         )}
       </div>

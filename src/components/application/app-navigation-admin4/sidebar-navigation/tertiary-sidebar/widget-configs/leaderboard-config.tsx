@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { BarChart03, Users01, Globe05, Home01, Calendar, Edit03 } from '@untitledui/icons';
+import React, { useState, useEffect } from 'react';
+import { Settings01, Users01, Grid01, Calendar, Star01, Hash01, DotsGrid } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
-import { Select } from '@/components/base/select/select';
 import { Toggle } from '@/components/base/toggle/toggle';
 import { useResolvedTheme } from '@/hooks/use-resolved-theme';
 import { cx } from '@/utils/cx';
@@ -12,24 +11,50 @@ export const LeaderboardConfig: React.FC = () => {
   const { leaderboardConfig, updateLeaderboardConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { title, source, numberOfMembers, defaultTab, showScore, excludeAdminsModerators } = leaderboardConfig;
+  const { source, numberOfMembers, excludeAdmins, tabView, showScore } = leaderboardConfig;
 
   // Section collapse/expand states
-  const [infoExpanded, setInfoExpanded] = useState(true);
-  const [layoutExpanded, setLayoutExpanded] = useState(true);
+  const [sourceExpanded, setSourceExpanded] = useState(true);
+  const [tabExpanded, setTabExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
 
-  const sourceOptions = [
-    { id: 'all_spaces', label: 'All Spaces', icon: Globe05 },
-    { id: 'current_space', label: 'Current Space', icon: Home01 },
-    { id: 'event', label: 'Event', icon: Calendar },
-    { id: 'blog', label: 'Blog', icon: Edit03 }
-  ];
+  // Tab views state
+  const [tabViews, setTabViews] = useState([
+    { id: 'all', label: 'All Time', enabled: true },
+    { id: 'month', label: 'This Month', enabled: true },
+    { id: 'week', label: 'This Week', enabled: true }
+  ]);
+  const [editingTabId, setEditingTabId] = useState<string | null>(null);
 
-  const defaultTabOptions = [
-    { id: 'all_time', label: 'All Time', icon: Globe05 },
-    { id: 'month', label: 'Month', icon: Calendar },
-    { id: 'week', label: 'Week', icon: Calendar }
+  // Update tabView whenever tabViews change
+  useEffect(() => {
+    const enabledTabs = tabViews.filter(tab => tab.enabled);
+    // Find which tab is currently selected based on tabView config
+    const currentTab = tabViews.find(tab => tab.id === tabView);
+    if (currentTab && !currentTab.enabled && enabledTabs.length > 0) {
+      // If current tab is disabled, switch to first enabled tab
+      updateLeaderboardConfig({ tabView: enabledTabs[0].id as any });
+    }
+  }, [tabViews, tabView, updateLeaderboardConfig]);
+
+  // Tab handlers
+  const handleToggleTab = (tabId: string) => {
+    if (tabId === 'all') return; // All Time tab can't be disabled
+    
+    setTabViews(prev => prev.map(tab => 
+      tab.id === tabId ? { ...tab, enabled: !tab.enabled } : tab
+    ));
+  };
+
+  const handleRenameTab = (tabId: string, newLabel: string) => {
+    setTabViews(prev => prev.map(tab => 
+      tab.id === tabId ? { ...tab, label: newLabel } : tab
+    ));
+  };
+
+  const sourceOptions = [
+    { id: 'all', label: 'All', icon: Users01 },
+    { id: 'current', label: 'Current Space', icon: Grid01 }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -67,35 +92,160 @@ export const LeaderboardConfig: React.FC = () => {
     </div>
   );
 
+  const StyleTile = ({ option, isSelected, onClick }: {
+    option: { id: string; label: string; icon: React.ComponentType<any> };
+    isSelected: boolean;
+    onClick: () => void;
+  }) => {
+    const IconComponent = option.icon;
+    return (
+      <button
+        onClick={onClick}
+        className={cx(
+          "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
+          isSelected
+            ? theme === 'dark'
+              ? "border-brand-solid bg-brand-solid/20 text-brand-primary"
+              : "border-brand-solid bg-brand-50 text-brand-secondary"
+            : theme === 'dark'
+              ? "border-gray-700 bg-gray-800/50 text-gray-200 hover:border-gray-600 hover:bg-gray-700/60"
+              : "border-secondary bg-primary text-secondary hover:border-brand-200 hover:bg-brand-25"
+        )}
+      >
+        <div className={cx(
+          "p-2 rounded-md",
+          isSelected 
+            ? theme === 'dark' 
+              ? "bg-brand-solid/30" 
+              : "bg-brand-100"
+            : theme === 'dark'
+              ? "bg-gray-700/60"
+              : "bg-secondary/60"
+        )}>
+          <IconComponent className="size-4" />
+        </div>
+        <span className="text-xs font-medium">{option.label}</span>
+      </button>
+    );
+  };
+
+  const TabViewItem = ({ tab, onToggle, onRename }: {
+    tab: { id: string; label: string; enabled: boolean };
+    onToggle: (tabId: string) => void;
+    onRename: (tabId: string, newLabel: string) => void;
+  }) => {
+    const isEditing = editingTabId === tab.id;
+    const [editLabel, setEditLabel] = useState(tab.label);
+
+    useEffect(() => {
+      setEditLabel(tab.label);
+    }, [tab.label]);
+
+    const handleRename = () => {
+      onRename(tab.id, editLabel);
+      setEditingTabId(null);
+    };
+
+    const handleStartEdit = () => {
+      setEditingTabId(tab.id);
+      setEditLabel(tab.label);
+    };
+
+    const handleCancelEdit = () => {
+      setEditLabel(tab.label);
+      setEditingTabId(null);
+    };
+
+    return (
+      <div className={cx(
+        "flex items-center px-2 py-2 border rounded-lg transition-all duration-200",
+        theme === 'dark' 
+          ? "border-gray-700 bg-gray-800/50 hover:bg-gray-800/80 hover:border-gray-600"
+          : "border-gray-200 bg-white/50 hover:bg-white/80 hover:border-gray-300"
+      )}>
+        <DotsGrid className={cx(
+          "size-4 mr-3 cursor-grab",
+          theme === 'dark' ? "text-gray-500" : "text-gray-400"
+        )} />
+
+        <div className="flex-1">
+          {isEditing ? (
+            <Input
+              value={editLabel}
+              onChange={(value) => setEditLabel(value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') handleCancelEdit();
+              }}
+              size="sm"
+              autoFocus
+            />
+          ) : (
+            <span 
+              className={cx(
+                "text-sm font-medium cursor-pointer",
+                theme === 'dark' ? "text-gray-100" : "text-gray-900"
+              )}
+              onDoubleClick={handleStartEdit}
+            >
+              {tab.label}
+            </span>
+          )}
+        </div>
+
+        <div className="mr-2">
+          <Toggle
+            isSelected={tab.enabled}
+            onChange={() => onToggle(tab.id)}
+            size="sm"
+            slim
+            isDisabled={tab.id === 'all'}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-2">
-      {/* Basic Section */}
+      {/* Source Section */}
       <CustomizerSection
-        title="Basic"
-        isExpanded={infoExpanded}
-        onExpandedChange={setInfoExpanded}
+        title="Source"
+        isExpanded={sourceExpanded}
+        onExpandedChange={setSourceExpanded}
       >
         <div className="space-y-4">
           <div>
-            <Input
-              label="Title"
-              id="leaderboard-title"
-              value={title}
-              onChange={(value) => updateLeaderboardConfig({ title: value })}
-              placeholder="Enter leaderboard title"
-            />
+            <div className="grid grid-cols-2 gap-2">
+              {sourceOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={source === option.id}
+                  onClick={() => updateLeaderboardConfig({ source: option.id as any })}
+                />
+              ))}
+            </div>
           </div>
-          
-          <div>
-            <Select
-              label="Source"
-              items={sourceOptions}
-              selectedKey={source}
-              onSelectionChange={(key) => updateLeaderboardConfig({ source: key as 'all_spaces' | 'current_space' | 'event' | 'blog' })}
-            >
-              {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-            </Select>
-          </div>
+
+          {/* Number of Members */}
+          <Input
+            label="Number of members"
+            type="number"
+            value={numberOfMembers.toString()}
+            onChange={(value) => updateLeaderboardConfig({ numberOfMembers: parseInt(value) || 5 })}
+            placeholder="5"
+          />
+
+          {/* Exclude Admins Toggle */}
+          <PropertyToggle
+            icon={Settings01}
+            label="Exclude Admins & Moderators"
+            isSelected={excludeAdmins}
+            onChange={(value) => updateLeaderboardConfig({ excludeAdmins: value })}
+            id="exclude-admins"
+          />
         </div>
       </CustomizerSection>
 
@@ -105,34 +255,21 @@ export const LeaderboardConfig: React.FC = () => {
         theme === 'dark' ? "border-gray-700" : "border-secondary"
       )}></div>
 
-      {/* Style Section */}
+      {/* Tab Views Section */}
       <CustomizerSection
-        title="Style"
-        isExpanded={layoutExpanded}
-        onExpandedChange={setLayoutExpanded}
+        title="Tab views"
+        isExpanded={tabExpanded}
+        onExpandedChange={setTabExpanded}
       >
-        <div className="space-y-4">
-          <div>
-            <Input
-              label="Number of Members"
-              id="number-of-members"
-              type="number"
-              value={numberOfMembers.toString()}
-              onChange={(value) => updateLeaderboardConfig({ numberOfMembers: parseInt(value) || 5 })}
-              placeholder="5"
+        <div className="space-y-1.5">
+          {tabViews.map((tab) => (
+            <TabViewItem
+              key={tab.id}
+              tab={tab}
+              onToggle={handleToggleTab}
+              onRename={handleRenameTab}
             />
-          </div>
-          
-          <div>
-            <Select
-              label="Default Tab"
-              items={defaultTabOptions}
-              selectedKey={defaultTab}
-              onSelectionChange={(key) => updateLeaderboardConfig({ defaultTab: key as 'all_time' | 'month' | 'week' })}
-            >
-              {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-            </Select>
-          </div>
+          ))}
         </div>
       </CustomizerSection>
 
@@ -150,23 +287,14 @@ export const LeaderboardConfig: React.FC = () => {
       >
         <div className="space-y-2">
           <PropertyToggle
-            icon={BarChart03}
+            icon={Hash01}
             label="Show Score"
             isSelected={showScore}
             onChange={(value) => updateLeaderboardConfig({ showScore: value })}
             id="show-score"
-          />
-
-          <PropertyToggle
-            icon={Users01}
-            label="Exclude Admins & Moderators"
-            isSelected={excludeAdminsModerators}
-            onChange={(value) => updateLeaderboardConfig({ excludeAdminsModerators: value })}
-            id="exclude-admins-moderators"
           />
         </div>
       </CustomizerSection>
     </div>
   );
 };
-
