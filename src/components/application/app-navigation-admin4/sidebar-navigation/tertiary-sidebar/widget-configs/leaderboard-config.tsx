@@ -11,7 +11,7 @@ export const LeaderboardConfig: React.FC = () => {
   const { leaderboardConfig, updateLeaderboardConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { numberOfMembers, excludeAdmins, tabView, allTab, monthTab, weekTab, showScore } = leaderboardConfig;
+  const { heading, numberOfMembers, excludeAdmins, tabView, allTab, monthTab, weekTab, showScore } = leaderboardConfig;
 
   // Section collapse/expand states
   const [basicExpanded, setBasicExpanded] = useState(true);
@@ -229,6 +229,14 @@ export const LeaderboardConfig: React.FC = () => {
         onExpandedChange={setBasicExpanded}
       >
         <div className="space-y-4">
+          {/* Heading */}
+          <Input
+            label="Heading"
+            value={heading}
+            onChange={(value) => updateLeaderboardConfig({ heading: value })}
+            placeholder="Leaderboard"
+          />
+
           {/* Number of Members */}
           <Input
             label="Number of members"

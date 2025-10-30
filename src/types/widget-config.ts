@@ -85,6 +85,7 @@ export interface MembersConfig {
 
 export interface LeaderboardConfig {
   source: 'all' | 'current';
+  heading: string;
   numberOfMembers: number;
   excludeAdmins: boolean;
   tabView: 'all' | 'month' | 'week';
@@ -284,6 +285,7 @@ export const defaultComposerConfig: ComposerConfig = {
 
 export const defaultLeaderboardConfig: LeaderboardConfig = {
   source: 'current',
+  heading: 'Leaderboard',
   numberOfMembers: 5,
   excludeAdmins: false,
   tabView: 'all',
