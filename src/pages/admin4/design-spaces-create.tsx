@@ -235,7 +235,6 @@ export const DesignSpacesCreatePage = () => {
                                             e.preventDefault();
                                         }
                                     }}
-                                    className={type.disabled ? "cursor-not-allowed" : ""}
                                 >
                                     <span className="flex items-center gap-2">
                                         <span>{type.label}</span>

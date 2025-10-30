@@ -157,8 +157,8 @@ export const AnnouncementBannerWidget: React.FC<AnnouncementBannerWidgetProps> =
 
           {/* Text - Centered */}
           <p className={cx("text-sm font-medium", getTextColor())}>
-            {announcementBannerConfig.title || announcementBannerConfig.text || "Announcement text"}
-        </p>
+            {announcementBannerConfig.title || "Announcement text"}
+          </p>
       </div>
 
         {/* Close Button - Far right */}
