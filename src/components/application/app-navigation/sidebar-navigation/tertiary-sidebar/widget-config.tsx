@@ -1559,17 +1559,15 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
   };
 
   const renderLeaderboardConfig = () => {
-    const { title, source, numberOfMembers, defaultTab, showScore, excludeAdminsModerators } = leaderboardConfig;
+    const { source, numberOfMembers, tabView, showScore, excludeAdmins } = leaderboardConfig;
 
     const sourceOptions = [
-      { id: 'all_spaces', label: 'All Spaces', icon: Globe05 },
-      { id: 'current_space', label: 'Current Space', icon: Home01 },
-      { id: 'event', label: 'Event', icon: Calendar },
-      { id: 'blog', label: 'Blog', icon: Edit03 }
+      { id: 'all', label: 'All Spaces', icon: Globe05 },
+      { id: 'current', label: 'Current Space', icon: Home01 }
     ];
 
-    const defaultTabOptions = [
-      { id: 'all_time', label: 'All Time', icon: Globe05 },
+    const tabViewOptions = [
+      { id: 'all', label: 'All Time', icon: Globe05 },
       { id: 'month', label: 'Month', icon: Calendar },
       { id: 'week', label: 'Week', icon: Calendar }
     ];
@@ -1584,21 +1582,11 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
         >
           <div className="space-y-4">
             <div>
-              <Input
-                label="Title"
-                id="leaderboard-title"
-                value={title}
-                onChange={(value) => updateLeaderboardConfig({ title: value })}
-                placeholder="Enter leaderboard title"
-              />
-            </div>
-            
-            <div>
               <Select
                 label="Source"
                 items={sourceOptions}
                 selectedKey={source}
-                onSelectionChange={(key) => updateLeaderboardConfig({ source: key as 'all_spaces' | 'current_space' | 'event' | 'blog' })}
+                onSelectionChange={(key) => updateLeaderboardConfig({ source: key as 'all' | 'current' })}
               >
                 {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
               </Select>
@@ -1633,9 +1621,9 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             <div>
               <Select
                 label="Default Tab"
-                items={defaultTabOptions}
-                selectedKey={defaultTab}
-                onSelectionChange={(key) => updateLeaderboardConfig({ defaultTab: key as 'all_time' | 'month' | 'week' })}
+                items={tabViewOptions}
+                selectedKey={tabView}
+                onSelectionChange={(key) => updateLeaderboardConfig({ tabView: key as 'all' | 'month' | 'week' })}
               >
                 {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
               </Select>
@@ -1667,8 +1655,8 @@ const WidgetConfig: React.FC<WidgetConfigProps> = ({ selectedWidget, onBack, onS
             <PropertyToggle
               icon={Users01}
               label="Exclude Admins & Moderators"
-              isSelected={excludeAdminsModerators}
-              onChange={(value) => updateLeaderboardConfig({ excludeAdminsModerators: value })}
+              isSelected={excludeAdmins}
+              onChange={(value) => updateLeaderboardConfig({ excludeAdmins: value })}
               id="exclude-admins-moderators"
             />
           </div>
