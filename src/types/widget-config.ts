@@ -227,7 +227,7 @@ export const defaultAnnouncementBannerConfig: AnnouncementBannerConfig = {
 
 export const defaultHeroBannerConfig: HeroBannerConfig = {
   layout: 'fill',
-  style: 'simple',
+  style: 'color',
   alignment: 'center',
   title: 'Welcome to Our Community',
   description: 'Join us for discussions, events, and more',

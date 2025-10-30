@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings01, Palette, Image01, VideoRecorder, Upload01, Square, Zap, GridDotsOuter, FlexAlignRight, FlexAlignLeft, FlexAlignTop, FlexAlignBottom, AlignLeft, AlignCenter, AlignRight } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
@@ -20,6 +20,13 @@ export const HeroBannerConfig: React.FC = () => {
   const [styleExpanded, setStyleExpanded] = useState(true);
   const [contentExpanded, setContentExpanded] = useState(true);
   const [ctaExpanded, setCtaExpanded] = useState(true);
+
+  // Auto-switch from simple to color when layout changes to split
+  useEffect(() => {
+    if (['right', 'left', 'top', 'bottom'].includes(layout) && style === 'simple') {
+      updateHeroBannerConfig({ style: 'color' });
+    }
+  }, [layout, style, updateHeroBannerConfig]);
 
   const layoutOptions = [
     { id: 'fill', label: 'Fill', icon: GridDotsOuter },
@@ -152,7 +159,7 @@ export const HeroBannerConfig: React.FC = () => {
       >
         <div className="space-y-6">
           <div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-2">
               {styleOptions
                 .filter(option => layout === 'fill' || option.id !== 'simple')
                 .map((option) => (
