@@ -52,6 +52,20 @@ export interface AnnouncementBannerConfig {
   videoUrl: string;
 }
 
+export interface HeroBannerConfig {
+  layout: 'fill' | 'right' | 'left' | 'top' | 'bottom';
+  style: 'simple' | 'color' | 'image' | 'video';
+  title: string;
+  description: string;
+  showCTA: boolean;
+  ctaText: string;
+  ctaUrl: string;
+  // Style specific fields
+  backgroundColor: string;
+  imageUrl: string;
+  videoUrl: string;
+}
+
 export interface ComposerConfig {
   placeholder: string;
   showImageUpload: boolean;
@@ -206,6 +220,20 @@ export const defaultAnnouncementBannerConfig: AnnouncementBannerConfig = {
   showCloseButton: true,
   // Style specific defaults
   backgroundColor: '#ec4899',
+  imageUrl: '',
+  videoUrl: '',
+};
+
+export const defaultHeroBannerConfig: HeroBannerConfig = {
+  layout: 'fill',
+  style: 'simple',
+  title: 'Welcome to Our Community',
+  description: 'Join us for discussions, events, and more',
+  showCTA: true,
+  ctaText: 'Get Started',
+  ctaUrl: '#',
+  // Style specific defaults
+  backgroundColor: '#7f56d9',
   imageUrl: '',
   videoUrl: '',
 };

@@ -6,6 +6,8 @@ import {
   defaultSpaceHeaderConfig,
   AnnouncementBannerConfig,
   defaultAnnouncementBannerConfig,
+  HeroBannerConfig,
+  defaultHeroBannerConfig,
   ComposerConfig,
   defaultComposerConfig,
   LeaderboardConfig,
@@ -87,6 +89,8 @@ interface WidgetConfigContextType {
   updateSpaceHeaderConfig: (config: Partial<SpaceHeaderConfig>) => void;
   announcementBannerConfig: AnnouncementBannerConfig;
   updateAnnouncementBannerConfig: (config: Partial<AnnouncementBannerConfig>) => void;
+  heroBannerConfig: HeroBannerConfig;
+  updateHeroBannerConfig: (config: Partial<HeroBannerConfig>) => void;
   composerConfig: ComposerConfig;
   updateComposerConfig: (config: Partial<ComposerConfig>) => void;
   leaderboardConfig: LeaderboardConfig;
@@ -137,6 +141,7 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
   const [eventsListConfig, setEventsListConfig] = useState<EventsListConfig>(defaultEventsListConfig);
   const [spaceHeaderConfig, setSpaceHeaderConfig] = useState<SpaceHeaderConfig>(defaultSpaceHeaderConfig);
   const [announcementBannerConfig, setAnnouncementBannerConfig] = useState<AnnouncementBannerConfig>(defaultAnnouncementBannerConfig);
+  const [heroBannerConfig, setHeroBannerConfig] = useState<HeroBannerConfig>(defaultHeroBannerConfig);
   const [composerConfig, setComposerConfig] = useState<ComposerConfig>(defaultComposerConfig);
   const [leaderboardConfig, setLeaderboardConfig] = useState<LeaderboardConfig>(defaultLeaderboardConfig);
   const [htmlScriptConfig, setHtmlScriptConfig] = useState<HtmlScriptConfig>(defaultHtmlScriptConfig);
@@ -246,6 +251,10 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
 
   const updateAnnouncementBannerConfig = (config: Partial<AnnouncementBannerConfig>) => {
     setAnnouncementBannerConfig(prevConfig => ({ ...prevConfig, ...config }));
+  };
+
+  const updateHeroBannerConfig = (config: Partial<HeroBannerConfig>) => {
+    setHeroBannerConfig(prevConfig => ({ ...prevConfig, ...config }));
   };
 
   const updateComposerConfig = (config: Partial<ComposerConfig>) => {
@@ -393,6 +402,8 @@ export const WidgetConfigProvider: React.FC<WidgetConfigProviderProps> = ({ chil
       updateSpaceHeaderConfig,
       announcementBannerConfig,
       updateAnnouncementBannerConfig,
+      heroBannerConfig,
+      updateHeroBannerConfig,
       composerConfig,
       updateComposerConfig,
       leaderboardConfig,

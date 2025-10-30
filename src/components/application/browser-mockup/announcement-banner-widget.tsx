@@ -150,32 +150,32 @@ export const AnnouncementBannerWidget: React.FC<AnnouncementBannerWidgetProps> =
           {/* Icon - Dynamic based on style (hidden for primary, color, image, video) */}
           {announcementBannerConfig.showIcon && 
            !['primary', 'color', 'image', 'video'].includes(announcementBannerConfig.style) && (
-            <div className="flex-shrink-0">
+        <div className="flex-shrink-0">
               <IconComponent className={cx("w-5 h-5", getIconColor())} />
-            </div>
-          )}
+        </div>
+      )}
 
           {/* Text - Centered */}
           <p className={cx("text-sm font-medium", getTextColor())}>
             {announcementBannerConfig.title || announcementBannerConfig.text || "Announcement text"}
-          </p>
-        </div>
+        </p>
+      </div>
 
         {/* Close Button - Far right */}
-        {announcementBannerConfig.showCloseButton && (
-          <button 
-            className={cx(
-              "flex-shrink-0 p-1 rounded-md transition-colors",
-              "hover:bg-white/20",
-              getTextColor()
-            )}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-      </div>
-    );
+      {announcementBannerConfig.showCloseButton && (
+        <button 
+          className={cx(
+            "flex-shrink-0 p-1 rounded-md transition-colors",
+            "hover:bg-white/20",
+            getTextColor()
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
+    </div>
+  );
   };
 
   return (
@@ -255,7 +255,7 @@ export const AnnouncementBannerWidget: React.FC<AnnouncementBannerWidgetProps> =
         </a>
       ) : (
         <div className="relative z-10">
-          <BannerContent />
+        <BannerContent />
         </div>
       )}
     </div>

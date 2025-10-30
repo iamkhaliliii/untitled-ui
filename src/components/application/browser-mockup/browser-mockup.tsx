@@ -7,6 +7,7 @@ import { SpaceHeaderWidget } from "./space-header-widget";
 import { EventsListWidget } from "./events-list-widget";
 import { ComposerWidget } from "./composer-widget";
 import { AnnouncementBannerWidget } from "./announcement-banner-widget";
+import { HeroBannerWidget } from "./hero-banner-widget";
 import { LeaderboardWidget } from "./leaderboard-widget";
 import { HtmlScriptWidget } from "./html-script-widget";
 import { RichTextWidget } from "./rich-text-widget";
@@ -555,22 +556,7 @@ export const BrowserMockup = ({
                         } else if (widget.id.startsWith('hero-banner_') || widget.label === 'Hero Banner') {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">
-                              <div className={cx(
-                                "rounded-lg border p-8 text-center",
-                                theme === 'dark' ? "bg-gray-800 border-gray-700" : "bg-gradient-to-r from-blue-50 to-purple-50 border-gray-200"
-                              )}>
-                                <h2 className={cx(
-                                  "text-3xl font-bold mb-4",
-                                  theme === 'dark' ? "text-gray-100" : "text-gray-900"
-                                )}>Welcome to Our Community</h2>
-                                <p className={cx(
-                                  "text-lg mb-6",
-                                  theme === 'dark' ? "text-gray-300" : "text-gray-600"
-                                )}>Join us for discussions, events, and more</p>
-                                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                                  Get Started
-                                </button>
-                              </div>
+                              <HeroBannerWidget theme={theme} />
                             </div>
                           );
                         } else if (widget.id.startsWith('events_')) {

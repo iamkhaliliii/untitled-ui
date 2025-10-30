@@ -374,13 +374,13 @@ export const AnnouncementBannerConfig: React.FC = () => {
         <div className="space-y-2">
           {/* Icon toggle - only for natural, warning, error, info styles */}
           {['natural', 'warning', 'error', 'info'].includes(style) && (
-            <PropertyToggle
-              icon={Settings01}
-              label="Icon"
-              isSelected={showIcon}
-              onChange={(value) => updateAnnouncementBannerConfig({ showIcon: value })}
-              id="show-icon"
-            />
+          <PropertyToggle
+            icon={Settings01}
+            label="Icon"
+            isSelected={showIcon}
+            onChange={(value) => updateAnnouncementBannerConfig({ showIcon: value })}
+            id="show-icon"
+          />
           )}
 
           <PropertyToggle
