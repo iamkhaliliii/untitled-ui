@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, Grid03, File01, Star01, Users01, ArrowLeft, HelpCircle, Code01, Image01 } from "@untitledui/icons";
+import { AlertCircle, Grid03, File01, Star01, Users01, ArrowLeft, HelpCircle, Code01, Image01, CursorBox, FlexAlignTop } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 
 interface AddWidgetListProps {
@@ -9,9 +9,8 @@ interface AddWidgetListProps {
 }
 
 const spaceWidgets = [
-  { id: 'space-header', label: 'Space Header', icon: Image01 },
-  { id: 'hero-banner', label: 'Hero Banner', icon: HelpCircle },
-  { id: 'announcement-banner', label: 'Announcement Banner', icon: HelpCircle },
+  { id: 'hero-banner', label: 'Hero Banner', icon: CursorBox },
+  { id: 'announcement-banner', label: 'Announcement Banner', icon: FlexAlignTop },
   { id: 'members', label: 'Members', icon: Users01, underDesign: true },
   { id: 'leaderboard', label: 'Leaderboard', icon: Star01, underDesign: true },
   { id: 'spaces', label: 'Spaces', icon: Grid03, underDesign: true },
