@@ -137,6 +137,26 @@ export const SpaceHeaderConfig: React.FC = () => {
             </div>
           </div>
 
+          {/* Header Style - Always visible */}
+          <div>
+            <label className={cx(
+              "block text-sm font-medium mb-2",
+              theme === 'dark' ? "text-gray-100" : "text-secondary"
+            )}>
+              Header Style
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {headerStyleOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={headerStyle === option.id}
+                  onClick={() => updateSpaceHeaderConfig({ headerStyle: option.id as 'modern' | 'simple' })}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Color Selector - Show when Color style is selected */}
           {style === 'color' && (
             <div>
@@ -331,20 +351,6 @@ export const SpaceHeaderConfig: React.FC = () => {
                   )}
                 </div>
               </FileTrigger>
-            </div>
-          )}
-
-          {/* Header Style Select - Show for Color, Image, Video */}
-          {(style === 'color' || style === 'image' || style === 'video') && (
-            <div>
-              <Select 
-                label="Header Style"
-                items={headerStyleOptions} 
-                selectedKey={headerStyle}
-                onSelectionChange={(key) => updateSpaceHeaderConfig({ headerStyle: key as 'modern' | 'simple' })}
-              >
-                {(item) => <Select.Item id={item.id} label={item.label} icon={item.icon} />}
-              </Select>
             </div>
           )}
         </div>
