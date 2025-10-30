@@ -11,10 +11,10 @@ export const LeaderboardConfig: React.FC = () => {
   const { leaderboardConfig, updateLeaderboardConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { source, numberOfMembers, excludeAdmins, tabView, allTab, monthTab, weekTab, showScore } = leaderboardConfig;
+  const { numberOfMembers, excludeAdmins, tabView, allTab, monthTab, weekTab, showScore } = leaderboardConfig;
 
   // Section collapse/expand states
-  const [sourceExpanded, setSourceExpanded] = useState(true);
+  const [basicExpanded, setBasicExpanded] = useState(true);
   const [tabExpanded, setTabExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
 
@@ -69,11 +69,6 @@ export const LeaderboardConfig: React.FC = () => {
       tab.id === tabId ? { ...tab, label: newLabel } : tab
     ));
   };
-
-  const sourceOptions = [
-    { id: 'all', label: 'All', icon: Users01 },
-    { id: 'current', label: 'Current Space', icon: Grid01 }
-  ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
     icon: React.ComponentType<any>;
@@ -227,26 +222,13 @@ export const LeaderboardConfig: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      {/* Source Section */}
+      {/* Basic Section */}
       <CustomizerSection
-        title="Source"
-        isExpanded={sourceExpanded}
-        onExpandedChange={setSourceExpanded}
+        title="Basic"
+        isExpanded={basicExpanded}
+        onExpandedChange={setBasicExpanded}
       >
         <div className="space-y-4">
-          <div>
-            <div className="grid grid-cols-2 gap-2">
-              {sourceOptions.map((option) => (
-                <StyleTile
-                  key={option.id}
-                  option={option}
-                  isSelected={source === option.id}
-                  onClick={() => updateLeaderboardConfig({ source: option.id as any })}
-                />
-              ))}
-            </div>
-          </div>
-
           {/* Number of Members */}
           <Input
             label="Number of members"
