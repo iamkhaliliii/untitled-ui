@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings01, Palette, Image01, VideoRecorder, Upload01, Square, Zap, GridDotsOuter, FlexAlignRight, FlexAlignLeft, FlexAlignTop, FlexAlignBottom } from '@untitledui/icons';
+import { Settings01, Palette, Image01, VideoRecorder, Upload01, Square, Zap, GridDotsOuter, FlexAlignRight, FlexAlignLeft, FlexAlignTop, FlexAlignBottom, AlignLeft, AlignCenter, AlignRight } from '@untitledui/icons';
 import { Input } from '@/components/base/input/input';
 import { TextArea } from '@/components/base/textarea/textarea';
 import { Toggle } from '@/components/base/toggle/toggle';
@@ -13,7 +13,7 @@ export const HeroBannerConfig: React.FC = () => {
   const { heroBannerConfig, updateHeroBannerConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { layout, style, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
+  const { layout, style, alignment, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
 
   // Section collapse/expand states
   const [layoutExpanded, setLayoutExpanded] = useState(true);
@@ -34,6 +34,12 @@ export const HeroBannerConfig: React.FC = () => {
     { id: 'color', label: 'Color', icon: Palette },
     { id: 'image', label: 'Image', icon: Image01 },
     { id: 'video', label: 'Video', icon: VideoRecorder }
+  ];
+
+  const alignmentOptions = [
+    { id: 'left', label: 'Left', icon: AlignLeft },
+    { id: 'center', label: 'Center', icon: AlignCenter },
+    { id: 'right', label: 'Right', icon: AlignRight }
   ];
 
   const PropertyToggle = ({ icon: Icon, label, isSelected, onChange, id }: {
@@ -146,15 +152,17 @@ export const HeroBannerConfig: React.FC = () => {
       >
         <div className="space-y-6">
           <div>
-            <div className="grid grid-cols-4 gap-2">
-              {styleOptions.map((option) => (
-                <StyleTile
-                  key={option.id}
-                  option={option}
-                  isSelected={style === option.id}
-                  onClick={() => updateHeroBannerConfig({ style: option.id as any })}
-                />
-              ))}
+            <div className="grid grid-cols-3 gap-2">
+              {styleOptions
+                .filter(option => layout === 'fill' || option.id !== 'simple')
+                .map((option) => (
+                  <StyleTile
+                    key={option.id}
+                    option={option}
+                    isSelected={style === option.id}
+                    onClick={() => updateHeroBannerConfig({ style: option.id as any })}
+                  />
+                ))}
             </div>
           </div>
 
@@ -384,6 +392,26 @@ export const HeroBannerConfig: React.FC = () => {
             placeholder="Enter hero description"
             rows={3}
           />
+
+          {/* Alignment */}
+          <div>
+            <label className={cx(
+              "text-sm font-medium mb-2 block",
+              theme === 'dark' ? "text-gray-100" : "text-secondary"
+            )}>
+              Alignment
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {alignmentOptions.map((option) => (
+                <StyleTile
+                  key={option.id}
+                  option={option}
+                  isSelected={alignment === option.id}
+                  onClick={() => updateHeroBannerConfig({ alignment: option.id as any })}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </CustomizerSection>
 

@@ -15,7 +15,7 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
   const theme = useResolvedTheme(propTheme);
   const { heroBannerConfig } = useWidgetConfig();
   
-  const { layout, style, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
+  const { layout, style, alignment, title, description, showCTA, ctaText, ctaUrl, backgroundColor, imageUrl, videoUrl } = heroBannerConfig;
 
   // Calculate contrast and determine text color
   const getTextColor = (hexColor: string): 'white' | 'black' => {
@@ -51,12 +51,26 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
     }
   };
 
+  // Get text alignment classes
+  const getTextAlignment = () => {
+    switch (alignment) {
+      case 'left':
+        return 'text-left items-start';
+      case 'right':
+        return 'text-right items-end';
+      case 'center':
+      default:
+        return 'text-center items-center';
+    }
+  };
+
   // Render Fill Layout (content over background)
   if (layout === 'fill') {
     return (
       <div 
         className={cx(
-          "rounded-lg overflow-hidden relative min-h-[300px] flex flex-col items-center justify-center p-16 text-center",
+          "rounded-lg overflow-hidden relative min-h-[300px] flex flex-col justify-center p-16",
+          getTextAlignment(),
           style === 'simple' && (theme === 'dark' ? "bg-gray-800 border border-gray-700" : "bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200"),
           className
         )}
@@ -125,16 +139,16 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl">
-        <h1 className={cx(
-          "text-5xl font-bold mb-6",
+        <h2 className={cx(
+          "text-2xl font-bold mb-3",
           style === 'simple' && (theme === 'dark' ? "text-gray-100" : "text-gray-900"),
           (style === 'color' || style === 'image' || style === 'video') && (textColor === 'white' ? 'text-white' : 'text-black')
         )}>
           {title}
-        </h1>
+        </h2>
         
         <p className={cx(
-          "text-xl mb-8",
+          "text-base mb-6",
           style === 'simple' && (theme === 'dark' ? "text-gray-300" : "text-gray-600"),
           (style === 'color' || style === 'image' || style === 'video') && (textColor === 'white' ? 'text-white/90' : 'text-black/80')
         )}>
@@ -145,7 +159,7 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
           <a
             href={ctaUrl}
             className={cx(
-              "inline-block px-8 py-4 rounded-lg font-semibold text-lg transition-all hover:scale-105",
+              "inline-block px-6 py-3 rounded-lg font-medium text-sm transition-colors",
               style === 'simple' && "bg-brand-solid text-white hover:bg-brand-solid_hover",
               style === 'color' && (textColor === 'white' ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-900 text-white hover:bg-gray-800'),
               (style === 'image' || style === 'video') && "bg-white text-gray-900 hover:bg-gray-100"
@@ -172,6 +186,7 @@ export const HeroBannerWidget: React.FC<HeroBannerWidgetProps> = ({
       {/* Content Column */}
       <div className={cx(
         "flex flex-col justify-center p-8",
+        getTextAlignment(),
         (layout === 'left' || layout === 'right') && "w-1/2",
         (layout === 'top' || layout === 'bottom') && "w-full"
       )}>

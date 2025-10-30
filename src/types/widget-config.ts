@@ -55,6 +55,7 @@ export interface AnnouncementBannerConfig {
 export interface HeroBannerConfig {
   layout: 'fill' | 'right' | 'left' | 'top' | 'bottom';
   style: 'simple' | 'color' | 'image' | 'video';
+  alignment: 'left' | 'center' | 'right';
   title: string;
   description: string;
   showCTA: boolean;
@@ -227,6 +228,7 @@ export const defaultAnnouncementBannerConfig: AnnouncementBannerConfig = {
 export const defaultHeroBannerConfig: HeroBannerConfig = {
   layout: 'fill',
   style: 'simple',
+  alignment: 'center',
   title: 'Welcome to Our Community',
   description: 'Join us for discussions, events, and more',
   showCTA: true,
