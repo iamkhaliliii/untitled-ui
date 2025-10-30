@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronUp, ChevronDown } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
@@ -30,49 +28,28 @@ interface CustomizerSectionProps {
 
 export const CustomizerSection = ({
   title,
-  defaultExpanded = true,
-  isExpanded: controlledExpanded,
-  onExpandedChange,
   action,
   utilityActions,
   children,
   className
 }: CustomizerSectionProps) => {
-  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const theme = useResolvedTheme();
-  
-  // Use controlled state if provided, otherwise use internal state
-  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
-  
-  const handleToggle = () => {
-    const newExpanded = !isExpanded;
-    
-    if (controlledExpanded === undefined) {
-      setInternalExpanded(newExpanded);
-    }
-    
-    onExpandedChange?.(newExpanded);
-  };
 
   return (
     <div className={cx("space-y-1 -mx-2", className)}>
-      <button
+      <div
         className={cx(
-          "group w-full flex items-center text-start rounded-base focus:outline-none focus-visible:ring ring-inset ring-offset-0 font-medium py-2 px-2 text-md transition-colors",
+          "group w-full flex items-center text-start rounded-base font-medium py-2 px-2 text-md",
           theme === 'dark'
-            ? "text-gray-100 hover:text-gray-50 hover:bg-gray-800/20 rounded-md"
-            : "text-content bg-surface hover:text-content-hovered hover:bg-surface-hovered"
+            ? "text-gray-100"
+            : "text-content bg-surface"
         )}
-        onClick={handleToggle}
       >
         <span className="flex-grow truncate tracking-tight">{title}</span>
         <div className="flex items-center gap-2 ml-2">
           {/* Show utility actions if provided */}
           {utilityActions && (
-            <div 
-              className="flex items-center gap-1"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="flex items-center gap-1">
               {utilityActions}
             </div>
           )}
@@ -95,24 +72,12 @@ export const CustomizerSection = ({
               {action.label}
             </button>
           )}
-          
-          {isExpanded ? (
-            <ChevronUp className={cx(
-              "h-5 w-5 transform transition-all ease-in-out duration-150 flex-shrink-0 shrink-0 ms-2",
-              theme === 'dark' ? "text-gray-400" : "text-fg-secondary"
-            )} />
-          ) : (
-            <ChevronDown className={cx(
-              "h-5 w-5 transform transition-all ease-in-out duration-150 flex-shrink-0 shrink-0 ms-2",
-              theme === 'dark' ? "text-gray-400" : "text-fg-secondary"
-            )} />
-          )}
         </div>
-      </button>
+      </div>
       
-      {/* Content */}
-      {isExpanded && children && (
-        <div className="animate-in fade-in slide-in-from-top-2 duration-300 ease-out pt-2 pb-4 px-2">
+      {/* Content - Always visible */}
+      {children && (
+        <div className="pt-2 pb-4 px-2">
           {children}
         </div>
       )}
