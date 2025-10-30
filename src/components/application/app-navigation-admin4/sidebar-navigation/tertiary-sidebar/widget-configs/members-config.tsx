@@ -10,18 +10,12 @@ export const MembersConfig: React.FC = () => {
   const { membersConfig, updateMembersConfig } = useWidgetConfig();
   const theme = useResolvedTheme();
   
-  const { source, hideAdmins, sort, layout, showAvatar, showBadges, showMessageButton, showDetails } = membersConfig;
+  const { hideAdmins, sort, layout, showAvatar, showBadges, showMessageButton, showDetails } = membersConfig;
 
   // Section collapse/expand states
-  const [sourceExpanded, setSourceExpanded] = useState(true);
   const [sortExpanded, setSortExpanded] = useState(true);
   const [layoutExpanded, setLayoutExpanded] = useState(true);
   const [propertiesExpanded, setPropertiesExpanded] = useState(true);
-
-  const sourceOptions = [
-    { id: 'all', label: 'All', icon: Users01 },
-    { id: 'current', label: 'Current Space', icon: Grid01 }
-  ];
 
   const sortOptions = [
     { id: 'alphabetic', label: 'Alphabetic', icon: Settings01 },
@@ -109,24 +103,22 @@ export const MembersConfig: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      {/* Source Section */}
+      {/* Layout Section */}
       <CustomizerSection
-        title="Source"
-        isExpanded={sourceExpanded}
-        onExpandedChange={setSourceExpanded}
+        title="Layout"
+        isExpanded={layoutExpanded}
+        onExpandedChange={setLayoutExpanded}
       >
         <div className="space-y-4">
-          <div>
-            <div className="grid grid-cols-2 gap-2">
-              {sourceOptions.map((option) => (
-                <StyleTile
-                  key={option.id}
-                  option={option}
-                  isSelected={source === option.id}
-                  onClick={() => updateMembersConfig({ source: option.id as any })}
-                />
-              ))}
-            </div>
+          <div className="grid grid-cols-3 gap-2">
+            {layoutOptions.map((option) => (
+              <StyleTile
+                key={option.id}
+                option={option}
+                isSelected={layout === option.id}
+                onClick={() => updateMembersConfig({ layout: option.id as any })}
+              />
+            ))}
           </div>
 
           {/* Hide Admins Toggle */}
@@ -159,30 +151,6 @@ export const MembersConfig: React.FC = () => {
               option={option}
               isSelected={sort === option.id}
               onClick={() => updateMembersConfig({ sort: option.id as any })}
-            />
-          ))}
-        </div>
-      </CustomizerSection>
-
-      {/* Divider */}
-      <div className={cx(
-        "border-t",
-        theme === 'dark' ? "border-gray-700" : "border-secondary"
-      )}></div>
-
-      {/* Layout Section */}
-      <CustomizerSection
-        title="Layout"
-        isExpanded={layoutExpanded}
-        onExpandedChange={setLayoutExpanded}
-      >
-        <div className="grid grid-cols-3 gap-2">
-          {layoutOptions.map((option) => (
-            <StyleTile
-              key={option.id}
-              option={option}
-              isSelected={layout === option.id}
-              onClick={() => updateMembersConfig({ layout: option.id as any })}
             />
           ))}
         </div>
