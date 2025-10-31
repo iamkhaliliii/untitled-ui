@@ -303,8 +303,27 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             </div>
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base">{timeSlot.date}</div>
-                                                            <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{timeSlot.time}</div>
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base mb-1">{timeSlot.date}</div>
+                                                            <div className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-400 flex items-center gap-1">
+                                                                <span>{timeSlot.time}</span>
+                                                                <span>•</span>
+                                                                {event.locationType === "virtual" ? (
+                                                                    <span className="flex items-center gap-1">
+                                                                        <VideoRecorder className="h-3.5 w-3.5" />
+                                                                        <span>Virtual</span>
+                                                                    </span>
+                                                                ) : event.locationType === "hybrid" ? (
+                                                                    <span className="flex items-center gap-1">
+                                                                        <MarkerPin01 className="h-3.5 w-3.5" />
+                                                                        <span>{event.location} + Virtual</span>
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="flex items-center gap-1">
+                                                                        <MarkerPin01 className="h-3.5 w-3.5" />
+                                                                        <span>{event.location}</span>
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                         <div className="absolute top-0 right-0 flex gap-1 items-center">
                                                             <div className="flex gap-1 items-center">
