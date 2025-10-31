@@ -954,7 +954,11 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <Dropdown.Item key="view-event" icon={Eye}>
                                                                 View Event
                                                             </Dropdown.Item>
-                                                            <Dropdown.Item key="edit-event" icon={Edit01}>
+                                                            <Dropdown.Item 
+                                                                key="edit-event" 
+                                                                icon={Edit01}
+                                                                onClick={() => window.location.href = 'http://localhost:5173/admin4/content2/events/edit'}
+                                                            >
                                                                 Edit Event
                                                             </Dropdown.Item>
                                                             <Dropdown.Item key="analytics" icon={TrendUp02}>
