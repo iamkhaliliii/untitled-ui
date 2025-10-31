@@ -92,6 +92,8 @@ import AnnouncementBannerCustomizePage from "@/pages/admin4/customize/widgets/an
 import HeroBannerCustomizePage from "@/pages/admin4/customize/widgets/hero-banner-customize";
 import MembersCustomizePage from "@/pages/admin4/customize/widgets/members-customize";
 import LeaderboardCustomizePage from "@/pages/admin4/customize/widgets/leaderboard-customize";
+import HtmlScriptCustomizePage from "@/pages/admin4/customize/widgets/html-script-customize";
+import RichTextCustomizePage from "@/pages/admin4/customize/widgets/rich-text-customize";
 import { SiteHomePage } from "@/pages/site/home";
 import { SiteFeedPage } from "@/pages/site/feed";
 import SiteEventPage from "@/pages/site/event";
@@ -478,6 +480,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/announcement-banner" element={<AnnouncementBannerCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/hero-banner" element={<HeroBannerCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/members" element={<MembersCustomizePage />} />
+                        <Route path="/admin4/design/spaces/:spaceType/customize/widget/html-script" element={<HtmlScriptCustomizePage />} />
+                        <Route path="/admin4/design/spaces/:spaceType/customize/widget/rich-text" element={<RichTextCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/events" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/events-list" element={<EventsListCustomizePage />} />
                         <Route path="/admin4/design/spaces/:spaceType/customize/widget/discussion" element={<DiscussionsListCustomizePage />} />

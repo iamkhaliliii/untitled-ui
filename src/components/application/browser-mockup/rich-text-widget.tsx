@@ -40,19 +40,6 @@ export const RichTextWidget: React.FC<RichTextWidgetProps> = ({ className, theme
     }
   };
 
-  const getContentClasses = () => {
-    switch (richTextConfig.cardStyle) {
-      case 'card':
-        return "";
-      case 'no_padding':
-        return "p-4";
-      case 'none':
-        return "";
-      default:
-        return "";
-    }
-  };
-
   // Simple markdown-like rendering
   const renderContent = (content: string) => {
     return content
@@ -96,11 +83,9 @@ export const RichTextWidget: React.FC<RichTextWidgetProps> = ({ className, theme
 
   return (
     <div className={getContainerClasses()}>
-      <div className={getContentClasses()}>
-        {/* Rich Text Content */}
-        <div className="prose prose-sm max-w-none space-y-3">
-          {renderContent(richTextConfig.content)}
-        </div>
+      {/* Rich Text Content */}
+      <div className="prose prose-sm max-w-none space-y-3">
+        {renderContent(richTextConfig.content)}
       </div>
     </div>
   );

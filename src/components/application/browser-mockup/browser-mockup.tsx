@@ -572,6 +572,18 @@ export const BrowserMockup = ({
                               <LeaderboardWidget theme={theme} />
                             </div>
                           );
+                        } else if (widget.id.startsWith('html-script_') || widget.label === 'Html Script') {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <HtmlScriptWidget theme={theme} />
+                            </div>
+                          );
+                        } else if (widget.id.startsWith('rich-text_') || widget.label === 'Rich Text') {
+                          return (
+                            <div key={widget.id} className="transition-all duration-200 ease-out">
+                              <RichTextWidget theme={theme} />
+                            </div>
+                          );
                         } else if (widget.id.startsWith('events_')) {
                           return (
                             <div key={widget.id} className="transition-all duration-200 ease-out">

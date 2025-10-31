@@ -40,28 +40,13 @@ export const HtmlScriptWidget: React.FC<HtmlScriptWidgetProps> = ({ className, t
     }
   };
 
-  const getContentClasses = () => {
-    switch (htmlScriptConfig.cardStyle) {
-      case 'card':
-        return "";
-      case 'no_padding':
-        return "p-4";
-      case 'none':
-        return "";
-      default:
-        return "";
-    }
-  };
-
   return (
     <div className={getContainerClasses()}>
-      <div className={getContentClasses()}>
-        {/* Render the HTML content */}
-        <div 
-          dangerouslySetInnerHTML={{ __html: htmlScriptConfig.codeInput }}
-          className="custom-html-content"
-        />
-      </div>
+      {/* Render the HTML content */}
+      <div 
+        dangerouslySetInnerHTML={{ __html: htmlScriptConfig.codeInput }}
+        className="custom-html-content"
+      />
     </div>
   );
 };
