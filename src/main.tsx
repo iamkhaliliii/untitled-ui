@@ -42,6 +42,7 @@ import { SiteCmsEventsPage as Admin2SiteCmsEventsPage } from "@/pages/admin2/sit
 // Admin 4.0 imports
 import { AdminDashboardPage as Admin4DashboardPage } from "@/pages/admin4/dashboard";
 import { AdminContentEventsCreatePage as Admin4ContentEventsCreatePage } from "@/pages/admin4/content-events-create";
+import { AdminContentEventsEditPage as Admin4ContentEventsEditPage } from "@/pages/admin4/content-events-edit";
 import { AdminContentPostsCreatePage as Admin4ContentPostsCreatePage } from "@/pages/admin4/content-posts-create";
 import { AdminContent2Page as Admin4Content2Page } from "@/pages/admin4/content2";
 import { AdminPeoplePage as Admin4PeoplePage } from "@/pages/admin4/people";
@@ -258,6 +259,8 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/admin4/content2" element={<Navigate to="/admin4/content2/posts" replace />} />
                         <Route path="/admin4/content2/events" element={<Admin4Content2Page />} />
                         <Route path="/admin4/content2/events/create" element={<Admin4ContentEventsCreatePage />} />
+                        <Route path="/admin4/content2/events/edit" element={<Admin4ContentEventsEditPage />} />
+                        <Route path="/admin4/content2/events/edit/:id" element={<Admin4ContentEventsEditPage />} />
                         <Route path="/admin4/content2/posts" element={<Admin4Content2Page />} />
                         <Route path="/admin4/content2/posts/create" element={<Admin4ContentPostsCreatePage />} />
                         <Route path="/admin4/content2/spaces" element={<Admin4Content2Page />} />
