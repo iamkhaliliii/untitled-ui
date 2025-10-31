@@ -6,6 +6,7 @@ import { ModalOverlay, Modal, Dialog } from './modal';
 import { Button } from '../../base/buttons/button';
 import { Badge, BadgeWithIcon } from '../../base/badges/badges';
 import { Dropdown } from '../../base/dropdown/dropdown';
+import { useNavigate } from 'react-router';
 
 // RSVP States
 type RSVPState = 'open' | 'closed' | 'completed';
@@ -98,6 +99,7 @@ interface EventDetailsModalProps {
 }
 
 export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isOpen, onClose, onRSVPStatusChange }) => {
+    const navigate = useNavigate();
     type RsvpStage = 'initial' | 'processing' | 'confirmed' | 'cancelled';
     const [rsvpStage, setRsvpStage] = useState<RsvpStage>('initial');
     const [showOtherTimes, setShowOtherTimes] = useState(false);
@@ -957,7 +959,10 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                                                             <Dropdown.Item 
                                                                 key="edit-event" 
                                                                 icon={Edit01}
-                                                                onClick={() => window.location.href = 'http://localhost:5173/admin4/content2/events/edit'}
+                                                                onAction={() => {
+                                                                    onClose();
+                                                                    navigate('/admin4/content2/events/edit');
+                                                                }}
                                                             >
                                                                 Edit Event
                                                             </Dropdown.Item>
